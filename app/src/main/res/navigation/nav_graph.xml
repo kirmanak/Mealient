@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/nav_graph"
+	app:startDestination="@id/authenticationFragment">
+
+	<fragment
+		android:id="@+id/authenticationFragment"
+		android:name="gq.kirmanak.mealie.ui.auth.AuthenticationFragment"
+		android:label="AuthenticationFragment" />
+</navigation>
