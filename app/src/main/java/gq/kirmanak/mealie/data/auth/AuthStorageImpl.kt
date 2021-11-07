@@ -10,6 +10,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 private const val TOKEN_KEY = "AUTH_TOKEN"
+private const val BASE_URL_KEY = "BASE_URL"
 
 class AuthStorageImpl @Inject constructor(@ApplicationContext private val context: Context) : AuthStorage {
     private val sharedPreferences: SharedPreferences
@@ -22,8 +23,11 @@ class AuthStorageImpl @Inject constructor(@ApplicationContext private val contex
         token != null
     }
 
-    override suspend fun storeToken(token: String) {
-        Timber.d("storeToken() called with: token = $token")
-        sharedPreferences.edit().putString(TOKEN_KEY, token).apply()
+    override suspend fun storeAuthData(token: String, baseUrl: String) {
+        Timber.v("storeAuthData() called with: token = $token, baseUrl = $baseUrl")
+        sharedPreferences.edit()
+            .putString(TOKEN_KEY, token)
+            .putString(BASE_URL_KEY, baseUrl)
+            .apply()
     }
 }

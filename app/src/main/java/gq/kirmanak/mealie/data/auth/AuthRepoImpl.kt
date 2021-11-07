@@ -24,7 +24,7 @@ class AuthRepoImpl @Inject constructor(
         Timber.d("authenticate result is $authResult")
         if (authResult.isFailure) return authResult.exceptionOrNull()
         val token = checkNotNull(authResult.getOrNull())
-        storage.storeToken(token)
+        storage.storeAuthData(token, baseUrl)
         return null
     }
 }
