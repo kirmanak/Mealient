@@ -13,7 +13,7 @@ class RetrofitBuilder @Inject constructor() {
     fun buildRetrofit(baseUrl: String): Retrofit {
         Timber.v("buildRetrofit() called with: baseUrl = $baseUrl")
         val url = if (baseUrl.startsWith("http")) baseUrl else "https://$baseUrl"
-        val contentType = MediaType.get("application/json")
+        val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl(url)
             .addConverterFactory(Json.asConverterFactory(contentType))
