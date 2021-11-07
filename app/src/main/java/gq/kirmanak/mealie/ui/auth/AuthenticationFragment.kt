@@ -14,8 +14,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealie.databinding.FragmentAuthenticationBinding
 import timber.log.Timber
 
-private const val TAG = "AuthenticationFragment"
-
 @AndroidEntryPoint
 class AuthenticationFragment : Fragment() {
     private var _binding: FragmentAuthenticationBinding? = null
@@ -88,7 +86,7 @@ class AuthenticationFragment : Fragment() {
         inputLayout: TextInputLayout,
         errorText: () -> String
     ): String? {
-        Timber.v("checkIfInputIsEmpty() called with: input = " + input + ", inputLayout = " + inputLayout + ", errorText = " + errorText)
+        Timber.v("checkIfInputIsEmpty() called with: input = $input, inputLayout = $inputLayout, errorText = $errorText")
         val text = input.text?.toString()
         Timber.d("Input text is \"$text\"")
         if (text.isNullOrBlank()) {
