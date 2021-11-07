@@ -6,6 +6,7 @@ import androidx.preference.PreferenceManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val TOKEN_KEY = "AUTH_TOKEN"
@@ -15,10 +16,14 @@ class AuthStorageImpl @Inject constructor(@ApplicationContext private val contex
         get() = PreferenceManager.getDefaultSharedPreferences(context)
 
     override suspend fun isAuthenticated(): Boolean = withContext(Dispatchers.IO) {
-        sharedPreferences.getString(TOKEN_KEY, null) != null
+        Timber.v("isAuthenticated() called")
+        val token = sharedPreferences.getString(TOKEN_KEY, null)
+        Timber.d("isAuthenticated: token is $token")
+        token != null
     }
 
     override suspend fun storeToken(token: String) {
+        Timber.d("storeToken() called with: token = $token")
         sharedPreferences.edit().putString(TOKEN_KEY, token).apply()
     }
 }
