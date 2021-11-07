@@ -25,7 +25,7 @@ class AuthenticationViewModel @Inject constructor(
         Timber.v("authenticate() called with: username = $username, password = $password, baseUrl = $baseUrl")
         val result = authRepo.authenticate(username, password, baseUrl)
         if (result == null) Timber.d("authenticate() returns null")
-        else Timber.e("authenticate() returns error", result)
+        else Timber.e(result, "authenticate() returns error")
         return result
     }
 }

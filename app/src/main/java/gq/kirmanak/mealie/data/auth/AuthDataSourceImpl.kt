@@ -20,7 +20,7 @@ class AuthDataSourceImpl @Inject constructor(
         val response = try {
             authService.getToken(username, password)
         } catch (e: Exception) {
-            Timber.e("Authenticate() exception", e)
+            Timber.e(e, "Authenticate() exception")
             return Result.failure(e)
         }
         Timber.d("authenticate() response is $response")

@@ -36,7 +36,7 @@ class RecipesRemoteMediator @Inject constructor(
         val recipes = try {
             network.requestRecipes(start = start, end = end)
         } catch (e: Exception) {
-            Timber.e("Can't load recipes", e)
+            Timber.e(e, "Can't load recipes")
             return MediatorResult.Error(e)
         }
 
@@ -46,7 +46,7 @@ class RecipesRemoteMediator @Inject constructor(
                 PREPEND, APPEND -> storage.saveRecipes(recipes)
             }
         } catch (e: Exception) {
-            Timber.e("Can't save recipes", e)
+            Timber.e(e, "Can't save recipes")
             return MediatorResult.Error(e)
         }
         val expectedCount = end - start
