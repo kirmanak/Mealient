@@ -20,6 +20,7 @@ class RecipeDataSourceImpl @Inject constructor(
     }
 
     private suspend fun getRecipeService(): RecipeService {
+        Timber.v("getRecipeService() called")
         val cachedService: RecipeService? = _recipeService
         val service: RecipeService = if (cachedService == null) {
             val baseUrl = checkNotNull(authRepo.getBaseUrl()) { "Base url is null" }

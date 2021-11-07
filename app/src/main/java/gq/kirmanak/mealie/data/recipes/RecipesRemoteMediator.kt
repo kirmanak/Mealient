@@ -8,6 +8,7 @@ import androidx.paging.RemoteMediator
 import gq.kirmanak.mealie.data.recipes.db.RecipeEntity
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealie.data.recipes.network.RecipeDataSource
+import timber.log.Timber
 import javax.inject.Inject
 
 @ExperimentalPagingApi
@@ -35,6 +36,7 @@ class RecipesRemoteMediator @Inject constructor(
         val recipes = try {
             network.requestRecipes(start = start, end = end)
         } catch (e: Exception) {
+            Timber.e("Can't load recipes", e)
             return MediatorResult.Error(e)
         }
 
@@ -44,6 +46,7 @@ class RecipesRemoteMediator @Inject constructor(
                 PREPEND, APPEND -> storage.saveRecipes(recipes)
             }
         } catch (e: Exception) {
+            Timber.e("Can't save recipes", e)
             return MediatorResult.Error(e)
         }
         val expectedCount = end - start
