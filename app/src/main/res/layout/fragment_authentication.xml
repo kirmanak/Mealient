@@ -6,15 +6,64 @@
 	android:layout_height="match_parent"
 	tools:context=".ui.auth.AuthenticationFragment">
 
-	<!-- TODO implement correct authentication screen -->
-	<TextView
-		android:id="@+id/textView"
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/email_input_layout"
 		android:layout_width="0dp"
-		android:layout_height="0dp"
-		android:gravity="center"
-		android:text="@string/app_name"
+		android:layout_height="wrap_content"
+		app:layout_constraintBottom_toTopOf="@+id/password_input_layout"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/email_input"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/fragment_authentication_input_hint_email"
+			android:inputType="textEmailAddress" />
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/password_input_layout"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		app:layout_constraintBottom_toTopOf="@+id/url_input_layout"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/email_input_layout">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/password_input"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/fragment_authentication_input_hint_password"
+			android:inputType="textPassword" />
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/url_input_layout"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		app:layout_constraintBottom_toTopOf="@+id/button"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/password_input_layout">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/url_input"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/fragment_authnetication_input_hint_url"
+			android:inputType="textUri" />
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<Button
+		android:id="@+id/button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/fragment_authentication_button_login"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toBottomOf="@+id/url_input_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

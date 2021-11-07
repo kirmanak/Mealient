@@ -1,3 +1,7 @@
 <resources>
 	<string name="app_name">Mealie</string>
+	<string name="fragment_authentication_input_hint_email">E-mail</string>
+	<string name="fragment_authentication_input_hint_password">Password</string>
+	<string name="fragment_authnetication_input_hint_url">Url</string>
+	<string name="fragment_authentication_button_login">Login</string>
 </resources>
