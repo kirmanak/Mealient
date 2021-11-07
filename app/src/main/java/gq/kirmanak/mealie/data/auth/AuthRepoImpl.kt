@@ -9,7 +9,7 @@ class AuthRepoImpl @Inject constructor(
 ) : AuthRepo {
     override suspend fun isAuthenticated(): Boolean {
         Timber.v("isAuthenticated")
-        val authenticated = storage.isAuthenticated()
+        val authenticated = getToken() != null
         Timber.d("isAuthenticated() response $authenticated")
         return authenticated
     }
@@ -26,5 +26,15 @@ class AuthRepoImpl @Inject constructor(
         val token = checkNotNull(authResult.getOrNull())
         storage.storeAuthData(token, baseUrl)
         return null
+    }
+
+    override suspend fun getBaseUrl(): String? {
+        Timber.v("getBaseUrl() called")
+        return storage.getBaseUrl()
+    }
+
+    override suspend fun getToken(): String? {
+        Timber.v("getToken() called")
+        return storage.getToken()
     }
 }
