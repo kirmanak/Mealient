@@ -10,13 +10,13 @@ import javax.inject.Inject
 
 @ExperimentalSerializationApi
 class RetrofitBuilder @Inject constructor(private val okHttpBuilder: OkHttpBuilder) {
-    fun buildRetrofit(baseUrl: String): Retrofit {
-        Timber.v("buildRetrofit() called with: baseUrl = $baseUrl")
+    fun buildRetrofit(baseUrl: String, token: String? = null): Retrofit {
+        Timber.v("buildRetrofit() called with: baseUrl = $baseUrl, token = $token")
         val url = if (baseUrl.startsWith("http")) baseUrl else "https://$baseUrl"
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl(url)
-            .client(okHttpBuilder.buildOkHttp())
+            .client(okHttpBuilder.buildOkHttp(token))
             .addConverterFactory(Json.asConverterFactory(contentType))
             .build()
     }

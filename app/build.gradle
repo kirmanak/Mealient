@@ -76,10 +76,10 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
     testImplementation "androidx.paging:paging-common-ktx:$paging_version"
 
-    def room_version = "2.3.0"
+    def room_version = "2.4.0-beta01"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    implementation "androidx.room:room-paging:2.4.0-beta01"
+    implementation "androidx.room:room-paging:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
 

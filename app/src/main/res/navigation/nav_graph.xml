@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/nav_graph"
 	app:startDestination="@id/authenticationFragment">
 
 	<fragment
 		android:id="@+id/authenticationFragment"
 		android:name="gq.kirmanak.mealie.ui.auth.AuthenticationFragment"
-		android:label="AuthenticationFragment" />
+		android:label="AuthenticationFragment" >
+		<action
+			android:id="@+id/action_authenticationFragment_to_recipesFragment"
+			app:destination="@id/recipesFragment" />
+	</fragment>
+	<fragment
+		android:id="@+id/recipesFragment"
+		android:name="gq.kirmanak.mealie.ui.recipes.RecipesFragment"
+		android:label="fragment_recipes"
+		tools:layout="@layout/fragment_recipes" />
 </navigation>

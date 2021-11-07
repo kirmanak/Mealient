@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealie.databinding.FragmentAuthenticationBinding
@@ -46,6 +47,7 @@ class AuthenticationFragment : Fragment() {
     private fun checkIfAuthenticatedAlready() {
         Timber.v("checkIfAuthenticatedAlready() called")
         lifecycleScope.launchWhenCreated {
+            if (viewModel.isAuthenticated()) navigateToRecipes()
             Toast.makeText(
                 requireContext(),
                 if (viewModel.isAuthenticated()) "User is authenticated"
@@ -53,6 +55,10 @@ class AuthenticationFragment : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    private fun navigateToRecipes() {
+        findNavController().navigate(AuthenticationFragmentDirections.actionAuthenticationFragmentToRecipesFragment())
     }
 
     private fun onLoginClicked() {
@@ -73,6 +79,7 @@ class AuthenticationFragment : Fragment() {
         }
         lifecycleScope.launchWhenResumed {
             val exception = viewModel.authenticate(email, pass, url)
+            if (exception == null) navigateToRecipes()
             Toast.makeText(
                 requireContext(),
                 "Exception is ${exception?.message ?: "null"}",
