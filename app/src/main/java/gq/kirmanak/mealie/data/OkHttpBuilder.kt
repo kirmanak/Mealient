@@ -14,7 +14,7 @@ class OkHttpBuilder @Inject constructor() {
     }
 
     private fun buildLoggingInterceptor() : Interceptor {
-        val interceptor = HttpLoggingInterceptor { message -> Timber.v(message) }
+        val interceptor = HttpLoggingInterceptor { message -> Timber.tag("OkHttp").v(message) }
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         return interceptor
     }
