@@ -11,7 +11,9 @@
 		android:label="AuthenticationFragment" >
 		<action
 			android:id="@+id/action_authenticationFragment_to_recipesFragment"
-			app:destination="@id/recipesFragment" />
+			app:destination="@id/recipesFragment"
+			app:popUpTo="@id/nav_graph"
+			app:popUpToInclusive="true" />
 	</fragment>
 	<fragment
 		android:id="@+id/recipesFragment"
