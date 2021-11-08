@@ -31,7 +31,7 @@ class RecipesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recipes.layoutManager = LinearLayoutManager(requireContext())
-        val recipesPagingAdapter = RecipesPagingAdapter()
+        val recipesPagingAdapter = RecipesPagingAdapter(viewModel)
         binding.recipes.adapter = recipesPagingAdapter
         lifecycleScope.launchWhenResumed {
             viewModel.recipeFlow.collectLatest {

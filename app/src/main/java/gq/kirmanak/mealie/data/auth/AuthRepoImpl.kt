@@ -20,11 +20,12 @@ class AuthRepoImpl @Inject constructor(
         baseUrl: String
     ): Throwable? {
         Timber.v("authenticate() called with: username = $username, password = $password, baseUrl = $baseUrl")
-        val authResult = dataSource.authenticate(username, password, baseUrl)
+        val url = if (baseUrl.startsWith("http")) baseUrl else "https://$baseUrl"
+        val authResult = dataSource.authenticate(username, password, url)
         Timber.d("authenticate result is $authResult")
         if (authResult.isFailure) return authResult.exceptionOrNull()
         val token = checkNotNull(authResult.getOrNull())
-        storage.storeAuthData(token, baseUrl)
+        storage.storeAuthData(token, url)
         return null
     }
 

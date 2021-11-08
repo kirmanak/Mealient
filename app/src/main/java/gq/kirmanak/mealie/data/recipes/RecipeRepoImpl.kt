@@ -13,7 +13,7 @@ class RecipeRepoImpl @Inject constructor(
     private val storage: RecipeStorage
 ) : RecipeRepo {
     override fun createPager(): Pager<Int, RecipeEntity> {
-        val pagingConfig = PagingConfig(pageSize = 30)
+        val pagingConfig = PagingConfig(pageSize = 30, enablePlaceholders = false, prefetchDistance = 10)
         return Pager(pagingConfig, 0, mediator) {
             storage.queryRecipes()
         }

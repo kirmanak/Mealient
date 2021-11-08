@@ -12,10 +12,9 @@ import javax.inject.Inject
 class RetrofitBuilder @Inject constructor(private val okHttpBuilder: OkHttpBuilder) {
     fun buildRetrofit(baseUrl: String, token: String? = null): Retrofit {
         Timber.v("buildRetrofit() called with: baseUrl = $baseUrl, token = $token")
-        val url = if (baseUrl.startsWith("http")) baseUrl else "https://$baseUrl"
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
-            .baseUrl(url)
+            .baseUrl(baseUrl)
             .client(okHttpBuilder.buildOkHttp(token))
             .addConverterFactory(Json.asConverterFactory(contentType))
             .build()
