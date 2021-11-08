@@ -4,7 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 @Entity(tableName = "recipes", indices = [Index(value = ["remote_id"], unique = true)])
 data class RecipeEntity(
@@ -15,6 +16,6 @@ data class RecipeEntity(
     @ColumnInfo(name = "image") val image: String,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "rating") val rating: Int?,
-    @ColumnInfo(name = "date_added") val dateAdded: Instant,
-    @ColumnInfo(name = "date_updated") val dateUpdated: Instant
+    @ColumnInfo(name = "date_added") val dateAdded: LocalDate,
+    @ColumnInfo(name = "date_updated") val dateUpdated: LocalDateTime
 )

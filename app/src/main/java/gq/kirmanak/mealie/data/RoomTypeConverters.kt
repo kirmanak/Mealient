@@ -1,12 +1,22 @@
 package gq.kirmanak.mealie.data
 
 import androidx.room.TypeConverter
-import kotlinx.datetime.Instant
+import kotlinx.datetime.*
 
 object RoomTypeConverters {
     @TypeConverter
-    fun instantToTimestamp(instant: Instant) = instant.toEpochMilliseconds()
+    fun localDateTimeToTimestamp(localDateTime: LocalDateTime) =
+        localDateTime.toInstant(TimeZone.UTC).toEpochMilliseconds()
 
     @TypeConverter
-    fun timestampToInstant(timestamp: Long) = Instant.fromEpochMilliseconds(timestamp)
+    fun timestampToLocalDateTime(timestamp: Long) =
+        Instant.fromEpochMilliseconds(timestamp).toLocalDateTime(TimeZone.UTC)
+
+    @TypeConverter
+    fun localDateToTimeStamp(date: LocalDate) =
+        localDateTimeToTimestamp(date.atTime(0, 0))
+
+    @TypeConverter
+    fun timestampToLocalDate(timestamp: Long) =
+        timestampToLocalDateTime(timestamp).date
 }

@@ -1,6 +1,7 @@
 package gq.kirmanak.mealie.data.recipes.network
 
-import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,6 +15,6 @@ data class GetRecipeSummaryResponse(
     @SerialName("recipeCategory") val recipeCategories: List<String>,
     @SerialName("tags") val tags: List<String>,
     @SerialName("rating") val rating: Int?,
-    @SerialName("dateAdded") val dateAdded: Instant,
-    @SerialName("dateUpdated") val dateUpdated: Instant
+    @SerialName("dateAdded") val dateAdded: LocalDate,
+    @SerialName("dateUpdated") val dateUpdated: LocalDateTime
 )
