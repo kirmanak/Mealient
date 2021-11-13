@@ -36,6 +36,10 @@ android {
     buildFeatures {
         viewBinding true
     }
+    lintOptions {
+        disable 'ObsoleteLintCustomCheck'
+        enable 'ConvertToWebp', 'DuplicateStrings', 'EasterEgg', 'ExpensiveAssertion', 'IconExpectedSize', 'ImplicitSamInstance', 'InvalidPackage', 'KotlinPropertyAccess', 'LambdaLast', 'MinSdkTooLow', 'NegativeMargin', 'NoHardKeywords', 'Registered', 'RequiredSize', 'UnknownNullness', 'WrongThreadInterprocedural'
+    }
 }
 
 dependencies {

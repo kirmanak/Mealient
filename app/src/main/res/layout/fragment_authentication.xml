@@ -43,7 +43,7 @@
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/url_input_layout"
 		style="@style/SmallMarginTextInputLayoutStyle"
-		android:hint="@string/fragment_authnetication_input_hint_url"
+		android:hint="@string/fragment_authentication_input_hint_url"
 		app:layout_constraintBottom_toTopOf="@+id/button"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
