@@ -43,4 +43,10 @@ interface RecipeDao {
 
     @Query("SELECT * FROM recipes")
     suspend fun queryAllRecipes(): List<RecipeEntity>
+
+    @Query("SELECT * FROM category_recipe")
+    suspend fun queryAllCategoryRecipes(): List<CategoryRecipeEntity>
+
+    @Query("SELECT * FROM tag_recipe")
+    suspend fun queryAllTagRecipes(): List<TagRecipeEntity>
 }
