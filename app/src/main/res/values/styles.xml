@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="SmallMarginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginStart">@dimen/margin_small</item>
+		<item name="android:layout_marginTop">@dimen/margin_small</item>
+		<item name="android:layout_marginEnd">@dimen/margin_small</item>
+		<item name="android:layout_marginBottom">@dimen/margin_small</item>
+	</style>
+
+	<style name="SmallMarginButton">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginStart">@dimen/margin_small</item>
+		<item name="android:layout_marginTop">@dimen/margin_small</item>
+		<item name="android:layout_marginEnd">@dimen/margin_small</item>
+		<item name="android:layout_marginBottom">@dimen/margin_small</item>
+	</style>
+</resources>

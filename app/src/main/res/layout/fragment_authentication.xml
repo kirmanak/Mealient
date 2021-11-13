@@ -8,13 +8,7 @@
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/email_input_layout"
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_small"
-		android:layout_marginTop="@dimen/margin_small"
-		android:layout_marginEnd="@dimen/margin_small"
-		android:layout_marginBottom="@dimen/margin_small"
+		style="@style/SmallMarginTextInputLayoutStyle"
 		android:hint="@string/fragment_authentication_input_hint_email"
 		app:layout_constraintBottom_toTopOf="@+id/password_input_layout"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -32,13 +26,7 @@
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/password_input_layout"
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_small"
-		android:layout_marginTop="@dimen/margin_small"
-		android:layout_marginEnd="@dimen/margin_small"
-		android:layout_marginBottom="@dimen/margin_small"
+		style="@style/SmallMarginTextInputLayoutStyle"
 		android:hint="@string/fragment_authentication_input_hint_password"
 		app:layout_constraintBottom_toTopOf="@+id/url_input_layout"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -54,13 +42,7 @@
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/url_input_layout"
-		style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_small"
-		android:layout_marginTop="@dimen/margin_small"
-		android:layout_marginEnd="@dimen/margin_small"
-		android:layout_marginBottom="@dimen/margin_small"
+		style="@style/SmallMarginTextInputLayoutStyle"
 		android:hint="@string/fragment_authnetication_input_hint_url"
 		app:layout_constraintBottom_toTopOf="@+id/button"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -76,15 +58,10 @@
 
 	<Button
 		android:id="@+id/button"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_small"
-		android:layout_marginTop="@dimen/margin_small"
-		android:layout_marginEnd="@dimen/margin_small"
-		android:layout_marginBottom="@dimen/margin_small"
 		android:text="@string/fragment_authentication_button_login"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
+		style="@style/SmallMarginButton"
 		app:layout_constraintTop_toBottomOf="@+id/url_input_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>
