@@ -72,9 +72,12 @@ stages:
 lintDebug:
   interruptible: true
   stage: lint
-  needs: []
+  needs: [ ]
   script:
     - ./gradlew -Pci --console=plain lintDebug -PbuildDir=lint
+  artifacts:
+    paths:
+      - app/lint
 
 # Make Project
 assembleDebug:
