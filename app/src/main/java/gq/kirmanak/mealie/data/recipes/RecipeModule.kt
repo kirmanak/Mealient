@@ -7,6 +7,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorageImpl
+import gq.kirmanak.mealie.data.recipes.impl.RecipeImageLoaderImpl
+import gq.kirmanak.mealie.data.recipes.impl.RecipeRepoImpl
 import gq.kirmanak.mealie.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealie.data.recipes.network.RecipeDataSourceImpl
 import kotlinx.serialization.ExperimentalSerializationApi

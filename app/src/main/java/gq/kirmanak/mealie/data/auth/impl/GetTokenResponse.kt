@@ -1,4 +1,4 @@
-package gq.kirmanak.mealie.data.auth
+package gq.kirmanak.mealie.data.auth.impl
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

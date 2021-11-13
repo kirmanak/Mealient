@@ -1,8 +1,9 @@
-package gq.kirmanak.mealie.data.recipes
+package gq.kirmanak.mealie.data.recipes.impl
 
 import android.widget.ImageView
 import gq.kirmanak.mealie.R
 import gq.kirmanak.mealie.data.auth.AuthRepo
+import gq.kirmanak.mealie.data.recipes.RecipeImageLoader
 import gq.kirmanak.mealie.ui.ImageLoader
 import javax.inject.Inject
 

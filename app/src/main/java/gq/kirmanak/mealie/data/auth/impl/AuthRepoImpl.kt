@@ -1,5 +1,8 @@
-package gq.kirmanak.mealie.data.auth
+package gq.kirmanak.mealie.data.auth.impl
 
+import gq.kirmanak.mealie.data.auth.AuthDataSource
+import gq.kirmanak.mealie.data.auth.AuthRepo
+import gq.kirmanak.mealie.data.auth.AuthStorage
 import timber.log.Timber
 import javax.inject.Inject
 

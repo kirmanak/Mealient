@@ -1,4 +1,4 @@
-package gq.kirmanak.mealie.data.auth
+package gq.kirmanak.mealie.data.auth.impl
 
 import okhttp3.Interceptor
 import okhttp3.Response

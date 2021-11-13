@@ -1,6 +1,6 @@
 package gq.kirmanak.mealie.data.recipes.network
 
-import gq.kirmanak.mealie.data.RetrofitBuilder
+import gq.kirmanak.mealie.data.impl.RetrofitBuilder
 import gq.kirmanak.mealie.data.auth.AuthRepo
 import kotlinx.serialization.ExperimentalSerializationApi
 import timber.log.Timber

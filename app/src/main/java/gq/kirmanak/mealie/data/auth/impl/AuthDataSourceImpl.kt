@@ -1,6 +1,8 @@
-package gq.kirmanak.mealie.data.auth
+package gq.kirmanak.mealie.data.auth.impl
 
-import gq.kirmanak.mealie.data.RetrofitBuilder
+import gq.kirmanak.mealie.data.impl.RetrofitBuilder
+import gq.kirmanak.mealie.data.auth.AuthDataSource
+import gq.kirmanak.mealie.data.auth.AuthService
 import kotlinx.serialization.ExperimentalSerializationApi
 import retrofit2.create
 import timber.log.Timber

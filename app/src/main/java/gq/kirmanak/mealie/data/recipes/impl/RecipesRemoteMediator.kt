@@ -1,4 +1,4 @@
-package gq.kirmanak.mealie.data.recipes
+package gq.kirmanak.mealie.data.recipes.impl
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType

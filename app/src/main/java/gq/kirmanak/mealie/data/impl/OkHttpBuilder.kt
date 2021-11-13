@@ -1,6 +1,6 @@
-package gq.kirmanak.mealie.data
+package gq.kirmanak.mealie.data.impl
 
-import gq.kirmanak.mealie.data.auth.AuthOkHttpInterceptor
+import gq.kirmanak.mealie.data.auth.impl.AuthOkHttpInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

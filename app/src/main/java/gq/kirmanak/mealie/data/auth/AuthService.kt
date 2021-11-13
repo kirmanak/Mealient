@@ -1,5 +1,6 @@
 package gq.kirmanak.mealie.data.auth
 
+import gq.kirmanak.mealie.data.auth.impl.GetTokenResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST

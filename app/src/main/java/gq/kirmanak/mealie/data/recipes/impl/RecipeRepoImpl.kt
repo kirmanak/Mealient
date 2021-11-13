@@ -1,8 +1,9 @@
-package gq.kirmanak.mealie.data.recipes
+package gq.kirmanak.mealie.data.recipes.impl
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import gq.kirmanak.mealie.data.recipes.RecipeRepo
 import gq.kirmanak.mealie.data.recipes.db.RecipeEntity
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
 import javax.inject.Inject

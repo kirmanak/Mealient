@@ -3,6 +3,7 @@ package gq.kirmanak.mealie.data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import gq.kirmanak.mealie.data.impl.RoomTypeConverters
 import gq.kirmanak.mealie.data.recipes.db.*
 import javax.inject.Singleton
 

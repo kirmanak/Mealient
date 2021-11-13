@@ -1,9 +1,10 @@
-package gq.kirmanak.mealie.data.auth
+package gq.kirmanak.mealie.data.auth.impl
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import gq.kirmanak.mealie.data.auth.AuthStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
