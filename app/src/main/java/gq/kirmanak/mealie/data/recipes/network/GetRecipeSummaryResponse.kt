@@ -11,7 +11,7 @@ data class GetRecipeSummaryResponse(
     @SerialName("name") val name: String,
     @SerialName("slug") val slug: String,
     @SerialName("image") val image: String,
-    @SerialName("description") val description: String,
+    @SerialName("description") val description: String = "",
     @SerialName("recipeCategory") val recipeCategories: List<String>,
     @SerialName("tags") val tags: List<String>,
     @SerialName("rating") val rating: Int?,
