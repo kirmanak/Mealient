@@ -39,7 +39,7 @@ class RecipesFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             Timber.d("onViewCreated: coroutine started")
             viewModel.recipeFlow.collectLatest {
-                Timber.d("onViewCreated: received $it")
+                Timber.d("onViewCreated: received update")
                 recipesPagingAdapter.submitData(it)
             }
         }
