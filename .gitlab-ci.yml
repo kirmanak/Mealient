@@ -19,7 +19,7 @@ lintDebug:
   stage: lint
   needs: [ ]
   script:
-    - ./gradlew lintDebug
+    - ./gradlew lintDebug -PbuildDir=lint
   artifacts:
     when: always
     paths:
