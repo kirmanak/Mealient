@@ -2,12 +2,14 @@ package gq.kirmanak.mealie.data.auth.impl
 
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
+import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_TOKEN
+import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_URL
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class AuthStorageImplTest : BaseTest() {
+class AuthStorageImplTest : HiltRobolectricTest() {
     @Inject
     lateinit var subject: AuthStorageImpl
 
@@ -37,10 +39,4 @@ class AuthStorageImplTest : BaseTest() {
     fun `when reading url without storing data then returns null`() = runBlocking {
         assertThat(subject.getBaseUrl()).isNull()
     }
-
-    companion object {
-        private const val TEST_TOKEN = "TEST_TOKEN"
-        private const val TEST_URL = "TEST_URL"
-    }
-
 }

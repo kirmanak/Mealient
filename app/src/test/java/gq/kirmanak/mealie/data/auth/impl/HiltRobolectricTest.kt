@@ -10,7 +10,7 @@ import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
 @Config(application = HiltTestApplication::class)
-abstract class BaseTest {
+abstract class HiltRobolectricTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
