@@ -4,7 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorageImpl
 import gq.kirmanak.mealie.data.recipes.impl.RecipeImageLoaderImpl
@@ -16,7 +16,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalPagingApi
 @ExperimentalSerializationApi
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 interface RecipeModule {
     @Binds
     fun provideRecipeDataSource(recipeDataSourceImpl: RecipeDataSourceImpl): RecipeDataSource
