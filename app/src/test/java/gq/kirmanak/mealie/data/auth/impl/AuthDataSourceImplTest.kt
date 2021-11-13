@@ -1,10 +1,7 @@
 package gq.kirmanak.mealie.data.auth.impl
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -13,10 +10,7 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.annotation.Config
 import retrofit2.HttpException
 import java.nio.charset.Charset
 import javax.inject.Inject
@@ -24,21 +18,11 @@ import javax.inject.Inject
 @ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
-@RunWith(AndroidJUnit4::class)
-@Config(application = HiltTestApplication::class)
-class AuthDataSourceImplTest {
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
+class AuthDataSourceImplTest : BaseTest() {
     @Inject
     lateinit var subject: AuthDataSourceImpl
     private lateinit var mockServer: MockWebServer
     private lateinit var serverUrl: String
-
-    @Before
-    fun inject() {
-        hiltRule.inject()
-    }
 
     @Before
     fun startMockServer() {
