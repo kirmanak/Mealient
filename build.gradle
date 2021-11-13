@@ -4,7 +4,7 @@ buildscript {
     ext.nav_version = "2.4.0-beta02"
 
     // https://dagger.dev/hilt/gradle-setup
-    ext.hilt_version = "2.38.1"
+    ext.hilt_version = "2.40.1"
 
     // https://kotlinlang.org/docs/gradle.html
     ext.kotlin_version = "1.5.31"
