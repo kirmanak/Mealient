@@ -1,4 +1,4 @@
-image: androidsdk/android-30
+image: runmymind/docker-android-sdk:ubuntu-standalone
 
 before_script:
   # Shouldn't be necessary, but just to be sure
