@@ -1,5 +1,6 @@
 package gq.kirmanak.mealie.data.impl
 
+import gq.kirmanak.mealie.BuildConfig
 import gq.kirmanak.mealie.data.auth.impl.AuthOkHttpInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -11,7 +12,7 @@ class OkHttpBuilder @Inject constructor() {
     fun buildOkHttp(token: String?): OkHttpClient {
         Timber.v("buildOkHttp() called with: token = $token")
         val builder = OkHttpClient.Builder()
-            .addNetworkInterceptor(buildLoggingInterceptor())
+        if (BuildConfig.DEBUG) builder.addNetworkInterceptor(buildLoggingInterceptor())
         if (token != null) builder.addNetworkInterceptor(AuthOkHttpInterceptor(token))
         return builder.build()
     }
