@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -48,12 +47,6 @@ class AuthenticationFragment : Fragment() {
         Timber.v("checkIfAuthenticatedAlready() called")
         lifecycleScope.launchWhenCreated {
             if (viewModel.isAuthenticated()) navigateToRecipes()
-            Toast.makeText(
-                requireContext(),
-                if (viewModel.isAuthenticated()) "User is authenticated"
-                else "User isn't authenticated",
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 
@@ -80,11 +73,6 @@ class AuthenticationFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             val exception = viewModel.authenticate(email, pass, url)
             if (exception == null) navigateToRecipes()
-            Toast.makeText(
-                requireContext(),
-                "Exception is ${exception?.message ?: "null"}",
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 
