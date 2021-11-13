@@ -12,13 +12,13 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalSerializationApi
 @Module
 @InstallIn(ViewModelComponent::class)
-abstract class AuthModule {
+interface AuthModule {
     @Binds
-    abstract fun bindAuthDataSource(authDataSourceImpl: AuthDataSourceImpl): AuthDataSource
+    fun bindAuthDataSource(authDataSourceImpl: AuthDataSourceImpl): AuthDataSource
 
     @Binds
-    abstract fun bindAuthStorage(authStorageImpl: AuthStorageImpl): AuthStorage
+    fun bindAuthStorage(authStorageImpl: AuthStorageImpl): AuthStorage
 
     @Binds
-    abstract fun bindAuthRepo(authRepo: AuthRepoImpl): AuthRepo
+    fun bindAuthRepo(authRepo: AuthRepoImpl): AuthRepo
 }

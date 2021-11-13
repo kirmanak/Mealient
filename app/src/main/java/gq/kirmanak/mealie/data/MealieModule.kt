@@ -10,7 +10,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class MealieModule {
+interface MealieModule {
     companion object {
         @Provides
         fun createDb(@ApplicationContext context: Context): MealieDb {
