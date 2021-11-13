@@ -1,8 +1,8 @@
 package gq.kirmanak.mealie.data.auth.impl
 
-import gq.kirmanak.mealie.data.impl.RetrofitBuilder
 import gq.kirmanak.mealie.data.auth.AuthDataSource
 import gq.kirmanak.mealie.data.auth.AuthService
+import gq.kirmanak.mealie.data.impl.RetrofitBuilder
 import kotlinx.serialization.ExperimentalSerializationApi
 import retrofit2.create
 import timber.log.Timber
@@ -16,16 +16,11 @@ class AuthDataSourceImpl @Inject constructor(
         username: String,
         password: String,
         baseUrl: String
-    ): Result<String> {
+    ): String {
         Timber.v("authenticate() called with: username = $username, password = $password, baseUrl = $baseUrl")
         val authService = retrofitBuilder.buildRetrofit(baseUrl).create<AuthService>()
-        val response = try {
-            authService.getToken(username, password)
-        } catch (e: Exception) {
-            Timber.e(e, "Authenticate() exception")
-            return Result.failure(e)
-        }
+        val response = authService.getToken(username, password)
         Timber.d("authenticate() response is $response")
-        return Result.success(response.accessToken)
+        return response.accessToken
     }
 }

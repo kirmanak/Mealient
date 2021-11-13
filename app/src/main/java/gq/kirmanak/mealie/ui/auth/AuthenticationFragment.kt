@@ -71,8 +71,13 @@ class AuthenticationFragment : Fragment() {
             } ?: return
         }
         lifecycleScope.launchWhenResumed {
-            val exception = viewModel.authenticate(email, pass, url)
-            if (exception == null) navigateToRecipes()
+            runCatching {
+                viewModel.authenticate(email, pass, url)
+            }.onSuccess {
+                navigateToRecipes()
+            }.onFailure {
+                Timber.e(it, "Can't authenticate")
+            }
         }
     }
 

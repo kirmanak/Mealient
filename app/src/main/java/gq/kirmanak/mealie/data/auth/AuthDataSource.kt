@@ -4,5 +4,5 @@ interface AuthDataSource {
     /**
      * Tries to acquire authentication token using the provided credentials on specified server.
      */
-    suspend fun authenticate(username: String, password: String, baseUrl: String): Result<String>
+    suspend fun authenticate(username: String, password: String, baseUrl: String): String
 }

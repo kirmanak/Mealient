@@ -21,11 +21,8 @@ class AuthenticationViewModel @Inject constructor(
         return result
     }
 
-    suspend fun authenticate(username: String, password: String, baseUrl: String): Throwable? {
+    suspend fun authenticate(username: String, password: String, baseUrl: String) {
         Timber.v("authenticate() called with: username = $username, password = $password, baseUrl = $baseUrl")
-        val result = authRepo.authenticate(username, password, baseUrl)
-        if (result == null) Timber.d("authenticate() returns null")
-        else Timber.e(result, "authenticate() returns error")
-        return result
+        authRepo.authenticate(username, password, baseUrl)
     }
 }
