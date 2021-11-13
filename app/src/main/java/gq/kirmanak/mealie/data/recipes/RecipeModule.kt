@@ -24,4 +24,7 @@ interface RecipeModule {
 
     @Binds
     fun provideRecipeRepo(recipeRepoImpl: RecipeRepoImpl): RecipeRepo
+
+    @Binds
+    fun provideRecipeImageLoader(recipeImageLoaderImpl: RecipeImageLoaderImpl): RecipeImageLoader
 }
