@@ -1,21 +1,18 @@
 image: runmymind/docker-android-sdk:ubuntu-standalone
 
 before_script:
-  # Shouldn't be necessary, but just to be sure
-  - chmod +x ./gradlew
   # Ask gradle to put everything to .gradle dir so that we can cache it
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
 cache:
   key: "mealie-android"
   paths:
-     - .gradle/wrapper
-     - .gradle/caches
+    - .gradle
 
 stages:
-    - lint
-    - build
-    - test
+  - lint
+  - build
+  - test
 
 lintDebug:
   interruptible: true
@@ -31,7 +28,7 @@ lintDebug:
 assembleDebug:
   interruptible: true
   stage: build
-  needs: []
+  needs: [ ]
   script:
     - ./gradlew assembleDebug
   artifacts:
@@ -41,7 +38,7 @@ assembleDebug:
 debugTests:
   interruptible: true
   stage: test
-  needs: ["assembleDebug"]
+  needs: [ "assembleDebug" ]
   script:
     - ./gradlew testDebug
   artifacts:
