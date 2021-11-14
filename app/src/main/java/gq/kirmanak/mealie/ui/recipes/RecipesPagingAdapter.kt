@@ -22,14 +22,14 @@ class RecipesPagingAdapter(
         val binding = ViewHolderRecipeBinding.inflate(inflater, parent, false)
         return RecipeViewHolder(binding, viewModel)
     }
-}
 
-private object RecipeDiffCallback : DiffUtil.ItemCallback<RecipeEntity>() {
-    override fun areItemsTheSame(oldItem: RecipeEntity, newItem: RecipeEntity): Boolean {
-        return oldItem.localId == newItem.localId
-    }
+    private object RecipeDiffCallback : DiffUtil.ItemCallback<RecipeEntity>() {
+        override fun areItemsTheSame(oldItem: RecipeEntity, newItem: RecipeEntity): Boolean {
+            return oldItem.remoteId == newItem.remoteId
+        }
 
-    override fun areContentsTheSame(oldItem: RecipeEntity, newItem: RecipeEntity): Boolean {
-        return oldItem == newItem
+        override fun areContentsTheSame(oldItem: RecipeEntity, newItem: RecipeEntity): Boolean {
+            return oldItem.name == newItem.name && oldItem.slug == newItem.slug
+        }
     }
 }
