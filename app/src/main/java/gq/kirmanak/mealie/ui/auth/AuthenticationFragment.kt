@@ -55,6 +55,7 @@ class AuthenticationFragment : Fragment() {
     }
 
     private fun navigateToRecipes() {
+        Timber.v("navigateToRecipes() called")
         findNavController().navigate(AuthenticationFragmentDirections.actionAuthenticationFragmentToRecipesFragment())
     }
 
