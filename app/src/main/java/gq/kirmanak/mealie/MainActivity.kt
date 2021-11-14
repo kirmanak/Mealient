@@ -45,11 +45,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         Timber.v("onCreateOptionsMenu() called with: menu = $menu")
         menuInflater.inflate(R.menu.main_toolbar, menu)
-        return true
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        Timber.v("onPrepareOptionsMenu() called with: menu = $menu")
         menu.findItem(R.id.logout).isVisible = isAuthenticated
         return true
     }
