@@ -24,4 +24,9 @@ class AuthenticationViewModel @Inject constructor(
         Timber.v("authenticationStatuses() called")
         return authRepo.authenticationStatuses()
     }
+
+    fun logout() {
+        Timber.v("logout() called")
+        authRepo.logout()
+    }
 }

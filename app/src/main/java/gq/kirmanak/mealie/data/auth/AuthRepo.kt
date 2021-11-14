@@ -10,4 +10,6 @@ interface AuthRepo {
     suspend fun getToken(): String?
 
     fun authenticationStatuses(): Flow<Boolean>
+
+    fun logout()
 }

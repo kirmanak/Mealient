@@ -53,4 +53,25 @@ class AuthStorageImplTest : HiltRobolectricTest() {
         subject.storeAuthData(TEST_TOKEN, TEST_URL)
         assertThat(subject.tokenObservable().first()).isEqualTo(TEST_TOKEN)
     }
+
+    @Test
+    fun `when clearAuthData then first token is null`() = runBlocking {
+        subject.storeAuthData(TEST_TOKEN, TEST_URL)
+        subject.clearAuthData()
+        assertThat(subject.tokenObservable().first()).isNull()
+    }
+
+    @Test
+    fun `when clearAuthData then getToken returns null`() = runBlocking {
+        subject.storeAuthData(TEST_TOKEN, TEST_URL)
+        subject.clearAuthData()
+        assertThat(subject.getToken()).isNull()
+    }
+
+    @Test
+    fun `when clearAuthData then getBaseUrl returns null`() = runBlocking {
+        subject.storeAuthData(TEST_TOKEN, TEST_URL)
+        subject.clearAuthData()
+        assertThat(subject.getBaseUrl()).isNull()
+    }
 }

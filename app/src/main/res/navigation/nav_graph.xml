@@ -19,5 +19,11 @@
 		android:id="@+id/recipesFragment"
 		android:name="gq.kirmanak.mealie.ui.recipes.RecipesFragment"
 		android:label="fragment_recipes"
-		tools:layout="@layout/fragment_recipes" />
+		tools:layout="@layout/fragment_recipes">
+		<action
+			android:id="@+id/action_recipesFragment_to_authenticationFragment"
+			app:destination="@id/authenticationFragment"
+			app:popUpTo="@id/nav_graph"
+			app:popUpToInclusive="true" />
+	</fragment>
 </navigation>

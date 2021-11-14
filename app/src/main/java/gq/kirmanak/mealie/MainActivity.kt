@@ -2,6 +2,7 @@ package gq.kirmanak.mealie
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -47,5 +48,16 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.main_toolbar, menu)
         menu.findItem(R.id.logout).isVisible = isAuthenticated
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Timber.v("onOptionsItemSelected() called with: item = $item")
+        val result = if (item.itemId == R.id.logout) {
+            authViewModel.logout()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+        return result
     }
 }

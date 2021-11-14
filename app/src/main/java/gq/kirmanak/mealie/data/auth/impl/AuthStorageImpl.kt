@@ -25,7 +25,7 @@ class AuthStorageImpl @Inject constructor(@ApplicationContext private val contex
     private val sharedPreferences: SharedPreferences
         get() = PreferenceManager.getDefaultSharedPreferences(context)
 
-    override suspend fun storeAuthData(token: String, baseUrl: String) {
+    override fun storeAuthData(token: String, baseUrl: String) {
         Timber.v("storeAuthData() called with: token = $token, baseUrl = $baseUrl")
         sharedPreferences.edit()
             .putString(TOKEN_KEY, token)
@@ -45,6 +45,10 @@ class AuthStorageImpl @Inject constructor(@ApplicationContext private val contex
         val token = getString(TOKEN_KEY)
         Timber.d("getToken: token is $token")
         return token
+    }
+
+    private suspend fun getString(key: String): String? = withContext(Dispatchers.Default) {
+        sharedPreferences.getString(key, null)
     }
 
     override fun tokenObservable(): Flow<String?> {
@@ -70,7 +74,11 @@ class AuthStorageImpl @Inject constructor(@ApplicationContext private val contex
         }
     }
 
-    private suspend fun getString(key: String): String? = withContext(Dispatchers.Default) {
-        sharedPreferences.getString(key, null)
+    override fun clearAuthData() {
+        Timber.v("clearAuthData() called")
+        sharedPreferences.edit()
+            .remove(TOKEN_KEY)
+            .remove(BASE_URL_KEY)
+            .apply()
     }
 }

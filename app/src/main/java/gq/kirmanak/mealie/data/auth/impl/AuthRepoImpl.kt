@@ -38,4 +38,9 @@ class AuthRepoImpl @Inject constructor(
         Timber.v("authenticationStatuses() called")
         return storage.tokenObservable().map { it != null }
     }
+
+    override fun logout() {
+        Timber.v("logout() called")
+        storage.clearAuthData()
+    }
 }
