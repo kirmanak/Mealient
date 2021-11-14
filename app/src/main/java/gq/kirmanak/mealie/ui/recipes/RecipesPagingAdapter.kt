@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import gq.kirmanak.mealie.data.recipes.db.RecipeEntity
 import gq.kirmanak.mealie.databinding.ViewHolderRecipeBinding
 import timber.log.Timber
@@ -22,16 +21,6 @@ class RecipesPagingAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = ViewHolderRecipeBinding.inflate(inflater, parent, false)
         return RecipeViewHolder(binding, viewModel)
-    }
-}
-
-class RecipeViewHolder(
-    private val binding: ViewHolderRecipeBinding,
-    private val recipeViewModel: RecipeViewModel
-) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: RecipeEntity?) {
-        binding.name.text = item?.name
-        recipeViewModel.loadRecipeImage(binding.image, item)
     }
 }
 
