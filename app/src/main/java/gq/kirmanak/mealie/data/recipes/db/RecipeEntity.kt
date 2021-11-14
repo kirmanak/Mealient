@@ -18,4 +18,8 @@ data class RecipeEntity(
     @ColumnInfo(name = "rating") val rating: Int?,
     @ColumnInfo(name = "date_added") val dateAdded: LocalDate,
     @ColumnInfo(name = "date_updated") val dateUpdated: LocalDateTime
-)
+) {
+    override fun toString(): String {
+        return "RecipeEntity(localId=$localId, remoteId=$remoteId, name='$name')"
+    }
+}
