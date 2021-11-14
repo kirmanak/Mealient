@@ -7,9 +7,9 @@ import javax.inject.Inject
 
 class ImageLoaderGlide @Inject constructor() : ImageLoader {
     override fun loadImage(url: String?, @DrawableRes placeholderId: Int, imageView: ImageView) {
-        with(GlideApp.with(imageView)) {
-            if (url.isNullOrBlank()) clear(imageView)
-            else load(url).placeholder(placeholderId).into(imageView)
-        }
+        GlideApp.with(imageView)
+            .load(url)
+            .placeholder(placeholderId)
+            .into(imageView)
     }
 }
