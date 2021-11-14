@@ -14,7 +14,7 @@ class RecipeImageLoaderImpl @Inject constructor(
     override suspend fun loadRecipeImage(view: ImageView, slug: String?) {
         val baseUrl = authRepo.getBaseUrl()
         val recipeImageUrl =
-            if (baseUrl.isNullOrBlank()) null
+            if (baseUrl.isNullOrBlank() || slug.isNullOrBlank()) null
             else "$baseUrl/api/media/recipes/$slug/images/original.webp"
         imageLoader.loadImage(recipeImageUrl, R.drawable.placeholder_recipe, view)
     }
