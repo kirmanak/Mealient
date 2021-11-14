@@ -7,8 +7,10 @@ import dagger.hilt.components.SingletonComponent
 import gq.kirmanak.mealie.data.auth.impl.AuthDataSourceImpl
 import gq.kirmanak.mealie.data.auth.impl.AuthRepoImpl
 import gq.kirmanak.mealie.data.auth.impl.AuthStorageImpl
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.serialization.ExperimentalSerializationApi
 
+@ExperimentalCoroutinesApi
 @ExperimentalSerializationApi
 @Module
 @InstallIn(SingletonComponent::class)

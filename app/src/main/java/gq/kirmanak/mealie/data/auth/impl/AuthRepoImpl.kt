@@ -3,6 +3,8 @@ package gq.kirmanak.mealie.data.auth.impl
 import gq.kirmanak.mealie.data.auth.AuthDataSource
 import gq.kirmanak.mealie.data.auth.AuthRepo
 import gq.kirmanak.mealie.data.auth.AuthStorage
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -10,13 +12,6 @@ class AuthRepoImpl @Inject constructor(
     private val dataSource: AuthDataSource,
     private val storage: AuthStorage
 ) : AuthRepo {
-    override suspend fun isAuthenticated(): Boolean {
-        Timber.v("isAuthenticated")
-        val authenticated = getToken() != null
-        Timber.d("isAuthenticated() response $authenticated")
-        return authenticated
-    }
-
     override suspend fun authenticate(
         username: String,
         password: String,
@@ -37,5 +32,10 @@ class AuthRepoImpl @Inject constructor(
     override suspend fun getToken(): String? {
         Timber.v("getToken() called")
         return storage.getToken()
+    }
+
+    override fun authenticationStatuses(): Flow<Boolean> {
+        Timber.v("authenticationStatuses() called")
+        return storage.tokenObservable().map { it != null }
     }
 }

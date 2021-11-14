@@ -1,11 +1,13 @@
 package gq.kirmanak.mealie.data.auth
 
-interface AuthRepo {
-    suspend fun isAuthenticated(): Boolean
+import kotlinx.coroutines.flow.Flow
 
+interface AuthRepo {
     suspend fun authenticate(username: String, password: String, baseUrl: String)
 
     suspend fun getBaseUrl(): String?
 
     suspend fun getToken(): String?
+
+    fun authenticationStatuses(): Flow<Boolean>
 }

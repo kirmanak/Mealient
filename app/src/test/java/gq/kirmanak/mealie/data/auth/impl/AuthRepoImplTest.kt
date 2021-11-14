@@ -7,6 +7,7 @@ import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_USERNAME
 import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.enqueueSuccessfulAuthResponse
 import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.enqueueUnsuccessfulAuthResponse
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import retrofit2.HttpException
@@ -18,15 +19,15 @@ class AuthRepoImplTest : MockServerTest() {
     lateinit var subject: AuthRepoImpl
 
     @Test
-    fun `when not authenticated then isAuthenticated false`() = runBlocking {
-        assertThat(subject.isAuthenticated()).isFalse()
+    fun `when not authenticated then first auth status is false`() = runBlocking {
+        assertThat(subject.authenticationStatuses().first()).isFalse()
     }
 
     @Test
-    fun `when authenticated then isAuthenticated true`() = runBlocking {
+    fun `when authenticated then first auth status is true`() = runBlocking {
         mockServer.enqueueSuccessfulAuthResponse()
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
-        assertThat(subject.isAuthenticated()).isTrue()
+        assertThat(subject.authenticationStatuses().first()).isTrue()
     }
 
     @Test(expected = HttpException::class)

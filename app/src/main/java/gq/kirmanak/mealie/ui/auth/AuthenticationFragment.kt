@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealie.databinding.FragmentAuthenticationBinding
+import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -24,7 +25,17 @@ class AuthenticationFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.v("onCreate() called with: savedInstanceState = $savedInstanceState")
-        checkIfAuthenticatedAlready()
+        listenToAuthenticationStatuses()
+    }
+
+    private fun listenToAuthenticationStatuses() {
+        Timber.d("listenToAuthenticationStatuses() called")
+        lifecycleScope.launchWhenCreated {
+            viewModel.authenticationStatuses().collectLatest {
+                Timber.d("listenToAuthenticationStatuses: new status = $it")
+                if (it) navigateToRecipes()
+            }
+        }
     }
 
     override fun onCreateView(
@@ -41,13 +52,6 @@ class AuthenticationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
         binding.button.setOnClickListener { onLoginClicked() }
-    }
-
-    private fun checkIfAuthenticatedAlready() {
-        Timber.v("checkIfAuthenticatedAlready() called")
-        lifecycleScope.launchWhenCreated {
-            if (viewModel.isAuthenticated()) navigateToRecipes()
-        }
     }
 
     private fun navigateToRecipes() {
@@ -73,8 +77,6 @@ class AuthenticationFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             runCatching {
                 viewModel.authenticate(email, pass, url)
-            }.onSuccess {
-                navigateToRecipes()
             }.onFailure {
                 Timber.e(it, "Can't authenticate")
             }
