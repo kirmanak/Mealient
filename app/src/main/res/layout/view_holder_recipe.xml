@@ -27,7 +27,6 @@
 			android:id="@+id/image"
 			android:layout_width="@dimen/width_view_holder_recipe_image"
 			android:layout_height="@dimen/height_view_holder_recipe_image"
-			android:layout_margin="@dimen/margin_small"
 			android:contentDescription="@string/content_description_view_holder_recipe_image"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"

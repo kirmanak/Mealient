@@ -9,6 +9,7 @@ class ImageLoaderGlide @Inject constructor() : ImageLoader {
     override fun loadImage(url: String?, @DrawableRes placeholderId: Int, imageView: ImageView) {
         GlideApp.with(imageView)
             .load(url)
+            .centerCrop()
             .placeholder(placeholderId)
             .into(imageView)
     }
