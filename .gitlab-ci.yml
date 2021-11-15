@@ -10,20 +10,8 @@ cache:
     - .gradle
 
 stages:
-  - lint
   - build
   - test
-
-lintDebug:
-  interruptible: true
-  stage: lint
-  needs: [ ]
-  script:
-    - ./gradlew lintDebug -PbuildDir=lint
-  artifacts:
-    when: always
-    paths:
-      - app/lint
 
 assembleDebug:
   interruptible: true
