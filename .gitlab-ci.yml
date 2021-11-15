@@ -1,4 +1,4 @@
-image: runmymind/docker-android-sdk:ubuntu-standalone
+image: androidsdk/android-30
 
 before_script:
   # Ask gradle to put everything to .gradle dir so that we can cache it
