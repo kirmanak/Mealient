@@ -34,7 +34,6 @@ class AuthStorageImpl @Inject constructor(@ApplicationContext private val contex
     }
 
     override suspend fun getBaseUrl(): String? {
-        Timber.v("getBaseUrl() called")
         val baseUrl = getString(BASE_URL_KEY)
         Timber.d("getBaseUrl: base url is $baseUrl")
         return baseUrl

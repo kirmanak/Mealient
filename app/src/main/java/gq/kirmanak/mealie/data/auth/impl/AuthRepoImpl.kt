@@ -24,10 +24,7 @@ class AuthRepoImpl @Inject constructor(
         storage.storeAuthData(accessToken, url)
     }
 
-    override suspend fun getBaseUrl(): String? {
-        Timber.v("getBaseUrl() called")
-        return storage.getBaseUrl()
-    }
+    override suspend fun getBaseUrl(): String? = storage.getBaseUrl()
 
     override suspend fun getToken(): String? {
         Timber.v("getToken() called")
