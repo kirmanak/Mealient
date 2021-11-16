@@ -6,17 +6,27 @@ import androidx.paging.PagingConfig
 import gq.kirmanak.mealie.data.recipes.RecipeRepo
 import gq.kirmanak.mealie.data.recipes.db.RecipeEntity
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
+import timber.log.Timber
 import javax.inject.Inject
 
 @ExperimentalPagingApi
 class RecipeRepoImpl @Inject constructor(
     private val mediator: RecipesRemoteMediator,
-    private val storage: RecipeStorage
+    private val storage: RecipeStorage,
+    private val pagingSourceFactory: RecipePagingSourceFactory
 ) : RecipeRepo {
     override fun createPager(): Pager<Int, RecipeEntity> {
-        val pagingConfig = PagingConfig(pageSize = 30, enablePlaceholders = false, prefetchDistance = 10)
-        return Pager(pagingConfig, 0, mediator) {
-            storage.queryRecipes()
-        }
+        Timber.v("createPager() called")
+        val pagingConfig = PagingConfig(pageSize = 30, enablePlaceholders = true)
+        return Pager(
+            config = pagingConfig,
+            remoteMediator = mediator,
+            pagingSourceFactory = pagingSourceFactory
+        )
+    }
+
+    override suspend fun clearLocalData() {
+        Timber.v("clearLocalData() called")
+        storage.clearAllLocalData()
     }
 }

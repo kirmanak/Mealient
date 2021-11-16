@@ -75,7 +75,7 @@ class AuthenticationFragment : Fragment() {
                 "URL is empty"
             } ?: return
         }
-        lifecycleScope.launchWhenResumed {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             runCatching {
                 viewModel.authenticate(email, pass, url)
             }.onFailure {

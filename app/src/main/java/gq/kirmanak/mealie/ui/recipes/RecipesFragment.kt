@@ -11,10 +11,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealie.databinding.FragmentRecipesBinding
+import gq.kirmanak.mealie.ui.SwipeRefreshLayoutHelper.listenToRefreshRequests
 import gq.kirmanak.mealie.ui.auth.AuthenticationViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class RecipesFragment : Fragment() {
     private var _binding: FragmentRecipesBinding? = null
@@ -58,12 +62,26 @@ class RecipesFragment : Fragment() {
     private fun setupRecipeAdapter() {
         Timber.v("setupRecipeAdapter() called")
         binding.recipes.layoutManager = LinearLayoutManager(requireContext())
-        val recipesPagingAdapter = RecipesPagingAdapter(viewModel)
-        binding.recipes.adapter = recipesPagingAdapter
-        lifecycleScope.launchWhenResumed {
-            viewModel.recipeFlow.collectLatest {
-                Timber.d("setupRecipeAdapter: received update")
-                recipesPagingAdapter.submitData(it)
+        val adapter = RecipesPagingAdapter(viewModel)
+        binding.recipes.adapter = adapter
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.recipeFlow.collect {
+                Timber.d("Received update")
+                adapter.submitData(it)
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            adapter.listenToRefreshRequests(binding.refresher)
+        }
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            adapter.onPagesUpdatedFlow.collect {
+                Timber.d("Pages have been updated")
+                binding.refresher.isRefreshing = false
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            adapter.loadStateFlow.collect {
+                Timber.d("New load state: $it")
             }
         }
     }

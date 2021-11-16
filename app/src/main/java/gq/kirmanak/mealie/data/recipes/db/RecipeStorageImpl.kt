@@ -99,4 +99,13 @@ class RecipeStorageImpl @Inject constructor(
             saveRecipes(recipes)
         }
     }
+
+    override suspend fun clearAllLocalData() {
+        Timber.v("clearAllLocalData() called")
+        db.withTransaction {
+            recipeDao.removeAllRecipes()
+            recipeDao.removeAllCategories()
+            recipeDao.removeAllTags()
+        }
+    }
 }

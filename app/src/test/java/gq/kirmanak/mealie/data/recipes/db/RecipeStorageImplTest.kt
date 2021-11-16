@@ -4,10 +4,11 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealie.data.MealieDb
 import gq.kirmanak.mealie.data.auth.impl.HiltRobolectricTest
-import gq.kirmanak.mealie.data.recipes.network.GetRecipeSummaryResponse
+import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.CAKE_RECIPE_ENTITY
+import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.PORRIDGE_RECIPE_ENTITY
+import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.RECIPE_SUMMARY_CAKE
+import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.TEST_RECIPE_SUMMARIES
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import org.junit.Test
 import javax.inject.Inject
 
@@ -46,30 +47,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     fun `when saveRecipes then saves recipes`(): Unit = runBlocking {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         val actualTags = mealieDb.recipeDao().queryAllRecipes()
-        assertThat(actualTags).containsExactly(
-            RecipeEntity(
-                localId = 1,
-                remoteId = 1,
-                name = "Cake",
-                slug = "cake",
-                image = "86",
-                description = "A tasty cake",
-                rating = 4,
-                dateAdded = LocalDate.parse("2021-11-13"),
-                dateUpdated = LocalDateTime.parse("2021-11-13T15:30:13")
-            ),
-            RecipeEntity(
-                localId = 2,
-                remoteId = 2,
-                name = "Porridge",
-                slug = "porridge",
-                image = "89",
-                description = "A tasty porridge",
-                rating = 5,
-                dateAdded = LocalDate.parse("2021-11-12"),
-                dateUpdated = LocalDateTime.parse("2021-10-13T17:35:23"),
-            )
-        )
+        assertThat(actualTags).containsExactly(CAKE_RECIPE_ENTITY, PORRIDGE_RECIPE_ENTITY)
     }
 
     @Test
@@ -96,33 +74,59 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         )
     }
 
-    companion object {
-        private val RECIPE_SUMMARY_CAKE = GetRecipeSummaryResponse(
-            remoteId = 1,
-            name = "Cake",
-            slug = "cake",
-            image = "86",
-            description = "A tasty cake",
-            recipeCategories = listOf("dessert", "tasty"),
-            tags = listOf("gluten", "allergic"),
-            rating = 4,
-            dateAdded = LocalDate.parse("2021-11-13"),
-            dateUpdated = LocalDateTime.parse("2021-11-13T15:30:13"),
+    @Test
+    fun `when refreshAll then old recipes aren't preserved`(): Unit = runBlocking {
+        subject.saveRecipes(TEST_RECIPE_SUMMARIES)
+        subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
+        val actual = mealieDb.recipeDao().queryAllRecipes()
+        assertThat(actual).containsExactly(
+            CAKE_RECIPE_ENTITY.copy(localId = 3),
         )
+    }
 
-        private val RECIPE_SUMMARY_PORRIDGE = GetRecipeSummaryResponse(
-            remoteId = 2,
-            name = "Porridge",
-            slug = "porridge",
-            image = "89",
-            description = "A tasty porridge",
-            recipeCategories = listOf("porridge", "tasty"),
-            tags = listOf("gluten", "milk"),
-            rating = 5,
-            dateAdded = LocalDate.parse("2021-11-12"),
-            dateUpdated = LocalDateTime.parse("2021-10-13T17:35:23"),
+    @Test
+    fun `when refreshAll then old category recipes aren't preserved`(): Unit = runBlocking {
+        subject.saveRecipes(TEST_RECIPE_SUMMARIES)
+        subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
+        val actual = mealieDb.recipeDao().queryAllCategoryRecipes()
+        assertThat(actual).containsExactly(
+            CategoryRecipeEntity(categoryId = 1, recipeId = 3),
+            CategoryRecipeEntity(categoryId = 2, recipeId = 3),
         )
+    }
 
-        private val TEST_RECIPE_SUMMARIES = listOf(RECIPE_SUMMARY_CAKE, RECIPE_SUMMARY_PORRIDGE)
+    @Test
+    fun `when refreshAll then old tag recipes aren't preserved`(): Unit = runBlocking {
+        subject.saveRecipes(TEST_RECIPE_SUMMARIES)
+        subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
+        val actual = mealieDb.recipeDao().queryAllTagRecipes()
+        assertThat(actual).containsExactly(
+            TagRecipeEntity(tagId = 1, recipeId = 3),
+            TagRecipeEntity(tagId = 2, recipeId = 3),
+        )
+    }
+
+    @Test
+    fun `when clearAllLocalData then recipes aren't preserved`(): Unit = runBlocking {
+        subject.saveRecipes(TEST_RECIPE_SUMMARIES)
+        subject.clearAllLocalData()
+        val actual = mealieDb.recipeDao().queryAllRecipes()
+        assertThat(actual).isEmpty()
+    }
+
+    @Test
+    fun `when clearAllLocalData then categories aren't preserved`(): Unit = runBlocking {
+        subject.saveRecipes(TEST_RECIPE_SUMMARIES)
+        subject.clearAllLocalData()
+        val actual = mealieDb.recipeDao().queryAllCategories()
+        assertThat(actual).isEmpty()
+    }
+
+    @Test
+    fun `when clearAllLocalData then tags aren't preserved`(): Unit = runBlocking {
+        subject.saveRecipes(TEST_RECIPE_SUMMARIES)
+        subject.clearAllLocalData()
+        val actual = mealieDb.recipeDao().queryAllTags()
+        assertThat(actual).isEmpty()
     }
 }

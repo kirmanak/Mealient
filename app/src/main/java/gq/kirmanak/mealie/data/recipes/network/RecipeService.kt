@@ -7,6 +7,6 @@ interface RecipeService {
     @GET("/api/recipes/summary")
     suspend fun getRecipeSummary(
         @Query("start") start: Int,
-        @Query("end") end: Int
+        @Query("limit") limit: Int
     ): List<GetRecipeSummaryResponse>
 }

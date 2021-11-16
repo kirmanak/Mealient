@@ -1,15 +1,19 @@
 package gq.kirmanak.mealie.ui.auth
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealie.data.auth.AuthRepo
+import gq.kirmanak.mealie.data.recipes.RecipeRepo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
-    private val authRepo: AuthRepo
+    private val authRepo: AuthRepo,
+    private val recipeRepo: RecipeRepo
 ) : ViewModel() {
     init {
         Timber.v("constructor called")
@@ -28,5 +32,6 @@ class AuthenticationViewModel @Inject constructor(
     fun logout() {
         Timber.v("logout() called")
         authRepo.logout()
+        viewModelScope.launch { recipeRepo.clearLocalData() }
     }
 }

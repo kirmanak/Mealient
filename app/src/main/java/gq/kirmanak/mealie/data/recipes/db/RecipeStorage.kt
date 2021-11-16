@@ -9,4 +9,6 @@ interface RecipeStorage {
     fun queryRecipes(): PagingSource<Int, RecipeEntity>
 
     suspend fun refreshAll(recipes: List<GetRecipeSummaryResponse>)
+
+    suspend fun clearAllLocalData()
 }

@@ -6,12 +6,20 @@
 	android:layout_height="match_parent"
 	tools:context=".ui.recipes.RecipesFragment">
 
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/recipes"
-		android:layout_width="0dp"
-		android:layout_height="0dp"
+	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+		android:id="@+id/refresher"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toTopOf="parent">
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recipes"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			tools:listitem="@layout/view_holder_recipe" />
+	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

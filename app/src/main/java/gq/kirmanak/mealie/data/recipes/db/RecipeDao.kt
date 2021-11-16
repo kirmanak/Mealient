@@ -14,7 +14,7 @@ interface RecipeDao {
     @Query("SELECT * FROM categories")
     suspend fun queryAllCategories(): List<CategoryEntity>
 
-    @Query("SELECT * FROM recipes")
+    @Query("SELECT * FROM recipes ORDER BY date_added DESC")
     fun queryRecipesByPages(): PagingSource<Int, RecipeEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -41,7 +41,13 @@ interface RecipeDao {
     @Query("DELETE FROM recipes")
     suspend fun removeAllRecipes()
 
-    @Query("SELECT * FROM recipes")
+    @Query("DELETE FROM tags")
+    suspend fun removeAllTags()
+
+    @Query("DELETE FROM categories")
+    suspend fun removeAllCategories()
+
+    @Query("SELECT * FROM recipes ORDER BY date_updated DESC")
     suspend fun queryAllRecipes(): List<RecipeEntity>
 
     @Query("SELECT * FROM category_recipe")
