@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealie.data.recipes.RecipeImageLoader
 import gq.kirmanak.mealie.data.recipes.RecipeRepo
-import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
+import gq.kirmanak.mealie.data.recipes.db.entity.RecipeSummaryEntity
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package gq.kirmanak.mealie.data.recipes.db
+package gq.kirmanak.mealie.data.recipes.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -15,7 +15,7 @@ import androidx.room.ForeignKey
         onUpdate = ForeignKey.CASCADE
     ), ForeignKey(
         entity = RecipeSummaryEntity::class,
-        parentColumns = ["local_id"],
+        parentColumns = ["remote_id"],
         childColumns = ["recipe_id"],
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.CASCADE

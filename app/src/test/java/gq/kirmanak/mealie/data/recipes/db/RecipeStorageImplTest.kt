@@ -8,6 +8,10 @@ import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.CAKE_RECIPE_ENTITY
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.PORRIDGE_RECIPE_ENTITY
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.RECIPE_SUMMARY_CAKE
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.TEST_RECIPE_SUMMARIES
+import gq.kirmanak.mealie.data.recipes.db.entity.CategoryEntity
+import gq.kirmanak.mealie.data.recipes.db.entity.CategoryRecipeEntity
+import gq.kirmanak.mealie.data.recipes.db.entity.TagEntity
+import gq.kirmanak.mealie.data.recipes.db.entity.TagRecipeEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import javax.inject.Inject
@@ -79,9 +83,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
         val actual = mealieDb.recipeDao().queryAllRecipes()
-        assertThat(actual).containsExactly(
-            CAKE_RECIPE_ENTITY.copy(localId = 3),
-        )
+        assertThat(actual).containsExactly(CAKE_RECIPE_ENTITY)
     }
 
     @Test
@@ -90,8 +92,8 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
         val actual = mealieDb.recipeDao().queryAllCategoryRecipes()
         assertThat(actual).containsExactly(
-            CategoryRecipeEntity(categoryId = 1, recipeId = 3),
-            CategoryRecipeEntity(categoryId = 2, recipeId = 3),
+            CategoryRecipeEntity(categoryId = 1, recipeId = 1),
+            CategoryRecipeEntity(categoryId = 2, recipeId = 1),
         )
     }
 
@@ -101,8 +103,8 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
         val actual = mealieDb.recipeDao().queryAllTagRecipes()
         assertThat(actual).containsExactly(
-            TagRecipeEntity(tagId = 1, recipeId = 3),
-            TagRecipeEntity(tagId = 2, recipeId = 3),
+            TagRecipeEntity(tagId = 1, recipeId = 1),
+            TagRecipeEntity(tagId = 2, recipeId = 1),
         )
     }
 

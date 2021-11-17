@@ -2,6 +2,8 @@ package gq.kirmanak.mealie.data.recipes.network
 
 import gq.kirmanak.mealie.data.auth.AuthRepo
 import gq.kirmanak.mealie.data.impl.RetrofitBuilder
+import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeResponse
+import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeSummaryResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,6 +21,14 @@ class RecipeDataSourceImpl @Inject constructor(
         val recipeSummary = service.getRecipeSummary(start, limit)
         Timber.v("requestRecipes() returned: $recipeSummary")
         return recipeSummary
+    }
+
+    override suspend fun requestRecipeInfo(slug: String): GetRecipeResponse {
+        Timber.v("requestRecipeInfo() called with: slug = $slug")
+        val service: RecipeService = getRecipeService()
+        val recipeInfo = service.getRecipe(slug)
+        Timber.v("requestRecipeInfo() returned: $recipeInfo")
+        return recipeInfo
     }
 
     private suspend fun getRecipeService(): RecipeService {

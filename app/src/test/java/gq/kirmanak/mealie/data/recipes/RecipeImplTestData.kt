@@ -1,7 +1,7 @@
 package gq.kirmanak.mealie.data.recipes
 
-import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
-import gq.kirmanak.mealie.data.recipes.network.GetRecipeSummaryResponse
+import gq.kirmanak.mealie.data.recipes.db.entity.RecipeSummaryEntity
+import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeSummaryResponse
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import okhttp3.mockwebserver.MockResponse
@@ -68,7 +68,6 @@ object RecipeImplTestData {
     """
 
     val CAKE_RECIPE_ENTITY = RecipeSummaryEntity(
-        localId = 1,
         remoteId = 1,
         name = "Cake",
         slug = "cake",
@@ -80,7 +79,6 @@ object RecipeImplTestData {
     )
 
     val PORRIDGE_RECIPE_ENTITY = RecipeSummaryEntity(
-        localId = 2,
         remoteId = 2,
         name = "Porridge",
         slug = "porridge",

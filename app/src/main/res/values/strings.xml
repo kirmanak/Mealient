@@ -8,4 +8,7 @@
 	<string name="menu_main_toolbar_content_description_logout">@string/menu_main_toolbar_logout</string>
 	<string name="menu_main_toolbar_logout">Logout</string>
 	<string name="view_holder_recipe_text_placeholder">Loading…</string>
+	<string name="content_description_fragment_recipe_info_image">@string/content_description_view_holder_recipe_image</string>
+	<string name="fragment_recipe_info_ingredients_header">Ingredients</string>
+	<string name="fragment_recipe_info_instructions_header">Instructions</string>
 </resources>

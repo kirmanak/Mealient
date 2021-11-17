@@ -15,7 +15,7 @@ import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.PORRIDGE_RECIPE_ENTITY
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.TEST_RECIPE_ENTITIES
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.enqueueSuccessfulRecipeSummaryResponse
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.enqueueUnsuccessfulRecipeSummaryResponse
-import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
+import gq.kirmanak.mealie.data.recipes.db.entity.RecipeSummaryEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test

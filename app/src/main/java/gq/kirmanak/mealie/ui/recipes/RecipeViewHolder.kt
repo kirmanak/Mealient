@@ -2,7 +2,7 @@ package gq.kirmanak.mealie.ui.recipes
 
 import androidx.recyclerview.widget.RecyclerView
 import gq.kirmanak.mealie.R
-import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
+import gq.kirmanak.mealie.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealie.databinding.ViewHolderRecipeBinding
 
 class RecipeViewHolder(

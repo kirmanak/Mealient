@@ -4,7 +4,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import gq.kirmanak.mealie.data.impl.RoomTypeConverters
-import gq.kirmanak.mealie.data.recipes.db.*
+import gq.kirmanak.mealie.data.recipes.db.RecipeDao
+import gq.kirmanak.mealie.data.recipes.db.entity.*
 import javax.inject.Singleton
 
 @Database(

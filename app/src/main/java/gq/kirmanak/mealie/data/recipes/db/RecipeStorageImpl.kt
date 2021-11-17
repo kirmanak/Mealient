@@ -3,7 +3,11 @@ package gq.kirmanak.mealie.data.recipes.db
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
 import gq.kirmanak.mealie.data.MealieDb
-import gq.kirmanak.mealie.data.recipes.network.GetRecipeSummaryResponse
+import gq.kirmanak.mealie.data.recipes.db.entity.*
+import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeIngredientResponse
+import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeInstructionResponse
+import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeResponse
+import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeSummaryResponse
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,16 +31,20 @@ class RecipeStorageImpl @Inject constructor(
         val categoryRecipeEntities = mutableSetOf<CategoryRecipeEntity>()
 
         for (recipe in recipes) {
-            val recipeId = recipeDao.insertRecipe(recipe.recipeEntity())
+            val recipeSummaryEntity = recipe.recipeEntity()
+            recipeDao.insertRecipe(recipeSummaryEntity)
 
             for (tag in recipe.tags) {
                 val tagId = getIdOrInsert(tagEntities, tag)
-                tagRecipeEntities += TagRecipeEntity(tagId, recipeId)
+                tagRecipeEntities += TagRecipeEntity(tagId, recipeSummaryEntity.remoteId)
             }
 
             for (category in recipe.recipeCategories) {
                 val categoryId = getOrInsert(categoryEntities, category)
-                categoryRecipeEntities += CategoryRecipeEntity(categoryId, recipeId)
+                categoryRecipeEntities += CategoryRecipeEntity(
+                    categoryId,
+                    recipeSummaryEntity.remoteId
+                )
             }
         }
 
@@ -108,4 +116,42 @@ class RecipeStorageImpl @Inject constructor(
             recipeDao.removeAllTags()
         }
     }
+
+    override suspend fun saveRecipeInfo(recipe: GetRecipeResponse) {
+        Timber.v("saveRecipeInfo() called with: recipe = $recipe")
+        db.withTransaction {
+            recipeDao.insertRecipe(recipe.toRecipeEntity())
+            val ingredients = recipe.recipeIngredients.map {
+                it.toRecipeIngredientEntity(recipe.remoteId)
+            }
+            recipeDao.insertRecipeIngredients(ingredients)
+            val instructions = recipe.recipeInstructions.map {
+                it.toRecipeInstructionEntity(recipe.remoteId)
+            }
+            recipeDao.insertRecipeInstructions(instructions)
+        }
+    }
+
+    private fun GetRecipeResponse.toRecipeEntity() = RecipeEntity(
+        remoteId = remoteId,
+        recipeYield = recipeYield
+    )
+
+    private fun GetRecipeIngredientResponse.toRecipeIngredientEntity(remoteId: Long) =
+        RecipeIngredientEntity(
+            recipeId = remoteId,
+            title = title,
+            note = note,
+            unit = unit,
+            food = food,
+            disableAmount = disableAmount,
+            quantity = quantity
+        )
+
+    private fun GetRecipeInstructionResponse.toRecipeInstructionEntity(remoteId: Long) =
+        RecipeInstructionEntity(
+            recipeId = remoteId,
+            title = title,
+            text = text
+        )
 }

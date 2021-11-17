@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<ImageView
+			android:id="@+id/image"
+			android:layout_width="0dp"
+			android:layout_height="@dimen/fragment_recipe_info_image_height"
+			android:layout_marginBottom="@dimen/margin_small"
+			android:contentDescription="@string/content_description_fragment_recipe_info_image"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+		<TextView
+			android:id="@+id/title"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_small"
+			android:textAppearance="?textAppearanceHeadline6"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/image"
+			tools:text="Best-Ever Beef Stew" />
+
+		<TextView
+			android:id="@+id/description"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_small"
+			android:textAppearance="?textAppearanceBody2"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/title"
+			tools:text="Stay warm all winter with this classic Beef Stew made with red wine and beef stock from Delish.com." />
+
+		<TextView
+			android:id="@+id/ingredients_header"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_small"
+			android:text="@string/fragment_recipe_info_ingredients_header"
+			android:textAppearance="?textAppearanceHeadline6"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/description" />
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/ingredients_list"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_small"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/ingredients_header"
+			tools:itemCount="3"
+			tools:listitem="@layout/view_holder_ingredient" />
+
+		<TextView
+			android:id="@+id/instructions_header"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_small"
+			android:text="@string/fragment_recipe_info_instructions_header"
+			android:textAppearance="?textAppearanceHeadline6"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/ingredients_list" />
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/instructions_list"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/margin_small"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/instructions_header"
+			tools:itemCount="2"
+			tools:listitem="@layout/view_holder_instruction" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

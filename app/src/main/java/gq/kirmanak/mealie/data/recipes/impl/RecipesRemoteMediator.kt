@@ -8,7 +8,7 @@ import androidx.paging.LoadType.REFRESH
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
-import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
+import gq.kirmanak.mealie.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealie.data.recipes.network.RecipeDataSource
 import kotlinx.coroutines.CancellationException
 import timber.log.Timber

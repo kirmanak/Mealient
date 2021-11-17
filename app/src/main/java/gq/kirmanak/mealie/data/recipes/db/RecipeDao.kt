@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import gq.kirmanak.mealie.data.recipes.db.entity.*
 
 @Dao
 interface RecipeDao {
@@ -18,7 +19,7 @@ interface RecipeDao {
     fun queryRecipesByPages(): PagingSource<Int, RecipeSummaryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRecipe(recipeSummaryEntity: RecipeSummaryEntity): Long
+    suspend fun insertRecipe(recipeSummaryEntity: RecipeSummaryEntity)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTag(tagEntity: TagEntity): Long
@@ -55,4 +56,13 @@ interface RecipeDao {
 
     @Query("SELECT * FROM tag_recipe")
     suspend fun queryAllTagRecipes(): List<TagRecipeEntity>
+
+    @Insert
+    suspend fun insertRecipe(recipe: RecipeEntity)
+
+    @Insert
+    suspend fun insertRecipeInstructions(instructions: List<RecipeInstructionEntity>)
+
+    @Insert
+    suspend fun insertRecipeIngredients(ingredients: List<RecipeIngredientEntity>)
 }

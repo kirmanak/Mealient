@@ -5,7 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import gq.kirmanak.mealie.data.recipes.RecipeRepo
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
-import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
+import gq.kirmanak.mealie.data.recipes.db.entity.RecipeSummaryEntity
 import timber.log.Timber
 import javax.inject.Inject
 

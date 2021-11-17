@@ -2,7 +2,7 @@ package gq.kirmanak.mealie.data.recipes.impl
 
 import androidx.paging.PagingSource
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
-import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
+import gq.kirmanak.mealie.data.recipes.db.entity.RecipeSummaryEntity
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
