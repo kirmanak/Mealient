@@ -19,3 +19,25 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontobfuscate
+
+### kotlinx.serialization https://github.com/Kotlin/kotlinx.serialization#android ###
+-if @kotlinx.serialization.Serializable class **
+-keepclassmembers class <1> {
+    static <1>$Companion Companion;
+}
+-if @kotlinx.serialization.Serializable class ** {
+    static **$* *;
+}
+-keepclassmembers class <1>$<3> {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-if @kotlinx.serialization.Serializable class ** {
+    public static ** INSTANCE;
+}
+-keepclassmembers class <1> {
+    public static <1> INSTANCE;
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-keepattributes RuntimeVisibleAnnotations,AnnotationDefault
+### kotlinx.serialization https://github.com/Kotlin/kotlinx.serialization#android ###
