@@ -25,5 +25,24 @@
 			app:destination="@id/authenticationFragment"
 			app:popUpTo="@id/nav_graph"
 			app:popUpToInclusive="true" />
+		<action
+			android:id="@+id/action_recipesFragment_to_recipeInfoFragment"
+			app:destination="@id/recipeInfoFragment" />
+	</fragment>
+	<fragment
+		android:id="@+id/recipeInfoFragment"
+		android:name="gq.kirmanak.mealie.ui.recipes.info.RecipeInfoFragment"
+		android:label="RecipeInfoFragment">
+		<action
+			android:id="@+id/action_recipeInfoFragment_to_authenticationFragment"
+			app:destination="@id/authenticationFragment"
+			app:popUpTo="@id/nav_graph"
+			app:popUpToInclusive="true" />
+		<argument
+			android:name="recipe_slug"
+			app:argType="string" />
+		<argument
+			android:name="recipe_id"
+			app:argType="long" />
 	</fragment>
 </navigation>

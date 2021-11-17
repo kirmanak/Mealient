@@ -10,7 +10,12 @@ import javax.inject.Inject
 
 @ExperimentalSerializationApi
 class RetrofitBuilder @Inject constructor(private val okHttpBuilder: OkHttpBuilder) {
-    private val json by lazy { Json { coerceInputValues = true } }
+    private val json by lazy {
+        Json {
+            coerceInputValues = true
+            ignoreUnknownKeys = true
+        }
+    }
 
     fun buildRetrofit(baseUrl: String, token: String? = null): Retrofit {
         Timber.v("buildRetrofit() called with: baseUrl = $baseUrl, token = $token")

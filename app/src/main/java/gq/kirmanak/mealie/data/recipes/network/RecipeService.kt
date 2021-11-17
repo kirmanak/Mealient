@@ -13,7 +13,7 @@ interface RecipeService {
         @Query("limit") limit: Int
     ): List<GetRecipeSummaryResponse>
 
-    @GET("/api/recipes/:recipe_slug")
+    @GET("/api/recipes/{recipe_slug}")
     suspend fun getRecipe(
         @Path("recipe_slug") recipeSlug: String
     ): GetRecipeResponse

@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import gq.kirmanak.mealie.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealie.databinding.FragmentRecipesBinding
 import gq.kirmanak.mealie.ui.SwipeRefreshLayoutHelper.listenToRefreshRequests
 import gq.kirmanak.mealie.ui.auth.AuthenticationViewModel
@@ -44,6 +45,15 @@ class RecipesFragment : Fragment() {
         listenToAuthStatuses()
     }
 
+    private fun navigateToRecipeInfo(recipeSummaryEntity: RecipeSummaryEntity) {
+        findNavController().navigate(
+            RecipesFragmentDirections.actionRecipesFragmentToRecipeInfoFragment(
+                recipeSlug = recipeSummaryEntity.slug,
+                recipeId = recipeSummaryEntity.remoteId
+            )
+        )
+    }
+
     private fun listenToAuthStatuses() {
         Timber.v("listenToAuthStatuses() called")
         lifecycleScope.launchWhenCreated {
@@ -62,7 +72,7 @@ class RecipesFragment : Fragment() {
     private fun setupRecipeAdapter() {
         Timber.v("setupRecipeAdapter() called")
         binding.recipes.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = RecipesPagingAdapter(viewModel)
+        val adapter = RecipesPagingAdapter(viewModel) { navigateToRecipeInfo(it) }
         binding.recipes.adapter = adapter
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.recipeFlow.collect {
@@ -77,11 +87,6 @@ class RecipesFragment : Fragment() {
             adapter.onPagesUpdatedFlow.collect {
                 Timber.d("Pages have been updated")
                 binding.refresher.isRefreshing = false
-            }
-        }
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            adapter.loadStateFlow.collect {
-                Timber.d("New load state: $it")
             }
         }
     }

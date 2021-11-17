@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.room.withTransaction
 import gq.kirmanak.mealie.data.MealieDb
 import gq.kirmanak.mealie.data.recipes.db.entity.*
+import gq.kirmanak.mealie.data.recipes.impl.FullRecipeInfo
 import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeIngredientResponse
 import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeInstructionResponse
 import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeResponse
@@ -154,4 +155,13 @@ class RecipeStorageImpl @Inject constructor(
             title = title,
             text = text
         )
+
+    override suspend fun queryRecipeInfo(recipeId: Long): FullRecipeInfo {
+        Timber.v("queryRecipeInfo() called with: recipeId = $recipeId")
+        val fullRecipeInfo = checkNotNull(recipeDao.queryFullRecipeInfo(recipeId)) {
+            "Can't find recipe by id $recipeId in DB"
+        }
+        Timber.v("queryRecipeInfo() returned: $fullRecipeInfo")
+        return fullRecipeInfo
+    }
 }

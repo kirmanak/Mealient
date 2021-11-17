@@ -2,6 +2,7 @@ package gq.kirmanak.mealie.data.recipes.db
 
 import androidx.paging.PagingSource
 import gq.kirmanak.mealie.data.recipes.db.entity.RecipeSummaryEntity
+import gq.kirmanak.mealie.data.recipes.impl.FullRecipeInfo
 import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeResponse
 import gq.kirmanak.mealie.data.recipes.network.response.GetRecipeSummaryResponse
 
@@ -15,4 +16,6 @@ interface RecipeStorage {
     suspend fun clearAllLocalData()
 
     suspend fun saveRecipeInfo(recipe: GetRecipeResponse)
+
+    suspend fun queryRecipeInfo(recipeId: Long): FullRecipeInfo
 }
