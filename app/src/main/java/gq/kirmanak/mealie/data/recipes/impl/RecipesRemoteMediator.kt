@@ -7,8 +7,8 @@ import androidx.paging.LoadType.PREPEND
 import androidx.paging.LoadType.REFRESH
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import gq.kirmanak.mealie.data.recipes.db.RecipeEntity
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
+import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
 import gq.kirmanak.mealie.data.recipes.network.RecipeDataSource
 import kotlinx.coroutines.CancellationException
 import timber.log.Timber
@@ -19,14 +19,14 @@ class RecipesRemoteMediator @Inject constructor(
     private val storage: RecipeStorage,
     private val network: RecipeDataSource,
     private val pagingSourceFactory: RecipePagingSourceFactory,
-) : RemoteMediator<Int, RecipeEntity>() {
+) : RemoteMediator<Int, RecipeSummaryEntity>() {
 
     @VisibleForTesting
     var lastRequestEnd: Int = 0
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, RecipeEntity>
+        state: PagingState<Int, RecipeSummaryEntity>
     ): MediatorResult {
         Timber.v("load() called with: lastRequestEnd = $lastRequestEnd, loadType = $loadType, state = $state")
 

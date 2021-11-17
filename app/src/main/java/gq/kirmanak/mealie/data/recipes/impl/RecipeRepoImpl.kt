@@ -4,8 +4,8 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import gq.kirmanak.mealie.data.recipes.RecipeRepo
-import gq.kirmanak.mealie.data.recipes.db.RecipeEntity
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
+import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class RecipeRepoImpl @Inject constructor(
     private val storage: RecipeStorage,
     private val pagingSourceFactory: RecipePagingSourceFactory
 ) : RecipeRepo {
-    override fun createPager(): Pager<Int, RecipeEntity> {
+    override fun createPager(): Pager<Int, RecipeSummaryEntity> {
         Timber.v("createPager() called")
         val pagingConfig = PagingConfig(pageSize = 30, enablePlaceholders = true)
         return Pager(

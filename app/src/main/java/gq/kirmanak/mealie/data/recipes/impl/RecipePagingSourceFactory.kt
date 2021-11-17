@@ -1,8 +1,8 @@
 package gq.kirmanak.mealie.data.recipes.impl
 
 import androidx.paging.PagingSource
-import gq.kirmanak.mealie.data.recipes.db.RecipeEntity
 import gq.kirmanak.mealie.data.recipes.db.RecipeStorage
+import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,10 +10,10 @@ import javax.inject.Singleton
 @Singleton
 class RecipePagingSourceFactory @Inject constructor(
     private val recipeStorage: RecipeStorage
-) : () -> PagingSource<Int, RecipeEntity> {
-    private val sources: MutableList<PagingSource<Int, RecipeEntity>> = mutableListOf()
+) : () -> PagingSource<Int, RecipeSummaryEntity> {
+    private val sources: MutableList<PagingSource<Int, RecipeSummaryEntity>> = mutableListOf()
 
-    override fun invoke(): PagingSource<Int, RecipeEntity> {
+    override fun invoke(): PagingSource<Int, RecipeSummaryEntity> {
         Timber.v("invoke() called")
         val newSource = recipeStorage.queryRecipes()
         sources.add(newSource)

@@ -1,6 +1,6 @@
 package gq.kirmanak.mealie.data.recipes
 
-import gq.kirmanak.mealie.data.recipes.db.RecipeEntity
+import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
 import gq.kirmanak.mealie.data.recipes.network.GetRecipeSummaryResponse
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -67,7 +67,7 @@ object RecipeImplTestData {
         {"detail":"Unauthorized"}
     """
 
-    val CAKE_RECIPE_ENTITY = RecipeEntity(
+    val CAKE_RECIPE_ENTITY = RecipeSummaryEntity(
         localId = 1,
         remoteId = 1,
         name = "Cake",
@@ -79,7 +79,7 @@ object RecipeImplTestData {
         dateUpdated = LocalDateTime.parse("2021-11-13T15:30:13")
     )
 
-    val PORRIDGE_RECIPE_ENTITY = RecipeEntity(
+    val PORRIDGE_RECIPE_ENTITY = RecipeSummaryEntity(
         localId = 2,
         remoteId = 2,
         name = "Porridge",

@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
-@Entity(tableName = "recipes", indices = [Index(value = ["remote_id"], unique = true)])
-data class RecipeEntity(
+@Entity(tableName = "recipe_summaries", indices = [Index(value = ["remote_id"], unique = true)])
+data class RecipeSummaryEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "local_id") val localId: Long = 0,
     @ColumnInfo(name = "remote_id") val remoteId: Long,
     @ColumnInfo(name = "name") val name: String,

@@ -15,7 +15,7 @@ import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.PORRIDGE_RECIPE_ENTITY
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.TEST_RECIPE_ENTITIES
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.enqueueSuccessfulRecipeSummaryResponse
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.enqueueUnsuccessfulRecipeSummaryResponse
-import gq.kirmanak.mealie.data.recipes.db.RecipeEntity
+import gq.kirmanak.mealie.data.recipes.db.RecipeSummaryEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -127,9 +127,9 @@ class RecipesRemoteMediatorTest : MockServerTest() {
     }
 
     private fun pagingState(
-        pages: List<PagingSource.LoadResult.Page<Int, RecipeEntity>> = emptyList(),
+        pages: List<PagingSource.LoadResult.Page<Int, RecipeSummaryEntity>> = emptyList(),
         anchorPosition: Int? = null
-    ): PagingState<Int, RecipeEntity> = PagingState(
+    ): PagingState<Int, RecipeSummaryEntity> = PagingState(
         pages = pages,
         anchorPosition = anchorPosition,
         config = pagingConfig,

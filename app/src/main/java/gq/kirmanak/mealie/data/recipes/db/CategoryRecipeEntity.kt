@@ -16,7 +16,7 @@ import androidx.room.Index
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.CASCADE
     ), ForeignKey(
-        entity = RecipeEntity::class,
+        entity = RecipeSummaryEntity::class,
         parentColumns = ["local_id"],
         childColumns = ["recipe_id"],
         onDelete = ForeignKey.CASCADE,

@@ -76,7 +76,7 @@ class RecipeStorageImpl @Inject constructor(
         return tagId
     }
 
-    private fun GetRecipeSummaryResponse.recipeEntity() = RecipeEntity(
+    private fun GetRecipeSummaryResponse.recipeEntity() = RecipeSummaryEntity(
         remoteId = remoteId,
         name = name,
         slug = slug,
@@ -87,7 +87,7 @@ class RecipeStorageImpl @Inject constructor(
         dateUpdated = dateUpdated,
     )
 
-    override fun queryRecipes(): PagingSource<Int, RecipeEntity> {
+    override fun queryRecipes(): PagingSource<Int, RecipeSummaryEntity> {
         Timber.v("queryRecipes() called")
         return recipeDao.queryRecipesByPages()
     }
