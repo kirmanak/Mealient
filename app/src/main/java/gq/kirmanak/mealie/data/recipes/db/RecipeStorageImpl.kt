@@ -122,10 +122,14 @@ class RecipeStorageImpl @Inject constructor(
         Timber.v("saveRecipeInfo() called with: recipe = $recipe")
         db.withTransaction {
             recipeDao.insertRecipe(recipe.toRecipeEntity())
+
+            recipeDao.deleteRecipeIngredients(recipe.remoteId)
             val ingredients = recipe.recipeIngredients.map {
                 it.toRecipeIngredientEntity(recipe.remoteId)
             }
             recipeDao.insertRecipeIngredients(ingredients)
+
+            recipeDao.deleteRecipeInstructions(recipe.remoteId)
             val instructions = recipe.recipeInstructions.map {
                 it.toRecipeInstructionEntity(recipe.remoteId)
             }

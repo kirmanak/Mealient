@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealie.databinding.FragmentRecipeInfoBinding
 import gq.kirmanak.mealie.ui.auth.AuthenticationViewModel
@@ -43,6 +44,16 @@ class RecipeInfoFragment : Fragment() {
         viewModel.recipeInfo.observe(viewLifecycleOwner) {
             binding.title.text = it.recipeSummaryEntity.name
             binding.description.text = it.recipeSummaryEntity.description
+
+            val recipeIngredientsAdapter = RecipeIngredientsAdapter()
+            binding.ingredientsList.adapter = recipeIngredientsAdapter
+            binding.ingredientsList.layoutManager = LinearLayoutManager(requireContext())
+            recipeIngredientsAdapter.submitList(it.recipeIngredients)
+
+            val recipeInstructionsAdapter = RecipeInstructionsAdapter()
+            binding.instructionsList.adapter = recipeInstructionsAdapter
+            binding.instructionsList.layoutManager = LinearLayoutManager(requireContext())
+            recipeInstructionsAdapter.submitList(it.recipeInstructions)
         }
     }
 
