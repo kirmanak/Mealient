@@ -3,8 +3,8 @@ package gq.kirmanak.mealie.data.impl
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealie.data.auth.impl.AUTHORIZATION_HEADER
-import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_TOKEN
-import gq.kirmanak.mealie.data.auth.impl.MockServerTest
+import gq.kirmanak.mealie.data.test.AuthImplTestData.TEST_TOKEN
+import gq.kirmanak.mealie.data.test.MockServerTest
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.mockwebserver.MockResponse

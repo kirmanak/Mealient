@@ -2,11 +2,12 @@ package gq.kirmanak.mealie.data.auth.impl
 
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
-import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_PASSWORD
-import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_TOKEN
-import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_USERNAME
-import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.enqueueSuccessfulAuthResponse
-import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.enqueueUnsuccessfulAuthResponse
+import gq.kirmanak.mealie.data.test.AuthImplTestData.TEST_PASSWORD
+import gq.kirmanak.mealie.data.test.AuthImplTestData.TEST_TOKEN
+import gq.kirmanak.mealie.data.test.AuthImplTestData.TEST_USERNAME
+import gq.kirmanak.mealie.data.test.AuthImplTestData.enqueueSuccessfulAuthResponse
+import gq.kirmanak.mealie.data.test.AuthImplTestData.enqueueUnsuccessfulAuthResponse
+import gq.kirmanak.mealie.data.test.MockServerTest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Test

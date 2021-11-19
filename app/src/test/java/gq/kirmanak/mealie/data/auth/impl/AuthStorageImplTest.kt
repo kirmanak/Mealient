@@ -2,8 +2,9 @@ package gq.kirmanak.mealie.data.auth.impl
 
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
-import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_TOKEN
-import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_URL
+import gq.kirmanak.mealie.data.test.AuthImplTestData.TEST_TOKEN
+import gq.kirmanak.mealie.data.test.AuthImplTestData.TEST_URL
+import gq.kirmanak.mealie.data.test.HiltRobolectricTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

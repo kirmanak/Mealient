@@ -1,4 +1,4 @@
-package gq.kirmanak.mealie.data.auth.impl
+package gq.kirmanak.mealie.data.test
 
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

@@ -1,4 +1,4 @@
-package gq.kirmanak.mealie.data.recipes
+package gq.kirmanak.mealie.data.test
 
 import gq.kirmanak.mealie.data.recipes.db.entity.RecipeEntity
 import gq.kirmanak.mealie.data.recipes.db.entity.RecipeIngredientEntity
@@ -106,7 +106,7 @@ object RecipeImplTestData {
         enqueue(response)
     }
 
-    fun MockWebServer.enqueueUnsuccessfulRecipeSummaryResponse() {
+    fun MockWebServer.enqueueUnsuccessfulRecipeResponse() {
         val response = MockResponse()
             .setBody(RECIPE_SUMMARY_UNSUCCESSFUL)
             .setHeader("Content-Type", "application/json")
@@ -171,6 +171,110 @@ object RecipeImplTestData {
         recipeIngredients = listOf(SUGAR_INGREDIENT, BREAD_INGREDIENT),
         recipeInstructions = listOf(MIX_INSTRUCTION, BAKE_INSTRUCTION)
     )
+
+    val GET_CAKE_RESPONSE_BODY = """
+        {
+                "id": 1,
+                "name": "Cake",
+                "slug": "cake",
+                "image": "86",
+                "description": "A tasty cake",
+                "recipeCategory": ["dessert", "tasty"],
+                "tags": ["gluten", "allergic"],
+                "rating": 4,
+                "dateAdded": "2021-11-13",
+                "dateUpdated": "2021-11-13T15:30:13",
+            "recipeYield": "4 servings",
+            "recipeIngredient": [
+                {
+                    "title": "Sugar",
+        "note": "2 oz of white sugar",
+        "unit": null,
+        "food": null,
+        "disableAmount": true,
+        "quantity": 1
+                },
+                {
+                    "title": "Bread",
+        "note": "2 oz of white bread",
+        "unit": null,
+        "food": null,
+        "disableAmount": false,
+        "quantity": 2
+                }
+            ],
+            "recipeInstructions": [
+                {
+                    "title": "Mix",
+                    "text": "Mix the ingredients"
+                },
+                {
+                    "title": "Bake",
+                    "text": "Bake the ingredients"
+                }
+            ],
+            "nutrition": {
+                "calories": "100",
+                "fatContent": "20",
+                "proteinContent": "30",
+                "carbohydrateContent": "40",
+                "fiberContent": "50",
+                "sodiumContent": "23",
+                "sugarContent": "53"
+            },
+            "tools": [],
+            "totalTime": "12 hours",
+            "prepTime": "1 hour",
+            "performTime": "4 hours",
+            "settings": {
+                "public": true,
+                "showNutrition": true,
+                "showAssets": true,
+                "landscapeView": true,
+                "disableComments": false,
+                "disableAmount": false
+            },
+            "assets": [],
+            "notes": [
+                {
+                    "title": "Note title",
+                    "text": "Note text"
+                },
+                {
+                    "title": "Second note",
+                    "text": "Second note text"
+                }
+            ],
+            "orgURL": null,
+            "extras": {},
+            "comments": [
+                {
+                    "text": "A new comment",
+                    "id": 1,
+                    "uuid": "476ebc15-f794-4eda-8380-d77bba47f839",
+                    "recipeSlug": "test-recipe",
+                    "dateAdded": "2021-11-19T22:13:23.862459",
+                    "user": {
+                        "id": 1,
+                        "username": "kirmanak",
+                        "admin": true
+                    }
+                },
+                {
+                    "text": "A second comment",
+                    "id": 2,
+                    "uuid": "20498eba-9639-4acd-ba0a-4829ee06915a",
+                    "recipeSlug": "test-recipe",
+                    "dateAdded": "2021-11-19T22:13:29.912314",
+                    "user": {
+                        "id": 1,
+                        "username": "kirmanak",
+                        "admin": true
+                    }
+                }
+            ]
+        }
+    """.trimIndent()
 
     val GET_PORRIDGE_RESPONSE = GetRecipeResponse(
         remoteId = 2,
@@ -295,4 +399,12 @@ object RecipeImplTestData {
             PORRIDGE_BOIL_RECIPE_INSTRUCTION_ENTITY,
         )
     )
+
+    fun MockWebServer.enqueueSuccessfulGetRecipe() {
+        val response = MockResponse()
+            .setResponseCode(200)
+            .setHeader("Content-Type", "application/json")
+            .setBody(GET_CAKE_RESPONSE_BODY)
+        enqueue(response)
+    }
 }
