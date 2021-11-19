@@ -10,8 +10,8 @@ import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.TEST_USERNAME
 import gq.kirmanak.mealie.data.auth.impl.AuthImplTestData.enqueueSuccessfulAuthResponse
 import gq.kirmanak.mealie.data.auth.impl.MockServerTest
-import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.CAKE_RECIPE_ENTITY
-import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.PORRIDGE_RECIPE_ENTITY
+import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.CAKE_RECIPE_SUMMARY_ENTITY
+import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_ENTITY
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.TEST_RECIPE_ENTITIES
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.enqueueSuccessfulRecipeSummaryResponse
 import gq.kirmanak.mealie.data.recipes.RecipeImplTestData.enqueueUnsuccessfulRecipeSummaryResponse
@@ -58,7 +58,10 @@ class RecipesRemoteMediatorTest : MockServerTest() {
         mockServer.enqueueSuccessfulRecipeSummaryResponse()
         subject.load(REFRESH, pagingState())
         val actual = mealieDb.recipeDao().queryAllRecipes()
-        assertThat(actual).containsExactly(CAKE_RECIPE_ENTITY, PORRIDGE_RECIPE_ENTITY)
+        assertThat(actual).containsExactly(
+            CAKE_RECIPE_SUMMARY_ENTITY,
+            PORRIDGE_RECIPE_SUMMARY_ENTITY
+        )
     }
 
     @Test
