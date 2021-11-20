@@ -3,7 +3,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/nav_graph"
-	app:startDestination="@id/disclaimerFragment">
+	app:startDestination="@id/splashFragment">
 
 	<fragment
 		android:id="@+id/authenticationFragment"
@@ -55,6 +55,27 @@
 		<action
 			android:id="@+id/action_disclaimerFragment_to_authenticationFragment"
 			app:destination="@id/authenticationFragment"
+			app:popUpTo="@id/nav_graph"
+			app:popUpToInclusive="true" />
+	</fragment>
+	<fragment
+		android:id="@+id/splashFragment"
+		android:name="gq.kirmanak.mealient.ui.splash.SplashFragment"
+		android:label="fragment_splash"
+		tools:layout="@layout/fragment_splash">
+		<action
+			android:id="@+id/action_splashFragment_to_authenticationFragment"
+			app:destination="@id/authenticationFragment"
+			app:popUpTo="@id/nav_graph"
+			app:popUpToInclusive="true" />
+		<action
+			android:id="@+id/action_splashFragment_to_disclaimerFragment"
+			app:destination="@id/disclaimerFragment"
+			app:popUpTo="@id/nav_graph"
+			app:popUpToInclusive="true" />
+		<action
+			android:id="@+id/action_splashFragment_to_recipesFragment"
+			app:destination="@id/recipesFragment"
 			app:popUpTo="@id/nav_graph"
 			app:popUpToInclusive="true" />
 	</fragment>
