@@ -19,9 +19,10 @@ assembleDebug:
   needs: [ ]
   script:
     - ./gradlew assembleDebug
+    - cp app/build/outputs/apk/debug/*.apk mealie-debug.apk
   artifacts:
     paths:
-      - app/build/outputs/apk/debug/*.apk
+      - mealie-debug.apk
 
 checkApp:
   interruptible: true
@@ -45,8 +46,9 @@ assembleRelease:
     - echo "keyAlias=$MEALIE_KEY_ALIAS" >> keystore.properties
     - echo "keyPassword=$MEALIE_KEY_PASSWORD" >> keystore.properties
     - ./gradlew assembleRelease
+    - cp app/build/outputs/apk/release/*.apk mealie-release.apk
   artifacts:
     paths:
-      - app/build/outputs/apk/release/*.apk
+      - mealie-release.apk
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
