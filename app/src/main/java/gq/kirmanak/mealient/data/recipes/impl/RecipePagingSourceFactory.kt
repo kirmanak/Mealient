@@ -13,6 +13,7 @@ class RecipePagingSourceFactory @Inject constructor(
 ) : () -> PagingSource<Int, RecipeSummaryEntity> {
     private val sources: MutableList<PagingSource<Int, RecipeSummaryEntity>> = mutableListOf()
 
+    @Synchronized
     override fun invoke(): PagingSource<Int, RecipeSummaryEntity> {
         Timber.v("invoke() called")
         val newSource = recipeStorage.queryRecipes()
@@ -20,6 +21,7 @@ class RecipePagingSourceFactory @Inject constructor(
         return newSource
     }
 
+    @Synchronized
     fun invalidate() {
         Timber.v("invalidate() called")
         for (source in sources) {
