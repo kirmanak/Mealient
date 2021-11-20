@@ -7,8 +7,8 @@
 
 	<fragment
 		android:id="@+id/authenticationFragment"
-		android:name="gq.kirmanak.mealie.ui.auth.AuthenticationFragment"
-		android:label="AuthenticationFragment" >
+		android:name="gq.kirmanak.mealient.ui.auth.AuthenticationFragment"
+		android:label="AuthenticationFragment">
 		<action
 			android:id="@+id/action_authenticationFragment_to_recipesFragment"
 			app:destination="@id/recipesFragment"
@@ -17,7 +17,7 @@
 	</fragment>
 	<fragment
 		android:id="@+id/recipesFragment"
-		android:name="gq.kirmanak.mealie.ui.recipes.RecipesFragment"
+		android:name="gq.kirmanak.mealient.ui.recipes.RecipesFragment"
 		android:label="fragment_recipes"
 		tools:layout="@layout/fragment_recipes">
 		<action
@@ -31,7 +31,7 @@
 	</fragment>
 	<fragment
 		android:id="@+id/recipeInfoFragment"
-		android:name="gq.kirmanak.mealie.ui.recipes.info.RecipeInfoFragment"
+		android:name="gq.kirmanak.mealient.ui.recipes.info.RecipeInfoFragment"
 		android:label="RecipeInfoFragment">
 		<action
 			android:id="@+id/action_recipeInfoFragment_to_authenticationFragment"

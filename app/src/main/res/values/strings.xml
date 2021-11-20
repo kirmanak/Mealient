@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">Mealie</string>
+	<string name="app_name">Mealient</string>
 	<string name="fragment_authentication_input_hint_email">E-mail</string>
 	<string name="fragment_authentication_input_hint_password">Password</string>
 	<string name="fragment_authentication_input_hint_url">Url</string>

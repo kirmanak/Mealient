@@ -5,6 +5,6 @@ If you face any issues using the application or have a feature request DO NOT se
 Instead, report a new issue in this repository.
 THAT IS NOT AN OFFICIAL CLIENT.
 
-# Mealie Android Application
+# Mealient Android Application
 
 An Android client for [Mealie](https://hay-kot.github.io/mealie/). Easily access your recipes using your phone.
