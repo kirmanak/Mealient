@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.databinding.ViewHolderInstructionBinding
 
@@ -29,7 +30,9 @@ class RecipeInstructionsAdapter :
     class RecipeInstructionViewHolder(private val binding: ViewHolderInstructionBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RecipeInstructionEntity, position: Int) {
-            binding.step.text = "Step: ${position + 1}"
+            binding.step.text = binding.root.resources.getString(
+                R.string.view_holder_recipe_instructions_step, position + 1
+            )
             binding.instruction.text = item.text
         }
     }

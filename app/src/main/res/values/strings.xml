@@ -15,4 +15,5 @@
 	<string name="fragment_disclaimer_main_text">This project is NOT associated with the core Mealie developers. If you face any issues when using the application or have a feature request DO NOT send them to the Mealie developers. Instead, report a new issue in the Mealient repository. THAT IS NOT AN OFFICIAL CLIENT.</string>
 	<string name="fragment_disclaimer_header">DISCLAIMER</string>
 	<string name="fragment_disclaimer_button_okay">OKAY</string>
+	<string name="view_holder_recipe_instructions_step">Step: %d</string>
 </resources>
