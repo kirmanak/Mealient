@@ -37,7 +37,7 @@ checkApp:
 assembleRelease:
   interruptible: true
   stage: build
-  needs: [ ]
+  needs: [ "check" ]
   script:
     - echo "$MEALIE_KEY_STORE" | base64 -d > app/mealie-release-key.jks
     - echo "keystorePath=mealie-release-key.jks" > keystore.properties
