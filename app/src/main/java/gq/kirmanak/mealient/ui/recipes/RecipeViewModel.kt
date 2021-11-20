@@ -8,6 +8,7 @@ import gq.kirmanak.mealient.data.recipes.RecipeImageLoader
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +19,7 @@ class RecipeViewModel @Inject constructor(
     val recipeFlow = recipeRepo.createPager().flow
 
     fun loadRecipeImage(view: ImageView, recipeSummary: RecipeSummaryEntity?) {
+        Timber.v("loadRecipeImage() called with: view = $view, recipeSummary = $recipeSummary")
         viewModelScope.launch {
             recipeImageLoader.loadRecipeImage(view, recipeSummary?.slug)
         }

@@ -45,6 +45,7 @@ class RecipesFragment : Fragment() {
     }
 
     private fun navigateToRecipeInfo(recipeSummaryEntity: RecipeSummaryEntity) {
+        Timber.v("navigateToRecipeInfo() called with: recipeSummaryEntity = $recipeSummaryEntity")
         findNavController().navigate(
             RecipesFragmentDirections.actionRecipesFragmentToRecipeInfoFragment(
                 recipeSlug = recipeSummaryEntity.slug,

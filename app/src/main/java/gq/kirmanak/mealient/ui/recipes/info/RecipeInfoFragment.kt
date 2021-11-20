@@ -40,6 +40,7 @@ class RecipeInfoFragment : Fragment() {
         viewModel.loadRecipeImage(binding.image, arguments.recipeSlug)
         viewModel.loadRecipeInfo(arguments.recipeId, arguments.recipeSlug)
         viewModel.recipeInfo.observe(viewLifecycleOwner) {
+            Timber.d("onViewCreated: full info $it")
             binding.title.text = it.recipeSummaryEntity.name
             binding.description.text = it.recipeSummaryEntity.description
 
@@ -58,7 +59,7 @@ class RecipeInfoFragment : Fragment() {
     private fun listenToAuthStatuses() {
         Timber.v("listenToAuthStatuses() called")
         authViewModel.authenticationStatuses().observe(this) {
-            Timber.v("listenToAuthStatuses: new auth status = $it")
+            Timber.d("listenToAuthStatuses: new auth status = $it")
             if (!it) navigateToAuthFragment()
         }
     }

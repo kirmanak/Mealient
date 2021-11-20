@@ -28,15 +28,11 @@ class RecipesPagingAdapter(
         override fun areItemsTheSame(
             oldItem: RecipeSummaryEntity,
             newItem: RecipeSummaryEntity
-        ): Boolean {
-            return oldItem.remoteId == newItem.remoteId
-        }
+        ): Boolean = oldItem.remoteId == newItem.remoteId
 
         override fun areContentsTheSame(
             oldItem: RecipeSummaryEntity,
             newItem: RecipeSummaryEntity
-        ): Boolean {
-            return oldItem.name == newItem.name && oldItem.slug == newItem.slug
-        }
+        ): Boolean = oldItem.name == newItem.name && oldItem.slug == newItem.slug
     }
 }

@@ -22,6 +22,7 @@ class RecipeInfoViewModel @Inject constructor(
     val recipeInfo: LiveData<FullRecipeInfo> = _recipeInfo
 
     fun loadRecipeImage(view: ImageView, recipeSlug: String) {
+        Timber.v("loadRecipeImage() called with: view = $view, recipeSlug = $recipeSlug")
         viewModelScope.launch {
             recipeImageLoader.loadRecipeImage(view, recipeSlug)
         }

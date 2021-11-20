@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.databinding.ViewHolderInstructionBinding
+import gq.kirmanak.mealient.ui.recipes.info.RecipeInstructionsAdapter.RecipeInstructionViewHolder
+import timber.log.Timber
 
 class RecipeInstructionsAdapter :
-    ListAdapter<RecipeInstructionEntity, RecipeInstructionsAdapter.RecipeInstructionViewHolder>(
-        RecipeInstructionDiffCallback
-    ) {
+    ListAdapter<RecipeInstructionEntity, RecipeInstructionViewHolder>(RecipeInstructionDiffCallback) {
 
     private object RecipeInstructionDiffCallback :
         DiffUtil.ItemCallback<RecipeInstructionEntity>() {
@@ -27,9 +27,11 @@ class RecipeInstructionsAdapter :
         ): Boolean = oldItem == newItem
     }
 
-    class RecipeInstructionViewHolder(private val binding: ViewHolderInstructionBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class RecipeInstructionViewHolder(
+        private val binding: ViewHolderInstructionBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RecipeInstructionEntity, position: Int) {
+            Timber.v("bind() called with: item = $item, position = $position")
             binding.step.text = binding.root.resources.getString(
                 R.string.view_holder_recipe_instructions_step, position + 1
             )
@@ -38,6 +40,7 @@ class RecipeInstructionsAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeInstructionViewHolder {
+        Timber.v("onCreateViewHolder() called with: parent = $parent, viewType = $viewType")
         val inflater = LayoutInflater.from(parent.context)
         return RecipeInstructionViewHolder(
             ViewHolderInstructionBinding.inflate(inflater, parent, false)
@@ -45,6 +48,9 @@ class RecipeInstructionsAdapter :
     }
 
     override fun onBindViewHolder(holder: RecipeInstructionViewHolder, position: Int) {
-        holder.bind(getItem(position), position)
+        Timber.v("onBindViewHolder() called with: holder = $holder, position = $position")
+        val item = getItem(position)
+        Timber.d("onBindViewHolder: item is $item")
+        holder.bind(item, position)
     }
 }
