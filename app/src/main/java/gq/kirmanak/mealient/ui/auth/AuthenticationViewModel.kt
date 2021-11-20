@@ -1,11 +1,12 @@
 package gq.kirmanak.mealient.ui.auth
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,9 +25,9 @@ class AuthenticationViewModel @Inject constructor(
         authRepo.authenticate(username, password, baseUrl)
     }
 
-    fun authenticationStatuses(): Flow<Boolean> {
+    fun authenticationStatuses(): LiveData<Boolean> {
         Timber.v("authenticationStatuses() called")
-        return authRepo.authenticationStatuses()
+        return authRepo.authenticationStatuses().asLiveData()
     }
 
     fun logout() {

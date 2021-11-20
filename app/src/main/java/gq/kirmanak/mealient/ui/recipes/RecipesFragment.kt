@@ -16,7 +16,6 @@ import gq.kirmanak.mealient.ui.SwipeRefreshLayoutHelper.listenToRefreshRequests
 import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 @ExperimentalCoroutinesApi
@@ -56,11 +55,9 @@ class RecipesFragment : Fragment() {
 
     private fun listenToAuthStatuses() {
         Timber.v("listenToAuthStatuses() called")
-        lifecycleScope.launchWhenCreated {
-            authViewModel.authenticationStatuses().collectLatest {
-                Timber.v("listenToAuthStatuses: new auth status = $it")
-                if (!it) navigateToAuthFragment()
-            }
+        authViewModel.authenticationStatuses().observe(this) {
+            Timber.v("listenToAuthStatuses: new auth status = $it")
+            if (!it) navigateToAuthFragment()
         }
     }
 

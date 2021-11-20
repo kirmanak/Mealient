@@ -5,11 +5,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.databinding.MainActivityBinding
 import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
-import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -29,10 +27,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun listenToAuthStatuses() {
         Timber.v("listenToAuthStatuses() called")
-        lifecycleScope.launchWhenCreated {
-            authViewModel.authenticationStatuses().collectLatest {
-                changeAuthStatus(it)
-            }
+        authViewModel.authenticationStatuses().observe(this) {
+            changeAuthStatus(it)
         }
     }
 

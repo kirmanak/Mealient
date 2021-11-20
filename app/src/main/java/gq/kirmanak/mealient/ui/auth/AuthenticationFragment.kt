@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.databinding.FragmentAuthenticationBinding
-import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -30,11 +29,9 @@ class AuthenticationFragment : Fragment() {
 
     private fun listenToAuthenticationStatuses() {
         Timber.d("listenToAuthenticationStatuses() called")
-        lifecycleScope.launchWhenCreated {
-            viewModel.authenticationStatuses().collectLatest {
-                Timber.d("listenToAuthenticationStatuses: new status = $it")
-                if (it) navigateToRecipes()
-            }
+        viewModel.authenticationStatuses().observe(this) {
+            Timber.d("listenToAuthenticationStatuses: new status = $it")
+            if (it) navigateToRecipes()
         }
     }
 
