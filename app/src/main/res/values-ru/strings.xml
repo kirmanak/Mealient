@@ -13,5 +13,5 @@
 	<string name="view_holder_recipe_instructions_step">Шаг: %d</string>
 	<string name="fragment_disclaimer_button_okay">Хорошо</string>
 	<string name="fragment_disclaimer_header">ДИСКЛЕЙМЕР</string>
-	<string name="fragment_disclaimer_main_text">Этот проект НЕ связан с разработчиками основного Meale. Если вы встретите какие-либо ошибки во время использования приложения или у вас есть предложения по улучшению, НЕ отправляйте их разработчикам Mealie. Вместо этого отправьте их в репозиторий Mealient. ЭТО НЕОФИЦИАЛЬНЫЙ КЛИЕНТ.</string>
+	<string name="fragment_disclaimer_main_text">Это неофициальный клиент к менеджеру рецептов Mealie. Он разрабатывается независимо от основного проекта Mealie. Любые проблемы и предложения по улучшению следует отправлять в репозиторий Mealient, НЕ в репозиторий Mealie.</string>
 </resources>

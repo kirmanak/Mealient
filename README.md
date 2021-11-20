@@ -1,6 +1,6 @@
 # DISCLAIMER
 
-This project is NOT associated with the core Mealie developers. If you face any issues when using the application or have a feature request DO NOT send them to the Mealie developers. Instead, report a new issue in the Mealient repository. THAT IS NOT AN OFFICIAL CLIENT.
+This is an unofficial client for recipe manager Mealie. The application is developed independently from the core Mealie project. Any issues or feature request must be sent to the Mealient repository, NOT the Mealie repository.
 
 # Mealient Android Application
 
