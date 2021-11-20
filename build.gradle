@@ -1,12 +1,14 @@
 buildscript {
-    // https://developer.android.com/jetpack/androidx/releases/navigation
-    ext.nav_version = "2.4.0-beta02"
+    ext {
+        // https://developer.android.com/jetpack/androidx/releases/navigation
+        nav_version = "2.4.0-beta02"
 
-    // https://dagger.dev/hilt/gradle-setup
-    ext.hilt_version = "2.40.1"
+        // https://dagger.dev/hilt/gradle-setup
+        hilt_version = "2.40.1"
 
-    // https://kotlinlang.org/docs/gradle.html
-    ext.kotlin_version = "1.5.31"
+        // https://kotlinlang.org/docs/gradle.html
+        kotlin_version = "1.6.0"
+    }
 
     repositories {
         google()
