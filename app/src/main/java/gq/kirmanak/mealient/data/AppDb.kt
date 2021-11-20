@@ -6,7 +6,6 @@ import androidx.room.TypeConverters
 import gq.kirmanak.mealient.data.impl.RoomTypeConverters
 import gq.kirmanak.mealient.data.recipes.db.RecipeDao
 import gq.kirmanak.mealient.data.recipes.db.entity.*
-import javax.inject.Singleton
 
 @Database(
     version = 1,
@@ -14,7 +13,6 @@ import javax.inject.Singleton
     exportSchema = false
 )
 @TypeConverters(RoomTypeConverters::class)
-@Singleton
 abstract class AppDb : RoomDatabase() {
     abstract fun recipeDao(): RecipeDao
 }

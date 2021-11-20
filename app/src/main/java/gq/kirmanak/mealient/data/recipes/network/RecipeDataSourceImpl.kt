@@ -38,7 +38,7 @@ class RecipeDataSourceImpl @Inject constructor(
             val baseUrl = checkNotNull(authRepo.getBaseUrl()) { "Base url is null" }
             val token = checkNotNull(authRepo.getToken()) { "Token is null" }
             Timber.d("requestRecipes: baseUrl = $baseUrl, token = $token")
-            val retrofit = retrofitBuilder.buildRetrofit(baseUrl, token)
+            val retrofit = retrofitBuilder.buildRetrofit(baseUrl)
             val createdService = retrofit.create(RecipeService::class.java)
             _recipeService = createdService
             createdService

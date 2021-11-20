@@ -8,12 +8,14 @@ import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 import javax.inject.Inject
 
-class OkHttpBuilder @Inject constructor() {
-    fun buildOkHttp(token: String?): OkHttpClient {
-        Timber.v("buildOkHttp() called with: token = $token")
+class OkHttpBuilder @Inject constructor(
+    private val authOkHttpInterceptor: AuthOkHttpInterceptor
+) {
+    fun buildOkHttp(): OkHttpClient {
+        Timber.v("buildOkHttp() called")
         val builder = OkHttpClient.Builder()
         if (BuildConfig.DEBUG) builder.addNetworkInterceptor(buildLoggingInterceptor())
-        if (token != null) builder.addNetworkInterceptor(AuthOkHttpInterceptor(token))
+        builder.addNetworkInterceptor(authOkHttpInterceptor)
         return builder.build()
     }
 

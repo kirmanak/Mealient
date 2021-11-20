@@ -4,26 +4,23 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import timber.log.Timber
 import javax.inject.Inject
 
 @ExperimentalSerializationApi
-class RetrofitBuilder @Inject constructor(private val okHttpBuilder: OkHttpBuilder) {
-    private val json by lazy {
-        Json {
-            coerceInputValues = true
-            ignoreUnknownKeys = true
-        }
-    }
-
-    fun buildRetrofit(baseUrl: String, token: String? = null): Retrofit {
-        Timber.v("buildRetrofit() called with: baseUrl = $baseUrl, token = $token")
+class RetrofitBuilder @Inject constructor(
+    private val okHttpClient: OkHttpClient,
+    private val json: Json
+) {
+    fun buildRetrofit(baseUrl: String): Retrofit {
+        Timber.v("buildRetrofit() called with: baseUrl = $baseUrl")
         val contentType = "application/json".toMediaType()
         val converterFactory = json.asConverterFactory(contentType)
         return Retrofit.Builder()
             .baseUrl(baseUrl)
-            .client(okHttpBuilder.buildOkHttp(token))
+            .client(okHttpClient)
             .addConverterFactory(converterFactory)
             .build()
     }
