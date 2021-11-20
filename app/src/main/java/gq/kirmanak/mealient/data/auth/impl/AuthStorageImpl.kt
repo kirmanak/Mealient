@@ -1,9 +1,6 @@
 package gq.kirmanak.mealient.data.auth.impl
 
-import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
-import dagger.hilt.android.qualifiers.ApplicationContext
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,10 +17,9 @@ private const val TOKEN_KEY = "AUTH_TOKEN"
 private const val BASE_URL_KEY = "BASE_URL"
 
 @ExperimentalCoroutinesApi
-class AuthStorageImpl @Inject constructor(@ApplicationContext private val context: Context) :
-    AuthStorage {
+class AuthStorageImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
-        get() = PreferenceManager.getDefaultSharedPreferences(context)
+) : AuthStorage {
 
     override fun storeAuthData(token: String, baseUrl: String) {
         Timber.v("storeAuthData() called with: token = $token, baseUrl = $baseUrl")
