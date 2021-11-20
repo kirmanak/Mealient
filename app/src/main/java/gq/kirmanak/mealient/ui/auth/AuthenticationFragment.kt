@@ -75,12 +75,14 @@ class AuthenticationFragment : Fragment() {
                 "URL is empty"
             } ?: return
         }
+        binding.button.isClickable = false
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             runCatching {
                 viewModel.authenticate(email, pass, url)
             }.onFailure {
                 Timber.e(it, "Can't authenticate")
             }
+            binding.button.isClickable = true
         }
     }
 
