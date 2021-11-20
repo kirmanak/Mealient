@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="fragment_authentication_input_hint_email">E-mail</string>
+	<string name="fragment_authentication_input_hint_password">Пароль</string>
+	<string name="fragment_authentication_input_hint_url">URL сервера</string>
+	<string name="fragment_authentication_button_login">Войти</string>
+	<string name="content_description_view_holder_recipe_image">Изображение готового блюда</string>
+	<string name="menu_main_toolbar_logout">Выйти</string>
+	<string name="view_holder_recipe_text_placeholder">Загрузка</string>
+	<string name="fragment_recipe_info_ingredients_header">Ингредиенты</string>
+	<string name="fragment_recipe_info_instructions_header">Инструкции</string>
+	<string name="fragment_disclaimer_button_okay_timer">Хорошо (%d секунд)</string>
+	<string name="view_holder_recipe_instructions_step">Шаг: %d</string>
+	<string name="fragment_disclaimer_button_okay">Хорошо</string>
+	<string name="fragment_disclaimer_header">ДИСКЛЕЙМЕР</string>
+	<string name="fragment_disclaimer_main_text">Этот проект НЕ связан с разработчиками основного Meale. Если вы встретите какие-либо ошибки во время использования приложения или у вас есть предложения по улучшению, НЕ отправляйте их разработчикам Mealie. Вместо этого отправьте их в репозиторий Mealient. ЭТО НЕОФИЦИАЛЬНЫЙ КЛИЕНТ.</string>
+</resources>
