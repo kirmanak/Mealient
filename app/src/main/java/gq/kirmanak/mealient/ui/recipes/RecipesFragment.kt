@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +26,17 @@ class RecipesFragment : Fragment() {
     private val binding: FragmentRecipesBinding
         get() = checkNotNull(_binding) { "Binding requested when fragment is off screen" }
     private val viewModel by viewModels<RecipeViewModel>()
+
     private val authViewModel by viewModels<AuthenticationViewModel>()
+    private val authStatuses by lazy { authViewModel.authenticationStatuses() }
+    private val authStatusObserver = Observer<Boolean> { onAuthStatusChange(it) }
+    private fun onAuthStatusChange(isAuthenticated: Boolean) {
+        Timber.v("onAuthStatusChange() called with: isAuthenticated = $isAuthenticated")
+        if (!isAuthenticated) {
+            authStatuses.removeObserver(authStatusObserver)
+            navigateToAuthFragment()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,7 +52,7 @@ class RecipesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
         setupRecipeAdapter()
-        listenToAuthStatuses()
+        authStatuses.observe(this, authStatusObserver)
     }
 
     private fun navigateToRecipeInfo(recipeSummaryEntity: RecipeSummaryEntity) {
@@ -52,14 +63,6 @@ class RecipesFragment : Fragment() {
                 recipeId = recipeSummaryEntity.remoteId
             )
         )
-    }
-
-    private fun listenToAuthStatuses() {
-        Timber.v("listenToAuthStatuses() called")
-        authViewModel.authenticationStatuses().observe(this) {
-            Timber.v("listenToAuthStatuses: new auth status = $it")
-            if (!it) navigateToAuthFragment()
-        }
     }
 
     private fun navigateToAuthFragment() {

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
@@ -21,18 +22,20 @@ class AuthenticationFragment : Fragment() {
         get() = checkNotNull(_binding) { "Binding requested when fragment is off screen" }
     private val viewModel by viewModels<AuthenticationViewModel>()
 
+    private val authStatuses by lazy { viewModel.authenticationStatuses() }
+    private val authStatusObserver = Observer<Boolean> { onAuthStatusChange(it) }
+    private fun onAuthStatusChange(isAuthenticated: Boolean) {
+        Timber.v("onAuthStatusChange() called with: isAuthenticated = $isAuthenticated")
+        if (isAuthenticated) {
+            authStatuses.removeObserver(authStatusObserver)
+            navigateToRecipes()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.v("onCreate() called with: savedInstanceState = $savedInstanceState")
-        listenToAuthenticationStatuses()
-    }
-
-    private fun listenToAuthenticationStatuses() {
-        Timber.d("listenToAuthenticationStatuses() called")
-        viewModel.authenticationStatuses().observe(this) {
-            Timber.d("listenToAuthenticationStatuses: new status = $it")
-            if (it) navigateToRecipes()
-        }
+        authStatuses.observe(this, authStatusObserver)
     }
 
     override fun onCreateView(

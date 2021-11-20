@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,9 +20,19 @@ class RecipeInfoFragment : Fragment() {
     private var _binding: FragmentRecipeInfoBinding? = null
     private val binding: FragmentRecipeInfoBinding
         get() = checkNotNull(_binding) { "Binding requested when fragment is off screen" }
-    private val authViewModel by viewModels<AuthenticationViewModel>()
     private val arguments by navArgs<RecipeInfoFragmentArgs>()
     private val viewModel by viewModels<RecipeInfoViewModel>()
+
+    private val authViewModel by viewModels<AuthenticationViewModel>()
+    private val authStatuses by lazy { authViewModel.authenticationStatuses() }
+    private val authStatusObserver = Observer<Boolean> { onAuthStatusChange(it) }
+    private fun onAuthStatusChange(isAuthenticated: Boolean) {
+        Timber.v("onAuthStatusChange() called with: isAuthenticated = $isAuthenticated")
+        if (!isAuthenticated) {
+            authStatuses.removeObserver(authStatusObserver)
+            navigateToAuthFragment()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,9 +47,11 @@ class RecipeInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
-        listenToAuthStatuses()
+        authStatuses.observe(this, authStatusObserver)
+
         viewModel.loadRecipeImage(binding.image, arguments.recipeSlug)
         viewModel.loadRecipeInfo(arguments.recipeId, arguments.recipeSlug)
+
         viewModel.recipeInfo.observe(viewLifecycleOwner) {
             Timber.d("onViewCreated: full info $it")
             binding.title.text = it.recipeSummaryEntity.name
@@ -53,14 +66,6 @@ class RecipeInfoFragment : Fragment() {
             binding.instructionsList.adapter = recipeInstructionsAdapter
             binding.instructionsList.layoutManager = LinearLayoutManager(requireContext())
             recipeInstructionsAdapter.submitList(it.recipeInstructions)
-        }
-    }
-
-    private fun listenToAuthStatuses() {
-        Timber.v("listenToAuthStatuses() called")
-        authViewModel.authenticationStatuses().observe(this) {
-            Timber.d("listenToAuthStatuses: new auth status = $it")
-            if (!it) navigateToAuthFragment()
         }
     }
 
