@@ -20,7 +20,7 @@ android {
 
     signingConfigs {
         release {
-            file("../keystore.properties").with { keystorePropertiesFile ->
+            rootProject.file("keystore.properties").with { keystorePropertiesFile ->
                 if (keystorePropertiesFile.canRead()) {
                     def keystoreProperties = new Properties()
                     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
