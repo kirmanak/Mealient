@@ -10,8 +10,8 @@ cache:
     - .gradle
 
 stages:
+  - check
   - build
-  - test
 
 assembleDebug:
   interruptible: true
@@ -21,15 +21,32 @@ assembleDebug:
     - ./gradlew assembleDebug
   artifacts:
     paths:
-      - app/build/outputs/
+      - app/build/outputs/apk/debug/*.apk
 
-debugTests:
+checkApp:
   interruptible: true
-  stage: test
-  needs: [ "assembleDebug" ]
+  stage: check
+  needs: [ ]
   script:
-    - ./gradlew testDebug
+    - ./gradlew check
   artifacts:
     when: always
     reports:
       junit: ./**/build/test-results/**/TEST-*.xml
+
+assembleRelease:
+  interruptible: true
+  stage: build
+  needs: [ ]
+  script:
+    - echo "$MEALIE_KEY_STORE" | base64 -d > app/mealie-release-key.jks
+    - echo "keystorePath=mealie-release-key.jks" > keystore.properties
+    - echo "keystorePassword=$MEALIE_KEY_STORE_PASSWORD" >> keystore.properties
+    - echo "keyAlias=$MEALIE_KEY_ALIAS" >> keystore.properties
+    - echo "keyPassword=$MEALIE_KEY_PASSWORD" >> keystore.properties
+    - ./gradlew assembleRelease
+  artifacts:
+    paths:
+      - app/build/outputs/apk/release/*.apk
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
