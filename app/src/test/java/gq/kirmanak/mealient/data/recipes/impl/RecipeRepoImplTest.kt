@@ -5,11 +5,11 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.data.AppDb
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
-import gq.kirmanak.mealient.data.test.MockServerWithAuthTest
-import gq.kirmanak.mealient.data.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
-import gq.kirmanak.mealient.data.test.RecipeImplTestData.RECIPE_SUMMARY_CAKE
-import gq.kirmanak.mealient.data.test.RecipeImplTestData.enqueueSuccessfulGetRecipe
-import gq.kirmanak.mealient.data.test.RecipeImplTestData.enqueueUnsuccessfulRecipeResponse
+import gq.kirmanak.mealient.test.MockServerWithAuthTest
+import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
+import gq.kirmanak.mealient.test.RecipeImplTestData.RECIPE_SUMMARY_CAKE
+import gq.kirmanak.mealient.test.RecipeImplTestData.enqueueSuccessfulGetRecipe
+import gq.kirmanak.mealient.test.RecipeImplTestData.enqueueUnsuccessfulRecipeResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import javax.inject.Inject

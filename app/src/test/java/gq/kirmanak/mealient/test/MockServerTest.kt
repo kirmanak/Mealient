@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.test
+package gq.kirmanak.mealient.test
 
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After

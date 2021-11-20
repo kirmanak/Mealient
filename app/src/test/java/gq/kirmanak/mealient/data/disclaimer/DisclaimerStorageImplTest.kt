@@ -2,7 +2,7 @@ package gq.kirmanak.mealient.data.disclaimer
 
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
-import gq.kirmanak.mealient.data.test.HiltRobolectricTest
+import gq.kirmanak.mealient.test.HiltRobolectricTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import javax.inject.Inject

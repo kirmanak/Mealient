@@ -1,9 +1,9 @@
-package gq.kirmanak.mealient.data.test
+package gq.kirmanak.mealient.test
 
 import gq.kirmanak.mealient.data.auth.AuthRepo
-import gq.kirmanak.mealient.data.test.AuthImplTestData.TEST_PASSWORD
-import gq.kirmanak.mealient.data.test.AuthImplTestData.TEST_USERNAME
-import gq.kirmanak.mealient.data.test.AuthImplTestData.enqueueSuccessfulAuthResponse
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
+import gq.kirmanak.mealient.test.AuthImplTestData.enqueueSuccessfulAuthResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import javax.inject.Inject

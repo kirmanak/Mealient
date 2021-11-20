@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.test
+package gq.kirmanak.mealient.test
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule

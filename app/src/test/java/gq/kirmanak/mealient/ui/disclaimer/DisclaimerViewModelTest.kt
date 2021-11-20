@@ -3,7 +3,7 @@ package gq.kirmanak.mealient.ui.disclaimer
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
-import gq.kirmanak.mealient.data.test.HiltRobolectricTest
+import gq.kirmanak.mealient.test.HiltRobolectricTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
