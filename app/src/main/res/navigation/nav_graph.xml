@@ -3,12 +3,13 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/nav_graph"
-	app:startDestination="@id/authenticationFragment">
+	app:startDestination="@id/disclaimerFragment">
 
 	<fragment
 		android:id="@+id/authenticationFragment"
 		android:name="gq.kirmanak.mealient.ui.auth.AuthenticationFragment"
-		android:label="AuthenticationFragment">
+		android:label="AuthenticationFragment"
+		tools:layout="@layout/fragment_authentication">
 		<action
 			android:id="@+id/action_authenticationFragment_to_recipesFragment"
 			app:destination="@id/recipesFragment"
@@ -32,7 +33,8 @@
 	<fragment
 		android:id="@+id/recipeInfoFragment"
 		android:name="gq.kirmanak.mealient.ui.recipes.info.RecipeInfoFragment"
-		android:label="RecipeInfoFragment">
+		android:label="RecipeInfoFragment"
+		tools:layout="@layout/fragment_recipe_info">
 		<action
 			android:id="@+id/action_recipeInfoFragment_to_authenticationFragment"
 			app:destination="@id/authenticationFragment"
@@ -44,5 +46,16 @@
 		<argument
 			android:name="recipe_id"
 			app:argType="long" />
+	</fragment>
+	<fragment
+		android:id="@+id/disclaimerFragment"
+		android:name="gq.kirmanak.mealient.ui.disclaimer.DisclaimerFragment"
+		android:label="DisclaimerFragment"
+		tools:layout="@layout/fragment_disclaimer">
+		<action
+			android:id="@+id/action_disclaimerFragment_to_authenticationFragment"
+			app:destination="@id/authenticationFragment"
+			app:popUpTo="@id/nav_graph"
+			app:popUpToInclusive="true" />
 	</fragment>
 </navigation>

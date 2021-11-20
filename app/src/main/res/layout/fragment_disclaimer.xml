@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="ui.disclaimer.DisclaimerFragment">
+
+	<TextView
+		android:id="@+id/header"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_small"
+		android:gravity="center"
+		android:text="@string/fragment_disclaimer_header"
+		android:textAppearance="?textAppearanceHeadline3"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<TextView
+		android:id="@+id/main_text"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_small"
+		android:text="@string/fragment_disclaimer_main_text"
+		android:textAppearance="?textAppearanceHeadline6"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/header" />
+
+	<Button
+		android:id="@+id/okay"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_small"
+		android:clickable="false"
+		android:text="@string/fragment_disclaimer_button_okay_timer"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/main_text" />
+</androidx.constraintlayout.widget.ConstraintLayout>
