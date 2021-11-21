@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.data.auth.impl
 
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
+import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
@@ -12,8 +13,8 @@ import gq.kirmanak.mealient.test.MockServerTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
+import okhttp3.mockwebserver.MockResponse
 import org.junit.Test
-import retrofit2.HttpException
 import javax.inject.Inject
 
 @ExperimentalSerializationApi
@@ -30,7 +31,7 @@ class AuthDataSourceImplTest : MockServerTest() {
         assertThat(token).isEqualTo(TEST_TOKEN)
     }
 
-    @Test(expected = HttpException::class)
+    @Test(expected = Unauthorized::class)
     fun `when authentication isn't successful then throws`(): Unit = runBlocking {
         mockServer.enqueueUnsuccessfulAuthResponse()
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
@@ -52,4 +53,32 @@ class AuthDataSourceImplTest : MockServerTest() {
         assertThat(path).isEqualTo("/api/auth/token")
     }
 
+    @Test(expected = NotMealie::class)
+    fun `when authenticate but response empty then NotMealie`(): Unit = runBlocking {
+        val response = MockResponse().setResponseCode(200)
+        mockServer.enqueue(response)
+        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
+    }
+
+    @Test(expected = NotMealie::class)
+    fun `when authenticate but response invalid then NotMealie`(): Unit = runBlocking {
+        val response = MockResponse()
+            .setResponseCode(200)
+            .setHeader("Content-Type", "application/json")
+            .setBody("{\"test\": \"test\"")
+        mockServer.enqueue(response)
+        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
+    }
+
+    @Test(expected = NotMealie::class)
+    fun `when authenticate but response not found then NotMealie`(): Unit = runBlocking {
+        val response = MockResponse().setResponseCode(404)
+        mockServer.enqueue(response)
+        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
+    }
+
+    @Test(expected = NoServerConnection::class)
+    fun `when authenticate but host not found then NoServerConnection`(): Unit = runBlocking {
+        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, "http://test")
+    }
 }

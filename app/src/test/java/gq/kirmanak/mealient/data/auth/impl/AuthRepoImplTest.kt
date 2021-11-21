@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.data.auth.impl
 
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
+import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.Unauthorized
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
@@ -11,7 +12,6 @@ import gq.kirmanak.mealient.test.MockServerTest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
-import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -31,7 +31,7 @@ class AuthRepoImplTest : MockServerTest() {
         assertThat(subject.authenticationStatuses().first()).isTrue()
     }
 
-    @Test(expected = HttpException::class)
+    @Test(expected = Unauthorized::class)
     fun `when authentication fails then authenticate throws`() = runBlocking {
         mockServer.enqueueUnsuccessfulAuthResponse()
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)

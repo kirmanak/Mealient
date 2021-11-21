@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.data.auth
 
 import gq.kirmanak.mealient.data.auth.impl.GetTokenResponse
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -15,5 +16,5 @@ interface AuthService {
         @Field("scope") scope: String? = null,
         @Field("client_id") clientId: String? = null,
         @Field("client_secret") clientSecret: String? = null
-    ): GetTokenResponse
+    ): Response<GetTokenResponse>
 }
