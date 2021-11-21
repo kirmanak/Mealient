@@ -20,10 +20,10 @@ instructions/ingredients for each of them.
 
 ## Screenshots
 
-[login-screen](screenshots/login.webp)
-[recipes-screen](screenshots/recipes.webp)
-[recipe-info-screen](screenshots/recipe_info.webp)
-[usage](screenshots/usage.gif)
+![login-screen](screenshots/login.webp)
+![recipes-screen](screenshots/recipes.webp)
+![recipe-info-screen](screenshots/recipe_info.webp)
+![usage](screenshots/usage.gif)
 
 ## How to install
 
