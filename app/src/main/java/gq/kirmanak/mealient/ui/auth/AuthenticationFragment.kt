@@ -8,10 +8,11 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import gq.kirmanak.mealient.R
+import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
 import gq.kirmanak.mealient.databinding.FragmentAuthenticationBinding
 import timber.log.Timber
 
@@ -59,30 +60,35 @@ class AuthenticationFragment : Fragment() {
         findNavController().navigate(AuthenticationFragmentDirections.actionAuthenticationFragmentToRecipesFragment())
     }
 
-    private fun onLoginClicked() {
+    private fun onLoginClicked(): Unit = with(binding) {
         Timber.v("onLoginClicked() called")
-        val email: String
-        val pass: String
-        val url: String
-        with(binding) {
-            email = checkIfInputIsEmpty(emailInput, emailInputLayout) {
-                "Email is empty"
-            } ?: return
-            pass = checkIfInputIsEmpty(passwordInput, passwordInputLayout) {
-                "Pass is empty"
-            } ?: return
-            url = checkIfInputIsEmpty(urlInput, urlInputLayout) {
-                "URL is empty"
-            } ?: return
-        }
-        binding.button.isClickable = false
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            runCatching {
-                viewModel.authenticate(email, pass, url)
-            }.onFailure {
-                Timber.e(it, "Can't authenticate")
+
+        val email: String = checkIfInputIsEmpty(emailInput, emailInputLayout) {
+            getString(R.string.fragment_authentication_email_input_empty)
+        } ?: return
+
+        val pass: String = checkIfInputIsEmpty(passwordInput, passwordInputLayout) {
+            getString(R.string.fragment_authentication_password_input_empty)
+        } ?: return
+
+        val url: String = checkIfInputIsEmpty(urlInput, urlInputLayout) {
+            getString(R.string.fragment_authentication_url_input_empty)
+        } ?: return
+
+        button.isClickable = false
+        viewModel.authenticate(email, pass, url).observe(viewLifecycleOwner) {
+            Timber.d("onLoginClicked: result $it")
+            passwordInputLayout.error = when (it.exceptionOrNull()) {
+                is Unauthorized -> getString(R.string.fragment_authentication_credentials_incorrect)
+                else -> null
             }
-            binding.button.isClickable = true
+            urlInputLayout.error = when (it.exceptionOrNull()) {
+                is NoServerConnection -> getString(R.string.fragment_authentication_no_connection)
+                is NotMealie -> getString(R.string.fragment_authentication_unexpected_response)
+                is Unauthorized, null -> null
+                else -> getString(R.string.fragment_authentication_unknown_error)
+            }
+            button.isClickable = true
         }
     }
 

@@ -1,9 +1,6 @@
 package gq.kirmanak.mealient.ui.auth
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
@@ -16,13 +13,22 @@ class AuthenticationViewModel @Inject constructor(
     private val authRepo: AuthRepo,
     private val recipeRepo: RecipeRepo
 ) : ViewModel() {
-    init {
-        Timber.v("constructor called")
-    }
 
-    suspend fun authenticate(username: String, password: String, baseUrl: String) {
+    fun authenticate(username: String, password: String, baseUrl: String): LiveData<Result<Unit>> {
         Timber.v("authenticate() called with: username = $username, password = $password, baseUrl = $baseUrl")
-        authRepo.authenticate(username, password, baseUrl)
+        val result = MutableLiveData<Result<Unit>>()
+        viewModelScope.launch {
+            runCatching {
+                authRepo.authenticate(username, password, baseUrl)
+            }.onFailure {
+                Timber.e(it, "authenticate: can't authenticate")
+                result.value = Result.failure(it)
+            }.onSuccess {
+                Timber.d("authenticate: authenticated")
+                result.value = Result.success(Unit)
+            }
+        }
+        return result
     }
 
     fun authenticationStatuses(): LiveData<Boolean> {
