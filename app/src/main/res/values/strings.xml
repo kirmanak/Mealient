@@ -12,7 +12,7 @@
 	<string name="fragment_recipe_info_ingredients_header">Ingredients</string>
 	<string name="fragment_recipe_info_instructions_header">Instructions</string>
 	<string name="fragment_disclaimer_button_okay_timer">Okay (%d seconds)</string>
-	<string name="fragment_disclaimer_main_text">This is an unofficial client for recipe manager Mealie. The application is developed independently from the core Mealie project. Any issues or feature request must be sent to the Mealient repository, NOT the Mealie repository.</string>
+	<string name="fragment_disclaimer_main_text">This project is developed independently from the core Mealie project. It is NOT associated with the core Mealie developers. Any issues must be reported to the Mealient repository, NOT the Mealie repository.</string>
 	<string name="fragment_disclaimer_header">DISCLAIMER</string>
 	<string name="fragment_disclaimer_button_okay">Okay</string>
 	<string name="view_holder_recipe_instructions_step">Step: %d</string>
