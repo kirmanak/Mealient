@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private fun setToolbarRoundCorner() {
         Timber.v("setToolbarRoundCorner() called")
         val drawables = listOf(
+            binding.toolbarHolder.background as? MaterialShapeDrawable,
             binding.toolbar.background as? MaterialShapeDrawable,
         )
         Timber.d("setToolbarRoundCorner: drawables = $drawables")
