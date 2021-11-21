@@ -5,6 +5,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.databinding.MainActivityBinding
 import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
@@ -22,7 +24,24 @@ class MainActivity : AppCompatActivity() {
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        setToolbarRoundCorner()
         listenToAuthStatuses()
+    }
+
+    private fun setToolbarRoundCorner() {
+        Timber.v("setToolbarRoundCorner() called")
+        val drawables = listOf(
+            binding.toolbar.background as? MaterialShapeDrawable,
+        )
+        Timber.d("setToolbarRoundCorner: drawables = $drawables")
+        val radius = resources.getDimension(R.dimen.main_activity_toolbar_corner_radius)
+        for (drawable in drawables) {
+            drawable?.apply {
+                shapeAppearanceModel = shapeAppearanceModel.toBuilder()
+                    .setBottomLeftCorner(CornerFamily.ROUNDED, radius)
+                    .build()
+            }
+        }
     }
 
     private fun listenToAuthStatuses() {
