@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.setIcon(R.drawable.ic_toolbar)
         setToolbarRoundCorner()
         listenToAuthStatuses()
     }
