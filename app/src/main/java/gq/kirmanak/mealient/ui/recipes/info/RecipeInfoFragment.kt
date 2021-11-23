@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -67,6 +68,7 @@ class RecipeInfoFragment : Fragment() {
             binding.instructionsList.layoutManager = LinearLayoutManager(requireContext())
             recipeInstructionsAdapter.submitList(it.recipeInstructions)
         }
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = null
     }
 
     private fun navigateToAuthFragment() {
