@@ -8,6 +8,7 @@ import androidx.navigation.NavDirections
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +23,7 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            delay(1000)
             _nextDestination.value = if (!disclaimerStorage.isDisclaimerAccepted())
                 SplashFragmentDirections.actionSplashFragmentToDisclaimerFragment()
             else if (!authRepo.authenticationStatuses().first())
