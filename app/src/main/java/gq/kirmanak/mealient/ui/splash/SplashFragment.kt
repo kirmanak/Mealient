@@ -32,18 +32,13 @@ class SplashFragment : Fragment() {
     ): View {
         Timber.v("onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState")
         val binding = FragmentSplashBinding.inflate(inflater, container, false)
+        changeFullscreenState(true)
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        Timber.v("onResume() called")
-        changeFullscreenState(true)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Timber.v("onPause() called")
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.v("onDestroyView() called")
         changeFullscreenState(false)
     }
 
