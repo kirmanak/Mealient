@@ -6,7 +6,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.onFailure
-import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.withContext
@@ -57,7 +56,7 @@ class AuthStorageImpl @Inject constructor(
                     else -> return@OnSharedPreferenceChangeListener
                 }
                 Timber.d("tokenObservable: New token: $token")
-                trySendBlocking(token).onFailure { Timber.e(it, "Can't send new token") }
+                trySend(token).onFailure { Timber.e(it, "Can't send new token") }
             }
             Timber.v("tokenObservable: registering listener")
             send(getToken())
