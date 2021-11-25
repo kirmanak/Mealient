@@ -20,7 +20,9 @@ instructions/ingredients for each of them.
 
 ## Screenshots
 
-I will add the screenshots later.
+![device-2021-11-25-203020](https://user-images.githubusercontent.com/24299495/143483169-58bfa02b-d692-4d20-ad82-7e206de0c26c.png)
+![device-2021-11-25-203103](https://user-images.githubusercontent.com/24299495/143483174-3c05f3e2-957d-4558-83e5-8fa53c07b66e.png)
+![device-2021-11-25-203127](https://user-images.githubusercontent.com/24299495/143483181-20fc5bd9-2d47-4228-a85b-4dc571c49340.png)
 
 ## How to install
 
