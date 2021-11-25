@@ -12,6 +12,7 @@
 
 		<ImageView
 			android:id="@+id/image"
+			android:scaleType="centerCrop"
 			android:layout_width="0dp"
 			android:layout_height="@dimen/fragment_recipe_info_image_height"
 			android:layout_marginBottom="@dimen/margin_small"
