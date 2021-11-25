@@ -20,9 +20,7 @@ instructions/ingredients for each of them.
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/24299495/143483169-58bfa02b-d692-4d20-ad82-7e206de0c26c.png" width="274" height="489" />
-<img src="https://user-images.githubusercontent.com/24299495/143483174-3c05f3e2-957d-4558-83e5-8fa53c07b66e.png" width="274" height="489" />
-<img src="https://user-images.githubusercontent.com/24299495/143483181-20fc5bd9-2d47-4228-a85b-4dc571c49340.png" width="274" height="489" />
+<img src="https://user-images.githubusercontent.com/24299495/143483169-58bfa02b-d692-4d20-ad82-7e206de0c26c.png" width="274" height="489" /> <img src="https://user-images.githubusercontent.com/24299495/143483174-3c05f3e2-957d-4558-83e5-8fa53c07b66e.png" width="274" height="489" /> <img src="https://user-images.githubusercontent.com/24299495/143483181-20fc5bd9-2d47-4228-a85b-4dc571c49340.png" width="274" height="489" />
 
 ## How to install
 
