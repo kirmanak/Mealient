@@ -1,39 +1,28 @@
 package gq.kirmanak.mealient.ui.recipes.info
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.FragmentRecipeInfoBinding
-import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
-class RecipeInfoFragment : Fragment() {
+class RecipeInfoFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentRecipeInfoBinding? = null
     private val binding: FragmentRecipeInfoBinding
         get() = checkNotNull(_binding) { "Binding requested when fragment is off screen" }
     private val arguments by navArgs<RecipeInfoFragmentArgs>()
     private val viewModel by viewModels<RecipeInfoViewModel>()
-
-    private val authViewModel by viewModels<AuthenticationViewModel>()
-    private val authStatuses by lazy { authViewModel.authenticationStatuses() }
-    private val authStatusObserver = Observer<Boolean> { onAuthStatusChange(it) }
-    private fun onAuthStatusChange(isAuthenticated: Boolean) {
-        Timber.v("onAuthStatusChange() called with: isAuthenticated = $isAuthenticated")
-        if (!isAuthenticated) {
-            authStatuses.removeObserver(authStatusObserver)
-            navigateToAuthFragment()
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +37,6 @@ class RecipeInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
-        authStatuses.observe(this, authStatusObserver)
 
         viewModel.loadRecipeImage(binding.image, arguments.recipeSlug)
         viewModel.loadRecipeInfo(arguments.recipeId, arguments.recipeSlug)
@@ -71,10 +59,8 @@ class RecipeInfoFragment : Fragment() {
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = null
     }
 
-    private fun navigateToAuthFragment() {
-        Timber.v("navigateToAuthFragment() called")
-        findNavController().navigate(RecipeInfoFragmentDirections.actionRecipeInfoFragmentToAuthenticationFragment())
-    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        BottomSheetDialog(requireContext(), R.style.NoShapeBottomSheetDialog)
 
     override fun onDestroyView() {
         super.onDestroyView()

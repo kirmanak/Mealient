@@ -10,10 +10,11 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-		<ImageView
+		<com.google.android.material.imageview.ShapeableImageView
 			android:id="@+id/image"
 			android:scaleType="centerCrop"
 			android:layout_width="0dp"
+			app:shapeAppearance="@style/ShapeAppearance.AllCornersRounded"
 			android:layout_height="@dimen/fragment_recipe_info_image_height"
 			android:layout_marginBottom="@dimen/margin_small"
 			android:contentDescription="@string/content_description_fragment_recipe_info_image"
