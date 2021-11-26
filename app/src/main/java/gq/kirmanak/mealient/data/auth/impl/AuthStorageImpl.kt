@@ -2,13 +2,11 @@ package gq.kirmanak.mealient.data.auth.impl
 
 import android.content.SharedPreferences
 import gq.kirmanak.mealient.data.auth.AuthStorage
-import kotlinx.coroutines.Dispatchers
+import gq.kirmanak.mealient.data.impl.util.changesFlow
+import gq.kirmanak.mealient.data.impl.util.getStringOrNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -29,43 +27,21 @@ class AuthStorageImpl @Inject constructor(
     }
 
     override suspend fun getBaseUrl(): String? {
-        val baseUrl = getString(BASE_URL_KEY)
+        val baseUrl = sharedPreferences.getStringOrNull(BASE_URL_KEY)
         Timber.d("getBaseUrl: base url is $baseUrl")
         return baseUrl
     }
 
     override suspend fun getToken(): String? {
         Timber.v("getToken() called")
-        val token = getString(TOKEN_KEY)
+        val token = sharedPreferences.getStringOrNull(TOKEN_KEY)
         Timber.d("getToken: token is $token")
         return token
     }
 
-    private suspend fun getString(key: String): String? = withContext(Dispatchers.Default) {
-        sharedPreferences.getString(key, null)
-    }
-
     override fun tokenObservable(): Flow<String?> {
         Timber.v("tokenObservable() called")
-        return callbackFlow {
-            val listener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
-                Timber.v("tokenObservable: listener called with key $key")
-                val token = when (key) {
-                    null -> null
-                    TOKEN_KEY -> prefs.getString(key, null)
-                    else -> return@OnSharedPreferenceChangeListener
-                }
-                Timber.d("tokenObservable: New token: $token")
-                trySend(token).onFailure { Timber.e(it, "Can't send new token") }
-            }
-            Timber.v("tokenObservable: registering listener")
-            send(getToken())
-            sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
-            awaitClose {
-                Timber.v("tokenObservable: flow has been closed")
-                sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
-            }
-        }
+        return sharedPreferences.changesFlow().map { it.first.getStringOrNull(TOKEN_KEY) }
     }
 
     override fun clearAuthData() {

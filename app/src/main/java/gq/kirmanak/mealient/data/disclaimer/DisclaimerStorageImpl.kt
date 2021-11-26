@@ -1,8 +1,7 @@
 package gq.kirmanak.mealient.data.disclaimer
 
 import android.content.SharedPreferences
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import gq.kirmanak.mealient.data.impl.util.getBooleanOrFalse
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -14,9 +13,7 @@ class DisclaimerStorageImpl @Inject constructor(
 
     override suspend fun isDisclaimerAccepted(): Boolean {
         Timber.v("isDisclaimerAccepted() called")
-        val isAccepted = withContext(Dispatchers.IO) {
-            sharedPreferences.getBoolean(IS_DISCLAIMER_ACCEPTED_KEY, false)
-        }
+        val isAccepted = sharedPreferences.getBooleanOrFalse(IS_DISCLAIMER_ACCEPTED_KEY)
         Timber.v("isDisclaimerAccepted() returned: $isAccepted")
         return isAccepted
     }
