@@ -3,10 +3,12 @@ package gq.kirmanak.mealient.data.recipes.db
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
 import gq.kirmanak.mealient.data.AppDb
+import gq.kirmanak.mealient.data.impl.util.recipeEntity
+import gq.kirmanak.mealient.data.impl.util.toRecipeEntity
+import gq.kirmanak.mealient.data.impl.util.toRecipeIngredientEntity
+import gq.kirmanak.mealient.data.impl.util.toRecipeInstructionEntity
 import gq.kirmanak.mealient.data.recipes.db.entity.*
 import gq.kirmanak.mealient.data.recipes.impl.FullRecipeInfo
-import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeIngredientResponse
-import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeSummaryResponse
 import timber.log.Timber
@@ -85,16 +87,6 @@ class RecipeStorageImpl @Inject constructor(
         return tagId
     }
 
-    private fun GetRecipeSummaryResponse.recipeEntity() = RecipeSummaryEntity(
-        remoteId = remoteId,
-        name = name,
-        slug = slug,
-        image = image,
-        description = description,
-        rating = rating,
-        dateAdded = dateAdded,
-        dateUpdated = dateUpdated,
-    )
 
     override fun queryRecipes(): PagingSource<Int, RecipeSummaryEntity> {
         Timber.v("queryRecipes() called")
@@ -136,29 +128,6 @@ class RecipeStorageImpl @Inject constructor(
             recipeDao.insertRecipeInstructions(instructions)
         }
     }
-
-    private fun GetRecipeResponse.toRecipeEntity() = RecipeEntity(
-        remoteId = remoteId,
-        recipeYield = recipeYield
-    )
-
-    private fun GetRecipeIngredientResponse.toRecipeIngredientEntity(remoteId: Long) =
-        RecipeIngredientEntity(
-            recipeId = remoteId,
-            title = title,
-            note = note,
-            unit = unit,
-            food = food,
-            disableAmount = disableAmount,
-            quantity = quantity
-        )
-
-    private fun GetRecipeInstructionResponse.toRecipeInstructionEntity(remoteId: Long) =
-        RecipeInstructionEntity(
-            recipeId = remoteId,
-            title = title,
-            text = text
-        )
 
     override suspend fun queryRecipeInfo(recipeId: Long): FullRecipeInfo {
         Timber.v("queryRecipeInfo() called with: recipeId = $recipeId")
