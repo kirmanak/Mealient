@@ -30,17 +30,18 @@ class AuthDataSourceImpl @Inject constructor(
         val authService = retrofitBuilder.buildRetrofit(baseUrl).create<AuthService>()
 
         val accessToken = runCatching {
-            authService.getToken(username, password)
-        }.mapCatching {
-            Timber.d("authenticate() response is $it")
-            if (!it.isSuccessful) {
-                val cause = HttpException(it)
-                throw when (it.decodeErrorBodyOrNull<GetTokenResponse, ErrorDetail>()?.detail) {
+            val response = authService.getToken(username, password)
+            Timber.d("authenticate() response is $response")
+            if (response.isSuccessful) {
+                checkNotNull(response.body()).accessToken
+            } else {
+                val cause = HttpException(response)
+                val errorDetail: ErrorDetail? = response.decodeErrorBodyOrNull(json)
+                throw when (errorDetail?.detail) {
                     "Unauthorized" -> Unauthorized(cause)
                     else -> NotMealie(cause)
                 }
             }
-            checkNotNull(it.body()).accessToken // Can't be null here, would throw SerializationException
         }.onFailure {
             Timber.e(it, "authenticate: getToken failed")
             throw when (it) {
