@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.InvalidatingPagingSourceFactory
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
@@ -15,7 +16,7 @@ import javax.inject.Inject
 class RecipeRepoImpl @Inject constructor(
     private val mediator: RecipesRemoteMediator,
     private val storage: RecipeStorage,
-    private val pagingSourceFactory: RecipePagingSourceFactory,
+    private val pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>,
     private val dataSource: RecipeDataSource,
 ) : RecipeRepo {
     override fun createPager(): Pager<Int, RecipeSummaryEntity> {

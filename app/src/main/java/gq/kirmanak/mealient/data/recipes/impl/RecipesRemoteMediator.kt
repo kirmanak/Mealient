@@ -1,12 +1,9 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
 import androidx.annotation.VisibleForTesting
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadType
+import androidx.paging.*
 import androidx.paging.LoadType.PREPEND
 import androidx.paging.LoadType.REFRESH
-import androidx.paging.PagingState
-import androidx.paging.RemoteMediator
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
@@ -18,7 +15,7 @@ import javax.inject.Inject
 class RecipesRemoteMediator @Inject constructor(
     private val storage: RecipeStorage,
     private val network: RecipeDataSource,
-    private val pagingSourceFactory: RecipePagingSourceFactory,
+    private val pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>,
 ) : RemoteMediator<Int, RecipeSummaryEntity>() {
 
     @VisibleForTesting
