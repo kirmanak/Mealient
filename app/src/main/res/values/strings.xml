@@ -11,9 +11,7 @@
 	<string name="content_description_fragment_recipe_info_image" translatable="false">@string/content_description_view_holder_recipe_image</string>
 	<string name="fragment_recipe_info_ingredients_header">Ingredients</string>
 	<string name="fragment_recipe_info_instructions_header">Instructions</string>
-	<string name="fragment_disclaimer_button_okay_timer">Okay (%d seconds)</string>
 	<string name="fragment_disclaimer_main_text">This project is developed independently from the core Mealie project. It is NOT associated with the core Mealie developers. Any issues must be reported to the Mealient repository, NOT the Mealie repository.</string>
-	<string name="fragment_disclaimer_header">DISCLAIMER</string>
 	<string name="fragment_disclaimer_button_okay">Okay</string>
 	<string name="view_holder_recipe_instructions_step">Step: %d</string>
 	<string name="fragment_authentication_email_input_empty">E-mail can\'t be empty</string>

@@ -59,11 +59,9 @@ class DisclaimerFragment : Fragment() {
         }
         viewModel.okayCountDown.observe(viewLifecycleOwner) {
             Timber.d("onViewCreated: new count $it")
-            binding.okay.text = if (it > 0) {
-                getString(R.string.fragment_disclaimer_button_okay_timer, it)
-            } else {
-                getString(R.string.fragment_disclaimer_button_okay)
-            }
+            binding.okay.text = if (it > 0) resources.getQuantityString(
+                R.plurals.fragment_disclaimer_button_okay_timer, it, it
+            ) else getString(R.string.fragment_disclaimer_button_okay)
             binding.okay.isClickable = it == 0
         }
         viewModel.startCountDown()

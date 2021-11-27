@@ -10,6 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.databinding.FragmentSplashBinding
+import gq.kirmanak.mealient.ui.setActionBarVisibility
+import gq.kirmanak.mealient.ui.setSystemUiVisibility
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -44,14 +46,7 @@ class SplashFragment : Fragment() {
 
     private fun changeFullscreenState(isFullscreen: Boolean) {
         Timber.v("changeFullscreenState() called with: isFullscreen = $isFullscreen")
-
-        val supportActionBar = (activity as? AppCompatActivity)?.supportActionBar
-        Timber.d("changeFullscreenState: action bar = $supportActionBar")
-        if (isFullscreen) supportActionBar?.hide()
-        else supportActionBar?.show()
-
-        val decorView = activity?.window?.decorView
-        Timber.d("changeFullscreenState: decorView = $decorView")
-        decorView?.systemUiVisibility = if (isFullscreen) View.SYSTEM_UI_FLAG_FULLSCREEN else 0
+        (activity as? AppCompatActivity)?.setActionBarVisibility(!isFullscreen)
+        activity?.setSystemUiVisibility(!isFullscreen)
     }
 }
