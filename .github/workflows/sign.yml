@@ -34,9 +34,10 @@ jobs:
           echo "keyAlias=$MEALIENT_KEY_ALIAS" >> keystore.properties
           echo "keyPassword=$MEALIENT_KEY_PASSWORD" >> keystore.properties
           ./gradlew assembleRelease --no-daemon
+          cp app/build/outputs/apk/release/*.apk mealient-release.apk
 
       - name: Upload signed APK
         uses: actions/upload-artifact@v2
         with:
           name: Signed APK
-          path: app/build/outputs/apk/release/*.apk
+          path: mealient-release.apk
