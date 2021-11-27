@@ -37,6 +37,9 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
 
+        binding.ingredientsList.adapter = viewModel.recipeIngredientsAdapter
+        binding.instructionsList.adapter = viewModel.recipeInstructionsAdapter
+
         viewModel.loadRecipeImage(binding.image, arguments.recipeSlug)
         viewModel.loadRecipeInfo(arguments.recipeId, arguments.recipeSlug)
 
@@ -44,14 +47,6 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
             Timber.d("onViewCreated: full info $it")
             binding.title.text = it.recipeSummaryEntity.name
             binding.description.text = it.recipeSummaryEntity.description
-
-            val recipeIngredientsAdapter = RecipeIngredientsAdapter()
-            binding.ingredientsList.adapter = recipeIngredientsAdapter
-            recipeIngredientsAdapter.submitList(it.recipeIngredients)
-
-            val recipeInstructionsAdapter = RecipeInstructionsAdapter()
-            binding.instructionsList.adapter = recipeInstructionsAdapter
-            recipeInstructionsAdapter.submitList(it.recipeInstructions)
         }
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = null
     }

@@ -20,6 +20,8 @@ class RecipeInfoViewModel @Inject constructor(
 ) : ViewModel() {
     private val _recipeInfo = MutableLiveData<FullRecipeInfo>()
     val recipeInfo: LiveData<FullRecipeInfo> = _recipeInfo
+    val recipeIngredientsAdapter = RecipeIngredientsAdapter()
+    val recipeInstructionsAdapter = RecipeInstructionsAdapter()
 
     fun loadRecipeImage(view: ImageView, recipeSlug: String) {
         Timber.v("loadRecipeImage() called with: view = $view, recipeSlug = $recipeSlug")
@@ -36,6 +38,8 @@ class RecipeInfoViewModel @Inject constructor(
             }.onSuccess {
                 Timber.d("loadRecipeInfo: received recipe info = $it")
                 _recipeInfo.value = it
+                recipeIngredientsAdapter.submitList(it.recipeIngredients)
+                recipeInstructionsAdapter.submitList(it.recipeInstructions)
             }.onFailure {
                 Timber.e(it, "loadRecipeInfo: can't load recipe info")
             }
