@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<plurals name="fragment_disclaimer_button_okay_timer">
+		<item quantity="one">Хорошо (%d секунда)</item>
+		<item quantity="few">Хорошо (%d секунды)</item>
+		<item quantity="many">Хорошо (%d секунд)</item>
+	</plurals>
+</resources>

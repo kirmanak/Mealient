@@ -9,7 +9,6 @@
 	<string name="view_holder_recipe_text_placeholder">Загрузка</string>
 	<string name="fragment_recipe_info_ingredients_header">Ингредиенты</string>
 	<string name="fragment_recipe_info_instructions_header">Инструкции</string>
-	<string name="fragment_disclaimer_button_okay_timer">Хорошо (%d секунд)</string>
 	<string name="view_holder_recipe_instructions_step">Шаг: %d</string>
 	<string name="fragment_disclaimer_button_okay">Хорошо</string>
 	<string name="fragment_disclaimer_main_text">Этот проект разрабатывается независимо от основного проекта Meale. Он не связан с разработчиками Mealie. О любых проблемах следует писать в репозиторий Mealient, НЕ в репозиторий Mealie.</string>
