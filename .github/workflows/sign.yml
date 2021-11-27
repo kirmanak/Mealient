@@ -1,0 +1,42 @@
+name: Sign
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Android SDK Tools
+        uses: android-actions/setup-android@v2
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'gradle'
+
+      - name: Sign APK
+        env:
+          MEALIE_KEY_STORE: ${{ secrets.MEALIE_KEY_STORE }}
+          MEALIE_KEY_STORE_PASSWORD: ${{ secrets.MEALIE_KEY_STORE_PASSWORD }}
+          MEALIE_KEY_ALIAS: ${{ secrets.MEALIE_KEY_ALIAS }}
+          MEALIE_KEY_PASSWORD: ${{ secrets.MEALIE_KEY_PASSWORD }}
+        run: |
+          echo "$MEALIE_KEY_STORE" | base64 -d > app/mealient-release-key.jks
+          echo "storeFile=mealient-release-key.jks" > keystore.properties
+          echo "storePassword=$MEALIE_KEY_STORE_PASSWORD" >> keystore.properties
+          echo "keyAlias=$MEALIE_KEY_ALIAS" >> keystore.properties
+          echo "keyPassword=$MEALIE_KEY_PASSWORD" >> keystore.properties
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Upload signed APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: Signed APK
+          path: app/build/outputs/apk/release/*.apk
