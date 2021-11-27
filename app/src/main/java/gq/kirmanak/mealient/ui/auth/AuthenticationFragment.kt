@@ -85,9 +85,13 @@ class AuthenticationFragment : Fragment() {
                 is Unauthorized -> getString(R.string.fragment_authentication_credentials_incorrect)
                 else -> null
             }
-            urlInputLayout.error = when (it.exceptionOrNull()) {
+            urlInputLayout.error = when (val exception = it.exceptionOrNull()) {
                 is NoServerConnection -> getString(R.string.fragment_authentication_no_connection)
                 is NotMealie -> getString(R.string.fragment_authentication_unexpected_response)
+                is MalformedUrl -> {
+                    val cause = exception.cause?.message ?: exception.message
+                    getString(R.string.fragment_authentication_url_invalid, cause)
+                }
                 is Unauthorized, null -> null
                 else -> getString(R.string.fragment_authentication_unknown_error)
             }

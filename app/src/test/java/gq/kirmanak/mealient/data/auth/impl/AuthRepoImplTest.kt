@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.data.auth.impl
 
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
+import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.MalformedUrl
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.Unauthorized
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
@@ -49,5 +50,30 @@ class AuthRepoImplTest : MockServerTest() {
         mockServer.enqueueSuccessfulAuthResponse()
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
         assertThat(subject.getBaseUrl()).isEqualTo(serverUrl)
+    }
+
+    @Test(expected = MalformedUrl::class)
+    fun `when baseUrl has ftp scheme then throws`() {
+        subject.parseBaseUrl("ftp://test")
+    }
+
+    @Test
+    fun `when baseUrl scheme has one slash then corrects`() {
+        assertThat(subject.parseBaseUrl("https:/test")).isEqualTo("https://test/")
+    }
+
+    @Test
+    fun `when baseUrl is single word then appends scheme and slash`() {
+        assertThat(subject.parseBaseUrl("test")).isEqualTo("https://test/")
+    }
+
+    @Test
+    fun `when baseUrl is host appends scheme and slash`() {
+        assertThat(subject.parseBaseUrl("google.com")).isEqualTo("https://google.com/")
+    }
+
+    @Test
+    fun `when baseUrl is correct then doesn't change`() {
+        assertThat(subject.parseBaseUrl("https://google.com/")).isEqualTo("https://google.com/")
     }
 }

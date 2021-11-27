@@ -21,4 +21,5 @@
 	<string name="fragment_authentication_no_connection">Ошибка подключения, проверьте адрес.</string>
 	<string name="fragment_authentication_unexpected_response">Неожиданный ответ. Это Mealie?</string>
 	<string name="fragment_authentication_unknown_error">Что-то пошло не так, попробуйте еще раз.</string>
+	<string name="fragment_authentication_url_invalid">Проверьте формат URL: %s</string>
 </resources>

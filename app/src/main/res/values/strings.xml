@@ -23,4 +23,5 @@
 	<string name="fragment_authentication_no_connection">Can\'t connect, check address.</string>
 	<string name="fragment_authentication_unexpected_response">Unexpected response. Is it Mealie?</string>
 	<string name="fragment_authentication_unknown_error">Something went wrong, please try again.</string>
+	<string name="fragment_authentication_url_invalid">Check URL format: %s</string>
 </resources>
