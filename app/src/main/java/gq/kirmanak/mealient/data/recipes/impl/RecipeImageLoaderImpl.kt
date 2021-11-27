@@ -1,21 +1,37 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
 import android.widget.ImageView
+import androidx.annotation.VisibleForTesting
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeImageLoader
 import gq.kirmanak.mealient.ui.ImageLoader
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import timber.log.Timber
 import javax.inject.Inject
 
 class RecipeImageLoaderImpl @Inject constructor(
     private val imageLoader: ImageLoader,
     private val authRepo: AuthRepo
 ): RecipeImageLoader {
+
     override suspend fun loadRecipeImage(view: ImageView, slug: String?) {
-        val baseUrl = authRepo.getBaseUrl()
-        val recipeImageUrl =
-            if (baseUrl.isNullOrBlank() || slug.isNullOrBlank()) null
-            else "$baseUrl/api/media/recipes/$slug/images/original.webp"
-        imageLoader.loadImage(recipeImageUrl, R.drawable.placeholder_recipe, view)
+        Timber.v("loadRecipeImage() called with: view = $view, slug = $slug")
+        imageLoader.loadImage(generateImageUrl(slug), R.drawable.placeholder_recipe, view)
+    }
+
+    @VisibleForTesting
+    suspend fun generateImageUrl(slug: String?): String? {
+        Timber.v("generateImageUrl() called with: slug = $slug")
+        val result = authRepo.getBaseUrl()
+            ?.takeIf { it.isNotBlank() }
+            ?.takeUnless { slug.isNullOrBlank() }
+            ?.toHttpUrlOrNull()
+            ?.newBuilder()
+            ?.addPathSegments("api/media/recipes/$slug/images/original.webp")
+            ?.build()
+            ?.toString()
+        Timber.v("generateImageUrl() returned: $result")
+        return result
     }
 }
