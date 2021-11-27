@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,12 +47,10 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
 
             val recipeIngredientsAdapter = RecipeIngredientsAdapter()
             binding.ingredientsList.adapter = recipeIngredientsAdapter
-            binding.ingredientsList.layoutManager = LinearLayoutManager(requireContext())
             recipeIngredientsAdapter.submitList(it.recipeIngredients)
 
             val recipeInstructionsAdapter = RecipeInstructionsAdapter()
             binding.instructionsList.adapter = recipeInstructionsAdapter
-            binding.instructionsList.layoutManager = LinearLayoutManager(requireContext())
             recipeInstructionsAdapter.submitList(it.recipeInstructions)
         }
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = null
