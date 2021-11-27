@@ -12,7 +12,6 @@
 	<string name="fragment_disclaimer_button_okay_timer">Хорошо (%d секунд)</string>
 	<string name="view_holder_recipe_instructions_step">Шаг: %d</string>
 	<string name="fragment_disclaimer_button_okay">Хорошо</string>
-	<string name="fragment_disclaimer_header">ДИСКЛЕЙМЕР</string>
 	<string name="fragment_disclaimer_main_text">Этот проект разрабатывается независимо от основного проекта Meale. Он не связан с разработчиками Mealie. О любых проблемах следует писать в репозиторий Mealient, НЕ в репозиторий Mealie.</string>
 	<string name="fragment_authentication_email_input_empty">E-mail не может быть пустым</string>
 	<string name="fragment_authentication_password_input_empty">Пароль не может быть пустым</string>
