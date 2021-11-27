@@ -4,12 +4,15 @@ import android.app.Activity
 import android.os.Build
 import android.view.View
 import android.view.WindowInsets
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.ChannelResult
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.onClosed
 import kotlinx.coroutines.channels.onFailure
@@ -22,9 +25,7 @@ fun SwipeRefreshLayout.refreshesLiveData(): LiveData<Unit> {
     val callbackFlow: Flow<Unit> = callbackFlow {
         val listener = SwipeRefreshLayout.OnRefreshListener {
             Timber.v("Refresh requested")
-            trySend(Unit)
-                .onFailure { Timber.e(it, "refreshesFlow: can't send refresh callback") }
-                .onClosed { Timber.e(it, "refreshesFlow: flow has been closed") }
+            trySend(Unit).logErrors("refreshesFlow")
         }
         Timber.v("Adding refresh request listener")
         setOnRefreshListener(listener)
@@ -60,4 +61,22 @@ fun AppCompatActivity.setActionBarVisibility(isVisible: Boolean) {
     Timber.v("setActionBarVisibility() called with: isVisible = $isVisible")
     supportActionBar?.apply { if (isVisible) show() else hide() }
         ?: Timber.w("setActionBarVisibility: action bar is null")
+}
+
+@ExperimentalCoroutinesApi
+fun TextView.textChangesFlow(): Flow<CharSequence?> = callbackFlow {
+    Timber.v("textChangesFlow() called")
+    val textWatcher = doAfterTextChanged {
+        trySend(it).logErrors("textChangesFlow")
+    }
+    awaitClose {
+        Timber.d("textChangesFlow: flow is closing")
+        removeTextChangedListener(textWatcher)
+    }
+}
+
+fun <T> ChannelResult<T>.logErrors(methodName: String): ChannelResult<T> {
+    onFailure { Timber.e(it, "$methodName: can't send event") }
+    onClosed { Timber.e(it, "$methodName: flow has been closed") }
+    return this
 }

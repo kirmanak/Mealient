@@ -9,14 +9,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
 import gq.kirmanak.mealient.databinding.FragmentAuthenticationBinding
+import gq.kirmanak.mealient.ui.textChangesFlow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class AuthenticationFragment : Fragment() {
     private var _binding: FragmentAuthenticationBinding? = null
@@ -107,11 +113,21 @@ class AuthenticationFragment : Fragment() {
         Timber.v("checkIfInputIsEmpty() called with: input = $input, inputLayout = $inputLayout, errorText = $errorText")
         val text = input.text?.toString()
         Timber.d("Input text is \"$text\"")
-        if (text.isNullOrBlank()) {
+        if (text.isNullOrEmpty()) {
             inputLayout.error = errorText()
+            viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                waitUntilNotEmpty(input)
+                inputLayout.error = null
+            }
             return null
         }
         return text
+    }
+
+    private suspend fun waitUntilNotEmpty(input: EditText) {
+        Timber.v("waitUntilNotEmpty() called with: input = $input")
+        input.textChangesFlow().filterNotNull().first { it.isNotEmpty() }
+        Timber.v("waitUntilNotEmpty() returned")
     }
 
     override fun onDestroyView() {
