@@ -26,7 +26,6 @@
 	<style name="NoShapeBottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
 		<item name="shapeAppearance">@null</item>
 		<item name="shapeAppearanceOverlay">@null</item>
-		<item name="behavior_fitToContents">false</item>
 		<item name="android:background">@drawable/recipe_info_background</item>
 	</style>
 </resources>
