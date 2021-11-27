@@ -28,7 +28,7 @@ jobs:
           MEALIENT_KEY_ALIAS: ${{ secrets.MEALIENT_KEY_ALIAS }}
           MEALIENT_KEY_PASSWORD: ${{ secrets.MEALIENT_KEY_PASSWORD }}
         run: |
-          echo "$MEALIENT_KEY_STORE" | base64 -d -o app/keystore.jks
+          echo "$MEALIENT_KEY_STORE" | base64 -d > app/keystore.jks
           echo "storeFile=keystore.jks" > keystore.properties
           echo "storePassword=$MEALIENT_KEY_STORE_PASSWORD" >> keystore.properties
           echo "keyAlias=$MEALIENT_KEY_ALIAS" >> keystore.properties
