@@ -23,16 +23,16 @@ jobs:
 
       - name: Sign APK
         env:
-          MEALIE_KEY_STORE: ${{ secrets.MEALIE_KEY_STORE }}
-          MEALIE_KEY_STORE_PASSWORD: ${{ secrets.MEALIE_KEY_STORE_PASSWORD }}
-          MEALIE_KEY_ALIAS: ${{ secrets.MEALIE_KEY_ALIAS }}
-          MEALIE_KEY_PASSWORD: ${{ secrets.MEALIE_KEY_PASSWORD }}
+          MEALIENT_KEY_STORE: ${{ secrets.MEALIENT_KEY_STORE }}
+          MEALIENT_KEY_STORE_PASSWORD: ${{ secrets.MEALIENT_KEY_STORE_PASSWORD }}
+          MEALIENT_KEY_ALIAS: ${{ secrets.MEALIENT_KEY_ALIAS }}
+          MEALIENT_KEY_PASSWORD: ${{ secrets.MEALIENT_KEY_PASSWORD }}
         run: |
-          echo "$MEALIE_KEY_STORE" | base64 -d > app/mealient-release-key.jks
-          echo "storeFile=mealient-release-key.jks" > keystore.properties
-          echo "storePassword=$MEALIE_KEY_STORE_PASSWORD" >> keystore.properties
-          echo "keyAlias=$MEALIE_KEY_ALIAS" >> keystore.properties
-          echo "keyPassword=$MEALIE_KEY_PASSWORD" >> keystore.properties
+          echo "$MEALIENT_KEY_STORE" | base64 -d -o app/keystore.jks
+          echo "storeFile=keystore.jks" > keystore.properties
+          echo "storePassword=$MEALIENT_KEY_STORE_PASSWORD" >> keystore.properties
+          echo "keyAlias=$MEALIENT_KEY_ALIAS" >> keystore.properties
+          echo "keyPassword=$MEALIENT_KEY_PASSWORD" >> keystore.properties
           ./gradlew assembleRelease --no-daemon
 
       - name: Upload signed APK
