@@ -157,4 +157,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.google.truth/truth
     testImplementation "com.google.truth:truth:1.1.3"
+
+    // https://github.com/facebook/stetho/releases
+    def stetho_version = "1.6.0"
+    implementation "com.facebook.stetho:stetho:$stetho_version"
+    implementation "com.facebook.stetho:stetho-okhttp3:$stetho_version"
 }
