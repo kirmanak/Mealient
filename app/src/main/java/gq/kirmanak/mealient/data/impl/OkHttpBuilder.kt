@@ -1,6 +1,5 @@
 package gq.kirmanak.mealient.data.impl
 
-import com.facebook.stetho.okhttp3.StethoInterceptor
 import gq.kirmanak.mealient.BuildConfig
 import gq.kirmanak.mealient.data.auth.impl.AuthOkHttpInterceptor
 import okhttp3.Interceptor
@@ -15,11 +14,8 @@ class OkHttpBuilder @Inject constructor(
     fun buildOkHttp(): OkHttpClient {
         Timber.v("buildOkHttp() called")
         val builder = OkHttpClient.Builder()
+        if (BuildConfig.DEBUG) builder.addNetworkInterceptor(buildLoggingInterceptor())
         builder.addNetworkInterceptor(authOkHttpInterceptor)
-        if (BuildConfig.DEBUG) {
-            builder.addNetworkInterceptor(buildLoggingInterceptor())
-            builder.addNetworkInterceptor(StethoInterceptor())
-        }
         return builder.build()
     }
 
