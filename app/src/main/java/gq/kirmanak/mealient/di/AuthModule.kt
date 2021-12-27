@@ -1,9 +1,12 @@
-package gq.kirmanak.mealient.data.auth
+package gq.kirmanak.mealient.di
 
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import gq.kirmanak.mealient.data.auth.AuthDataSource
+import gq.kirmanak.mealient.data.auth.AuthRepo
+import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.auth.impl.AuthDataSourceImpl
 import gq.kirmanak.mealient.data.auth.impl.AuthRepoImpl
 import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl

@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.recipes
+package gq.kirmanak.mealient.di
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.InvalidatingPagingSourceFactory
@@ -7,6 +7,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import gq.kirmanak.mealient.data.recipes.RecipeImageLoader
+import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorageImpl
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageLoaderImpl
