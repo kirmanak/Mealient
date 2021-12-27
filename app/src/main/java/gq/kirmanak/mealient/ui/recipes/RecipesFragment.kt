@@ -1,16 +1,16 @@
 package gq.kirmanak.mealient.ui.recipes
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
 import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
@@ -21,10 +21,8 @@ import timber.log.Timber
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class RecipesFragment : Fragment() {
-    private var _binding: FragmentRecipesBinding? = null
-    private val binding: FragmentRecipesBinding
-        get() = checkNotNull(_binding) { "Binding requested when fragment is off screen" }
+class RecipesFragment : Fragment(R.layout.fragment_recipes) {
+    private val binding by viewBinding(FragmentRecipesBinding::bind)
     private val viewModel by viewModels<RecipeViewModel>()
 
     private val authViewModel by viewModels<AuthenticationViewModel>()
@@ -36,16 +34,6 @@ class RecipesFragment : Fragment() {
             authStatuses.removeObserver(authStatusObserver)
             navigateToAuthFragment()
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        Timber.v("onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState")
-        _binding = FragmentRecipesBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,11 +76,5 @@ class RecipesFragment : Fragment() {
                 navigateToRecipeInfo(it)
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.v("onDestroyView() called")
-        _binding = null
     }
 }
