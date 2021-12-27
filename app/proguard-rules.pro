@@ -41,3 +41,10 @@
 }
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
 ### kotlinx.serialization https://github.com/Kotlin/kotlinx.serialization#android ###
+
+### OkHttp warnings https://github.com/square/okhttp/issues/6258 ###
+-dontwarn okhttp3.internal.platform.**
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
+### OkHttp warnings ###
