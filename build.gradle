@@ -1,10 +1,10 @@
 buildscript {
     ext {
         // https://developer.android.com/jetpack/androidx/releases/navigation
-        nav_version = "2.4.0-beta02"
+        nav_version = "2.4.0-rc01"
 
         // https://dagger.dev/hilt/gradle-setup
-        hilt_version = "2.40.1"
+        hilt_version = "2.40.5"
 
         // https://kotlinlang.org/docs/gradle.html
         kotlin_version = "1.6.0"
@@ -17,7 +17,7 @@ buildscript {
 
     dependencies {
         // https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-        classpath "com.android.tools.build:gradle:7.0.3"
+        classpath "com.android.tools.build:gradle:7.0.4"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
