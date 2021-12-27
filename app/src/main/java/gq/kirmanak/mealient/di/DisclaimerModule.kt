@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.ui.disclaimer
+package gq.kirmanak.mealient.di
 
 import dagger.Binds
 import dagger.Module

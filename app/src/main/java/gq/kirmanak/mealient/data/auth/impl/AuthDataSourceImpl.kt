@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.data.auth.impl
 
 import gq.kirmanak.mealient.data.auth.AuthDataSource
-import gq.kirmanak.mealient.data.auth.AuthService
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
 import gq.kirmanak.mealient.data.impl.ErrorDetail
 import gq.kirmanak.mealient.data.impl.RetrofitBuilder
