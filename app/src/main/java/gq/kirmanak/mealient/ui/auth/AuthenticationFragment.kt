@@ -1,9 +1,7 @@
 package gq.kirmanak.mealient.ui.auth
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -11,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
@@ -24,10 +23,8 @@ import timber.log.Timber
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class AuthenticationFragment : Fragment() {
-    private var _binding: FragmentAuthenticationBinding? = null
-    private val binding: FragmentAuthenticationBinding
-        get() = checkNotNull(_binding) { "Binding requested when fragment is off screen" }
+class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
+    private val binding by viewBinding(FragmentAuthenticationBinding::bind)
     private val viewModel by viewModels<AuthenticationViewModel>()
 
     private val authStatuses by lazy { viewModel.authenticationStatuses() }
@@ -44,16 +41,6 @@ class AuthenticationFragment : Fragment() {
         super.onCreate(savedInstanceState)
         Timber.v("onCreate() called with: savedInstanceState = $savedInstanceState")
         authStatuses.observe(this, authStatusObserver)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        Timber.v("onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState")
-        _binding = FragmentAuthenticationBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -128,11 +115,5 @@ class AuthenticationFragment : Fragment() {
         Timber.v("waitUntilNotEmpty() called with: input = $input")
         input.textChangesFlow().filterNotNull().first { it.isNotEmpty() }
         Timber.v("waitUntilNotEmpty() returned")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.v("onDestroyView() called")
-        _binding = null
     }
 }

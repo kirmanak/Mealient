@@ -1,23 +1,20 @@
 package gq.kirmanak.mealient.ui.disclaimer
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.FragmentDisclaimerBinding
 import timber.log.Timber
 
 @AndroidEntryPoint
-class DisclaimerFragment : Fragment() {
-    private var _binding: FragmentDisclaimerBinding? = null
-    private val binding: FragmentDisclaimerBinding
-        get() = checkNotNull(_binding) { "Binding requested when fragment is off screen" }
+class DisclaimerFragment : Fragment(R.layout.fragment_disclaimer) {
+    private val binding by viewBinding(FragmentDisclaimerBinding::bind)
     private val viewModel by viewModels<DisclaimerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,16 +37,6 @@ class DisclaimerFragment : Fragment() {
         findNavController().navigate(DisclaimerFragmentDirections.actionDisclaimerFragmentToAuthenticationFragment())
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        Timber.v("onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState")
-        _binding = FragmentDisclaimerBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
@@ -67,11 +54,5 @@ class DisclaimerFragment : Fragment() {
         viewModel.startCountDown()
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.title =
             getString(R.string.app_name)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.v("onDestroyView() called")
-        _binding = null
     }
 }

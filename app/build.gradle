@@ -159,4 +159,7 @@ dependencies {
     def stetho_version = "1.6.0"
     implementation "com.facebook.stetho:stetho:$stetho_version"
     implementation "com.facebook.stetho:stetho-okhttp3:$stetho_version"
+
+    // https://github.com/androidbroadcast/ViewBindingPropertyDelegate/releases
+    implementation "com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.3"
 }

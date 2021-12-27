@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,9 +18,7 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class RecipeInfoFragment : BottomSheetDialogFragment() {
-    private var _binding: FragmentRecipeInfoBinding? = null
-    private val binding: FragmentRecipeInfoBinding
-        get() = checkNotNull(_binding) { "Binding requested when fragment is off screen" }
+    private val binding by viewBinding(FragmentRecipeInfoBinding::bind)
     private val arguments by navArgs<RecipeInfoFragmentArgs>()
     private val viewModel by viewModels<RecipeInfoViewModel>()
 
@@ -29,8 +28,7 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         Timber.v("onCreateView() called with: inflater = $inflater, container = $container, savedInstanceState = $savedInstanceState")
-        _binding = FragmentRecipeInfoBinding.inflate(inflater, container, false)
-        return binding.root
+        return FragmentRecipeInfoBinding.inflate(inflater, container, false).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,10 +51,4 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         BottomSheetDialog(requireContext(), R.style.NoShapeBottomSheetDialog)
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.v("onDestroyView() called")
-        _binding = null
-    }
 }
