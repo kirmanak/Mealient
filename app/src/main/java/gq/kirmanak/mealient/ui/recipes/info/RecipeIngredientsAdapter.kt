@@ -9,8 +9,11 @@ import gq.kirmanak.mealient.data.recipes.db.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.databinding.ViewHolderIngredientBinding
 import gq.kirmanak.mealient.ui.recipes.info.RecipeIngredientsAdapter.RecipeIngredientViewHolder
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RecipeIngredientsAdapter :
+@Singleton
+class RecipeIngredientsAdapter @Inject constructor() :
     ListAdapter<RecipeIngredientEntity, RecipeIngredientViewHolder>(RecipeIngredientDiffCallback) {
 
     class RecipeIngredientViewHolder(

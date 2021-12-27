@@ -14,35 +14,44 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class RecipeInfoViewModel @Inject constructor(
+class RecipeInfoViewModel
+@Inject
+constructor(
     private val recipeRepo: RecipeRepo,
-    private val recipeImageLoader: RecipeImageLoader
+    private val recipeImageLoader: RecipeImageLoader,
+    private val recipeIngredientsAdapter: RecipeIngredientsAdapter,
+    private val recipeInstructionsAdapter: RecipeInstructionsAdapter,
 ) : ViewModel() {
+
     private val _recipeInfo = MutableLiveData<FullRecipeInfo>()
-    val recipeInfo: LiveData<FullRecipeInfo> = _recipeInfo
-    val recipeIngredientsAdapter = RecipeIngredientsAdapter()
-    val recipeInstructionsAdapter = RecipeInstructionsAdapter()
+    val recipeInfo: LiveData<FullRecipeInfo> by ::_recipeInfo
+    private val _listsVisibility = MutableLiveData(RecipeInfoListsVisibility())
+    val listsVisibility: LiveData<RecipeInfoListsVisibility> by ::_listsVisibility
 
     fun loadRecipeImage(view: ImageView, recipeSlug: String) {
         Timber.v("loadRecipeImage() called with: view = $view, recipeSlug = $recipeSlug")
-        viewModelScope.launch {
-            recipeImageLoader.loadRecipeImage(view, recipeSlug)
-        }
+        viewModelScope.launch { recipeImageLoader.loadRecipeImage(view, recipeSlug) }
     }
 
     fun loadRecipeInfo(recipeId: Long, recipeSlug: String) {
         Timber.v("loadRecipeInfo() called with: recipeId = $recipeId, recipeSlug = $recipeSlug")
+        _listsVisibility.value = RecipeInfoListsVisibility()
+        recipeIngredientsAdapter.submitList(null)
+        recipeInstructionsAdapter.submitList(null)
         viewModelScope.launch {
-            runCatching {
-                recipeRepo.loadRecipeInfo(recipeId, recipeSlug)
-            }.onSuccess {
-                Timber.d("loadRecipeInfo: received recipe info = $it")
-                _recipeInfo.value = it
-                recipeIngredientsAdapter.submitList(it.recipeIngredients)
-                recipeInstructionsAdapter.submitList(it.recipeInstructions)
-            }.onFailure {
-                Timber.e(it, "loadRecipeInfo: can't load recipe info")
-            }
+            runCatching { recipeRepo.loadRecipeInfo(recipeId, recipeSlug) }
+                .onSuccess {
+                    Timber.d("loadRecipeInfo: received recipe info = $it")
+                    _recipeInfo.value = it
+                    recipeIngredientsAdapter.submitList(it.recipeIngredients)
+                    recipeInstructionsAdapter.submitList(it.recipeInstructions)
+                    _listsVisibility.value =
+                        RecipeInfoListsVisibility(
+                            areIngredientsVisible = it.recipeIngredients.isNotEmpty(),
+                            areInstructionsVisible = it.recipeInstructions.isNotEmpty()
+                        )
+                }
+                .onFailure { Timber.e(it, "loadRecipeInfo: can't load recipe info") }
         }
     }
 }

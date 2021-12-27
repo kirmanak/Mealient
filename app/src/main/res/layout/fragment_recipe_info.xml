@@ -109,6 +109,13 @@
 			</LinearLayout>
 		</com.google.android.material.card.MaterialCardView>
 
+		<androidx.constraintlayout.widget.Group
+			android:id="@+id/instructions_group"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			app:constraint_referenced_ids="instructions_header,instructions_list" />
+
 		<TextView
 			android:id="@+id/instructions_header"
 			android:layout_width="0dp"
