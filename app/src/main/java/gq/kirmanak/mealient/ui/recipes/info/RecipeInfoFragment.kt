@@ -51,4 +51,14 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         BottomSheetDialog(requireContext(), R.style.NoShapeBottomSheetDialog)
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.v("onDestroyView() called")
+        // Prevent RV leaking through mObservers list in adapter
+        with(binding) {
+            ingredientsList.adapter = null
+            instructionsList.adapter = null
+        }
+    }
 }

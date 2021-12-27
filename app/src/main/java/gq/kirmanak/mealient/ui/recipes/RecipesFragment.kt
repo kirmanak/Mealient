@@ -77,4 +77,11 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
             }
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.v("onDestroyView() called")
+        // Prevent RV leaking through mObservers list in adapter
+        binding.recipes.adapter = null
+    }
 }
