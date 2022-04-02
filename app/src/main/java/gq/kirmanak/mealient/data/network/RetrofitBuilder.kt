@@ -8,7 +8,9 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RetrofitBuilder @Inject constructor(
     private val okHttpClient: OkHttpClient,
     private val json: Json

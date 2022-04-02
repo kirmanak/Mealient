@@ -13,7 +13,9 @@ import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
 import gq.kirmanak.mealient.extensions.toRecipeInstructionEntity
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RecipeStorageImpl @Inject constructor(
     private val db: AppDb
 ) : RecipeStorage {

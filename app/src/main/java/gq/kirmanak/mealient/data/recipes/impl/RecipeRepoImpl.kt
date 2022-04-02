@@ -11,8 +11,10 @@ import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import kotlinx.coroutines.CancellationException
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @OptIn(ExperimentalPagingApi::class)
+@Singleton
 class RecipeRepoImpl @Inject constructor(
     private val mediator: RecipesRemoteMediator,
     private val storage: RecipeStorage,

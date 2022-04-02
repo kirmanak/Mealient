@@ -12,7 +12,9 @@ import retrofit2.HttpException
 import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AuthDataSourceImpl @Inject constructor(
     private val authServiceFactory: ServiceFactory<AuthService>,
     private val json: Json,

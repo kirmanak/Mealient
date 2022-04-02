@@ -4,9 +4,11 @@ import android.content.SharedPreferences
 import gq.kirmanak.mealient.extensions.getBooleanOrFalse
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val IS_DISCLAIMER_ACCEPTED_KEY = "IS_DISCLAIMER_ACCEPTED"
 
+@Singleton
 class DisclaimerStorageImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : DisclaimerStorage {

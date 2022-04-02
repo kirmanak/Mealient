@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.map
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AuthRepoImpl @Inject constructor(
     private val dataSource: AuthDataSource,
     private val storage: AuthStorage,

@@ -5,7 +5,9 @@ import com.squareup.picasso.Picasso
 import gq.kirmanak.mealient.ui.ImageLoader
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ImageLoaderPicasso @Inject constructor(
     private val picasso: Picasso
 ) : ImageLoader {

@@ -9,10 +9,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val AUTH_HEADER_KEY = "AUTH_TOKEN"
 private const val BASE_URL_KEY = "BASE_URL"
 
+@Singleton
 class AuthStorageImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : AuthStorage {
