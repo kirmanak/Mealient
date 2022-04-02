@@ -14,7 +14,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface UiModule {
+
     @Binds
+    @Singleton
     fun bindImageLoader(imageLoaderGlide: ImageLoaderPicasso): ImageLoader
 
     companion object {

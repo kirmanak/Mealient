@@ -23,16 +23,21 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface RecipeModule {
+
     @Binds
+    @Singleton
     fun provideRecipeDataSource(recipeDataSourceImpl: RecipeDataSourceImpl): RecipeDataSource
 
     @Binds
+    @Singleton
     fun provideRecipeStorage(recipeStorageImpl: RecipeStorageImpl): RecipeStorage
 
     @Binds
+    @Singleton
     fun provideRecipeRepo(recipeRepoImpl: RecipeRepoImpl): RecipeRepo
 
     @Binds
+    @Singleton
     fun provideRecipeImageLoader(recipeImageLoaderImpl: RecipeImageLoaderImpl): RecipeImageLoader
 
     companion object {

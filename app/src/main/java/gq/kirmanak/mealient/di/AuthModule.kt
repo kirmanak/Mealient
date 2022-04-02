@@ -1,9 +1,12 @@
 package gq.kirmanak.mealient.di
 
+import android.accounts.AccountManager
+import android.content.Context
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
@@ -31,11 +34,14 @@ interface AuthModule {
   }
 
   @Binds
+  @Singleton
   fun bindAuthDataSource(authDataSourceImpl: AuthDataSourceImpl): AuthDataSource
 
   @Binds
+  @Singleton
   fun bindAuthStorage(authStorageImpl: AuthStorageImpl): AuthStorage
 
   @Binds
+  @Singleton
   fun bindAuthRepo(authRepo: AuthRepoImpl): AuthRepo
 }
