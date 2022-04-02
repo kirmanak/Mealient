@@ -65,6 +65,7 @@ interface RecipeDao {
     suspend fun insertRecipeIngredients(ingredients: List<RecipeIngredientEntity>)
 
     @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH) // The lint is wrong, the columns are actually used
     @Query("SELECT * FROM recipe JOIN recipe_summaries ON recipe.remote_id = recipe_summaries.remote_id JOIN recipe_ingredient ON recipe_ingredient.recipe_id = recipe.remote_id JOIN recipe_instruction ON recipe_instruction.recipe_id = recipe.remote_id WHERE recipe.remote_id = :recipeId")
     suspend fun queryFullRecipeInfo(recipeId: Long): FullRecipeInfo?
 
