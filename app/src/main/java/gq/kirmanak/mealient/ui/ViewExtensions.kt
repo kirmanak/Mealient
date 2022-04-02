@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 fun SwipeRefreshLayout.refreshesLiveData(): LiveData<Unit> {
     val callbackFlow: Flow<Unit> = callbackFlow {
         val listener = SwipeRefreshLayout.OnRefreshListener {
@@ -63,7 +63,7 @@ fun AppCompatActivity.setActionBarVisibility(isVisible: Boolean) {
         ?: Timber.w("setActionBarVisibility: action bar is null")
 }
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 fun TextView.textChangesFlow(): Flow<CharSequence?> = callbackFlow {
     Timber.v("textChangesFlow() called")
     val textWatcher = doAfterTextChanged {

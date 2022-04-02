@@ -3,20 +3,18 @@ package gq.kirmanak.mealient.data.auth.impl
 import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
 import gq.kirmanak.mealient.data.impl.ErrorDetail
-import gq.kirmanak.mealient.data.impl.RetrofitBuilder
 import gq.kirmanak.mealient.data.impl.util.decodeErrorBodyOrNull
+import gq.kirmanak.mealient.data.network.ServiceFactory
 import kotlinx.coroutines.CancellationException
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
-import retrofit2.create
+import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
 
-@ExperimentalSerializationApi
 class AuthDataSourceImpl @Inject constructor(
-    private val retrofitBuilder: RetrofitBuilder,
+    private val authServiceFactory: ServiceFactory<AuthService>,
     private val json: Json,
 ) : AuthDataSource {
 
@@ -26,31 +24,37 @@ class AuthDataSourceImpl @Inject constructor(
         baseUrl: String
     ): String {
         Timber.v("authenticate() called with: username = $username, password = $password, baseUrl = $baseUrl")
-        val authService = retrofitBuilder.buildRetrofit(baseUrl).create<AuthService>()
-
-        val accessToken = runCatching {
-            val response = authService.getToken(username, password)
-            Timber.d("authenticate() response is $response")
-            if (response.isSuccessful) {
-                checkNotNull(response.body()).accessToken
-            } else {
-                val cause = HttpException(response)
-                val errorDetail: ErrorDetail? = response.decodeErrorBodyOrNull(json)
-                throw when (errorDetail?.detail) {
-                    "Unauthorized" -> Unauthorized(cause)
-                    else -> NotMealie(cause)
-                }
-            }
-        }.onFailure {
-            Timber.e(it, "authenticate: getToken failed")
-            throw when (it) {
-                is CancellationException, is AuthenticationError -> it
-                is SerializationException, is IllegalStateException -> NotMealie(it)
-                else -> NoServerConnection(it)
-            }
-        }.getOrThrow()
-
+        val authService = authServiceFactory.provideService(baseUrl)
+        val response = sendRequest(authService, username, password)
+        val accessToken = parseToken(response)
         Timber.v("authenticate() returned: $accessToken")
         return accessToken
+    }
+
+    private suspend fun sendRequest(
+        authService: AuthService,
+        username: String,
+        password: String
+    ): Response<GetTokenResponse> = try {
+        authService.getToken(username, password)
+    } catch (e: Throwable) {
+        throw when (e) {
+            is CancellationException -> e
+            is SerializationException -> NotMealie(e)
+            else -> NoServerConnection(e)
+        }
+    }
+
+    private fun parseToken(
+        response: Response<GetTokenResponse>
+    ): String = if (response.isSuccessful) {
+        response.body()?.accessToken ?: throw NotMealie(NullPointerException("Body is null"))
+    } else {
+        val cause = HttpException(response)
+        val errorDetail: ErrorDetail? = response.decodeErrorBodyOrNull(json)
+        throw when (errorDetail?.detail) {
+            "Unauthorized" -> Unauthorized(cause)
+            else -> NotMealie(cause)
+        }
     }
 }

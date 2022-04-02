@@ -21,11 +21,13 @@ import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_ENTI
 import gq.kirmanak.mealient.test.RecipeImplTestData.RECIPE_SUMMARY_CAKE
 import gq.kirmanak.mealient.test.RecipeImplTestData.RECIPE_SUMMARY_PORRIDGE
 import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARIES
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
+@OptIn(ExperimentalCoroutinesApi::class)
 class RecipeStorageImplTest : HiltRobolectricTest() {
 
     @Inject
@@ -35,7 +37,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     lateinit var appDb: AppDb
 
     @Test
-    fun `when saveRecipes then saves tags`(): Unit = runBlocking {
+    fun `when saveRecipes then saves tags`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         val actualTags = appDb.recipeDao().queryAllTags()
         assertThat(actualTags).containsExactly(
@@ -46,7 +48,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when saveRecipes then saves categories`(): Unit = runBlocking {
+    fun `when saveRecipes then saves categories`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         val actual = appDb.recipeDao().queryAllCategories()
         assertThat(actual).containsExactly(
@@ -57,7 +59,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when saveRecipes then saves recipes`(): Unit = runBlocking {
+    fun `when saveRecipes then saves recipes`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         val actualTags = appDb.recipeDao().queryAllRecipes()
         assertThat(actualTags).containsExactly(
@@ -67,7 +69,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when saveRecipes then saves category recipes`(): Unit = runBlocking {
+    fun `when saveRecipes then saves category recipes`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         val actual = appDb.recipeDao().queryAllCategoryRecipes()
         assertThat(actual).containsExactly(
@@ -79,7 +81,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when saveRecipes then saves tag recipes`(): Unit = runBlocking {
+    fun `when saveRecipes then saves tag recipes`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         val actual = appDb.recipeDao().queryAllTagRecipes()
         assertThat(actual).containsExactly(
@@ -91,7 +93,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when refreshAll then old recipes aren't preserved`(): Unit = runBlocking {
+    fun `when refreshAll then old recipes aren't preserved`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
         val actual = appDb.recipeDao().queryAllRecipes()
@@ -99,7 +101,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when refreshAll then old category recipes aren't preserved`(): Unit = runBlocking {
+    fun `when refreshAll then old category recipes aren't preserved`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
         val actual = appDb.recipeDao().queryAllCategoryRecipes()
@@ -110,7 +112,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when refreshAll then old tag recipes aren't preserved`(): Unit = runBlocking {
+    fun `when refreshAll then old tag recipes aren't preserved`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
         val actual = appDb.recipeDao().queryAllTagRecipes()
@@ -121,7 +123,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when clearAllLocalData then recipes aren't preserved`(): Unit = runBlocking {
+    fun `when clearAllLocalData then recipes aren't preserved`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         subject.clearAllLocalData()
         val actual = appDb.recipeDao().queryAllRecipes()
@@ -129,7 +131,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when clearAllLocalData then categories aren't preserved`(): Unit = runBlocking {
+    fun `when clearAllLocalData then categories aren't preserved`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         subject.clearAllLocalData()
         val actual = appDb.recipeDao().queryAllCategories()
@@ -137,7 +139,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when clearAllLocalData then tags aren't preserved`(): Unit = runBlocking {
+    fun `when clearAllLocalData then tags aren't preserved`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         subject.clearAllLocalData()
         val actual = appDb.recipeDao().queryAllTags()
@@ -145,7 +147,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when saveRecipeInfo then saves recipe info`(): Unit = runBlocking {
+    fun `when saveRecipeInfo then saves recipe info`() = runTest {
         subject.saveRecipes(listOf(RECIPE_SUMMARY_CAKE))
         subject.saveRecipeInfo(GET_CAKE_RESPONSE)
         val actual = appDb.recipeDao().queryFullRecipeInfo(1)
@@ -153,7 +155,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when saveRecipeInfo with two then saves second`(): Unit = runBlocking {
+    fun `when saveRecipeInfo with two then saves second`() = runTest {
         subject.saveRecipes(listOf(RECIPE_SUMMARY_CAKE, RECIPE_SUMMARY_PORRIDGE))
         subject.saveRecipeInfo(GET_CAKE_RESPONSE)
         subject.saveRecipeInfo(GET_PORRIDGE_RESPONSE)
@@ -162,7 +164,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when saveRecipeInfo secondly then overwrites ingredients`(): Unit = runBlocking {
+    fun `when saveRecipeInfo secondly then overwrites ingredients`() = runTest {
         subject.saveRecipes(listOf(RECIPE_SUMMARY_CAKE))
         subject.saveRecipeInfo(GET_CAKE_RESPONSE)
         val newRecipe = GET_CAKE_RESPONSE.copy(recipeIngredients = listOf(BREAD_INGREDIENT))
@@ -173,7 +175,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     }
 
     @Test
-    fun `when saveRecipeInfo secondly then overwrites instructions`(): Unit = runBlocking {
+    fun `when saveRecipeInfo secondly then overwrites instructions`() = runTest {
         subject.saveRecipes(listOf(RECIPE_SUMMARY_CAKE))
         subject.saveRecipeInfo(GET_CAKE_RESPONSE)
         val newRecipe = GET_CAKE_RESPONSE.copy(recipeInstructions = listOf(MIX_INSTRUCTION))

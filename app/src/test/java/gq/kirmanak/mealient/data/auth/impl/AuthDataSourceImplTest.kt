@@ -1,84 +1,86 @@
 package gq.kirmanak.mealient.data.auth.impl
 
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
+import gq.kirmanak.mealient.data.network.ServiceFactory
+import gq.kirmanak.mealient.di.AppModule
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
-import gq.kirmanak.mealient.test.AuthImplTestData.body
-import gq.kirmanak.mealient.test.AuthImplTestData.enqueueSuccessfulAuthResponse
-import gq.kirmanak.mealient.test.AuthImplTestData.enqueueUnsuccessfulAuthResponse
-import gq.kirmanak.mealient.test.MockServerTest
+import gq.kirmanak.mealient.test.toJsonResponseBody
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.ExperimentalSerializationApi
-import okhttp3.mockwebserver.MockResponse
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
-import javax.inject.Inject
+import retrofit2.Response
+import java.io.IOException
 
-@ExperimentalSerializationApi
-@ExperimentalCoroutinesApi
-@HiltAndroidTest
-class AuthDataSourceImplTest : MockServerTest() {
-    @Inject
+@OptIn(ExperimentalCoroutinesApi::class)
+class AuthDataSourceImplTest {
+    @MockK
+    lateinit var authService: AuthService
+
+    @MockK
+    lateinit var authServiceFactory: ServiceFactory<AuthService>
+
     lateinit var subject: AuthDataSourceImpl
 
+    @Before
+    fun setUp() {
+        MockKAnnotations.init(this)
+        subject = AuthDataSourceImpl(authServiceFactory, AppModule.createJson())
+    }
+
     @Test
-    fun `when authentication is successful then token is correct`() = runBlocking {
-        mockServer.enqueueSuccessfulAuthResponse()
-        val token = subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
+    fun `when authentication is successful then token is correct`() = runTest {
+        val token = authenticate(Response.success(GetTokenResponse(TEST_TOKEN)))
         assertThat(token).isEqualTo(TEST_TOKEN)
     }
 
     @Test(expected = Unauthorized::class)
-    fun `when authentication isn't successful then throws`(): Unit = runBlocking {
-        mockServer.enqueueUnsuccessfulAuthResponse()
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
-    }
-
-    @Test
-    fun `when authentication is requested then body is correct`() = runBlocking {
-        mockServer.enqueueSuccessfulAuthResponse()
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
-        val body = mockServer.takeRequest().body()
-        assertThat(body).isEqualTo("username=$TEST_USERNAME&password=$TEST_PASSWORD")
-    }
-
-    @Test
-    fun `when authentication is requested then path is correct`() = runBlocking {
-        mockServer.enqueueSuccessfulAuthResponse()
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
-        val path = mockServer.takeRequest().path
-        assertThat(path).isEqualTo("/api/auth/token")
+    fun `when authenticate receives 401 and Unauthorized then throws Unauthorized`() = runTest {
+        val body = "{\"detail\":\"Unauthorized\"}".toJsonResponseBody()
+        authenticate(Response.error(401, body))
     }
 
     @Test(expected = NotMealie::class)
-    fun `when authenticate but response empty then NotMealie`(): Unit = runBlocking {
-        val response = MockResponse().setResponseCode(200)
-        mockServer.enqueue(response)
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
+    fun `when authenticate receives 401 but not Unauthorized then throws NotMealie`() = runTest {
+        val body = "{\"detail\":\"Something\"}".toJsonResponseBody()
+        authenticate(Response.error(401, body))
     }
 
     @Test(expected = NotMealie::class)
-    fun `when authenticate but response invalid then NotMealie`(): Unit = runBlocking {
-        val response = MockResponse()
-            .setResponseCode(200)
-            .setHeader("Content-Type", "application/json")
-            .setBody("{\"test\": \"test\"")
-        mockServer.enqueue(response)
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
+    fun `when authenticate receives 404 and empty body then throws NotMealie`() = runTest {
+        authenticate(Response.error(401, "".toJsonResponseBody()))
     }
 
     @Test(expected = NotMealie::class)
-    fun `when authenticate but response not found then NotMealie`(): Unit = runBlocking {
-        val response = MockResponse().setResponseCode(404)
-        mockServer.enqueue(response)
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
+    fun `when authenticate receives 200 and null then throws NotMealie`() = runTest {
+        authenticate(Response.success<GetTokenResponse>(200, null))
     }
 
     @Test(expected = NoServerConnection::class)
-    fun `when authenticate but host not found then NoServerConnection`(): Unit = runBlocking {
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, "http://test")
+    fun `when authenticate and getToken throws then throws NoServerConnection`() = runTest {
+        setUpAuthServiceFactory()
+        coEvery { authService.getToken(any(), any()) } throws IOException("Server not found")
+        callAuthenticate()
+    }
+
+    private suspend fun authenticate(response: Response<GetTokenResponse>): String {
+        setUpAuthServiceFactory()
+        coEvery { authService.getToken(eq(TEST_USERNAME), eq(TEST_PASSWORD)) } returns response
+        return callAuthenticate()
+    }
+
+    private suspend fun callAuthenticate() =
+        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, TEST_BASE_URL)
+
+    private fun setUpAuthServiceFactory() {
+        every { authServiceFactory.provideService(eq(TEST_BASE_URL)) } returns authService
     }
 }

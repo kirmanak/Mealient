@@ -17,7 +17,7 @@ suspend fun SharedPreferences.getStringOrNull(key: String) =
 suspend fun SharedPreferences.getBooleanOrFalse(key: String) =
     withContext(Dispatchers.IO) { getBoolean(key, false) }
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 fun SharedPreferences.changesFlow(): Flow<Pair<SharedPreferences, String?>> = callbackFlow {
     val listener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
         Timber.v("watchChanges: listener called with key $key")

@@ -7,7 +7,11 @@ interface AuthRepo {
 
     suspend fun getBaseUrl(): String?
 
-    suspend fun getToken(): String?
+    suspend fun requireBaseUrl(): String
+
+    suspend fun getAuthHeader(): String?
+
+    suspend fun requireAuthHeader(): String
 
     fun authenticationStatuses(): Flow<Boolean>
 

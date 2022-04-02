@@ -16,12 +16,10 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
 import gq.kirmanak.mealient.databinding.FragmentAuthenticationBinding
 import gq.kirmanak.mealient.ui.textChangesFlow
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
     private val binding by viewBinding(FragmentAuthenticationBinding::bind)

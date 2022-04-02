@@ -1,55 +1,74 @@
 package gq.kirmanak.mealient.data.auth.impl
 
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidTest
+import gq.kirmanak.mealient.data.auth.AuthDataSource
+import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.MalformedUrl
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.Unauthorized
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
-import gq.kirmanak.mealient.test.AuthImplTestData.enqueueSuccessfulAuthResponse
-import gq.kirmanak.mealient.test.AuthImplTestData.enqueueUnsuccessfulAuthResponse
-import gq.kirmanak.mealient.test.MockServerTest
+import gq.kirmanak.mealient.test.RobolectricTest
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
+import io.mockk.verify
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
-import javax.inject.Inject
 
-@HiltAndroidTest
-class AuthRepoImplTest : MockServerTest() {
-    @Inject
+@OptIn(ExperimentalCoroutinesApi::class)
+class AuthRepoImplTest : RobolectricTest() {
+
+    @MockK
+    lateinit var dataSource: AuthDataSource
+
+    @MockK(relaxUnitFun = true)
+    lateinit var storage: AuthStorage
+
     lateinit var subject: AuthRepoImpl
 
+    @Before
+    fun setUp() {
+        MockKAnnotations.init(this)
+        subject = AuthRepoImpl(dataSource, storage)
+    }
+
     @Test
-    fun `when not authenticated then first auth status is false`() = runBlocking {
+    fun `when not authenticated then first auth status is false`() = runTest {
+        coEvery { storage.authHeaderObservable() } returns flowOf(null)
         assertThat(subject.authenticationStatuses().first()).isFalse()
     }
 
     @Test
-    fun `when authenticated then first auth status is true`() = runBlocking {
-        mockServer.enqueueSuccessfulAuthResponse()
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
+    fun `when authenticated then first auth status is true`() = runTest {
+        coEvery { storage.authHeaderObservable() } returns flowOf(TEST_AUTH_HEADER)
         assertThat(subject.authenticationStatuses().first()).isTrue()
     }
 
     @Test(expected = Unauthorized::class)
-    fun `when authentication fails then authenticate throws`() = runBlocking {
-        mockServer.enqueueUnsuccessfulAuthResponse()
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
+    fun `when authentication fails then authenticate throws`() = runTest {
+        coEvery {
+            dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD), eq(TEST_BASE_URL))
+        } throws Unauthorized(RuntimeException())
+        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, TEST_BASE_URL)
     }
 
     @Test
-    fun `when authenticated then getToken returns token`() = runBlocking {
-        mockServer.enqueueSuccessfulAuthResponse()
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
-        assertThat(subject.getToken()).isEqualTo(TEST_TOKEN)
+    fun `when authenticated then getToken returns token`() = runTest {
+        coEvery { storage.getAuthHeader() } returns TEST_AUTH_HEADER
+        assertThat(subject.getAuthHeader()).isEqualTo(TEST_AUTH_HEADER)
     }
 
     @Test
-    fun `when authenticated then getBaseUrl returns url`() = runBlocking {
-        mockServer.enqueueSuccessfulAuthResponse()
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, serverUrl)
-        assertThat(subject.getBaseUrl()).isEqualTo(serverUrl)
+    fun `when authenticated then getBaseUrl returns url`() = runTest {
+        coEvery { storage.getBaseUrl() } returns TEST_BASE_URL
+        assertThat(subject.getBaseUrl()).isEqualTo(TEST_BASE_URL)
     }
 
     @Test(expected = MalformedUrl::class)
@@ -75,5 +94,20 @@ class AuthRepoImplTest : MockServerTest() {
     @Test
     fun `when baseUrl is correct then doesn't change`() {
         assertThat(subject.parseBaseUrl("https://google.com/")).isEqualTo("https://google.com/")
+    }
+
+    @Test
+    fun `when authenticated successfully then stores token and url`() = runTest {
+        coEvery {
+            dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD), eq(TEST_BASE_URL))
+        } returns TEST_TOKEN
+        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, TEST_BASE_URL)
+        verify { storage.storeAuthData(TEST_AUTH_HEADER, TEST_BASE_URL) }
+    }
+
+    @Test
+    fun `when logout then clearAuthData is called`() = runTest {
+        subject.logout()
+        verify { storage.clearAuthData() }
     }
 }
