@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "gq.kirmanak.mealient"
-        minSdk 21
+        minSdk 23
         targetSdk 31
         versionCode 5
         versionName "0.1.4"
