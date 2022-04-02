@@ -14,8 +14,9 @@ import javax.inject.Inject
 
 class AuthRepoImpl @Inject constructor(
     private val dataSource: AuthDataSource,
-    private val storage: AuthStorage
+    private val storage: AuthStorage,
 ) : AuthRepo {
+
     override suspend fun authenticate(
         username: String,
         password: String,
@@ -24,20 +25,23 @@ class AuthRepoImpl @Inject constructor(
         Timber.v("authenticate() called with: username = $username, password = $password, baseUrl = $baseUrl")
         val url = parseBaseUrl(baseUrl)
         val accessToken = dataSource.authenticate(username, password, url)
-        Timber.d("authenticate result is $accessToken")
-        storage.storeAuthData(accessToken, url)
+        Timber.d("authenticate result is \"$accessToken\"")
+        storage.storeAuthData(AUTH_HEADER_FORMAT.format(accessToken), url)
     }
 
     override suspend fun getBaseUrl(): String? = storage.getBaseUrl()
 
-    override suspend fun getToken(): String? {
-        Timber.v("getToken() called")
-        return storage.getToken()
-    }
+    override suspend fun requireBaseUrl(): String =
+        checkNotNull(getBaseUrl()) { "Base URL is null when it was required" }
+
+    override suspend fun getAuthHeader(): String? = storage.getAuthHeader()
+
+    override suspend fun requireAuthHeader(): String =
+        checkNotNull(getAuthHeader()) { "Auth header is null when it was required" }
 
     override fun authenticationStatuses(): Flow<Boolean> {
         Timber.v("authenticationStatuses() called")
-        return storage.tokenObservable().map { it != null }
+        return storage.authHeaderObservable().map { it != null }
     }
 
     override fun logout() {
@@ -57,4 +61,7 @@ class AuthRepoImpl @Inject constructor(
         throw MalformedUrl(e)
     }
 
+    companion object {
+        private const val AUTH_HEADER_FORMAT = "Bearer %s"
+    }
 }

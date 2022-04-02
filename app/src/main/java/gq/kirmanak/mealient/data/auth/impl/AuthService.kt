@@ -11,9 +11,5 @@ interface AuthService {
     suspend fun getToken(
         @Field("username") username: String,
         @Field("password") password: String,
-        @Field("grant_type") grantType: String? = null,
-        @Field("scope") scope: String? = null,
-        @Field("client_id") clientId: String? = null,
-        @Field("client_secret") clientSecret: String? = null
     ): Response<GetTokenResponse>
 }

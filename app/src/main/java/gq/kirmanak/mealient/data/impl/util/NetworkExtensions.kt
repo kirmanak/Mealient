@@ -7,11 +7,10 @@ import retrofit2.Response
 import timber.log.Timber
 import java.io.InputStream
 
-@ExperimentalSerializationApi
 inline fun <T, reified R> Response<T>.decodeErrorBodyOrNull(json: Json): R? =
     errorBody()?.byteStream()?.let { json.decodeFromStreamOrNull<R>(it) }
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 inline fun <reified T> Json.decodeFromStreamOrNull(stream: InputStream): T? =
     runCatching { decodeFromStream<T>(stream) }
         .onFailure { Timber.e(it, "decodeFromStreamOrNull: can't decode") }

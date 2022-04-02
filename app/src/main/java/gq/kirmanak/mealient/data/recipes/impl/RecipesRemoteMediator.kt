@@ -11,7 +11,7 @@ import kotlinx.coroutines.CancellationException
 import timber.log.Timber
 import javax.inject.Inject
 
-@ExperimentalPagingApi
+@OptIn(ExperimentalPagingApi::class)
 class RecipesRemoteMediator @Inject constructor(
     private val storage: RecipeStorage,
     private val network: RecipeDataSource,
