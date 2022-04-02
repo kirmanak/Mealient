@@ -40,7 +40,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
         setupRecipeAdapter()
-        authStatuses.observe(this, authStatusObserver)
+        authStatuses.observe(viewLifecycleOwner, authStatusObserver)
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = null
     }
 
