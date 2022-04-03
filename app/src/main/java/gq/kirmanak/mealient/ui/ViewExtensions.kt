@@ -4,13 +4,16 @@ import android.app.Activity
 import android.os.Build
 import android.view.View
 import android.view.WindowInsets
+import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.ChannelResult
 import kotlinx.coroutines.channels.awaitClose
@@ -18,6 +21,8 @@ import kotlinx.coroutines.channels.onClosed
 import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -79,4 +84,29 @@ fun <T> ChannelResult<T>.logErrors(methodName: String): ChannelResult<T> {
     onFailure { Timber.e(it, "$methodName: can't send event") }
     onClosed { Timber.e(it, "$methodName: flow has been closed") }
     return this
+}
+
+fun EditText.checkIfInputIsEmpty(
+    inputLayout: TextInputLayout,
+    lifecycleCoroutineScope: LifecycleCoroutineScope,
+    errorText: () -> String
+): String? {
+    Timber.v("checkIfInputIsEmpty() called with: input = $this, inputLayout = $inputLayout, errorText = $errorText")
+    val text = text?.toString()
+    Timber.d("Input text is \"$text\"")
+    if (text.isNullOrEmpty()) {
+        inputLayout.error = errorText()
+        lifecycleCoroutineScope.launchWhenResumed {
+            waitUntilNotEmpty()
+            inputLayout.error = null
+        }
+        return null
+    }
+    return text
+}
+
+suspend fun EditText.waitUntilNotEmpty() {
+    Timber.v("waitUntilNotEmpty() called with: input = $this")
+    textChangesFlow().filterNotNull().first { it.isNotEmpty() }
+    Timber.v("waitUntilNotEmpty() returned")
 }

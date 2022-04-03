@@ -13,20 +13,10 @@ class AuthStorageImpl @Inject constructor(
 ) : AuthStorage {
 
     private val authHeaderKey by preferencesStorage::authHeaderKey
-    private val baseUrlKey by preferencesStorage::baseUrlKey
 
-    override suspend fun storeAuthData(authHeader: String, baseUrl: String) {
-        Timber.v("storeAuthData() called with: authHeader = $authHeader, baseUrl = $baseUrl")
-        preferencesStorage.storeValues(
-            Pair(authHeaderKey, authHeader),
-            Pair(baseUrlKey, baseUrl),
-        )
-    }
-
-    override suspend fun getBaseUrl(): String? {
-        val baseUrl = preferencesStorage.getValue(baseUrlKey)
-        Timber.d("getBaseUrl: base url is $baseUrl")
-        return baseUrl
+    override suspend fun storeAuthData(authHeader: String) {
+        Timber.v("storeAuthData() called with: authHeader = $authHeader")
+        preferencesStorage.storeValues(Pair(authHeaderKey, authHeader))
     }
 
     override suspend fun getAuthHeader(): String? {
@@ -43,6 +33,6 @@ class AuthStorageImpl @Inject constructor(
 
     override suspend fun clearAuthData() {
         Timber.v("clearAuthData() called")
-        preferencesStorage.removeValues(authHeaderKey, baseUrlKey)
+        preferencesStorage.removeValues(authHeaderKey)
     }
 }

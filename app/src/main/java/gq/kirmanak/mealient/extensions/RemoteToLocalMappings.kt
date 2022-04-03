@@ -1,5 +1,7 @@
 package gq.kirmanak.mealient.extensions
 
+import gq.kirmanak.mealient.data.baseurl.VersionInfo
+import gq.kirmanak.mealient.data.baseurl.VersionResponse
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeEntity
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeInstructionEntity
@@ -42,3 +44,5 @@ fun GetRecipeSummaryResponse.recipeEntity() = RecipeSummaryEntity(
     dateAdded = dateAdded,
     dateUpdated = dateUpdated,
 )
+
+fun VersionResponse.versionInfo() = VersionInfo(production, version, demoStatus)

@@ -16,8 +16,9 @@
 	<string name="fragment_authentication_password_input_empty">Пароль не может быть пустым</string>
 	<string name="fragment_authentication_url_input_empty">URL не может быть пустым</string>
 	<string name="fragment_authentication_credentials_incorrect">E-mail или пароль не подходит.</string>
-	<string name="fragment_authentication_no_connection">Ошибка подключения, проверьте адрес.</string>
-	<string name="fragment_authentication_unexpected_response">Неожиданный ответ. Это Mealie?</string>
+	<string name="fragment_base_url_no_connection">Ошибка подключения, проверьте адрес.</string>
+	<string name="fragment_base_url_unexpected_response">Неожиданный ответ. Это Mealie?</string>
 	<string name="fragment_authentication_unknown_error">Что-то пошло не так, попробуйте еще раз.</string>
-	<string name="fragment_authentication_url_invalid">Проверьте формат URL: %s</string>
+	<string name="fragment_base_url_malformed_url">Проверьте формат URL: %s</string>
+	<string name="fragment_base_url_save">Продолжить</string>
 </resources>

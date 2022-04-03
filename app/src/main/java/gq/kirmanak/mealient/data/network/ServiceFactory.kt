@@ -2,5 +2,5 @@ package gq.kirmanak.mealient.data.network
 
 interface ServiceFactory<T> {
 
-    fun provideService(baseUrl: String): T
+    suspend fun provideService(baseUrl: String? = null): T
 }

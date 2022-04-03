@@ -30,8 +30,8 @@ class RecipeDataSourceImpl @Inject constructor(
 
     private suspend fun getRecipeService(): RecipeService {
         Timber.v("getRecipeService() called")
-        return recipeServiceFactory.provideService(authRepo.requireBaseUrl())
+        return recipeServiceFactory.provideService()
     }
 
-    private suspend fun getToken(): String = authRepo.requireAuthHeader()
+    private suspend fun getToken(): String? = authRepo.getAuthHeader()
 }

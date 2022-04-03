@@ -14,12 +14,12 @@ class AuthenticationViewModel @Inject constructor(
     private val recipeRepo: RecipeRepo
 ) : ViewModel() {
 
-    fun authenticate(username: String, password: String, baseUrl: String): LiveData<Result<Unit>> {
-        Timber.v("authenticate() called with: username = $username, password = $password, baseUrl = $baseUrl")
+    fun authenticate(username: String, password: String): LiveData<Result<Unit>> {
+        Timber.v("authenticate() called with: username = $username, password = $password")
         val result = MutableLiveData<Result<Unit>>()
         viewModelScope.launch {
             runCatching {
-                authRepo.authenticate(username, password, baseUrl)
+                authRepo.authenticate(username, password)
             }.onFailure {
                 Timber.e(it, "authenticate: can't authenticate")
                 result.value = Result.failure(it)

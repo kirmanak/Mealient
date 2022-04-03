@@ -48,8 +48,8 @@
 		android:label="DisclaimerFragment"
 		tools:layout="@layout/fragment_disclaimer">
 		<action
-			android:id="@+id/action_disclaimerFragment_to_authenticationFragment"
-			app:destination="@id/authenticationFragment"
+			android:id="@+id/action_disclaimerFragment_to_baseURLFragment"
+			app:destination="@id/baseURLFragment"
 			app:popUpTo="@id/nav_graph"
 			app:popUpToInclusive="true" />
 	</fragment>
@@ -73,5 +73,19 @@
 			app:destination="@id/recipesFragment"
 			app:popUpTo="@id/nav_graph"
 			app:popUpToInclusive="true" />
+		<action
+			android:id="@+id/action_splashFragment_to_baseURLFragment"
+			app:destination="@id/baseURLFragment"
+			app:popUpTo="@id/nav_graph"
+			app:popUpToInclusive="true" />
+	</fragment>
+	<fragment
+		android:id="@+id/baseURLFragment"
+		android:name="gq.kirmanak.mealient.ui.baseurl.BaseURLFragment"
+		android:label="fragment_base_url"
+		tools:layout="@layout/fragment_base_url">
+		<action
+			android:id="@+id/action_baseURLFragment_to_recipesFragment"
+			app:destination="@id/recipesFragment" />
 	</fragment>
 </navigation>
