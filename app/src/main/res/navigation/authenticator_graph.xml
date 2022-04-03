@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/authenticator_graph"
+    app:startDestination="@id/authenticationFragment2">
+
+    <fragment
+        android:id="@+id/authenticationFragment2"
+        android:name="gq.kirmanak.mealient.ui.auth.AuthenticationFragment"
+        android:label="fragment_authentication"
+        tools:layout="@layout/fragment_authentication" />
+</navigation>
