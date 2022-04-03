@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.impl.util
+package gq.kirmanak.mealient.extensions
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json

@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.impl
+package gq.kirmanak.mealient.data.network
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

@@ -2,9 +2,9 @@ package gq.kirmanak.mealient.data.auth.impl
 
 import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
-import gq.kirmanak.mealient.data.impl.ErrorDetail
-import gq.kirmanak.mealient.data.impl.util.decodeErrorBodyOrNull
+import gq.kirmanak.mealient.data.network.ErrorDetail
 import gq.kirmanak.mealient.data.network.ServiceFactory
+import gq.kirmanak.mealient.extensions.decodeErrorBodyOrNull
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json

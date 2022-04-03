@@ -1,7 +1,7 @@
 package gq.kirmanak.mealient.data.disclaimer
 
 import android.content.SharedPreferences
-import gq.kirmanak.mealient.data.impl.util.getBooleanOrFalse
+import gq.kirmanak.mealient.extensions.getBooleanOrFalse
 import timber.log.Timber
 import javax.inject.Inject
 

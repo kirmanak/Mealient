@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.impl
+package gq.kirmanak.mealient.data.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi

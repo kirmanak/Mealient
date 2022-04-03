@@ -10,9 +10,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import gq.kirmanak.mealient.data.AppDb
-import gq.kirmanak.mealient.data.impl.OkHttpBuilder
-import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Module
@@ -27,16 +24,4 @@ object AppModule {
     @Singleton
     fun createSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context)
-
-    @Provides
-    @Singleton
-    fun createOkHttp(okHttpBuilder: OkHttpBuilder): OkHttpClient =
-        okHttpBuilder.buildOkHttp()
-
-    @Provides
-    @Singleton
-    fun createJson(): Json = Json {
-        coerceInputValues = true
-        ignoreUnknownKeys = true
-    }
 }

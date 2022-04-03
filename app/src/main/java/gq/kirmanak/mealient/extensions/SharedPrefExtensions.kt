@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.impl.util
+package gq.kirmanak.mealient.extensions
 
 import android.content.SharedPreferences
 import kotlinx.coroutines.Dispatchers

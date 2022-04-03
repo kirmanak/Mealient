@@ -3,8 +3,8 @@ package gq.kirmanak.mealient.data.auth.impl
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import gq.kirmanak.mealient.data.auth.AuthStorage
-import gq.kirmanak.mealient.data.impl.util.changesFlow
-import gq.kirmanak.mealient.data.impl.util.getStringOrNull
+import gq.kirmanak.mealient.extensions.changesFlow
+import gq.kirmanak.mealient.extensions.getStringOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
