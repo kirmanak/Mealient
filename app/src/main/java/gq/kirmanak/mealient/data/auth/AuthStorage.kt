@@ -3,7 +3,7 @@ package gq.kirmanak.mealient.data.auth
 import kotlinx.coroutines.flow.Flow
 
 interface AuthStorage {
-    fun storeAuthData(authHeader: String, baseUrl: String)
+    suspend fun storeAuthData(authHeader: String, baseUrl: String)
 
     suspend fun getBaseUrl(): String?
 
@@ -11,5 +11,5 @@ interface AuthStorage {
 
     fun authHeaderObservable(): Flow<String?>
 
-    fun clearAuthData()
+    suspend fun clearAuthData()
 }

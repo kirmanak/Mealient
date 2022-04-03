@@ -38,7 +38,9 @@ class AuthenticationViewModel @Inject constructor(
 
     fun logout() {
         Timber.v("logout() called")
-        authRepo.logout()
-        viewModelScope.launch { recipeRepo.clearLocalData() }
+        viewModelScope.launch {
+            authRepo.logout()
+            recipeRepo.clearLocalData()
+        }
     }
 }

@@ -46,7 +46,7 @@ class AuthRepoImpl @Inject constructor(
         return storage.authHeaderObservable().map { it != null }
     }
 
-    override fun logout() {
+    override suspend fun logout() {
         Timber.v("logout() called")
         storage.clearAuthData()
     }

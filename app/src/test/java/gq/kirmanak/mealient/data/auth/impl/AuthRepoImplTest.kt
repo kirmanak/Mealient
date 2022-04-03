@@ -13,8 +13,8 @@ import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
 import gq.kirmanak.mealient.test.RobolectricTest
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -102,12 +102,12 @@ class AuthRepoImplTest : RobolectricTest() {
             dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD), eq(TEST_BASE_URL))
         } returns TEST_TOKEN
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD, TEST_BASE_URL)
-        verify { storage.storeAuthData(TEST_AUTH_HEADER, TEST_BASE_URL) }
+        coVerify { storage.storeAuthData(TEST_AUTH_HEADER, TEST_BASE_URL) }
     }
 
     @Test
     fun `when logout then clearAuthData is called`() = runTest {
         subject.logout()
-        verify { storage.clearAuthData() }
+        coVerify { storage.clearAuthData() }
     }
 }
