@@ -1,7 +1,6 @@
-package gq.kirmanak.mealient.data.impl
+package gq.kirmanak.mealient.extensions
 
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.data.impl.util.RoomTypeConverters
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.junit.Test

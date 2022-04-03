@@ -3,17 +3,19 @@ package gq.kirmanak.mealient.data.recipes.db
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
 import gq.kirmanak.mealient.data.AppDb
-import gq.kirmanak.mealient.data.impl.util.recipeEntity
-import gq.kirmanak.mealient.data.impl.util.toRecipeEntity
-import gq.kirmanak.mealient.data.impl.util.toRecipeIngredientEntity
-import gq.kirmanak.mealient.data.impl.util.toRecipeInstructionEntity
 import gq.kirmanak.mealient.data.recipes.db.entity.*
 import gq.kirmanak.mealient.data.recipes.impl.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeSummaryResponse
+import gq.kirmanak.mealient.extensions.recipeEntity
+import gq.kirmanak.mealient.extensions.toRecipeEntity
+import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
+import gq.kirmanak.mealient.extensions.toRecipeInstructionEntity
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RecipeStorageImpl @Inject constructor(
     private val db: AppDb
 ) : RecipeStorage {

@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.impl
+package gq.kirmanak.mealient.data.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -8,7 +8,9 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RetrofitBuilder @Inject constructor(
     private val okHttpClient: OkHttpClient,
     private val json: Json

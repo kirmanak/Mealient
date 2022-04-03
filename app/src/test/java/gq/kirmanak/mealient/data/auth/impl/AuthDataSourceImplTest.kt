@@ -3,7 +3,7 @@ package gq.kirmanak.mealient.data.auth.impl
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
 import gq.kirmanak.mealient.data.network.ServiceFactory
-import gq.kirmanak.mealient.di.AppModule
+import gq.kirmanak.mealient.di.NetworkModule
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
@@ -33,7 +33,7 @@ class AuthDataSourceImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = AuthDataSourceImpl(authServiceFactory, AppModule.createJson())
+        subject = AuthDataSourceImpl(authServiceFactory, NetworkModule.createJson())
     }
 
     @Test

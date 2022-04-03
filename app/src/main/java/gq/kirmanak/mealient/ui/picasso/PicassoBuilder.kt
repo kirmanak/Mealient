@@ -8,7 +8,9 @@ import gq.kirmanak.mealient.BuildConfig
 import okhttp3.OkHttpClient
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PicassoBuilder @Inject constructor(
     @ApplicationContext private val context: Context,
     private val okHttpClient: OkHttpClient

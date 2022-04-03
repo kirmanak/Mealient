@@ -25,54 +25,54 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DebugModule {
-  @Provides
-  @Singleton
-  @IntoSet
-  fun provideLoggingInterceptor(): Interceptor {
-    val interceptor = HttpLoggingInterceptor { message -> Timber.tag("OkHttp").v(message) }
-    interceptor.level = HttpLoggingInterceptor.Level.BODY
-    return interceptor
-  }
+    @Provides
+    @Singleton
+    @IntoSet
+    fun provideLoggingInterceptor(): Interceptor {
+        val interceptor = HttpLoggingInterceptor { message -> Timber.tag("OkHttp").v(message) }
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        return interceptor
+    }
 
-  @Provides
-  @Singleton
-  @IntoSet
-  fun provideFlipperInterceptor(networkFlipperPlugin: NetworkFlipperPlugin): Interceptor {
-    return FlipperOkhttpInterceptor(networkFlipperPlugin)
-  }
+    @Provides
+    @Singleton
+    @IntoSet
+    fun provideFlipperInterceptor(networkFlipperPlugin: NetworkFlipperPlugin): Interceptor {
+        return FlipperOkhttpInterceptor(networkFlipperPlugin)
+    }
 
-  @Provides
-  @Singleton
-  fun networkFlipperPlugin() = NetworkFlipperPlugin()
+    @Provides
+    @Singleton
+    fun networkFlipperPlugin() = NetworkFlipperPlugin()
 
-  @Provides
-  @Singleton
-  @IntoSet
-  fun bindNetworkFlipperPlugin(plugin: NetworkFlipperPlugin): FlipperPlugin = plugin
+    @Provides
+    @Singleton
+    @IntoSet
+    fun bindNetworkFlipperPlugin(plugin: NetworkFlipperPlugin): FlipperPlugin = plugin
 
-  @Provides
-  @Singleton
-  @IntoSet
-  fun sharedPreferencesPlugin(@ApplicationContext context: Context): FlipperPlugin =
-    SharedPreferencesFlipperPlugin(context)
+    @Provides
+    @Singleton
+    @IntoSet
+    fun sharedPreferencesPlugin(@ApplicationContext context: Context): FlipperPlugin =
+        SharedPreferencesFlipperPlugin(context)
 
-  @Provides
-  @Singleton
-  @IntoSet
-  fun leakCanaryPlugin(): FlipperPlugin {
-    LeakCanary.config = LeakCanary.config.copy(onHeapAnalyzedListener = FlipperLeakListener())
-    return LeakCanary2FlipperPlugin()
-  }
+    @Provides
+    @Singleton
+    @IntoSet
+    fun leakCanaryPlugin(): FlipperPlugin {
+        LeakCanary.config = LeakCanary.config.copy(onHeapAnalyzedListener = FlipperLeakListener())
+        return LeakCanary2FlipperPlugin()
+    }
 
-  @Provides
-  @Singleton
-  @IntoSet
-  fun databasesPlugin(@ApplicationContext context: Context): FlipperPlugin =
-    DatabasesFlipperPlugin(context)
+    @Provides
+    @Singleton
+    @IntoSet
+    fun databasesPlugin(@ApplicationContext context: Context): FlipperPlugin =
+        DatabasesFlipperPlugin(context)
 
-  @Provides
-  @Singleton
-  @IntoSet
-  fun inspectorPlugin(@ApplicationContext context: Context): FlipperPlugin =
-    InspectorFlipperPlugin(context, DescriptorMapping.withDefaults())
+    @Provides
+    @Singleton
+    @IntoSet
+    fun inspectorPlugin(@ApplicationContext context: Context): FlipperPlugin =
+        InspectorFlipperPlugin(context, DescriptorMapping.withDefaults())
 }

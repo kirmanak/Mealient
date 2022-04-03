@@ -9,7 +9,9 @@ import gq.kirmanak.mealient.ui.ImageLoader
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RecipeImageLoaderImpl @Inject constructor(
     private val imageLoader: ImageLoader,
     private val authRepo: AuthRepo

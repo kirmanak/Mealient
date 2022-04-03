@@ -2,9 +2,9 @@ package gq.kirmanak.mealient.data.auth.impl
 
 import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
-import gq.kirmanak.mealient.data.impl.ErrorDetail
-import gq.kirmanak.mealient.data.impl.util.decodeErrorBodyOrNull
+import gq.kirmanak.mealient.data.network.ErrorDetail
 import gq.kirmanak.mealient.data.network.ServiceFactory
+import gq.kirmanak.mealient.extensions.decodeErrorBodyOrNull
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -12,7 +12,9 @@ import retrofit2.HttpException
 import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AuthDataSourceImpl @Inject constructor(
     private val authServiceFactory: ServiceFactory<AuthService>,
     private val json: Json,

@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import gq.kirmanak.mealient.data.impl.RetrofitBuilder
+import gq.kirmanak.mealient.data.network.RetrofitBuilder
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.data.network.createServiceFactory
 import gq.kirmanak.mealient.data.recipes.RecipeImageLoader

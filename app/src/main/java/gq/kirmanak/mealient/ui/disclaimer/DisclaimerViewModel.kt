@@ -36,8 +36,10 @@ class DisclaimerViewModel @Inject constructor(
 
     fun acceptDisclaimer() {
         Timber.v("acceptDisclaimer() called")
-        disclaimerStorage.acceptDisclaimer()
-        _isAccepted.value = true
+        viewModelScope.launch {
+            disclaimerStorage.acceptDisclaimer()
+            _isAccepted.value = true
+        }
     }
 
     fun startCountDown() {

@@ -6,7 +6,9 @@ import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeSummaryResponse
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RecipeDataSourceImpl @Inject constructor(
     private val authRepo: AuthRepo,
     private val recipeServiceFactory: ServiceFactory<RecipeService>,

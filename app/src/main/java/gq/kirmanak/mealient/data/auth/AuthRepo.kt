@@ -15,5 +15,5 @@ interface AuthRepo {
 
     fun authenticationStatuses(): Flow<Boolean>
 
-    fun logout()
+    suspend fun logout()
 }

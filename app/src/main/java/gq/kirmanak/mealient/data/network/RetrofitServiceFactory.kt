@@ -1,6 +1,5 @@
 package gq.kirmanak.mealient.data.network
 
-import gq.kirmanak.mealient.data.impl.RetrofitBuilder
 import timber.log.Timber
 
 inline fun <reified T> RetrofitBuilder.createServiceFactory() =

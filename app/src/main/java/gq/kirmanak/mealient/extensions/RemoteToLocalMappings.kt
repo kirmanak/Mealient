@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.impl.util
+package gq.kirmanak.mealient.extensions
 
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeEntity
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeIngredientEntity
