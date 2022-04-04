@@ -14,10 +14,12 @@
 	<string name="fragment_disclaimer_main_text">Этот проект разрабатывается независимо от основного проекта Meale. Он не связан с разработчиками Mealie. О любых проблемах следует писать в репозиторий Mealient, НЕ в репозиторий Mealie.</string>
 	<string name="fragment_authentication_email_input_empty">E-mail не может быть пустым</string>
 	<string name="fragment_authentication_password_input_empty">Пароль не может быть пустым</string>
-	<string name="fragment_authentication_url_input_empty">URL не может быть пустым</string>
+	<string name="fragment_baseurl_url_input_empty">URL не может быть пустым</string>
 	<string name="fragment_authentication_credentials_incorrect">E-mail или пароль не подходит.</string>
-	<string name="fragment_authentication_no_connection">Ошибка подключения, проверьте адрес.</string>
-	<string name="fragment_authentication_unexpected_response">Неожиданный ответ. Это Mealie?</string>
+	<string name="fragment_base_url_no_connection">Ошибка подключения, проверьте адрес.</string>
+	<string name="fragment_base_url_unexpected_response">Неожиданный ответ. Это Mealie?</string>
 	<string name="fragment_authentication_unknown_error">Что-то пошло не так, попробуйте еще раз.</string>
-	<string name="fragment_authentication_url_invalid">Проверьте формат URL: %s</string>
+	<string name="fragment_base_url_malformed_url">Проверьте формат URL: %s</string>
+	<string name="fragment_base_url_save">Продолжить</string>
+	<string name="menu_main_toolbar_login">Войти</string>
 </resources>

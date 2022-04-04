@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.ui.disclaimer
 
 import com.google.common.truth.Truth.assertThat
-import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
@@ -14,7 +13,6 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltAndroidTest
 class DisclaimerViewModelTest {
     @MockK(relaxUnitFun = true)
     lateinit var storage: DisclaimerStorage

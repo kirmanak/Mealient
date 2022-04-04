@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
@@ -19,10 +20,12 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.v("onCreate() called with: savedInstanceState = $savedInstanceState")
-        viewModel.nextDestination.observe(this) {
-            Timber.d("onCreate: next destination $it")
-            findNavController().navigate(it)
-        }
+        viewModel.nextDestination.observe(this, ::onNextDestination)
+    }
+
+    private fun onNextDestination(navDirections: NavDirections) {
+        Timber.v("onNextDestination() called with: navDirections = $navDirections")
+        findNavController().navigate(navDirections)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

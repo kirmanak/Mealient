@@ -1,17 +1,15 @@
 package gq.kirmanak.mealient.data.auth.impl
 
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
+import gq.kirmanak.mealient.data.network.NetworkError.*
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.di.NetworkModule
-import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
 import gq.kirmanak.mealient.test.toJsonResponseBody
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -34,6 +32,7 @@ class AuthDataSourceImplTest {
     fun setUp() {
         MockKAnnotations.init(this)
         subject = AuthDataSourceImpl(authServiceFactory, NetworkModule.createJson())
+        coEvery { authServiceFactory.provideService() } returns authService
     }
 
     @Test
@@ -66,21 +65,21 @@ class AuthDataSourceImplTest {
 
     @Test(expected = NoServerConnection::class)
     fun `when authenticate and getToken throws then throws NoServerConnection`() = runTest {
-        setUpAuthServiceFactory()
         coEvery { authService.getToken(any(), any()) } throws IOException("Server not found")
         callAuthenticate()
     }
 
+    @Test(expected = MalformedUrl::class)
+    fun `when authenticate and provideService throws then MalformedUrl`() = runTest {
+        coEvery { authServiceFactory.provideService() } throws RuntimeException()
+        callAuthenticate()
+    }
+
     private suspend fun authenticate(response: Response<GetTokenResponse>): String {
-        setUpAuthServiceFactory()
         coEvery { authService.getToken(eq(TEST_USERNAME), eq(TEST_PASSWORD)) } returns response
         return callAuthenticate()
     }
 
-    private suspend fun callAuthenticate() =
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, TEST_BASE_URL)
+    private suspend fun callAuthenticate() = subject.authenticate(TEST_USERNAME, TEST_PASSWORD)
 
-    private fun setUpAuthServiceFactory() {
-        every { authServiceFactory.provideService(eq(TEST_BASE_URL)) } returns authService
-    }
 }

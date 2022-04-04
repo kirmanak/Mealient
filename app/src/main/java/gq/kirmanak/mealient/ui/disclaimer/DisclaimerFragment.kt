@@ -20,21 +20,17 @@ class DisclaimerFragment : Fragment(R.layout.fragment_disclaimer) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.v("onCreate() called with: savedInstanceState = $savedInstanceState")
-        listenToAcceptStatus()
+        viewModel.isAccepted.observe(this, ::onAcceptStateChange)
     }
 
-    private fun listenToAcceptStatus() {
-        Timber.v("listenToAcceptStatus() called")
-        viewModel.isAccepted.observe(this) {
-            Timber.d("listenToAcceptStatus: new status = $it")
-            if (it) navigateToAuth()
-        }
-        viewModel.checkIsAccepted()
+    private fun onAcceptStateChange(isAccepted: Boolean) {
+        Timber.v("onAcceptStateChange() called with: isAccepted = $isAccepted")
+        if (isAccepted) navigateNext()
     }
 
-    private fun navigateToAuth() {
-        Timber.v("navigateToAuth() called")
-        findNavController().navigate(DisclaimerFragmentDirections.actionDisclaimerFragmentToAuthenticationFragment())
+    private fun navigateNext() {
+        Timber.v("navigateNext() called")
+        findNavController().navigate(DisclaimerFragmentDirections.actionDisclaimerFragmentToBaseURLFragment())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

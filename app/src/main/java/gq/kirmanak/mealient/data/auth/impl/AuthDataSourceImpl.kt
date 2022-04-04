@@ -1,8 +1,8 @@
 package gq.kirmanak.mealient.data.auth.impl
 
 import gq.kirmanak.mealient.data.auth.AuthDataSource
-import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.*
 import gq.kirmanak.mealient.data.network.ErrorDetail
+import gq.kirmanak.mealient.data.network.NetworkError.*
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.extensions.decodeErrorBodyOrNull
 import kotlinx.coroutines.CancellationException
@@ -20,13 +20,14 @@ class AuthDataSourceImpl @Inject constructor(
     private val json: Json,
 ) : AuthDataSource {
 
-    override suspend fun authenticate(
-        username: String,
-        password: String,
-        baseUrl: String
-    ): String {
-        Timber.v("authenticate() called with: username = $username, password = $password, baseUrl = $baseUrl")
-        val authService = authServiceFactory.provideService(baseUrl)
+    override suspend fun authenticate(username: String, password: String): String {
+        Timber.v("authenticate() called with: username = $username, password = $password")
+        val authService = try {
+            authServiceFactory.provideService()
+        } catch (e: Exception) {
+            Timber.e(e, "authenticate: can't create Retrofit service")
+            throw MalformedUrl(e)
+        }
         val response = sendRequest(authService, username, password)
         val accessToken = parseToken(response)
         Timber.v("authenticate() returned: $accessToken")

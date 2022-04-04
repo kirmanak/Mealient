@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.data.auth.impl
 
+import androidx.datastore.preferences.core.Preferences
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.storage.PreferencesStorage
 import kotlinx.coroutines.flow.Flow
@@ -12,21 +13,14 @@ class AuthStorageImpl @Inject constructor(
     private val preferencesStorage: PreferencesStorage,
 ) : AuthStorage {
 
-    private val authHeaderKey by preferencesStorage::authHeaderKey
-    private val baseUrlKey by preferencesStorage::baseUrlKey
+    private val authHeaderKey: Preferences.Key<String>
+        get() = preferencesStorage.authHeaderKey
+    override val authHeaderFlow: Flow<String?>
+        get() = preferencesStorage.valueUpdates(authHeaderKey)
 
-    override suspend fun storeAuthData(authHeader: String, baseUrl: String) {
-        Timber.v("storeAuthData() called with: authHeader = $authHeader, baseUrl = $baseUrl")
-        preferencesStorage.storeValues(
-            Pair(authHeaderKey, authHeader),
-            Pair(baseUrlKey, baseUrl),
-        )
-    }
-
-    override suspend fun getBaseUrl(): String? {
-        val baseUrl = preferencesStorage.getValue(baseUrlKey)
-        Timber.d("getBaseUrl: base url is $baseUrl")
-        return baseUrl
+    override suspend fun storeAuthData(authHeader: String) {
+        Timber.v("storeAuthData() called with: authHeader = $authHeader")
+        preferencesStorage.storeValues(Pair(authHeaderKey, authHeader))
     }
 
     override suspend fun getAuthHeader(): String? {
@@ -36,13 +30,8 @@ class AuthStorageImpl @Inject constructor(
         return token
     }
 
-    override fun authHeaderObservable(): Flow<String?> {
-        Timber.v("authHeaderObservable() called")
-        return preferencesStorage.valueUpdates(authHeaderKey)
-    }
-
     override suspend fun clearAuthData() {
         Timber.v("clearAuthData() called")
-        preferencesStorage.removeValues(authHeaderKey, baseUrlKey)
+        preferencesStorage.removeValues(authHeaderKey)
     }
 }

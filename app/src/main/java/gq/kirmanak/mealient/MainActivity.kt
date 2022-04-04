@@ -9,6 +9,9 @@ import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.databinding.MainActivityBinding
+import gq.kirmanak.mealient.ui.auth.AuthenticationState
+import gq.kirmanak.mealient.ui.auth.AuthenticationState.AUTHORIZED
+import gq.kirmanak.mealient.ui.auth.AuthenticationState.UNAUTHORIZED
 import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
 import timber.log.Timber
 
@@ -16,7 +19,8 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainActivityBinding
     private val authViewModel by viewModels<AuthenticationViewModel>()
-    private var isAuthenticated = false
+    private val authenticationState: AuthenticationState
+        get() = authViewModel.currentAuthenticationState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,32 +52,34 @@ class MainActivity : AppCompatActivity() {
 
     private fun listenToAuthStatuses() {
         Timber.v("listenToAuthStatuses() called")
-        authViewModel.authenticationStatuses().observe(this) {
-            changeAuthStatus(it)
-        }
+        authViewModel.authenticationState.observe(this, ::onAuthStateUpdate)
     }
 
-    private fun changeAuthStatus(it: Boolean) {
-        Timber.v("changeAuthStatus() called with: it = $it")
-        if (isAuthenticated == it) return
-        isAuthenticated = it
+    private fun onAuthStateUpdate(authState: AuthenticationState) {
+        Timber.v("onAuthStateUpdate() called with: it = $authState")
         invalidateOptionsMenu()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         Timber.v("onCreateOptionsMenu() called with: menu = $menu")
         menuInflater.inflate(R.menu.main_toolbar, menu)
-        menu.findItem(R.id.logout).isVisible = isAuthenticated
+        menu.findItem(R.id.logout).isVisible = authenticationState == AUTHORIZED
+        menu.findItem(R.id.login).isVisible = authenticationState == UNAUTHORIZED
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Timber.v("onOptionsItemSelected() called with: item = $item")
-        val result = if (item.itemId == R.id.logout) {
-            authViewModel.logout()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
+        val result = when (item.itemId) {
+            R.id.logout -> {
+                authViewModel.logout()
+                true
+            }
+            R.id.login -> {
+                authViewModel.login()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
         return result
     }

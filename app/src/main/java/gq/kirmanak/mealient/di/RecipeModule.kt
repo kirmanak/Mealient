@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.data.network.RetrofitBuilder
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.data.network.createServiceFactory
@@ -44,9 +45,10 @@ interface RecipeModule {
 
         @Provides
         @Singleton
-        fun provideRecipeServiceFactory(retrofitBuilder: RetrofitBuilder): ServiceFactory<RecipeService> {
-            return retrofitBuilder.createServiceFactory()
-        }
+        fun provideRecipeServiceFactory(
+            retrofitBuilder: RetrofitBuilder,
+            baseURLStorage: BaseURLStorage,
+        ): ServiceFactory<RecipeService> = retrofitBuilder.createServiceFactory(baseURLStorage)
 
         @Provides
         @Singleton

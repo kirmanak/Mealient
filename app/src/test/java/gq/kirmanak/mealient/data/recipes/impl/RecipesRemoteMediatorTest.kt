@@ -3,7 +3,7 @@ package gq.kirmanak.mealient.data.recipes.impl
 import androidx.paging.*
 import androidx.paging.LoadType.*
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.data.auth.impl.AuthenticationError.Unauthorized
+import gq.kirmanak.mealient.data.network.NetworkError.Unauthorized
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource

@@ -19,58 +19,58 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeInfoFragment : BottomSheetDialogFragment() {
-  private val binding by viewBinding(FragmentRecipeInfoBinding::bind)
-  private val arguments by navArgs<RecipeInfoFragmentArgs>()
-  private val viewModel by viewModels<RecipeInfoViewModel>()
+    private val binding by viewBinding(FragmentRecipeInfoBinding::bind)
+    private val arguments by navArgs<RecipeInfoFragmentArgs>()
+    private val viewModel by viewModels<RecipeInfoViewModel>()
 
-  @Inject
-  lateinit var ingredientsAdapter: RecipeIngredientsAdapter
+    @Inject
+    lateinit var ingredientsAdapter: RecipeIngredientsAdapter
 
-  @Inject
-  lateinit var instructionsAdapter: RecipeInstructionsAdapter
+    @Inject
+    lateinit var instructionsAdapter: RecipeInstructionsAdapter
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View {
-    Timber.v("onCreateView() called")
-    return FragmentRecipeInfoBinding.inflate(inflater, container, false).root
-  }
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    Timber.v("onViewCreated() called")
-
-    binding.ingredientsList.adapter = ingredientsAdapter
-    binding.instructionsList.adapter = instructionsAdapter
-
-    viewModel.loadRecipeImage(binding.image, arguments.recipeSlug)
-    viewModel.loadRecipeInfo(arguments.recipeId, arguments.recipeSlug)
-
-    viewModel.recipeInfo.observe(viewLifecycleOwner) {
-      Timber.d("onViewCreated: full info $it")
-      binding.title.text = it.recipeSummaryEntity.name
-      binding.description.text = it.recipeSummaryEntity.description
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        Timber.v("onCreateView() called")
+        return FragmentRecipeInfoBinding.inflate(inflater, container, false).root
     }
 
-    viewModel.listsVisibility.observe(viewLifecycleOwner) {
-      Timber.d("onViewCreated: lists visibility $it")
-      binding.ingredientsHolder.isVisible = it.areIngredientsVisible
-      binding.instructionsGroup.isVisible = it.areInstructionsVisible
-    }
-  }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Timber.v("onViewCreated() called")
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-    BottomSheetDialog(requireContext(), R.style.NoShapeBottomSheetDialog)
+        binding.ingredientsList.adapter = ingredientsAdapter
+        binding.instructionsList.adapter = instructionsAdapter
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    Timber.v("onDestroyView() called")
-    // Prevent RV leaking through mObservers list in adapter
-    with(binding) {
-      ingredientsList.adapter = null
-      instructionsList.adapter = null
+        viewModel.loadRecipeImage(binding.image, arguments.recipeSlug)
+        viewModel.loadRecipeInfo(arguments.recipeId, arguments.recipeSlug)
+
+        viewModel.recipeInfo.observe(viewLifecycleOwner) {
+            Timber.d("onViewCreated: full info $it")
+            binding.title.text = it.recipeSummaryEntity.name
+            binding.description.text = it.recipeSummaryEntity.description
+        }
+
+        viewModel.listsVisibility.observe(viewLifecycleOwner) {
+            Timber.d("onViewCreated: lists visibility $it")
+            binding.ingredientsHolder.isVisible = it.areIngredientsVisible
+            binding.instructionsGroup.isVisible = it.areInstructionsVisible
+        }
     }
-  }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        BottomSheetDialog(requireContext(), R.style.NoShapeBottomSheetDialog)
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.v("onDestroyView() called")
+        // Prevent RV leaking through mObservers list in adapter
+        with(binding) {
+            ingredientsList.adapter = null
+            instructionsList.adapter = null
+        }
+    }
 }

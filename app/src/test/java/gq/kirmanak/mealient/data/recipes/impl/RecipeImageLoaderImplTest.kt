@@ -1,7 +1,7 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.data.auth.AuthRepo
+import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.ui.ImageLoader
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -16,7 +16,7 @@ class RecipeImageLoaderImplTest {
     lateinit var subject: RecipeImageLoaderImpl
 
     @MockK
-    lateinit var authRepo: AuthRepo
+    lateinit var baseURLStorage: BaseURLStorage
 
     @MockK
     lateinit var imageLoader: ImageLoader
@@ -24,8 +24,8 @@ class RecipeImageLoaderImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = RecipeImageLoaderImpl(imageLoader, authRepo)
-        coEvery { authRepo.getBaseUrl() } returns "https://google.com/"
+        subject = RecipeImageLoaderImpl(imageLoader, baseURLStorage)
+        prepareBaseURL("https://google.com/")
     }
 
     @Test
@@ -42,21 +42,21 @@ class RecipeImageLoaderImplTest {
 
     @Test
     fun `when url is null then generated is null`() = runTest {
-        coEvery { authRepo.getBaseUrl() } returns null
+        prepareBaseURL(null)
         val actual = subject.generateImageUrl("cake")
         assertThat(actual).isNull()
     }
 
     @Test
     fun `when url is blank then generated is null`() = runTest {
-        coEvery { authRepo.getBaseUrl() } returns "  "
+        prepareBaseURL("  ")
         val actual = subject.generateImageUrl("cake")
         assertThat(actual).isNull()
     }
 
     @Test
     fun `when url is empty then generated is null`() = runTest {
-        coEvery { authRepo.getBaseUrl() } returns ""
+        prepareBaseURL("")
         val actual = subject.generateImageUrl("cake")
         assertThat(actual).isNull()
     }
@@ -77,5 +77,9 @@ class RecipeImageLoaderImplTest {
     fun `when slug is null then generated is null`() = runTest {
         val actual = subject.generateImageUrl(null)
         assertThat(actual).isNull()
+    }
+
+    private fun prepareBaseURL(baseURL: String?) {
+        coEvery { baseURLStorage.getBaseURL() } returns baseURL
     }
 }

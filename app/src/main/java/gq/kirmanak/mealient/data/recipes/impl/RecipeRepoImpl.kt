@@ -23,7 +23,7 @@ class RecipeRepoImpl @Inject constructor(
 ) : RecipeRepo {
     override fun createPager(): Pager<Int, RecipeSummaryEntity> {
         Timber.v("createPager() called")
-        val pagingConfig = PagingConfig(pageSize = 30, enablePlaceholders = true)
+        val pagingConfig = PagingConfig(pageSize = 5, enablePlaceholders = true)
         return Pager(
             config = pagingConfig,
             remoteMediator = mediator,

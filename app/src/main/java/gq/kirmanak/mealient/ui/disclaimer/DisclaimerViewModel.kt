@@ -1,10 +1,7 @@
 package gq.kirmanak.mealient.ui.disclaimer
 
 import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
 import kotlinx.coroutines.delay
@@ -21,25 +18,15 @@ import javax.inject.Inject
 class DisclaimerViewModel @Inject constructor(
     private val disclaimerStorage: DisclaimerStorage
 ) : ViewModel() {
-    private val _isAccepted = MutableLiveData(false)
-    val isAccepted: LiveData<Boolean> = _isAccepted
+    val isAccepted: LiveData<Boolean>
+        get() = disclaimerStorage.isDisclaimerAcceptedFlow.asLiveData()
 
     private val _okayCountDown = MutableLiveData(FULL_COUNT_DOWN_SEC)
     val okayCountDown: LiveData<Int> = _okayCountDown
 
-    fun checkIsAccepted() {
-        Timber.v("checkIsAccepted() called")
-        viewModelScope.launch {
-            _isAccepted.value = disclaimerStorage.isDisclaimerAccepted()
-        }
-    }
-
     fun acceptDisclaimer() {
         Timber.v("acceptDisclaimer() called")
-        viewModelScope.launch {
-            disclaimerStorage.acceptDisclaimer()
-            _isAccepted.value = true
-        }
+        viewModelScope.launch { disclaimerStorage.acceptDisclaimer() }
     }
 
     fun startCountDown() {

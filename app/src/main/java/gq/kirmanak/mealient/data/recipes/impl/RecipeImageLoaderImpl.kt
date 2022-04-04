@@ -3,7 +3,7 @@ package gq.kirmanak.mealient.data.recipes.impl
 import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
 import gq.kirmanak.mealient.R
-import gq.kirmanak.mealient.data.auth.AuthRepo
+import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.data.recipes.RecipeImageLoader
 import gq.kirmanak.mealient.ui.ImageLoader
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class RecipeImageLoaderImpl @Inject constructor(
     private val imageLoader: ImageLoader,
-    private val authRepo: AuthRepo
+    private val baseURLStorage: BaseURLStorage,
 ): RecipeImageLoader {
 
     override suspend fun loadRecipeImage(view: ImageView, slug: String?) {
@@ -25,7 +25,7 @@ class RecipeImageLoaderImpl @Inject constructor(
     @VisibleForTesting
     suspend fun generateImageUrl(slug: String?): String? {
         Timber.v("generateImageUrl() called with: slug = $slug")
-        val result = authRepo.getBaseUrl()
+        val result = baseURLStorage.getBaseURL()
             ?.takeIf { it.isNotBlank() }
             ?.takeUnless { slug.isNullOrBlank() }
             ?.toHttpUrlOrNull()
