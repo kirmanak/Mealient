@@ -19,8 +19,6 @@ class AuthenticationViewModel @Inject constructor(
         flow = authRepo.isAuthorizedFlow,
         transform = AuthenticationState::determineState
     ).asLiveData()
-    val currentAuthenticationState: AuthenticationState
-        get() = checkNotNull(authenticationState.value) { "Auth state flow mustn't be null" }
 
     fun authenticate(username: String, password: String): LiveData<Result<Unit>> {
         Timber.v("authenticate() called with: username = $username, password = $password")

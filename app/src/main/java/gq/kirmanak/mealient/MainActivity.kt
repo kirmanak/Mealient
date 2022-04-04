@@ -19,8 +19,7 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainActivityBinding
     private val authViewModel by viewModels<AuthenticationViewModel>()
-    private val authenticationState: AuthenticationState
-        get() = authViewModel.currentAuthenticationState
+    private var lastAuthenticationState: AuthenticationState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,14 +56,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun onAuthStateUpdate(authState: AuthenticationState) {
         Timber.v("onAuthStateUpdate() called with: it = $authState")
+        lastAuthenticationState = authState
         invalidateOptionsMenu()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         Timber.v("onCreateOptionsMenu() called with: menu = $menu")
         menuInflater.inflate(R.menu.main_toolbar, menu)
-        menu.findItem(R.id.logout).isVisible = authenticationState == AUTHORIZED
-        menu.findItem(R.id.login).isVisible = authenticationState == UNAUTHORIZED
+        menu.findItem(R.id.logout).isVisible = lastAuthenticationState == AUTHORIZED
+        menu.findItem(R.id.login).isVisible = lastAuthenticationState == UNAUTHORIZED
         return true
     }
 
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.login -> {
-                authViewModel.login()
+                authViewModel.enableLoginRequest()
                 true
             }
             else -> super.onOptionsItemSelected(item)
