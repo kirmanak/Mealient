@@ -13,9 +13,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
+import gq.kirmanak.mealient.extensions.refreshesLiveData
 import gq.kirmanak.mealient.ui.auth.AuthenticationState
 import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
-import gq.kirmanak.mealient.ui.refreshesLiveData
 import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 

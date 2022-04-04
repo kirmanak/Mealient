@@ -45,8 +45,17 @@ class AuthenticationViewModel @Inject constructor(
         }
     }
 
-    fun login() {
-        Timber.v("login() called")
-        viewModelScope.launch { loginRequestsFlow.emit(true) }
+    fun enableLoginRequest() {
+        Timber.v("enableLoginRequest() called")
+        updateIsLoginRequested(true)
+    }
+
+    fun disableLoginRequest() {
+        Timber.v("disableLoginRequest() called")
+        updateIsLoginRequested(false)
+    }
+
+    private fun updateIsLoginRequested(isRequested: Boolean) {
+        viewModelScope.launch { loginRequestsFlow.emit(isRequested) }
     }
 }

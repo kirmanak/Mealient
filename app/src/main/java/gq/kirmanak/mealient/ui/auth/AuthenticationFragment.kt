@@ -13,7 +13,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.network.NetworkError.Unauthorized
 import gq.kirmanak.mealient.databinding.FragmentAuthenticationBinding
-import gq.kirmanak.mealient.ui.checkIfInputIsEmpty
+import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
+import gq.kirmanak.mealient.extensions.executeOnceOnBackPressed
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -28,6 +29,7 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         super.onCreate(savedInstanceState)
         Timber.v("onCreate() called with: savedInstanceState = $savedInstanceState")
         authStatuses.observe(this, ::onAuthStatusChange)
+        executeOnceOnBackPressed { viewModel.disableLoginRequest() }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

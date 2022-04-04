@@ -9,8 +9,8 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
-import gq.kirmanak.mealient.ui.setActionBarVisibility
-import gq.kirmanak.mealient.ui.setSystemUiVisibility
+import gq.kirmanak.mealient.extensions.setActionBarVisibility
+import gq.kirmanak.mealient.extensions.setSystemUiVisibility
 import timber.log.Timber
 
 @AndroidEntryPoint

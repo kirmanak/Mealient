@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.ui
+package gq.kirmanak.mealient.extensions
 
 import android.app.Activity
 import android.os.Build
