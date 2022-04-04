@@ -39,13 +39,18 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
     private fun onLoginClicked(): Unit = with(binding) {
         Timber.v("onLoginClicked() called")
 
-        val email: String = emailInput.checkIfInputIsEmpty(emailInputLayout, lifecycleScope) {
-            getString(R.string.fragment_authentication_email_input_empty)
-        } ?: return
+        val email: String = emailInput.checkIfInputIsEmpty(
+            inputLayout = emailInputLayout,
+            lifecycleOwner = viewLifecycleOwner,
+            stringId = R.string.fragment_authentication_email_input_empty,
+        ) ?: return
 
-        val pass: String = passwordInput.checkIfInputIsEmpty(passwordInputLayout, lifecycleScope) {
-            getString(R.string.fragment_authentication_password_input_empty)
-        } ?: return
+        val pass: String = passwordInput.checkIfInputIsEmpty(
+            inputLayout = passwordInputLayout,
+            lifecycleOwner = viewLifecycleOwner,
+            stringId = R.string.fragment_authentication_password_input_empty,
+            trim = false,
+        ) ?: return
 
         button.isClickable = false
         viewLifecycleOwner.lifecycleScope.launch {
