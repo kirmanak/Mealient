@@ -1,6 +1,9 @@
 package gq.kirmanak.mealient.ui.auth
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,10 +31,6 @@ class AuthenticationViewModel @Inject constructor(
     var authRequested: Boolean by authRequestsFlow::value
     var showLoginButton: Boolean by showLoginButtonFlow::value
 
-    private val _authenticationResult = MutableLiveData<Result<Unit>>()
-    val authenticationResult: LiveData<Result<Unit>>
-        get() = _authenticationResult
-
     init {
         viewModelScope.launch {
             authRequestsFlow.collect { isRequested ->
@@ -41,18 +40,9 @@ class AuthenticationViewModel @Inject constructor(
         }
     }
 
-    fun authenticate(username: String, password: String) {
-        Timber.v("authenticate() called with: username = $username, password = $password")
-        viewModelScope.launch {
-            runCatching {
-                authRepo.authenticate(username, password)
-            }.onFailure {
-                Timber.e(it, "authenticate: can't authenticate")
-                _authenticationResult.value = Result.failure(it)
-            }.onSuccess {
-                Timber.d("authenticate: authenticated")
-                _authenticationResult.value = Result.success(Unit)
-            }
-        }
+    suspend fun authenticate(username: String, password: String): Result<Unit> = runCatching {
+        authRepo.authenticate(username, password)
+    }.onFailure {
+        Timber.e(it, "authenticate: can't authenticate")
     }
 }

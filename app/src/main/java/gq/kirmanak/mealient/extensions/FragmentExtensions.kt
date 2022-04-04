@@ -8,6 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -28,3 +29,8 @@ fun OnBackPressedDispatcher.backPressedFlow(): Flow<Unit> = callbackFlow {
         callback.remove()
     }
 }
+
+inline fun <T> Fragment.collectWithViewLifecycle(
+    flow: Flow<T>,
+    crossinline collector: suspend (T) -> Unit,
+) = viewLifecycleOwner.lifecycleScope.launch { flow.collect(collector) }

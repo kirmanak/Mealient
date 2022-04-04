@@ -6,17 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
-import gq.kirmanak.mealient.extensions.refreshesLiveData
+import gq.kirmanak.mealient.extensions.collectWithViewLifecycle
+import gq.kirmanak.mealient.extensions.refreshRequestFlow
 import gq.kirmanak.mealient.ui.auth.AuthenticationState
 import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
-import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -58,20 +57,19 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private fun setupRecipeAdapter() {
         Timber.v("setupRecipeAdapter() called")
-        binding.recipes.adapter = viewModel.adapter
-        viewModel.isRefreshing.observe(viewLifecycleOwner) {
-            Timber.d("setupRecipeAdapter: isRefreshing = $it")
-            binding.refresher.isRefreshing = it
+        val adapter = RecipesPagingAdapter(viewModel, ::navigateToRecipeInfo)
+        binding.recipes.adapter = adapter
+        collectWithViewLifecycle(viewModel.pagingData) {
+            Timber.v("setupRecipeAdapter: received data update")
+            adapter.submitData(lifecycle, it)
         }
-        binding.refresher.refreshesLiveData().observe(viewLifecycleOwner) {
-            Timber.d("setupRecipeAdapter: received refresh request")
-            viewModel.adapter.refresh()
+        collectWithViewLifecycle(adapter.onPagesUpdatedFlow) {
+            Timber.v("setupRecipeAdapter: pages updated")
+            binding.refresher.isRefreshing = false
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.nextRecipeInfo.collect {
-                Timber.d("setupRecipeAdapter: navigating to recipe $it")
-                navigateToRecipeInfo(it)
-            }
+        collectWithViewLifecycle(binding.refresher.refreshRequestFlow()) {
+            Timber.v("setupRecipeAdapter: received refresh request")
+            adapter.refresh()
         }
     }
 

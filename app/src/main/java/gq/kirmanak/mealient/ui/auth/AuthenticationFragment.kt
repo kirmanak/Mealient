@@ -14,6 +14,7 @@ import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.databinding.FragmentAuthenticationBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
 import gq.kirmanak.mealient.extensions.executeOnceOnBackPressed
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -33,7 +34,6 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         binding.button.setOnClickListener { onLoginClicked() }
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.title =
             getString(R.string.app_name)
-        viewModel.authenticationResult.observe(viewLifecycleOwner, ::onAuthenticationResult)
     }
 
     private fun onLoginClicked(): Unit = with(binding) {
@@ -48,7 +48,9 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         } ?: return
 
         button.isClickable = false
-        viewModel.authenticate(email, pass)
+        viewLifecycleOwner.lifecycleScope.launch {
+            onAuthenticationResult(viewModel.authenticate(email, pass))
+        }
     }
 
     private fun onAuthenticationResult(result: Result<Unit>) {
