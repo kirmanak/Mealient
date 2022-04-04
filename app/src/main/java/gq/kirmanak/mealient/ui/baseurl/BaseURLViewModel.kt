@@ -24,15 +24,20 @@ class BaseURLViewModel @Inject constructor(
         private set(value) {
             _screenState.value = value
         }
-    val screenState: LiveData<BaseURLScreenState> by ::_screenState
+    val screenState: LiveData<BaseURLScreenState>
+        get() = _screenState
 
     fun saveBaseUrl(baseURL: String) {
         Timber.v("saveBaseUrl() called with: baseURL = $baseURL")
-        viewModelScope.launch { checkBaseURL(baseURL) }
+        val hasPrefix = ALLOWED_PREFIXES.any { baseURL.startsWith(it) }
+        val url = baseURL.takeIf { hasPrefix } ?: WITH_PREFIX_FORMAT.format(baseURL)
+        viewModelScope.launch { checkBaseURL(url) }
     }
 
     private suspend fun checkBaseURL(baseURL: String) {
+        Timber.v("checkBaseURL() called with: baseURL = $baseURL")
         val version = try {
+            // If it returns proper version info then it must be a Mealie
             versionDataSource.getVersionInfo(baseURL)
         } catch (e: NetworkError) {
             Timber.e(e, "checkBaseURL: can't get version info")
@@ -42,5 +47,10 @@ class BaseURLViewModel @Inject constructor(
         Timber.d("checkBaseURL: version is $version")
         baseURLStorage.storeBaseURL(baseURL)
         currentScreenState = BaseURLScreenState(null, true)
+    }
+
+    companion object {
+        private val ALLOWED_PREFIXES = listOf("http://", "https://")
+        private const val WITH_PREFIX_FORMAT = "https://%s"
     }
 }

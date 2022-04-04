@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.data.baseurl
 
+import androidx.datastore.preferences.core.Preferences
 import gq.kirmanak.mealient.data.storage.PreferencesStorage
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -9,7 +10,8 @@ class BaseURLStorageImpl @Inject constructor(
     private val preferencesStorage: PreferencesStorage,
 ) : BaseURLStorage {
 
-    private val baseUrlKey by preferencesStorage::baseUrlKey
+    private val baseUrlKey: Preferences.Key<String>
+        get() = preferencesStorage.baseUrlKey
 
     override suspend fun getBaseURL(): String? = preferencesStorage.getValue(baseUrlKey)
 

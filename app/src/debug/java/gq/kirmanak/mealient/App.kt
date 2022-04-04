@@ -11,23 +11,23 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class App : Application() {
-  // Use @JvmSuppressWildcards because otherwise dagger can't inject it (https://stackoverflow.com/a/43149382)
-  @Inject
-  lateinit var flipperPlugins: Set<@JvmSuppressWildcards FlipperPlugin>
+    // Use @JvmSuppressWildcards because otherwise dagger can't inject it (https://stackoverflow.com/a/43149382)
+    @Inject
+    lateinit var flipperPlugins: Set<@JvmSuppressWildcards FlipperPlugin>
 
-  override fun onCreate() {
-    super.onCreate()
-    Timber.plant(Timber.DebugTree())
-    Timber.v("onCreate() called")
-    setupFlipper()
-  }
-
-  private fun setupFlipper() {
-    if (FlipperUtils.shouldEnableFlipper(this)) {
-      SoLoader.init(this, false)
-      val flipperClient = AndroidFlipperClient.getInstance(this)
-      for (flipperPlugin in flipperPlugins) flipperClient.addPlugin(flipperPlugin)
-      flipperClient.start()
+    override fun onCreate() {
+        super.onCreate()
+        Timber.plant(Timber.DebugTree())
+        Timber.v("onCreate() called")
+        setupFlipper()
     }
-  }
+
+    private fun setupFlipper() {
+        if (FlipperUtils.shouldEnableFlipper(this)) {
+            SoLoader.init(this, false)
+            val flipperClient = AndroidFlipperClient.getInstance(this)
+            for (flipperPlugin in flipperPlugins) flipperClient.addPlugin(flipperPlugin)
+            flipperClient.start()
+        }
+    }
 }

@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -19,22 +19,15 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
     private val binding by viewBinding(FragmentAuthenticationBinding::bind)
-    private val viewModel by viewModels<AuthenticationViewModel>()
+    private val viewModel by activityViewModels<AuthenticationViewModel>()
 
-    private val authStatuses by lazy { viewModel.authenticationStatuses() }
-    private val authStatusObserver = Observer<Boolean> { onAuthStatusChange(it) }
-    private fun onAuthStatusChange(isAuthenticated: Boolean) {
-        Timber.v("onAuthStatusChange() called with: isAuthenticated = $isAuthenticated")
-        if (isAuthenticated) {
-            authStatuses.removeObserver(authStatusObserver)
-            navigateToRecipes()
-        }
-    }
+    private val authStatuses: LiveData<AuthenticationState>
+        get() = viewModel.authenticationState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.v("onCreate() called with: savedInstanceState = $savedInstanceState")
-        authStatuses.observe(this, authStatusObserver)
+        authStatuses.observe(this, ::onAuthStatusChange)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,9 +38,11 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
             getString(R.string.app_name)
     }
 
-    private fun navigateToRecipes() {
-        Timber.v("navigateToRecipes() called")
-        findNavController().navigate(AuthenticationFragmentDirections.actionAuthenticationFragmentToRecipesFragment())
+    private fun onAuthStatusChange(isAuthenticated: AuthenticationState) {
+        Timber.v("onAuthStatusChange() called with: isAuthenticated = $isAuthenticated")
+        if (isAuthenticated == AuthenticationState.AUTHORIZED) {
+            findNavController().popBackStack()
+        }
     }
 
     private fun onLoginClicked(): Unit = with(binding) {

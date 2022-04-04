@@ -39,14 +39,14 @@ class AuthRepoImplTest : RobolectricTest() {
 
     @Test
     fun `when not authenticated then first auth status is false`() = runTest {
-        coEvery { storage.authHeaderObservable() } returns flowOf(null)
-        assertThat(subject.authenticationStatuses().first()).isFalse()
+        coEvery { storage.authHeaderFlow } returns flowOf(null)
+        assertThat(subject.isAuthorizedFlow.first()).isFalse()
     }
 
     @Test
     fun `when authenticated then first auth status is true`() = runTest {
-        coEvery { storage.authHeaderObservable() } returns flowOf(TEST_AUTH_HEADER)
-        assertThat(subject.authenticationStatuses().first()).isTrue()
+        coEvery { storage.authHeaderFlow } returns flowOf(TEST_AUTH_HEADER)
+        assertThat(subject.isAuthorizedFlow.first()).isTrue()
     }
 
     @Test(expected = Unauthorized::class)

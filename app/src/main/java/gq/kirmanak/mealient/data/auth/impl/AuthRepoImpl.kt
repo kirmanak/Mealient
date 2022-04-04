@@ -15,6 +15,9 @@ class AuthRepoImpl @Inject constructor(
     private val storage: AuthStorage,
 ) : AuthRepo {
 
+    override val isAuthorizedFlow: Flow<Boolean>
+        get() = storage.authHeaderFlow.map { it != null }
+
     override suspend fun authenticate(username: String, password: String) {
         Timber.v("authenticate() called with: username = $username, password = $password")
         val accessToken = dataSource.authenticate(username, password)
@@ -26,11 +29,6 @@ class AuthRepoImpl @Inject constructor(
 
     override suspend fun requireAuthHeader(): String =
         checkNotNull(getAuthHeader()) { "Auth header is null when it was required" }
-
-    override fun authenticationStatuses(): Flow<Boolean> {
-        Timber.v("authenticationStatuses() called")
-        return storage.authHeaderObservable().map { it != null }
-    }
 
     override suspend fun logout() {
         Timber.v("logout() called")

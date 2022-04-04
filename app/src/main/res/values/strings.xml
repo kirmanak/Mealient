@@ -16,7 +16,7 @@
 	<string name="view_holder_recipe_instructions_step">Step: %d</string>
 	<string name="fragment_authentication_email_input_empty">E-mail can\'t be empty</string>
 	<string name="fragment_authentication_password_input_empty">Password can\'t be empty</string>
-	<string name="fragment_authentication_url_input_empty">URL can\'t be empty</string>
+	<string name="fragment_baseurl_url_input_empty">URL can\'t be empty</string>
 	<string name="fragment_authentication_credentials_incorrect">E-mail or password is incorrect.</string>
 	<string name="fragment_base_url_no_connection">Can\'t connect, check address.</string>
 	<string name="fragment_base_url_unexpected_response">Unexpected response. Is it Mealie?</string>
@@ -24,4 +24,6 @@
 	<string name="fragment_base_url_malformed_url">Check URL format: %s</string>
 	<string name="fragment_base_url_save">Proceed</string>
 	<string name="fragment_base_url_unknown_error" translatable="false">@string/fragment_authentication_unknown_error</string>
+	<string name="menu_main_toolbar_content_description_login" translatable="false">@string/menu_main_toolbar_login</string>
+	<string name="menu_main_toolbar_login">Login</string>
 </resources>

@@ -35,20 +35,20 @@ class AuthStorageImplTest : HiltRobolectricTest() {
 
     @Test
     fun `when didn't store auth data then first token is null`() = runTest {
-        assertThat(subject.authHeaderObservable().first()).isNull()
+        assertThat(subject.authHeaderFlow.first()).isNull()
     }
 
     @Test
     fun `when stored auth data then first token is correct`() = runTest {
         subject.storeAuthData(TEST_AUTH_HEADER)
-        assertThat(subject.authHeaderObservable().first()).isEqualTo(TEST_AUTH_HEADER)
+        assertThat(subject.authHeaderFlow.first()).isEqualTo(TEST_AUTH_HEADER)
     }
 
     @Test
     fun `when clearAuthData then first token is null`() = runTest {
         subject.storeAuthData(TEST_AUTH_HEADER)
         subject.clearAuthData()
-        assertThat(subject.authHeaderObservable().first()).isNull()
+        assertThat(subject.authHeaderFlow.first()).isNull()
     }
 
     @Test

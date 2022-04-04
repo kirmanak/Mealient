@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
+import gq.kirmanak.mealient.ui.auth.AuthenticationState
+import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
 import gq.kirmanak.mealient.ui.refreshesLiveData
 import kotlinx.coroutines.flow.collect
 import timber.log.Timber
@@ -20,6 +23,19 @@ import timber.log.Timber
 class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     private val binding by viewBinding(FragmentRecipesBinding::bind)
     private val viewModel by viewModels<RecipeViewModel>()
+    private val authViewModel by activityViewModels<AuthenticationViewModel>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        authViewModel.authenticationState.observe(this, ::onAuthStateChange)
+    }
+
+    private fun onAuthStateChange(authenticationState: AuthenticationState) {
+        Timber.v("onAuthStateChange() called with: authenticationState = $authenticationState")
+        if (authenticationState == AuthenticationState.AUTH_REQUESTED) {
+            findNavController().navigate(RecipesFragmentDirections.actionRecipesFragmentToAuthenticationFragment())
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

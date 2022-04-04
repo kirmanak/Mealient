@@ -24,9 +24,11 @@ constructor(
 ) : ViewModel() {
 
     private val _recipeInfo = MutableLiveData<FullRecipeInfo>()
-    val recipeInfo: LiveData<FullRecipeInfo> by ::_recipeInfo
+    val recipeInfo: LiveData<FullRecipeInfo>
+        get() = _recipeInfo
     private val _listsVisibility = MutableLiveData(RecipeInfoListsVisibility())
-    val listsVisibility: LiveData<RecipeInfoListsVisibility> by ::_listsVisibility
+    val listsVisibility: LiveData<RecipeInfoListsVisibility>
+        get() = _listsVisibility
 
     fun loadRecipeImage(view: ImageView, recipeSlug: String) {
         Timber.v("loadRecipeImage() called with: view = $view, recipeSlug = $recipeSlug")
