@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,9 +28,11 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
 
     private fun onProceedClick(view: View) {
         Timber.v("onProceedClick() called with: view = $view")
-        val url = binding.urlInput.checkIfInputIsEmpty(binding.urlInputLayout, lifecycleScope) {
-            getString(R.string.fragment_baseurl_url_input_empty)
-        } ?: return
+        val url = binding.urlInput.checkIfInputIsEmpty(
+            inputLayout = binding.urlInputLayout,
+            lifecycleOwner = viewLifecycleOwner,
+            stringId = R.string.fragment_baseurl_url_input_empty,
+        ) ?: return
         viewModel.saveBaseUrl(url)
     }
 
