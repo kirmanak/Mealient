@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.ui
+package gq.kirmanak.mealient.extensions
 
 import android.app.Activity
 import android.os.Build
@@ -10,8 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,20 +24,17 @@ import kotlinx.coroutines.flow.first
 import timber.log.Timber
 
 @OptIn(ExperimentalCoroutinesApi::class)
-fun SwipeRefreshLayout.refreshesLiveData(): LiveData<Unit> {
-    val callbackFlow: Flow<Unit> = callbackFlow {
-        val listener = SwipeRefreshLayout.OnRefreshListener {
-            Timber.v("Refresh requested")
-            trySend(Unit).logErrors("refreshesFlow")
-        }
-        Timber.v("Adding refresh request listener")
-        setOnRefreshListener(listener)
-        awaitClose {
-            Timber.v("Removing refresh request listener")
-            setOnRefreshListener(null)
-        }
+fun SwipeRefreshLayout.refreshRequestFlow(): Flow<Unit> = callbackFlow {
+    Timber.v("refreshRequestFlow() called")
+    val listener = SwipeRefreshLayout.OnRefreshListener {
+        Timber.v("refreshRequestFlow: listener called")
+        trySend(Unit).logErrors("refreshesFlow")
     }
-    return callbackFlow.asLiveData()
+    setOnRefreshListener(listener)
+    awaitClose {
+        Timber.v("Removing refresh request listener")
+        setOnRefreshListener(null)
+    }
 }
 
 fun Activity.setSystemUiVisibility(isVisible: Boolean) {

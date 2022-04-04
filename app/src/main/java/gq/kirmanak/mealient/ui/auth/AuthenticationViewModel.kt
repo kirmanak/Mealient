@@ -1,9 +1,13 @@
 package gq.kirmanak.mealient.ui.auth
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -14,41 +18,31 @@ class AuthenticationViewModel @Inject constructor(
     private val authRepo: AuthRepo,
 ) : ViewModel() {
 
-    private val loginRequestsFlow = MutableStateFlow(false)
-    val authenticationState: LiveData<AuthenticationState> = loginRequestsFlow.combine(
-        flow = authRepo.isAuthorizedFlow,
-        transform = AuthenticationState::determineState
-    ).asLiveData()
-    val currentAuthenticationState: AuthenticationState
-        get() = checkNotNull(authenticationState.value) { "Auth state flow mustn't be null" }
+    private val authRequestsFlow = MutableStateFlow(false)
+    private val showLoginButtonFlow = MutableStateFlow(false)
+    private val authenticationStateFlow = combine(
+        authRequestsFlow,
+        showLoginButtonFlow,
+        authRepo.isAuthorizedFlow,
+        AuthenticationState::determineState
+    )
+    val authenticationStateLive: LiveData<AuthenticationState>
+        get() = authenticationStateFlow.asLiveData()
+    var authRequested: Boolean by authRequestsFlow::value
+    var showLoginButton: Boolean by showLoginButtonFlow::value
 
-    fun authenticate(username: String, password: String): LiveData<Result<Unit>> {
-        Timber.v("authenticate() called with: username = $username, password = $password")
-        val result = MutableLiveData<Result<Unit>>()
+    init {
         viewModelScope.launch {
-            runCatching {
-                authRepo.authenticate(username, password)
-            }.onFailure {
-                Timber.e(it, "authenticate: can't authenticate")
-                result.value = Result.failure(it)
-            }.onSuccess {
-                Timber.d("authenticate: authenticated")
-                result.value = Result.success(Unit)
+            authRequestsFlow.collect { isRequested ->
+                // Clear auth token on logout request
+                if (!isRequested) authRepo.logout()
             }
         }
-        return result
     }
 
-    fun logout() {
-        Timber.v("logout() called")
-        viewModelScope.launch {
-            loginRequestsFlow.emit(false)
-            authRepo.logout()
-        }
-    }
-
-    fun login() {
-        Timber.v("login() called")
-        viewModelScope.launch { loginRequestsFlow.emit(true) }
+    suspend fun authenticate(username: String, password: String): Result<Unit> = runCatching {
+        authRepo.authenticate(username, password)
+    }.onFailure {
+        Timber.e(it, "authenticate: can't authenticate")
     }
 }

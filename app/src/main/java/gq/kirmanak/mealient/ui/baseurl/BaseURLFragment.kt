@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.databinding.FragmentBaseUrlBinding
-import gq.kirmanak.mealient.ui.checkIfInputIsEmpty
+import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
 import timber.log.Timber
 
 @AndroidEntryPoint
