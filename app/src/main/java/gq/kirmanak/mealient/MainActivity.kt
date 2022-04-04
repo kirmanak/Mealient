@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun listenToAuthStatuses() {
         Timber.v("listenToAuthStatuses() called")
-        authViewModel.authenticationState.observe(this, ::onAuthStateUpdate)
+        authViewModel.authenticationStateLive.observe(this, ::onAuthStateUpdate)
     }
 
     private fun onAuthStateUpdate(authState: AuthenticationState) {
@@ -71,12 +71,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Timber.v("onOptionsItemSelected() called with: item = $item")
         val result = when (item.itemId) {
-            R.id.logout -> {
-                authViewModel.logout()
-                true
-            }
-            R.id.login -> {
-                authViewModel.enableLoginRequest()
+            R.id.logout, R.id.login -> {
+                // When user clicks logout they don't want to be authorized
+                authViewModel.authRequested = item.itemId == R.id.login
                 true
             }
             else -> super.onOptionsItemSelected(item)
