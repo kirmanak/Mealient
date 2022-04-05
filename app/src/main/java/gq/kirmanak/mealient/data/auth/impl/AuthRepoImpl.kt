@@ -37,12 +37,14 @@ class AuthRepoImpl @Inject constructor(
         }.getOrThrow() // Throw error to show it to user
     }
 
-    override suspend fun getAuthHeader(): String? {
+    override suspend fun getAuthHeader(): String? = runCatchingExceptCancel {
         Timber.v("getAuthHeader() called")
-        return currentAccount()
+        currentAccount()
             ?.let { getAuthToken(it) }
             ?.let { AUTH_HEADER_FORMAT.format(it) }
-    }
+    }.onFailure {
+        Timber.e(it, "getAuthHeader: can't request auth header")
+    }.getOrNull()
 
     private suspend fun getAuthToken(account: Account?): String? {
         return account?.let { accountManagerInteractor.getAuthToken(it) }
@@ -65,6 +67,16 @@ class AuthRepoImpl @Inject constructor(
     private suspend fun removeAccount(account: Account) {
         Timber.v("removeAccount() called with: account = $account")
         accountManagerInteractor.removeAccount(account)
+    }
+
+    override fun invalidateAuthHeader(header: String) {
+        Timber.v("invalidateAuthHeader() called with: header = $header")
+        val token = header.substringAfter("Bearer ")
+        if (token == header) {
+            Timber.w("invalidateAuthHeader: can't find token in $header")
+        } else {
+            accountManagerInteractor.invalidateAuthToken(token)
+        }
     }
 
     companion object {

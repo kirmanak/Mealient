@@ -21,6 +21,11 @@ class AccountAuthenticatorImpl @Inject constructor(
     private val accountManager: AccountManager,
 ) : AbstractAccountAuthenticator(context) {
 
+    private val accountType: String
+        get() = accountParameters.accountType
+    private val authTokenType: String
+        get() = accountParameters.authTokenType
+
     override fun getAuthToken(
         response: AccountAuthenticatorResponse,
         account: Account,
@@ -50,7 +55,7 @@ class AccountAuthenticatorImpl @Inject constructor(
 
         return Bundle().apply {
             putString(AccountManager.KEY_ACCOUNT_NAME, account.name)
-            putString(AccountManager.KEY_ACCOUNT_TYPE, accountParameters.accountType)
+            putString(AccountManager.KEY_ACCOUNT_TYPE, accountType)
             putString(AccountManager.KEY_AUTHTOKEN, token)
         }
     }
@@ -114,13 +119,13 @@ class AccountAuthenticatorImpl @Inject constructor(
     // end region
 
     private fun checkAccountType(accountType: String) {
-        if (accountType != accountParameters.accountType) {
+        if (accountType != this.accountType) {
             throw UnsupportedAccountType(accountType)
         }
     }
 
     private fun checkAuthTokenType(authTokenType: String) {
-        if (authTokenType != accountParameters.authTokenType) {
+        if (authTokenType != this.authTokenType) {
             throw UnsupportedAuthTokenType(authTokenType)
         }
     }

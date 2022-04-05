@@ -13,4 +13,6 @@ interface AuthRepo {
     suspend fun requireAuthHeader(): String
 
     suspend fun logout()
+
+    fun invalidateAuthHeader(header: String)
 }

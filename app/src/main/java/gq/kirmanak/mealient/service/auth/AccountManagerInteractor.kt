@@ -14,4 +14,6 @@ interface AccountManagerInteractor {
     fun accountUpdatesFlow(): Flow<Array<Account>>
 
     suspend fun removeAccount(account: Account)
+
+    fun invalidateAuthToken(token: String)
 }
