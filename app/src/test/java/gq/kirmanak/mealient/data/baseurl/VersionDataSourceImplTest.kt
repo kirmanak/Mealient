@@ -36,7 +36,9 @@ class VersionDataSourceImplTest {
 
     @Test(expected = NetworkError.MalformedUrl::class)
     fun `when getVersionInfo and provideService throws then MalformedUrl`() = runTest {
-        coEvery { versionServiceFactory.provideService(eq(TEST_BASE_URL)) } throws RuntimeException()
+        coEvery {
+            versionServiceFactory.provideService(eq(TEST_BASE_URL))
+        } throws NetworkError.MalformedUrl(RuntimeException())
         subject.getVersionInfo(TEST_BASE_URL)
     }
 

@@ -2,11 +2,12 @@ package gq.kirmanak.mealient.data.auth.impl
 
 import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.network.ErrorDetail
-import gq.kirmanak.mealient.data.network.NetworkError.*
+import gq.kirmanak.mealient.data.network.NetworkError.NotMealie
+import gq.kirmanak.mealient.data.network.NetworkError.Unauthorized
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.extensions.decodeErrorBodyOrNull
-import kotlinx.coroutines.CancellationException
-import kotlinx.serialization.SerializationException
+import gq.kirmanak.mealient.extensions.mapToNetworkError
+import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import retrofit2.Response
@@ -22,12 +23,7 @@ class AuthDataSourceImpl @Inject constructor(
 
     override suspend fun authenticate(username: String, password: String): String {
         Timber.v("authenticate() called with: username = $username, password = $password")
-        val authService = try {
-            authServiceFactory.provideService()
-        } catch (e: Exception) {
-            Timber.e(e, "authenticate: can't create Retrofit service")
-            throw MalformedUrl(e)
-        }
+        val authService = authServiceFactory.provideService()
         val response = sendRequest(authService, username, password)
         val accessToken = parseToken(response)
         Timber.v("authenticate() returned: $accessToken")
@@ -38,14 +34,11 @@ class AuthDataSourceImpl @Inject constructor(
         authService: AuthService,
         username: String,
         password: String
-    ): Response<GetTokenResponse> = try {
+    ): Response<GetTokenResponse> = runCatchingExceptCancel {
         authService.getToken(username, password)
-    } catch (e: Throwable) {
-        throw when (e) {
-            is CancellationException -> e
-            is SerializationException -> NotMealie(e)
-            else -> NoServerConnection(e)
-        }
+    }.getOrElse {
+        Timber.e(it, "sendRequest: can't request token")
+        throw it.mapToNetworkError()
     }
 
     private fun parseToken(

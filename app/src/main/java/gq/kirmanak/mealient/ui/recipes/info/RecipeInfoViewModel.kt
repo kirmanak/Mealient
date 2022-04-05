@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.recipes.RecipeImageLoader
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.impl.FullRecipeInfo
+import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -41,7 +42,7 @@ constructor(
         recipeIngredientsAdapter.submitList(null)
         recipeInstructionsAdapter.submitList(null)
         viewModelScope.launch {
-            runCatching { recipeRepo.loadRecipeInfo(recipeId, recipeSlug) }
+            runCatchingExceptCancel { recipeRepo.loadRecipeInfo(recipeId, recipeSlug) }
                 .onSuccess {
                     Timber.d("loadRecipeInfo: received recipe info = $it")
                     _recipeInfo.value = it

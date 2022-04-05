@@ -6,6 +6,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
+import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -40,7 +41,7 @@ class AuthenticationViewModel @Inject constructor(
         }
     }
 
-    suspend fun authenticate(username: String, password: String): Result<Unit> = runCatching {
+    suspend fun authenticate(username: String, password: String) = runCatchingExceptCancel {
         authRepo.authenticate(username, password)
     }.onFailure {
         Timber.e(it, "authenticate: can't authenticate")
