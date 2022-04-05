@@ -31,7 +31,8 @@ interface AuthModule {
 
         @Provides
         @Singleton
-        fun provideAuthServiceFactory(retrofitBuilder: RetrofitBuilder,
+        fun provideAuthServiceFactory(
+            retrofitBuilder: RetrofitBuilder,
             baseURLStorage: BaseURLStorage,
         ): ServiceFactory<AuthService> = retrofitBuilder.createServiceFactory(baseURLStorage)
 
