@@ -35,18 +35,15 @@ sealed class AuthenticatorException(
         errorMessage = "$account not found"
     )
 
-    object NoBaseUrl : AuthenticatorException(
-        errorCode = AccountManager.ERROR_CODE_BAD_ARGUMENTS,
-        errorMessage = "Base URL was not provided"
-    )
-
     object Unauthorized : AuthenticatorException(
-        errorCode = AccountManager.ERROR_CODE_BAD_ARGUMENTS,
+        errorCode = ErrorCode.Unauthorized.ordinal,
         errorMessage = "E-mail or password weren't correct"
     )
 
     object NotMealie : AuthenticatorException(
-        errorCode = AccountManager.ERROR_CODE_BAD_ARGUMENTS,
+        errorCode = ErrorCode.NotMealie.ordinal,
         errorMessage = "Base URL must be pointing at a non Mealie server"
     )
+
+    enum class ErrorCode { NotMealie, Unauthorized; }
 }

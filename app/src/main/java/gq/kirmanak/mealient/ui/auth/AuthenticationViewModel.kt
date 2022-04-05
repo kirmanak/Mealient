@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -32,18 +31,14 @@ class AuthenticationViewModel @Inject constructor(
     var authRequested: Boolean by authRequestsFlow::value
     var showLoginButton: Boolean by showLoginButtonFlow::value
 
-    init {
-        viewModelScope.launch {
-            authRequestsFlow.collect { isRequested ->
-                // Clear auth token on logout request
-                if (!isRequested) authRepo.logout()
-            }
-        }
-    }
-
     suspend fun authenticate(username: String, password: String) = runCatchingExceptCancel {
         authRepo.authenticate(username, password)
     }.onFailure {
         Timber.e(it, "authenticate: can't authenticate")
+    }
+
+    fun logout() {
+        Timber.v("logout() called")
+        viewModelScope.launch { authRepo.logout() }
     }
 }

@@ -2,12 +2,12 @@ package gq.kirmanak.mealient.service.auth
 
 import android.accounts.*
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import dagger.hilt.android.qualifiers.ApplicationContext
 import gq.kirmanak.mealient.data.auth.AuthDataSource
-import gq.kirmanak.mealient.data.auth.impl.AuthenticationError
-import gq.kirmanak.mealient.ui.auth.AuthenticatorActivity
+import gq.kirmanak.mealient.data.network.NetworkError
+import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.service.auth.AuthenticatorException.*
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,55 +21,30 @@ class AccountAuthenticatorImpl @Inject constructor(
     private val accountManager: AccountManager,
 ) : AbstractAccountAuthenticator(context) {
 
-    override fun addAccount(
-        response: AccountAuthenticatorResponse,
-        accountType: String,
-        authTokenType: String,
-        requiredFeatures: Array<out String>?,
-        options: Bundle,
-    ): Bundle {
-        Timber.v("addAccount() called with: response = $response, accountType = $accountType, authTokenType = $authTokenType, requiredFeatures = $requiredFeatures, options = $options")
-
-        try {
-            checkAccountType(accountType)
-            checkAuthTokenType(authTokenType)
-        } catch (e: AuthenticatorException) {
-            Timber.e(e, "addAccount: validation failure")
-            return e.bundle
-        }
-
-        val intent = Intent(context, AuthenticatorActivity::class.java)
-        return Bundle().apply { putParcelable(AccountManager.KEY_INTENT, intent) }
-    }
-
     override fun getAuthToken(
         response: AccountAuthenticatorResponse,
         account: Account,
         authTokenType: String,
-        options: Bundle
+        options: Bundle?
     ): Bundle {
         Timber.v("getAuthToken() called with: response = $response, account = $account, authTokenType = $authTokenType, options = $options")
 
-        val password: String?
-        val baseUrl: String?
-        try {
+        val password = try {
             checkAccountType(account.type)
             checkAuthTokenType(authTokenType)
-            password = accountManager.getPassword(account)
-                ?: throw AuthenticatorException.AccountNotFound(account)
-            baseUrl = options.getString(KEY_BASE_URL) ?: throw AuthenticatorException.NoBaseUrl
+            accountManager.getPassword(account) ?: throw AccountNotFound(account)
         } catch (e: AuthenticatorException) {
             Timber.e(e, "getAuthToken: validation failure")
             return e.bundle
         }
 
-        val token = try {
-            runBlocking { authDataSource.authenticate(account.name, password, baseUrl) }
-        } catch (e: RuntimeException) {
-            return when (e) {
-                is AuthenticationError.NotMealie -> AuthenticatorException.NotMealie.bundle
-                is AuthenticationError.Unauthorized -> AuthenticatorException.Unauthorized.bundle
-                else -> throw NetworkErrorException(e)
+        val token = runCatchingExceptCancel {
+            runBlocking { authDataSource.authenticate(account.name, password) }
+        }.getOrElse {
+            return when (it) {
+                is NetworkError.NotMealie -> NotMealie.bundle
+                is NetworkError.Unauthorized -> Unauthorized.bundle
+                else -> throw NetworkErrorException(it)
             }
         }
 
@@ -87,7 +62,18 @@ class AccountAuthenticatorImpl @Inject constructor(
         options: Bundle?
     ): Bundle {
         Timber.v("confirmCredentials() called with: response = $response, account = $account, options = $options")
-        return AuthenticatorException.UnsupportedOperation("confirmCredentials").bundle
+        return UnsupportedOperation("confirmCredentials").bundle
+    }
+
+    override fun addAccount(
+        response: AccountAuthenticatorResponse,
+        accountType: String,
+        authTokenType: String,
+        requiredFeatures: Array<out String>?,
+        options: Bundle?,
+    ): Bundle {
+        Timber.v("addAccount() called with: response = $response, accountType = $accountType, authTokenType = $authTokenType, requiredFeatures = $requiredFeatures, options = $options")
+        return UnsupportedOperation("addAccount").bundle
     }
 
     override fun editProperties(
@@ -114,7 +100,7 @@ class AccountAuthenticatorImpl @Inject constructor(
         options: Bundle?
     ): Bundle {
         Timber.v("updateCredentials() called with: response = $response, account = $account, authTokenType = $authTokenType, options = $options")
-        return AuthenticatorException.UnsupportedOperation("updateCredentials").bundle
+        return UnsupportedOperation("updateCredentials").bundle
     }
 
     override fun hasFeatures(
@@ -129,13 +115,13 @@ class AccountAuthenticatorImpl @Inject constructor(
 
     private fun checkAccountType(accountType: String) {
         if (accountType != accountParameters.accountType) {
-            throw AuthenticatorException.UnsupportedAccountType(accountType)
+            throw UnsupportedAccountType(accountType)
         }
     }
 
     private fun checkAuthTokenType(authTokenType: String) {
-        if (authTokenType != accountParameters.accountType) {
-            throw AuthenticatorException.UnsupportedAccountType(authTokenType)
+        if (authTokenType != accountParameters.authTokenType) {
+            throw UnsupportedAuthTokenType(authTokenType)
         }
     }
 }

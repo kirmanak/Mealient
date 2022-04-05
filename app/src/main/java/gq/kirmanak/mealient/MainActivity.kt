@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity() {
             R.id.logout, R.id.login -> {
                 // When user clicks logout they don't want to be authorized
                 authViewModel.authRequested = item.itemId == R.id.login
+                authViewModel.logout()
                 true
             }
             else -> super.onOptionsItemSelected(item)
