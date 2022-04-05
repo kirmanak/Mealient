@@ -71,7 +71,7 @@ class AuthDataSourceImplTest {
 
     @Test(expected = MalformedUrl::class)
     fun `when authenticate and provideService throws then MalformedUrl`() = runTest {
-        coEvery { authServiceFactory.provideService() } throws RuntimeException()
+        coEvery { authServiceFactory.provideService() } throws MalformedUrl(RuntimeException())
         callAuthenticate()
     }
 

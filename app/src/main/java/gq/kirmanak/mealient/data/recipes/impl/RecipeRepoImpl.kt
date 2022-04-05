@@ -8,7 +8,7 @@ import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
-import kotlinx.coroutines.CancellationException
+import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,12 +39,10 @@ class RecipeRepoImpl @Inject constructor(
     override suspend fun loadRecipeInfo(recipeId: Long, recipeSlug: String): FullRecipeInfo {
         Timber.v("loadRecipeInfo() called with: recipeId = $recipeId, recipeSlug = $recipeSlug")
 
-        try {
+        runCatchingExceptCancel {
             storage.saveRecipeInfo(dataSource.requestRecipeInfo(recipeSlug))
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Throwable) {
-            Timber.e(e, "loadRecipeInfo: can't update full recipe info")
+        }.onFailure {
+            Timber.e(it, "loadRecipeInfo: can't update full recipe info")
         }
 
         return storage.queryRecipeInfo(recipeId)

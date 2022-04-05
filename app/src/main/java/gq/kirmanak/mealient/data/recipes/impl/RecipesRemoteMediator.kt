@@ -7,7 +7,7 @@ import androidx.paging.LoadType.REFRESH
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
-import kotlinx.coroutines.CancellationException
+import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,16 +37,14 @@ class RecipesRemoteMediator @Inject constructor(
         val start = if (loadType == REFRESH) 0 else lastRequestEnd
         val limit = if (loadType == REFRESH) state.config.initialLoadSize else state.config.pageSize
 
-        val count: Int = try {
+        val count: Int = runCatchingExceptCancel {
             val recipes = network.requestRecipes(start, limit)
             if (loadType == REFRESH) storage.refreshAll(recipes)
             else storage.saveRecipes(recipes)
             recipes.size
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Throwable) {
-            Timber.e(e, "Can't load recipes")
-            return MediatorResult.Error(e)
+        }.getOrElse {
+            Timber.e(it, "load: can't load recipes")
+            return MediatorResult.Error(it)
         }
 
         // After something is inserted into DB the paging sources have to be invalidated
