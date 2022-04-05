@@ -9,6 +9,7 @@ import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import gq.kirmanak.mealient.service.auth.AuthenticatorException.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,7 +45,11 @@ class AccountAuthenticatorImpl @Inject constructor(
         }
 
         val token = runCatchingExceptCancel {
-            runBlocking { authDataSource.authenticate(account.name, password) }
+            runBlocking {
+                withTimeout(10000) {
+                    authDataSource.authenticate(account.name, password)
+                }
+            }
         }.getOrElse {
             return when (it) {
                 is NetworkError.NotMealie -> NotMealie.bundle
