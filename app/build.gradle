@@ -16,6 +16,12 @@ android {
         targetSdk 31
         versionCode 7
         versionName "0.1.6"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
