@@ -5,7 +5,7 @@ import timber.log.Timber
 enum class AuthenticationState {
     AUTHORIZED,
     UNAUTHORIZED,
-    UNKNOWN;
+    HIDDEN;
 
     companion object {
 
@@ -15,7 +15,7 @@ enum class AuthenticationState {
         ): AuthenticationState {
             Timber.v("determineState() called with: showLoginButton = $showLoginButton, isAuthorized = $isAuthorized")
             val result = when {
-                !showLoginButton -> UNKNOWN
+                !showLoginButton -> HIDDEN
                 isAuthorized -> AUTHORIZED
                 else -> UNAUTHORIZED
             }

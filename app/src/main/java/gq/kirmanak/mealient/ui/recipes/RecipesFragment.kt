@@ -14,19 +14,19 @@ import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
 import gq.kirmanak.mealient.extensions.collectWithViewLifecycle
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
-import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
+import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
 class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     private val binding by viewBinding(FragmentRecipesBinding::bind)
     private val viewModel by viewModels<RecipeViewModel>()
-    private val authViewModel by activityViewModels<AuthenticationViewModel>()
+    private val activityViewModel by activityViewModels<MainActivityViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
-        authViewModel.showLoginButton = true
+        activityViewModel.showLoginButton = true
         setupRecipeAdapter()
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = null
     }
@@ -64,6 +64,6 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         Timber.v("onDestroyView() called")
         // Prevent RV leaking through mObservers list in adapter
         binding.recipes.adapter = null
-        authViewModel.showLoginButton = false
+        activityViewModel.showLoginButton = false
     }
 }

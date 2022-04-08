@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -12,13 +12,12 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.databinding.FragmentAuthenticationBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
-import gq.kirmanak.mealient.extensions.launchWithViewLifecycle
 import timber.log.Timber
 
 @AndroidEntryPoint
 class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
     private val binding by viewBinding(FragmentAuthenticationBinding::bind)
-    private val viewModel by activityViewModels<AuthenticationViewModel>()
+    private val viewModel by viewModels<AuthenticationViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -26,6 +25,7 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         binding.button.setOnClickListener { onLoginClicked() }
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.title =
             getString(R.string.app_name)
+        viewModel.authenticationResult.observe(viewLifecycleOwner, ::onAuthenticationResult)
     }
 
     private fun onLoginClicked(): Unit = with(binding) {
@@ -45,7 +45,7 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         ) ?: return
 
         button.isClickable = false
-        launchWithViewLifecycle { onAuthenticationResult(viewModel.authenticate(email, pass)) }
+        viewModel.authenticate(email, pass)
     }
 
     private fun onAuthenticationResult(result: Result<Unit>) {

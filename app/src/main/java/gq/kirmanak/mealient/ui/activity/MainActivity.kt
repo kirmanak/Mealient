@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient
+package gq.kirmanak.mealient.ui.activity
 
 import android.os.Bundle
 import android.view.Menu
@@ -10,17 +10,17 @@ import androidx.navigation.findNavController
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
+import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
 import gq.kirmanak.mealient.ui.auth.AuthenticationState
 import gq.kirmanak.mealient.ui.auth.AuthenticationState.AUTHORIZED
 import gq.kirmanak.mealient.ui.auth.AuthenticationState.UNAUTHORIZED
-import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainActivityBinding
-    private val authViewModel by viewModels<AuthenticationViewModel>()
+    private val viewModel by viewModels<MainActivityViewModel>()
     private var lastAuthenticationState: AuthenticationState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun listenToAuthStatuses() {
         Timber.v("listenToAuthStatuses() called")
-        authViewModel.authenticationStateLive.observe(this, ::onAuthStateUpdate)
+        viewModel.authenticationStateLive.observe(this, ::onAuthStateUpdate)
     }
 
     private fun onAuthStateUpdate(authState: AuthenticationState) {
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.logout -> {
-                authViewModel.logout()
+                viewModel.logout()
                 true
             }
             else -> super.onOptionsItemSelected(item)
