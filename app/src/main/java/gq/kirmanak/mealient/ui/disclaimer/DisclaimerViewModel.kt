@@ -5,7 +5,10 @@ import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -34,7 +37,6 @@ class DisclaimerViewModel @Inject constructor(
         tickerFlow(COUNT_DOWN_TICK_PERIOD_SEC.toLong(), TimeUnit.SECONDS)
             .take(FULL_COUNT_DOWN_SEC - COUNT_DOWN_TICK_PERIOD_SEC + 1)
             .onEach { _okayCountDown.value = FULL_COUNT_DOWN_SEC - it }
-            .onCompletion { isCountDownStarted = false }
             .launchIn(viewModelScope)
     }
 
