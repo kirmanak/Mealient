@@ -1,14 +1,10 @@
 package gq.kirmanak.mealient.ui.activity
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
-import gq.kirmanak.mealient.ui.auth.AuthenticationState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,16 +14,22 @@ class MainActivityViewModel @Inject constructor(
     private val authRepo: AuthRepo,
 ) : ViewModel() {
 
-    private val showLoginButtonFlow = MutableStateFlow(false)
-    var showLoginButton: Boolean by showLoginButtonFlow::value
+    private val _uiState = MutableLiveData(MainActivityUiState())
+    val uiStateLive: LiveData<MainActivityUiState>
+        get() = _uiState.distinctUntilChanged()
+    var uiState: MainActivityUiState
+        get() = checkNotNull(_uiState.value) { "UiState must not be null" }
+        private set(value) = _uiState.postValue(value)
 
-    private val authenticationStateFlow = combine(
-        showLoginButtonFlow,
-        authRepo.isAuthorizedFlow,
-        AuthenticationState::determineState
-    )
-    val authenticationStateLive: LiveData<AuthenticationState>
-        get() = authenticationStateFlow.asLiveData()
+    init {
+        authRepo.isAuthorizedFlow
+            .onEach { isAuthorized -> updateUiState { it.copy(isAuthorized = isAuthorized) } }
+            .launchIn(viewModelScope)
+    }
+
+    fun updateUiState(updater: (MainActivityUiState) -> MainActivityUiState) {
+        uiState = updater(uiState)
+    }
 
     fun logout() {
         Timber.v("logout() called")
