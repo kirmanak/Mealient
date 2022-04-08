@@ -18,21 +18,18 @@ class AuthenticationViewModel @Inject constructor(
     private val authRepo: AuthRepo,
 ) : ViewModel() {
 
-    private val authRequestsFlow = MutableStateFlow(false)
     private val showLoginButtonFlow = MutableStateFlow(false)
     private val authenticationStateFlow = combine(
-        authRequestsFlow,
         showLoginButtonFlow,
         authRepo.isAuthorizedFlow,
         AuthenticationState::determineState
     )
     val authenticationStateLive: LiveData<AuthenticationState>
         get() = authenticationStateFlow.asLiveData()
-    var authRequested: Boolean by authRequestsFlow::value
     var showLoginButton: Boolean by showLoginButtonFlow::value
 
-    suspend fun authenticate(username: String, password: String) = runCatchingExceptCancel {
-        authRepo.authenticate(username, password)
+    suspend fun authenticate(email: String, password: String) = runCatchingExceptCancel {
+        authRepo.authenticate(email, password)
     }.onFailure {
         Timber.e(it, "authenticate: can't authenticate")
     }

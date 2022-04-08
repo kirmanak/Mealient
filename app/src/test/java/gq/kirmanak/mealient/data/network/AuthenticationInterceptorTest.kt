@@ -66,7 +66,7 @@ class AuthenticationInterceptorTest {
 
         coVerifySequence {
             authRepo.getAuthHeader()
-            authRepo.invalidateAuthHeader(TEST_AUTH_HEADER)
+            authRepo.invalidateAuthHeader()
             authRepo.getAuthHeader()
         }
     }

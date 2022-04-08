@@ -19,7 +19,7 @@ class AuthenticationInterceptor @Inject constructor(
         val currentHeader = authHeader ?: return chain.proceed(chain.request())
         val response = proceedWithAuthHeader(chain, currentHeader)
         if (listOf(401, 403).contains(response.code)) {
-            authRepo.invalidateAuthHeader(currentHeader)
+            runBlocking { authRepo.invalidateAuthHeader() }
         } else {
             return response
         }

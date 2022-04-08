@@ -6,7 +6,7 @@ interface AuthRepo {
 
     val isAuthorizedFlow: Flow<Boolean>
 
-    suspend fun authenticate(username: String, password: String)
+    suspend fun authenticate(email: String, password: String)
 
     suspend fun getAuthHeader(): String?
 
@@ -14,5 +14,5 @@ interface AuthRepo {
 
     suspend fun logout()
 
-    fun invalidateAuthHeader(header: String)
+    suspend fun invalidateAuthHeader()
 }

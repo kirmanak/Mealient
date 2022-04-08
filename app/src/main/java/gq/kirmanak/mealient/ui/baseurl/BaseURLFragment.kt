@@ -11,6 +11,7 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.databinding.FragmentBaseUrlBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
+import gq.kirmanak.mealient.extensions.launchWithViewLifecycle
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -22,7 +23,6 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
-        viewModel.screenState.observe(viewLifecycleOwner, ::updateState)
         binding.button.setOnClickListener(::onProceedClick)
     }
 
@@ -33,16 +33,16 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
             lifecycleOwner = viewLifecycleOwner,
             stringId = R.string.fragment_baseurl_url_input_empty,
         ) ?: return
-        viewModel.saveBaseUrl(url)
+        launchWithViewLifecycle { onCheckURLResult(viewModel.saveBaseUrl(url)) }
     }
 
-    private fun updateState(baseURLScreenState: BaseURLScreenState) {
-        Timber.v("updateState() called with: baseURLScreenState = $baseURLScreenState")
-        if (baseURLScreenState.navigateNext) {
+    private fun onCheckURLResult(result: Result<Unit>) {
+        Timber.v("onCheckURLResult() called with: result = $result")
+        if (result.isSuccess) {
             findNavController().navigate(BaseURLFragmentDirections.actionBaseURLFragmentToRecipesFragment())
             return
         }
-        binding.urlInputLayout.error = when (val exception = baseURLScreenState.error) {
+        binding.urlInputLayout.error = when (val exception = result.exceptionOrNull()) {
             is NetworkError.NoServerConnection -> getString(R.string.fragment_base_url_no_connection)
             is NetworkError.NotMealie -> getString(R.string.fragment_base_url_unexpected_response)
             is NetworkError.MalformedUrl -> {

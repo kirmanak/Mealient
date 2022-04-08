@@ -23,7 +23,7 @@ class AuthDataSourceImpl @Inject constructor(
 
     override suspend fun authenticate(username: String, password: String): String {
         Timber.v("authenticate() called with: username = $username, password = $password")
-        val authService = authServiceFactory.provideService(needAuth = false)
+        val authService = authServiceFactory.provideService()
         val response = sendRequest(authService, username, password)
         val accessToken = parseToken(response)
         Timber.v("authenticate() returned: $accessToken")

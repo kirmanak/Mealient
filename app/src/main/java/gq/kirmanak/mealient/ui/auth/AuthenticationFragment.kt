@@ -5,7 +5,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -13,20 +12,13 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.databinding.FragmentAuthenticationBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
-import gq.kirmanak.mealient.extensions.executeOnceOnBackPressed
-import kotlinx.coroutines.launch
+import gq.kirmanak.mealient.extensions.launchWithViewLifecycle
 import timber.log.Timber
 
 @AndroidEntryPoint
 class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
     private val binding by viewBinding(FragmentAuthenticationBinding::bind)
     private val viewModel by activityViewModels<AuthenticationViewModel>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.v("onCreate() called with: savedInstanceState = $savedInstanceState")
-        executeOnceOnBackPressed { viewModel.authRequested = false }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,9 +45,7 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         ) ?: return
 
         button.isClickable = false
-        viewLifecycleOwner.lifecycleScope.launch {
-            onAuthenticationResult(viewModel.authenticate(email, pass))
-        }
+        launchWithViewLifecycle { onAuthenticationResult(viewModel.authenticate(email, pass)) }
     }
 
     private fun onAuthenticationResult(result: Result<Unit>) {

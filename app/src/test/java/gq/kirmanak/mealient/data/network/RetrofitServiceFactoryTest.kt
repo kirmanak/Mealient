@@ -33,7 +33,7 @@ class RetrofitServiceFactoryTest {
     fun setUp() {
         MockKAnnotations.init(this)
         subject = retrofitBuilder.createServiceFactory(baseURLStorage)
-        coEvery { retrofitBuilder.buildRetrofit(any(), eq(true)) } returns retrofit
+        coEvery { retrofitBuilder.buildRetrofit(any()) } returns retrofit
         every { retrofit.create(eq(VersionService::class.java)) } returns versionService
         coEvery { baseURLStorage.requireBaseURL() } returns TEST_BASE_URL
     }
@@ -53,7 +53,7 @@ class RetrofitServiceFactoryTest {
     fun `when provideService called twice then builder called once`() = runTest {
         subject.provideService()
         subject.provideService()
-        coVerifyAll { retrofitBuilder.buildRetrofit(eq(TEST_BASE_URL), eq(true)) }
+        coVerifyAll { retrofitBuilder.buildRetrofit(eq(TEST_BASE_URL)) }
     }
 
     @Test
@@ -61,8 +61,8 @@ class RetrofitServiceFactoryTest {
         subject.provideService()
         subject.provideService("new url")
         coVerifyAll {
-            retrofitBuilder.buildRetrofit(eq(TEST_BASE_URL), eq(true))
-            retrofitBuilder.buildRetrofit(eq("new url"), eq(true))
+            retrofitBuilder.buildRetrofit(eq(TEST_BASE_URL))
+            retrofitBuilder.buildRetrofit(eq("new url"))
         }
     }
 }

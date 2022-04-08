@@ -4,6 +4,7 @@ import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -33,4 +34,8 @@ fun OnBackPressedDispatcher.backPressedFlow(): Flow<Unit> = callbackFlow {
 inline fun <T> Fragment.collectWithViewLifecycle(
     flow: Flow<T>,
     crossinline collector: suspend (T) -> Unit,
-) = viewLifecycleOwner.lifecycleScope.launch { flow.collect(collector) }
+) = launchWithViewLifecycle { flow.collect(collector) }
+
+fun Fragment.launchWithViewLifecycle(
+    block: suspend CoroutineScope.() -> Unit,
+) = viewLifecycleOwner.lifecycleScope.launch(block = block)

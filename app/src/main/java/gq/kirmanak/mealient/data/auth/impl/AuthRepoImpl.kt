@@ -1,9 +1,9 @@
 package gq.kirmanak.mealient.data.auth.impl
 
-import android.accounts.Account
+import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
+import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
-import gq.kirmanak.mealient.service.auth.AccountManagerInteractor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -12,71 +12,41 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthRepoImpl @Inject constructor(
-    private val accountManagerInteractor: AccountManagerInteractor,
+    private val authStorage: AuthStorage,
+    private val authDataSource: AuthDataSource,
 ) : AuthRepo {
 
     override val isAuthorizedFlow: Flow<Boolean>
-        get() = accountManagerInteractor.accountUpdatesFlow()
-            .map { it.firstOrNull() }
-            .map { account ->
-                runCatchingExceptCancel { getAuthToken(account) }
-                    .onFailure { Timber.e(it, "authHeaderObservable: can't get token") }
-                    .getOrNull()
-            }.map { it != null }
+        get() = authStorage.authHeaderFlow.map { it != null }
 
-    override suspend fun authenticate(username: String, password: String) {
-        Timber.v("authenticate() called with: username = $username, password = $password")
-        val account = accountManagerInteractor.addAccount(username, password)
-        runCatchingExceptCancel {
-            getAuthToken(account) // Try to get token to check if password is correct
-        }.onFailure {
-            Timber.e(it, "authenticate: can't authorize")
-            removeAccount(account) // Remove account with incorrect password
-        }.onSuccess {
-            Timber.d("authenticate: successfully authorized")
-        }.getOrThrow() // Throw error to show it to user
+    override suspend fun authenticate(email: String, password: String) {
+        Timber.v("authenticate() called with: email = $email, password = $password")
+        authDataSource.authenticate(email, password)
+            .let { AUTH_HEADER_FORMAT.format(it) }
+            .let { authStorage.setAuthHeader(it) }
+        authStorage.setEmail(email)
+        authStorage.setPassword(password)
     }
 
-    override suspend fun getAuthHeader(): String? = runCatchingExceptCancel {
-        Timber.v("getAuthHeader() called")
-        currentAccount()
-            ?.let { getAuthToken(it) }
-            ?.let { AUTH_HEADER_FORMAT.format(it) }
-    }.onFailure {
-        Timber.e(it, "getAuthHeader: can't request auth header")
-    }.getOrNull()
+    override suspend fun getAuthHeader(): String? = authStorage.getAuthHeader()
 
-    private suspend fun getAuthToken(account: Account?): String? {
-        return account?.let { accountManagerInteractor.getAuthToken(it) }
+    override suspend fun requireAuthHeader(): String = checkNotNull(getAuthHeader()) {
+        "Auth header is null when it was required"
     }
-
-    private fun currentAccount(): Account? {
-        val account = accountManagerInteractor.getAccounts().firstOrNull()
-        Timber.v("currentAccount() returned: $account")
-        return account
-    }
-
-    override suspend fun requireAuthHeader(): String =
-        checkNotNull(getAuthHeader()) { "Auth header is null when it was required" }
 
     override suspend fun logout() {
         Timber.v("logout() called")
-        currentAccount()?.let { removeAccount(it) }
+        authStorage.setEmail(null)
+        authStorage.setPassword(null)
+        authStorage.setAuthHeader(null)
     }
 
-    private suspend fun removeAccount(account: Account) {
-        Timber.v("removeAccount() called with: account = $account")
-        accountManagerInteractor.removeAccount(account)
-    }
-
-    override fun invalidateAuthHeader(header: String) {
-        Timber.v("invalidateAuthHeader() called with: header = $header")
-        val token = header.substringAfter("Bearer ")
-        if (token == header) {
-            Timber.w("invalidateAuthHeader: can't find token in $header")
-        } else {
-            accountManagerInteractor.invalidateAuthToken(token)
-        }
+    override suspend fun invalidateAuthHeader() {
+        Timber.v("invalidateAuthHeader() called")
+        val email = authStorage.getEmail() ?: return
+        val password = authStorage.getPassword() ?: return
+        runCatchingExceptCancel { authenticate(email, password) }
+            .onFailure { logout() } // Clear all known values to avoid reusing them
     }
 
     companion object {

@@ -13,28 +13,21 @@ class RetrofitServiceFactory<T>(
     private val baseURLStorage: BaseURLStorage,
 ) : ServiceFactory<T> {
 
-    private val cache: MutableMap<ServiceParams, T> = mutableMapOf()
+    private val cache: MutableMap<String, T> = mutableMapOf()
 
-    override suspend fun provideService(
-        baseUrl: String?,
-        needAuth: Boolean,
-    ): T = runCatchingExceptCancel {
+    override suspend fun provideService(baseUrl: String?): T = runCatchingExceptCancel {
         Timber.v("provideService() called with: baseUrl = $baseUrl, class = ${serviceClass.simpleName}")
         val url = baseUrl ?: baseURLStorage.requireBaseURL()
-        val params = ServiceParams(url, needAuth)
-        synchronized(cache) { cache[params] ?: createService(params, serviceClass) }
+        synchronized(cache) { cache[url] ?: createService(url, serviceClass) }
     }.getOrElse {
         Timber.e(it, "provideService: can't provide service for $baseUrl")
         throw NetworkError.MalformedUrl(it)
     }
 
-    private fun createService(serviceParams: ServiceParams, serviceClass: Class<T>): T {
-        Timber.v("createService() called with: serviceParams = $serviceParams, serviceClass = ${serviceClass.simpleName}")
-        val (url, needAuth) = serviceParams
-        val service = retrofitBuilder.buildRetrofit(url, needAuth).create(serviceClass)
-        cache[serviceParams] = service
+    private fun createService(url: String, serviceClass: Class<T>): T {
+        Timber.v("createService() called with: url = $url, serviceClass = ${serviceClass.simpleName}")
+        val service = retrofitBuilder.buildRetrofit(url).create(serviceClass)
+        cache[url] = service
         return service
     }
-
-    data class ServiceParams(val baseUrl: String, val needAuth: Boolean)
 }

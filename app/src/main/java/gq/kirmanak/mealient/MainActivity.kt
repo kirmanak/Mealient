@@ -5,6 +5,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
+import androidx.navigation.findNavController
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,14 +73,21 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Timber.v("onOptionsItemSelected() called with: item = $item")
         val result = when (item.itemId) {
-            R.id.logout, R.id.login -> {
-                // When user clicks logout they don't want to be authorized
-                authViewModel.authRequested = item.itemId == R.id.login
+            R.id.login -> {
+                navigateToLogin()
+                true
+            }
+            R.id.logout -> {
                 authViewModel.logout()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
         return result
+    }
+
+    private fun navigateToLogin() {
+        Timber.v("navigateToLogin() called")
+        findNavController(binding.navHost.id).navigate("mealient://authenticate".toUri())
     }
 }

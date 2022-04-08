@@ -14,7 +14,6 @@ import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
 import gq.kirmanak.mealient.extensions.collectWithViewLifecycle
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
-import gq.kirmanak.mealient.ui.auth.AuthenticationState
 import gq.kirmanak.mealient.ui.auth.AuthenticationViewModel
 import timber.log.Timber
 
@@ -23,19 +22,6 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     private val binding by viewBinding(FragmentRecipesBinding::bind)
     private val viewModel by viewModels<RecipeViewModel>()
     private val authViewModel by activityViewModels<AuthenticationViewModel>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.v("onCreate() called with: savedInstanceState = $savedInstanceState")
-        authViewModel.authenticationStateLive.observe(this, ::onAuthStateChange)
-    }
-
-    private fun onAuthStateChange(authenticationState: AuthenticationState) {
-        Timber.v("onAuthStateChange() called with: authenticationState = $authenticationState")
-        if (authenticationState == AuthenticationState.AUTH_REQUESTED) {
-            findNavController().navigate(RecipesFragmentDirections.actionRecipesFragmentToAuthenticationFragment())
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

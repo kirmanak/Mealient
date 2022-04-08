@@ -9,6 +9,9 @@ import gq.kirmanak.mealient.data.baseurl.*
 import gq.kirmanak.mealient.data.network.RetrofitBuilder
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.data.network.createServiceFactory
+import kotlinx.serialization.json.Json
+import okhttp3.OkHttpClient
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -20,9 +23,12 @@ interface BaseURLModule {
         @Provides
         @Singleton
         fun provideVersionServiceFactory(
-            retrofitBuilder: RetrofitBuilder,
+            @Named(AUTH_OK_HTTP) okHttpClient: OkHttpClient,
+            json: Json,
             baseURLStorage: BaseURLStorage,
-        ): ServiceFactory<VersionService> = retrofitBuilder.createServiceFactory(baseURLStorage)
+        ): ServiceFactory<VersionService> {
+            return RetrofitBuilder(okHttpClient, json).createServiceFactory(baseURLStorage)
+        }
     }
 
     @Binds
