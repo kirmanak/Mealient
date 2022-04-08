@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.extensions
 
 import android.app.Activity
+import android.content.SharedPreferences
 import android.os.Build
 import android.view.View
 import android.view.WindowInsets
@@ -106,4 +107,15 @@ fun EditText.checkIfInputIsEmpty(
 suspend fun EditText.waitUntilNotEmpty() {
     textChangesFlow().filterNotNull().first { it.isNotEmpty() }
     Timber.v("waitUntilNotEmpty() returned")
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+fun <T> SharedPreferences.prefsChangeFlow(
+    valueReader: SharedPreferences.() -> T,
+): Flow<T> = callbackFlow {
+    fun sendValue() = trySend(valueReader()).logErrors("prefsChangeFlow")
+    val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> sendValue() }
+    sendValue()
+    registerOnSharedPreferenceChangeListener(listener)
+    awaitClose { unregisterOnSharedPreferenceChangeListener(listener) }
 }

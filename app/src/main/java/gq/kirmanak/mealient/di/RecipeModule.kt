@@ -19,6 +19,9 @@ import gq.kirmanak.mealient.data.recipes.impl.RecipeRepoImpl
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSourceImpl
 import gq.kirmanak.mealient.data.recipes.network.RecipeService
+import kotlinx.serialization.json.Json
+import okhttp3.OkHttpClient
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -46,9 +49,12 @@ interface RecipeModule {
         @Provides
         @Singleton
         fun provideRecipeServiceFactory(
-            retrofitBuilder: RetrofitBuilder,
+            @Named(AUTH_OK_HTTP) okHttpClient: OkHttpClient,
+            json: Json,
             baseURLStorage: BaseURLStorage,
-        ): ServiceFactory<RecipeService> = retrofitBuilder.createServiceFactory(baseURLStorage)
+        ): ServiceFactory<RecipeService> {
+            return RetrofitBuilder(okHttpClient, json).createServiceFactory(baseURLStorage)
+        }
 
         @Provides
         @Singleton

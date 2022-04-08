@@ -1,6 +1,9 @@
 package gq.kirmanak.mealient.data.baseurl
 
 import com.google.common.truth.Truth.assertThat
+import gq.kirmanak.mealient.data.baseurl.impl.VersionDataSourceImpl
+import gq.kirmanak.mealient.data.baseurl.impl.VersionResponse
+import gq.kirmanak.mealient.data.baseurl.impl.VersionService
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL

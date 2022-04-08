@@ -2,26 +2,23 @@ package gq.kirmanak.mealient.data.auth.impl
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthDataSource
+import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
-import gq.kirmanak.mealient.data.network.NetworkError.Unauthorized
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
-import gq.kirmanak.mealient.test.RobolectricTest
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.coVerify
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AuthRepoImplTest : RobolectricTest() {
+class AuthRepoImplTest {
 
     @MockK
     lateinit var dataSource: AuthDataSource
@@ -29,50 +26,83 @@ class AuthRepoImplTest : RobolectricTest() {
     @MockK(relaxUnitFun = true)
     lateinit var storage: AuthStorage
 
-    lateinit var subject: AuthRepoImpl
+    lateinit var subject: AuthRepo
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = AuthRepoImpl(dataSource, storage)
+        subject = AuthRepoImpl(storage, dataSource)
     }
 
     @Test
-    fun `when not authenticated then first auth status is false`() = runTest {
-        coEvery { storage.authHeaderFlow } returns flowOf(null)
-        assertThat(subject.isAuthorizedFlow.first()).isFalse()
+    fun `when isAuthorizedFlow then reads from storage`() = runTest {
+        every { storage.authHeaderFlow } returns flowOf("", null, "header")
+        assertThat(subject.isAuthorizedFlow.toList()).isEqualTo(listOf(true, false, true))
     }
 
     @Test
-    fun `when authenticated then first auth status is true`() = runTest {
-        coEvery { storage.authHeaderFlow } returns flowOf(TEST_AUTH_HEADER)
-        assertThat(subject.isAuthorizedFlow.first()).isTrue()
-    }
-
-    @Test(expected = Unauthorized::class)
-    fun `when authentication fails then authenticate throws`() = runTest {
-        coEvery {
-            dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD))
-        } throws Unauthorized(RuntimeException())
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD)
-    }
-
-    @Test
-    fun `when authenticated then getToken returns token`() = runTest {
-        coEvery { storage.getAuthHeader() } returns TEST_AUTH_HEADER
-        assertThat(subject.getAuthHeader()).isEqualTo(TEST_AUTH_HEADER)
-    }
-
-    @Test
-    fun `when authenticated successfully then stores token and url`() = runTest {
+    fun `when authenticate successfully then saves to storage`() = runTest {
         coEvery { dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD)) } returns TEST_TOKEN
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD)
-        coVerify { storage.storeAuthData(TEST_AUTH_HEADER) }
+        coVerifyAll {
+            storage.setAuthHeader(TEST_AUTH_HEADER)
+            storage.setEmail(TEST_USERNAME)
+            storage.setPassword(TEST_PASSWORD)
+        }
+        confirmVerified(storage)
     }
 
     @Test
-    fun `when logout then clearAuthData is called`() = runTest {
+    fun `when authenticate fails then does not change storage`() = runTest {
+        coEvery { dataSource.authenticate(any(), any()) } throws RuntimeException()
+        runCatching { subject.authenticate("invalid", "") }
+        confirmVerified(storage)
+    }
+
+    @Test
+    fun `when logout then removes email, password and header`() = runTest {
         subject.logout()
-        coVerify { storage.clearAuthData() }
+        coVerifyAll {
+            storage.setEmail(null)
+            storage.setPassword(null)
+            storage.setAuthHeader(null)
+        }
+        confirmVerified(storage)
+    }
+
+    @Test
+    fun `when invalidate then does not authenticate without email`() = runTest {
+        coEvery { storage.getEmail() } returns null
+        coEvery { storage.getPassword() } returns TEST_PASSWORD
+        subject.invalidateAuthHeader()
+        confirmVerified(dataSource)
+    }
+
+    @Test
+    fun `when invalidate then does not authenticate without password`() = runTest {
+        coEvery { storage.getEmail() } returns TEST_USERNAME
+        coEvery { storage.getPassword() } returns null
+        subject.invalidateAuthHeader()
+        confirmVerified(dataSource)
+    }
+
+    @Test
+    fun `when invalidate with credentials then calls authenticate`() = runTest {
+        coEvery { storage.getEmail() } returns TEST_USERNAME
+        coEvery { storage.getPassword() } returns TEST_PASSWORD
+        coEvery { dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD)) } returns TEST_TOKEN
+        subject.invalidateAuthHeader()
+        coVerifyAll {
+            dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD))
+        }
+    }
+
+    @Test
+    fun `when invalidate with credentials and auth fails then clears email`() = runTest {
+        coEvery { storage.getEmail() } returns "invalid"
+        coEvery { storage.getPassword() } returns ""
+        coEvery { dataSource.authenticate(any(), any()) } throws RuntimeException()
+        subject.invalidateAuthHeader()
+        coVerify { storage.setEmail(null) }
     }
 }

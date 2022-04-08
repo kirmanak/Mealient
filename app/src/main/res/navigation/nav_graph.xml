@@ -9,15 +9,16 @@
 		android:id="@+id/authenticationFragment"
 		android:name="gq.kirmanak.mealient.ui.auth.AuthenticationFragment"
 		android:label="AuthenticationFragment"
-		tools:layout="@layout/fragment_authentication" />
+		tools:layout="@layout/fragment_authentication">
+		<deepLink
+			android:id="@+id/deepLink"
+			app:uri="mealient://authenticate" />
+	</fragment>
 	<fragment
 		android:id="@+id/recipesFragment"
 		android:name="gq.kirmanak.mealient.ui.recipes.RecipesFragment"
 		android:label="fragment_recipes"
 		tools:layout="@layout/fragment_recipes">
-		<action
-			android:id="@+id/action_recipesFragment_to_authenticationFragment"
-			app:destination="@id/authenticationFragment" />
 		<action
 			android:id="@+id/action_recipesFragment_to_recipeInfoFragment"
 			app:destination="@id/recipeInfoFragment" />

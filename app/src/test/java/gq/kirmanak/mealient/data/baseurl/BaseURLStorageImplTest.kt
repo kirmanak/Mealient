@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.data.baseurl
 
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.google.common.truth.Truth.assertThat
+import gq.kirmanak.mealient.data.baseurl.impl.BaseURLStorageImpl
 import gq.kirmanak.mealient.data.storage.PreferencesStorage
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery

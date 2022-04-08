@@ -7,11 +7,8 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class RetrofitBuilder @Inject constructor(
+class RetrofitBuilder(
     private val okHttpClient: OkHttpClient,
     private val json: Json
 ) {

@@ -1,6 +1,7 @@
-package gq.kirmanak.mealient.data.baseurl
+package gq.kirmanak.mealient.data.baseurl.impl
 
 import androidx.datastore.preferences.core.Preferences
+import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.data.storage.PreferencesStorage
 import javax.inject.Inject
 import javax.inject.Singleton

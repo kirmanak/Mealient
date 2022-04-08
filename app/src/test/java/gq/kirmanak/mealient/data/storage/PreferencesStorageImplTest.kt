@@ -18,30 +18,30 @@ class PreferencesStorageImplTest : HiltRobolectricTest() {
 
     @Test
     fun `when getValue without writes then null`() = runTest {
-        assertThat(subject.getValue(subject.authHeaderKey)).isNull()
+        assertThat(subject.getValue(subject.baseUrlKey)).isNull()
     }
 
     @Test(expected = IllegalStateException::class)
     fun `when requireValue without writes then throws IllegalStateException`() = runTest {
-        subject.requireValue(subject.authHeaderKey)
+        subject.requireValue(subject.baseUrlKey)
     }
 
     @Test
     fun `when getValue after write then returns value`() = runTest {
-        subject.storeValues(Pair(subject.authHeaderKey, "test"))
-        assertThat(subject.getValue(subject.authHeaderKey)).isEqualTo("test")
+        subject.storeValues(Pair(subject.baseUrlKey, "test"))
+        assertThat(subject.getValue(subject.baseUrlKey)).isEqualTo("test")
     }
 
     @Test
     fun `when storeValue then valueUpdates emits`() = runTest {
-        subject.storeValues(Pair(subject.authHeaderKey, "test"))
-        assertThat(subject.valueUpdates(subject.authHeaderKey).first()).isEqualTo("test")
+        subject.storeValues(Pair(subject.baseUrlKey, "test"))
+        assertThat(subject.valueUpdates(subject.baseUrlKey).first()).isEqualTo("test")
     }
 
     @Test
     fun `when remove value then getValue returns null`() = runTest {
-        subject.storeValues(Pair(subject.authHeaderKey, "test"))
-        subject.removeValues(subject.authHeaderKey)
-        assertThat(subject.getValue(subject.authHeaderKey)).isNull()
+        subject.storeValues(Pair(subject.baseUrlKey, "test"))
+        subject.removeValues(subject.baseUrlKey)
+        assertThat(subject.getValue(subject.baseUrlKey)).isNull()
     }
 }

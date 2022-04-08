@@ -32,7 +32,7 @@ class AuthDataSourceImplTest {
     fun setUp() {
         MockKAnnotations.init(this)
         subject = AuthDataSourceImpl(authServiceFactory, NetworkModule.createJson())
-        coEvery { authServiceFactory.provideService() } returns authService
+        coEvery { authServiceFactory.provideService(any()) } returns authService
     }
 
     @Test
@@ -71,7 +71,9 @@ class AuthDataSourceImplTest {
 
     @Test(expected = MalformedUrl::class)
     fun `when authenticate and provideService throws then MalformedUrl`() = runTest {
-        coEvery { authServiceFactory.provideService() } throws MalformedUrl(RuntimeException())
+        coEvery {
+            authServiceFactory.provideService(any())
+        } throws MalformedUrl(RuntimeException())
         callAuthenticate()
     }
 

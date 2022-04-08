@@ -154,6 +154,9 @@ dependencies {
     // https://developer.android.com/topic/libraries/architecture/datastore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
+    // https://developer.android.com/topic/security/data#include-library
+    implementation "androidx.security:security-crypto:1.0.0"
+
     // https://github.com/junit-team/junit4/releases
     testImplementation "junit:junit:4.13.2"
 
