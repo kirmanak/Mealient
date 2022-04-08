@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.ui.activity
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -25,7 +26,8 @@ class MainActivityViewModel @Inject constructor(
         authRepo.isAuthorizedFlow,
         AuthenticationState::determineState
     )
-    val authenticationStateLive = authenticationStateFlow.asLiveData()
+    val authenticationStateLive: LiveData<AuthenticationState>
+        get() = authenticationStateFlow.asLiveData()
 
     fun logout() {
         Timber.v("logout() called")

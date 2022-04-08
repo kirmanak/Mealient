@@ -26,9 +26,7 @@ class AuthStorageImpl @Inject constructor(
             .distinctUntilChanged()
     private val singleThreadDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
-    override suspend fun setAuthHeader(authHeader: String?) {
-        putString(AUTH_HEADER_KEY, authHeader)
-    }
+    override suspend fun setAuthHeader(authHeader: String?) = putString(AUTH_HEADER_KEY, authHeader)
 
     override suspend fun getAuthHeader(): String? = getString(AUTH_HEADER_KEY)
 
@@ -45,9 +43,7 @@ class AuthStorageImpl @Inject constructor(
         value: String?
     ) = withContext(singleThreadDispatcher) {
         Timber.v("putString() called with: key = $key, value = $value")
-        sharedPreferences.edit {
-            value?.let { putString(key, value) } ?: remove(key)
-        }
+        sharedPreferences.edit(commit = true) { putString(key, value) }
     }
 
     private suspend fun getString(key: String) = withContext(singleThreadDispatcher) {
