@@ -18,13 +18,13 @@ class AuthenticationInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val currentHeader = authHeader ?: return chain.proceed(chain.request())
         val response = proceedWithAuthHeader(chain, currentHeader)
-        if (listOf(401, 403).contains(response.code)) {
+        return if (listOf(401, 403).contains(response.code)) {
             runBlocking { authRepo.invalidateAuthHeader() }
+            // Try again with new auth header (if any) or return previous response
+            authHeader?.let { proceedWithAuthHeader(chain, it) } ?: response
         } else {
-            return response
+            response
         }
-        val newHeader = authHeader ?: return response
-        return proceedWithAuthHeader(chain, newHeader)
     }
 
     private fun proceedWithAuthHeader(

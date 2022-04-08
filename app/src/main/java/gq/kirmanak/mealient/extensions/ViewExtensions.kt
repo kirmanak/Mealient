@@ -113,11 +113,9 @@ suspend fun EditText.waitUntilNotEmpty() {
 fun <T> SharedPreferences.prefsChangeFlow(
     valueReader: SharedPreferences.() -> T,
 ): Flow<T> = callbackFlow {
-    val listener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, _ ->
-        val value = prefs.valueReader()
-        trySend(value).logErrors("prefsChangeFlow")
-    }
-    trySend(valueReader())
+    fun sendValue() = trySend(valueReader()).logErrors("prefsChangeFlow")
+    val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> sendValue() }
+    sendValue()
     registerOnSharedPreferenceChangeListener(listener)
     awaitClose { unregisterOnSharedPreferenceChangeListener(listener) }
 }
