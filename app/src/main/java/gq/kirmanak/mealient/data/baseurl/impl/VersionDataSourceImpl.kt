@@ -1,5 +1,7 @@
-package gq.kirmanak.mealient.data.baseurl
+package gq.kirmanak.mealient.data.baseurl.impl
 
+import gq.kirmanak.mealient.data.baseurl.VersionDataSource
+import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.extensions.mapToNetworkError
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel

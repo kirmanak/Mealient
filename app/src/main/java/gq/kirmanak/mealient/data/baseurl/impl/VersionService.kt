@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.baseurl
+package gq.kirmanak.mealient.data.baseurl.impl
 
 import retrofit2.http.GET
 

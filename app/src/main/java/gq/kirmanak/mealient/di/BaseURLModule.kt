@@ -5,7 +5,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import gq.kirmanak.mealient.data.baseurl.*
+import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
+import gq.kirmanak.mealient.data.baseurl.VersionDataSource
+import gq.kirmanak.mealient.data.baseurl.impl.BaseURLStorageImpl
+import gq.kirmanak.mealient.data.baseurl.impl.VersionDataSourceImpl
+import gq.kirmanak.mealient.data.baseurl.impl.VersionService
 import gq.kirmanak.mealient.data.network.RetrofitBuilder
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.data.network.createServiceFactory

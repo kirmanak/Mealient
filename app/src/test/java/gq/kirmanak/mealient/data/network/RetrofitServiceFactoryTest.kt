@@ -2,7 +2,7 @@ package gq.kirmanak.mealient.data.network
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
-import gq.kirmanak.mealient.data.baseurl.VersionService
+import gq.kirmanak.mealient.data.baseurl.impl.VersionService
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
