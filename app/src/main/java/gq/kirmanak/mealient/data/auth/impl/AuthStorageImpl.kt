@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.data.auth.impl
 
 import android.content.SharedPreferences
+import androidx.annotation.VisibleForTesting
 import androidx.core.content.edit
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.di.AuthModule.Companion.ENCRYPTED
@@ -53,8 +54,13 @@ class AuthStorageImpl @Inject constructor(
     }
 
     companion object {
-        private const val AUTH_HEADER_KEY = "authHeader"
-        private const val EMAIL_KEY = "email"
-        private const val PASSWORD_KEY = "password"
+        @VisibleForTesting
+        const val AUTH_HEADER_KEY = "authHeader"
+
+        @VisibleForTesting
+        const val EMAIL_KEY = "email"
+
+        @VisibleForTesting
+        const val PASSWORD_KEY = "password"
     }
 }
