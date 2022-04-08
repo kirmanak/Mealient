@@ -15,19 +15,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.FragmentRecipeInfoBinding
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeInfoFragment : BottomSheetDialogFragment() {
+
     private val binding by viewBinding(FragmentRecipeInfoBinding::bind)
     private val arguments by navArgs<RecipeInfoFragmentArgs>()
     private val viewModel by viewModels<RecipeInfoViewModel>()
-
-    @Inject
-    lateinit var ingredientsAdapter: RecipeIngredientsAdapter
-
-    @Inject
-    lateinit var instructionsAdapter: RecipeInstructionsAdapter
+    private val ingredientsAdapter = RecipeIngredientsAdapter()
+    private val instructionsAdapter = RecipeInstructionsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,22 +38,27 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called")
 
-        binding.ingredientsList.adapter = ingredientsAdapter
-        binding.instructionsList.adapter = instructionsAdapter
-
-        viewModel.loadRecipeImage(binding.image, arguments.recipeSlug)
-        viewModel.loadRecipeInfo(arguments.recipeId, arguments.recipeSlug)
-
-        viewModel.recipeInfo.observe(viewLifecycleOwner) {
-            Timber.d("onViewCreated: full info $it")
-            binding.title.text = it.recipeSummaryEntity.name
-            binding.description.text = it.recipeSummaryEntity.description
+        with(binding) {
+            ingredientsList.adapter = ingredientsAdapter
+            instructionsList.adapter = instructionsAdapter
         }
 
-        viewModel.listsVisibility.observe(viewLifecycleOwner) {
-            Timber.d("onViewCreated: lists visibility $it")
-            binding.ingredientsHolder.isVisible = it.areIngredientsVisible
-            binding.instructionsGroup.isVisible = it.areInstructionsVisible
+        with(viewModel) {
+            loadRecipeImage(binding.image, arguments.recipeSlug)
+            loadRecipeInfo(arguments.recipeId, arguments.recipeSlug)
+            uiState.observe(viewLifecycleOwner, ::onUiStateChange)
+        }
+    }
+
+    private fun onUiStateChange(uiState: RecipeInfoUiState) = with(binding) {
+        Timber.v("onUiStateChange() called")
+        ingredientsHolder.isVisible = uiState.areIngredientsVisible
+        instructionsGroup.isVisible = uiState.areInstructionsVisible
+        uiState.recipeInfo?.let {
+            title.text = it.recipeSummaryEntity.name
+            description.text = it.recipeSummaryEntity.description
+            ingredientsAdapter.submitList(it.recipeIngredients)
+            instructionsAdapter.submitList(it.recipeInstructions)
         }
     }
 
