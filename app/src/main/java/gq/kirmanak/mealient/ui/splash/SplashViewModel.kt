@@ -23,12 +23,11 @@ class SplashViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             delay(1000)
-            _nextDestination.value = if (!disclaimerStorage.isDisclaimerAccepted())
-                SplashFragmentDirections.actionSplashFragmentToDisclaimerFragment()
-            else if (baseURLStorage.getBaseURL() == null)
-                SplashFragmentDirections.actionSplashFragmentToBaseURLFragment()
-            else
-                SplashFragmentDirections.actionSplashFragmentToRecipesFragment()
+            _nextDestination.value = when {
+                !disclaimerStorage.isDisclaimerAccepted() -> SplashFragmentDirections.actionSplashFragmentToDisclaimerFragment()
+                baseURLStorage.getBaseURL() == null -> SplashFragmentDirections.actionSplashFragmentToBaseURLFragment()
+                else -> SplashFragmentDirections.actionSplashFragmentToRecipesFragment()
+            }
         }
     }
 }
