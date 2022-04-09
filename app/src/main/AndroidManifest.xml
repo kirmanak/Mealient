@@ -15,7 +15,7 @@
 		android:roundIcon="@mipmap/ic_launcher"
 		android:supportsRtl="true"
 		tools:ignore="UnusedAttribute"
-		android:theme="@style/Theme.Mealient">
+		android:theme="@style/AppTheme">
 		<activity
 			android:name=".ui.activity.MainActivity"
 			android:exported="true">
