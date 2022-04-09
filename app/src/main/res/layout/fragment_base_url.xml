@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.baseurl.BaseURLFragment">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress"
+        style="@style/IndeterminateProgress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/url_input_layout"
         style="@style/SmallMarginTextInputLayoutStyle"
