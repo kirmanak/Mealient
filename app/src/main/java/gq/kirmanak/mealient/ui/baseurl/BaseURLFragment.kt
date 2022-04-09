@@ -12,6 +12,7 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.databinding.FragmentBaseUrlBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
+import gq.kirmanak.mealient.ui.OperationUiState
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import timber.log.Timber
 
@@ -26,7 +27,7 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
         binding.button.setOnClickListener(::onProceedClick)
-        viewModel.checkURLResult.observe(viewLifecycleOwner, ::onCheckURLResult)
+        viewModel.uiState.observe(viewLifecycleOwner, ::onUiStateChange)
         activityViewModel.updateUiState { it.copy(loginButtonVisible = false, titleVisible = true) }
     }
 
@@ -40,13 +41,13 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
         viewModel.saveBaseUrl(url)
     }
 
-    private fun onCheckURLResult(result: Result<Unit>) {
-        Timber.v("onCheckURLResult() called with: result = $result")
-        if (result.isSuccess) {
+    private fun onUiStateChange(uiState: OperationUiState<Unit>) = with(binding) {
+        Timber.v("onUiStateChange() called with: uiState = $uiState")
+        if (uiState.isSuccess) {
             findNavController().navigate(BaseURLFragmentDirections.actionBaseURLFragmentToRecipesFragment())
             return
         }
-        binding.urlInputLayout.error = when (val exception = result.exceptionOrNull()) {
+        urlInputLayout.error = when (val exception = uiState.exceptionOrNull) {
             is NetworkError.NoServerConnection -> getString(R.string.fragment_base_url_no_connection)
             is NetworkError.NotMealie -> getString(R.string.fragment_base_url_unexpected_response)
             is NetworkError.MalformedUrl -> {
@@ -56,5 +57,8 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
             null -> null
             else -> getString(R.string.fragment_base_url_unknown_error)
         }
+
+        uiState.updateButtonState(button)
+        uiState.updateProgressState(progress)
     }
 }

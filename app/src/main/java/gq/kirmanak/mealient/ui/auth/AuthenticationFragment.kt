@@ -12,6 +12,7 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.databinding.FragmentAuthenticationBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
+import gq.kirmanak.mealient.ui.OperationUiState
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import timber.log.Timber
 
@@ -26,7 +27,7 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
         binding.button.setOnClickListener { onLoginClicked() }
         activityViewModel.updateUiState { it.copy(loginButtonVisible = false, titleVisible = true) }
-        viewModel.authenticationResult.observe(viewLifecycleOwner, ::onAuthenticationResult)
+        viewModel.uiState.observe(viewLifecycleOwner, ::onUiStateChange)
     }
 
     private fun onLoginClicked(): Unit = with(binding) {
@@ -45,22 +46,22 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
             trim = false,
         ) ?: return
 
-        button.isClickable = false
         viewModel.authenticate(email, pass)
     }
 
-    private fun onAuthenticationResult(result: Result<Unit>) {
-        Timber.v("onAuthenticationResult() called with: result = $result")
-        if (result.isSuccess) {
+    private fun onUiStateChange(uiState: OperationUiState<Unit>) = with(binding) {
+        Timber.v("onUiStateChange() called with: authUiState = $uiState")
+        if (uiState.isSuccess) {
             findNavController().popBackStack()
             return
         }
 
-        binding.passwordInputLayout.error = when (result.exceptionOrNull()) {
+        passwordInputLayout.error = when (uiState.exceptionOrNull) {
             is NetworkError.Unauthorized -> getString(R.string.fragment_authentication_credentials_incorrect)
             else -> null
         }
 
-        binding.button.isClickable = true
+        uiState.updateButtonState(button)
+        uiState.updateProgressState(progress)
     }
 }
