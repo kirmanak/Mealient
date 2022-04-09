@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.ui.picasso
+package gq.kirmanak.mealient.ui.images
 
 import android.content.Context
 import com.squareup.picasso.OkHttp3Downloader
@@ -22,7 +22,7 @@ class PicassoBuilder @Inject constructor(
         Timber.v("buildPicasso() called")
         val builder = Picasso.Builder(context)
         builder.downloader(OkHttp3Downloader(okHttpClient))
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG_PICASSO) {
             builder.loggingEnabled(true)
             builder.indicatorsEnabled(true)
             builder.listener { _, uri, exception ->

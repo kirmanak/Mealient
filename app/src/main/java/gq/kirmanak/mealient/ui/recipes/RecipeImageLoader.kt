@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.recipes
+package gq.kirmanak.mealient.ui.recipes
 
 import android.widget.ImageView
 

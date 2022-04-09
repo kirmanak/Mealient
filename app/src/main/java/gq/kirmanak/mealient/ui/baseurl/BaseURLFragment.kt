@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.ui.baseurl
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -11,6 +12,7 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.databinding.FragmentBaseUrlBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
+import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -18,12 +20,14 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
 
     private val binding by viewBinding(FragmentBaseUrlBinding::bind)
     private val viewModel by viewModels<BaseURLViewModel>()
+    private val activityViewModel by activityViewModels<MainActivityViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
         binding.button.setOnClickListener(::onProceedClick)
         viewModel.checkURLResult.observe(viewLifecycleOwner, ::onCheckURLResult)
+        activityViewModel.updateUiState { it.copy(loginButtonVisible = false, titleVisible = true) }
     }
 
     private fun onProceedClick(view: View) {

@@ -2,7 +2,6 @@ package gq.kirmanak.mealient.ui.recipes
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -26,9 +25,8 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
-        activityViewModel.showLoginButton = true
+        activityViewModel.updateUiState { it.copy(loginButtonVisible = true, titleVisible = false) }
         setupRecipeAdapter()
-        (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = null
     }
 
     private fun navigateToRecipeInfo(recipeSummaryEntity: RecipeSummaryEntity) {
@@ -64,6 +62,5 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         Timber.v("onDestroyView() called")
         // Prevent RV leaking through mObservers list in adapter
         binding.recipes.adapter = null
-        activityViewModel.showLoginButton = false
     }
 }

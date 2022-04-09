@@ -12,16 +12,14 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
-import gq.kirmanak.mealient.ui.auth.AuthenticationState
-import gq.kirmanak.mealient.ui.auth.AuthenticationState.AUTHORIZED
-import gq.kirmanak.mealient.ui.auth.AuthenticationState.UNAUTHORIZED
 import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainActivityBinding
     private val viewModel by viewModels<MainActivityViewModel>()
-    private var lastAuthenticationState: AuthenticationState? = null
+    private val title: String by lazy { getString(R.string.app_name) }
+    private val uiState: MainActivityUiState get() = viewModel.uiState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +29,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setIcon(R.drawable.ic_toolbar)
         setToolbarRoundCorner()
-        listenToAuthStatuses()
+        viewModel.uiStateLive.observe(this, ::onUiStateChange)
+    }
+
+    private fun onUiStateChange(uiState: MainActivityUiState) {
+        Timber.v("onUiStateChange() called with: uiState = $uiState")
+        supportActionBar?.title = if (uiState.titleVisible) title else null
+        invalidateOptionsMenu()
     }
 
     private fun setToolbarRoundCorner() {
@@ -51,22 +55,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun listenToAuthStatuses() {
-        Timber.v("listenToAuthStatuses() called")
-        viewModel.authenticationStateLive.observe(this, ::onAuthStateUpdate)
-    }
-
-    private fun onAuthStateUpdate(authState: AuthenticationState) {
-        Timber.v("onAuthStateUpdate() called with: it = $authState")
-        lastAuthenticationState = authState
-        invalidateOptionsMenu()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         Timber.v("onCreateOptionsMenu() called with: menu = $menu")
         menuInflater.inflate(R.menu.main_toolbar, menu)
-        menu.findItem(R.id.logout).isVisible = lastAuthenticationState == AUTHORIZED
-        menu.findItem(R.id.login).isVisible = lastAuthenticationState == UNAUTHORIZED
+        menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
+        menu.findItem(R.id.login).isVisible = uiState.canShowLogin
         return true
     }
 

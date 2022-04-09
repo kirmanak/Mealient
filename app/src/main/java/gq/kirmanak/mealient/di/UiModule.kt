@@ -6,9 +6,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import gq.kirmanak.mealient.ui.ImageLoader
-import gq.kirmanak.mealient.ui.picasso.ImageLoaderPicasso
-import gq.kirmanak.mealient.ui.picasso.PicassoBuilder
+import gq.kirmanak.mealient.ui.images.ImageLoader
+import gq.kirmanak.mealient.ui.images.ImageLoaderPicasso
+import gq.kirmanak.mealient.ui.images.PicassoBuilder
 import javax.inject.Singleton
 
 @Module

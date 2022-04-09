@@ -4,7 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_margin="8dp"
-	app:cardCornerRadius="@dimen/rounded_corner_size_default"
+	app:shapeAppearance="@style/ShapeAppearance.AllCornersRounded"
 	app:cardElevation="10dp"
 	android:layout_height="wrap_content">
 

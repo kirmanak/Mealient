@@ -6,7 +6,7 @@
         android:id="@+id/login"
         android:contentDescription="@string/menu_main_toolbar_content_description_login"
         android:title="@string/menu_main_toolbar_login"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/logout"

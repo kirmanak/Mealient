@@ -10,11 +10,8 @@ import gq.kirmanak.mealient.data.recipes.db.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.databinding.ViewHolderInstructionBinding
 import gq.kirmanak.mealient.ui.recipes.info.RecipeInstructionsAdapter.RecipeInstructionViewHolder
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class RecipeInstructionsAdapter @Inject constructor() :
+class RecipeInstructionsAdapter :
     ListAdapter<RecipeInstructionEntity, RecipeInstructionViewHolder>(RecipeInstructionDiffCallback) {
 
     private object RecipeInstructionDiffCallback :

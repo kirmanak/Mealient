@@ -77,7 +77,7 @@
 			android:layout_marginHorizontal="8dp"
 			android:layout_marginTop="11dp"
 			android:layout_marginBottom="20dp"
-			app:cardCornerRadius="@dimen/rounded_corner_size_default"
+			app:shapeAppearance="@style/ShapeAppearance.AllCornersRounded"
 			app:cardElevation="10dp"
 			app:layout_constraintBottom_toTopOf="@+id/instructions_header"
 			app:layout_constraintEnd_toStartOf="@+id/end_guide"
