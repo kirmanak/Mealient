@@ -16,6 +16,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
+import gq.kirmanak.mealient.BuildConfig
 import leakcanary.LeakCanary
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
@@ -30,7 +31,10 @@ object DebugModule {
     @IntoSet
     fun provideLoggingInterceptor(): Interceptor {
         val interceptor = HttpLoggingInterceptor { message -> Timber.tag("OkHttp").v(message) }
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        interceptor.level = when {
+            BuildConfig.LOG_NETWORK -> HttpLoggingInterceptor.Level.BODY
+            else -> HttpLoggingInterceptor.Level.BASIC
+        }
         return interceptor
     }
 
