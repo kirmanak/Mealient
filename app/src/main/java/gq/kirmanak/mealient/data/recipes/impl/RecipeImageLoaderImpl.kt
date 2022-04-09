@@ -4,8 +4,8 @@ import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
-import gq.kirmanak.mealient.data.recipes.RecipeImageLoader
-import gq.kirmanak.mealient.ui.ImageLoader
+import gq.kirmanak.mealient.ui.images.ImageLoader
+import gq.kirmanak.mealient.ui.recipes.RecipeImageLoader
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import timber.log.Timber
 import javax.inject.Inject

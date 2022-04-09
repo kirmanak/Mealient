@@ -22,6 +22,8 @@ android {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+
+        buildConfigField "Boolean", "DEBUG_PICASSO", "false"
     }
 
     signingConfigs {
