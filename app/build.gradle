@@ -151,6 +151,8 @@ dependencies {
     // https://github.com/bumptech/glide/releases
     def glide_version = "4.13.1"
     implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     // https://github.com/androidbroadcast/ViewBindingPropertyDelegate/releases
     implementation "com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6"
