@@ -1,27 +1,25 @@
 package gq.kirmanak.mealient.di
 
-import com.squareup.picasso.Picasso
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.scopes.FragmentScoped
+import gq.kirmanak.mealient.data.recipes.impl.RecipeImageLoaderImpl
 import gq.kirmanak.mealient.ui.images.ImageLoader
-import gq.kirmanak.mealient.ui.images.ImageLoaderPicasso
-import gq.kirmanak.mealient.ui.images.PicassoBuilder
-import javax.inject.Singleton
+import gq.kirmanak.mealient.ui.images.ImageLoaderGlide
+import gq.kirmanak.mealient.ui.recipes.RecipeImageLoader
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(FragmentComponent::class)
 interface UiModule {
 
     @Binds
-    @Singleton
-    fun bindImageLoader(imageLoaderGlide: ImageLoaderPicasso): ImageLoader
+    @FragmentScoped
+    fun bindImageLoader(imageLoaderGlide: ImageLoaderGlide): ImageLoader
 
-    companion object {
-        @Provides
-        @Singleton
-        fun providePicasso(picassoBuilder: PicassoBuilder): Picasso = picassoBuilder.buildPicasso()
-    }
+    @Binds
+    @FragmentScoped
+    fun provideRecipeImageLoader(recipeImageLoaderImpl: RecipeImageLoaderImpl): RecipeImageLoader
+
 }

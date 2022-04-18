@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
+import androidx.fragment.app.Fragment
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.ui.images.ImageLoader
@@ -21,10 +22,13 @@ class RecipeImageLoaderImplTest {
     @MockK
     lateinit var imageLoader: ImageLoader
 
+    @MockK
+    lateinit var fragment: Fragment
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = RecipeImageLoaderImpl(imageLoader, baseURLStorage)
+        subject = RecipeImageLoaderImpl(imageLoader, baseURLStorage, fragment)
         prepareBaseURL("https://google.com/")
     }
 

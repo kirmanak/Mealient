@@ -8,7 +8,7 @@ import timber.log.Timber
 
 class RecipeViewHolder(
     private val binding: ViewHolderRecipeBinding,
-    private val recipeViewModel: RecipeViewModel,
+    private val recipeImageLoader: RecipeImageLoader,
     private val clickListener: (RecipeSummaryEntity) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     private val loadingPlaceholder by lazy {
@@ -18,7 +18,7 @@ class RecipeViewHolder(
     fun bind(item: RecipeSummaryEntity?) {
         Timber.v("bind() called with: item = $item")
         binding.name.text = item?.name ?: loadingPlaceholder
-        recipeViewModel.loadRecipeImage(binding.image, item)
+        recipeImageLoader.loadRecipeImage(binding.image, item?.slug)
         item?.let { entity ->
             binding.root.setOnClickListener {
                 Timber.d("bind: item clicked $entity")

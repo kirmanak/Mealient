@@ -14,7 +14,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.FragmentRecipeInfoBinding
+import gq.kirmanak.mealient.ui.recipes.RecipeImageLoader
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipeInfoFragment : BottomSheetDialogFragment() {
@@ -24,6 +26,9 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
     private val viewModel by viewModels<RecipeInfoViewModel>()
     private val ingredientsAdapter = RecipeIngredientsAdapter()
     private val instructionsAdapter = RecipeInstructionsAdapter()
+
+    @Inject
+    lateinit var recipeImageLoader: RecipeImageLoader
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,10 +46,10 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
         with(binding) {
             ingredientsList.adapter = ingredientsAdapter
             instructionsList.adapter = instructionsAdapter
+            recipeImageLoader.loadRecipeImage(image, arguments.recipeSlug)
         }
 
         with(viewModel) {
-            loadRecipeImage(binding.image, arguments.recipeSlug)
             loadRecipeInfo(arguments.recipeId, arguments.recipeSlug)
             uiState.observe(viewLifecycleOwner, ::onUiStateChange)
         }

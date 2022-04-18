@@ -2,24 +2,29 @@ package gq.kirmanak.mealient.data.recipes.impl
 
 import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
+import androidx.fragment.app.Fragment
+import dagger.hilt.android.scopes.FragmentScoped
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
+import gq.kirmanak.mealient.extensions.launchWhenViewResumed
 import gq.kirmanak.mealient.ui.images.ImageLoader
 import gq.kirmanak.mealient.ui.recipes.RecipeImageLoader
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@FragmentScoped
 class RecipeImageLoaderImpl @Inject constructor(
     private val imageLoader: ImageLoader,
     private val baseURLStorage: BaseURLStorage,
+    private val fragment: Fragment,
 ): RecipeImageLoader {
 
-    override suspend fun loadRecipeImage(view: ImageView, slug: String?) {
+    override fun loadRecipeImage(view: ImageView, slug: String?) {
         Timber.v("loadRecipeImage() called with: view = $view, slug = $slug")
-        imageLoader.loadImage(generateImageUrl(slug), R.drawable.placeholder_recipe, view)
+        fragment.launchWhenViewResumed {
+            imageLoader.loadImage(generateImageUrl(slug), R.drawable.placeholder_recipe, view)
+        }
     }
 
     @VisibleForTesting

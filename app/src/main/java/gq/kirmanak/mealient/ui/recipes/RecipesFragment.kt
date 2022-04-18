@@ -11,16 +11,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
-import gq.kirmanak.mealient.extensions.collectWithViewLifecycle
+import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     private val binding by viewBinding(FragmentRecipesBinding::bind)
     private val viewModel by viewModels<RecipeViewModel>()
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
+
+    @Inject
+    lateinit var recipeImageLoader: RecipeImageLoader
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,17 +45,17 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private fun setupRecipeAdapter() {
         Timber.v("setupRecipeAdapter() called")
-        val adapter = RecipesPagingAdapter(viewModel, ::navigateToRecipeInfo)
+        val adapter = RecipesPagingAdapter(recipeImageLoader, ::navigateToRecipeInfo)
         binding.recipes.adapter = adapter
-        collectWithViewLifecycle(viewModel.pagingData) {
+        collectWhenViewResumed(viewModel.pagingData) {
             Timber.v("setupRecipeAdapter: received data update")
             adapter.submitData(lifecycle, it)
         }
-        collectWithViewLifecycle(adapter.onPagesUpdatedFlow) {
+        collectWhenViewResumed(adapter.onPagesUpdatedFlow) {
             Timber.v("setupRecipeAdapter: pages updated")
             binding.refresher.isRefreshing = false
         }
-        collectWithViewLifecycle(binding.refresher.refreshRequestFlow()) {
+        collectWhenViewResumed(binding.refresher.refreshRequestFlow()) {
             Timber.v("setupRecipeAdapter: received refresh request")
             adapter.refresh()
         }
