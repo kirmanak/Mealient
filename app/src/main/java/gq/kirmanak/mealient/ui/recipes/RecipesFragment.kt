@@ -11,16 +11,25 @@ import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
-import gq.kirmanak.mealient.extensions.collectWithViewLifecycle
+import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
+import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
+import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     private val binding by viewBinding(FragmentRecipesBinding::bind)
     private val viewModel by viewModels<RecipeViewModel>()
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
+
+    @Inject
+    lateinit var recipeImageLoader: RecipeImageLoader
+
+    @Inject
+    lateinit var recipePreloaderFactory: RecipePreloaderFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,19 +50,22 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private fun setupRecipeAdapter() {
         Timber.v("setupRecipeAdapter() called")
-        val adapter = RecipesPagingAdapter(viewModel, ::navigateToRecipeInfo)
-        binding.recipes.adapter = adapter
-        collectWithViewLifecycle(viewModel.pagingData) {
-            Timber.v("setupRecipeAdapter: received data update")
-            adapter.submitData(lifecycle, it)
+        val recipesAdapter = RecipesPagingAdapter(recipeImageLoader, ::navigateToRecipeInfo)
+        with(binding.recipes) {
+            adapter = recipesAdapter
+            addOnScrollListener(recipePreloaderFactory.create(recipesAdapter))
         }
-        collectWithViewLifecycle(adapter.onPagesUpdatedFlow) {
+        collectWhenViewResumed(viewModel.pagingData) {
+            Timber.v("setupRecipeAdapter: received data update")
+            recipesAdapter.submitData(lifecycle, it)
+        }
+        collectWhenViewResumed(recipesAdapter.onPagesUpdatedFlow) {
             Timber.v("setupRecipeAdapter: pages updated")
             binding.refresher.isRefreshing = false
         }
-        collectWithViewLifecycle(binding.refresher.refreshRequestFlow()) {
+        collectWhenViewResumed(binding.refresher.refreshRequestFlow()) {
             Timber.v("setupRecipeAdapter: received refresh request")
-            adapter.refresh()
+            recipesAdapter.refresh()
         }
     }
 

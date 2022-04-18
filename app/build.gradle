@@ -14,8 +14,8 @@ android {
         applicationId "gq.kirmanak.mealient"
         minSdk 23
         targetSdk 31
-        versionCode 10
-        versionName "0.2.1"
+        versionCode 11
+        versionName "0.2.2"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -148,8 +148,15 @@ dependencies {
     // https://github.com/Kotlin/kotlinx-datetime/releases
     implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.3.1"
 
-    // https://github.com/square/picasso/releases
-    implementation "com.squareup.picasso:picasso:2.8"
+    // https://github.com/bumptech/glide/releases
+    def glide_version = "4.13.1"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
+    implementation("com.github.bumptech.glide:recyclerview-integration:$glide_version") {
+        // Excludes the support library because it's already included by Glide.
+        transitive = false
+    }
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     // https://github.com/androidbroadcast/ViewBindingPropertyDelegate/releases
     implementation "com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6"

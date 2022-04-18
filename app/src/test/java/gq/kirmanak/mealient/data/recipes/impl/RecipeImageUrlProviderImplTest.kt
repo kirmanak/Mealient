@@ -2,7 +2,6 @@ package gq.kirmanak.mealient.data.recipes.impl
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
-import gq.kirmanak.mealient.ui.images.ImageLoader
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -12,19 +11,17 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class RecipeImageLoaderImplTest {
-    lateinit var subject: RecipeImageLoaderImpl
+class RecipeImageUrlProviderImplTest {
+
+    lateinit var subject: RecipeImageUrlProvider
 
     @MockK
     lateinit var baseURLStorage: BaseURLStorage
 
-    @MockK
-    lateinit var imageLoader: ImageLoader
-
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = RecipeImageLoaderImpl(imageLoader, baseURLStorage)
+        subject = RecipeImageUrlProviderImpl(baseURLStorage)
         prepareBaseURL("https://google.com/")
     }
 
