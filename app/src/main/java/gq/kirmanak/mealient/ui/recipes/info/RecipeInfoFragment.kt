@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.FragmentRecipeInfoBinding
-import gq.kirmanak.mealient.ui.recipes.RecipeImageLoader
+import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -46,7 +46,6 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
         with(binding) {
             ingredientsList.adapter = ingredientsAdapter
             instructionsList.adapter = instructionsAdapter
-            recipeImageLoader.loadRecipeImage(image, arguments.recipeSlug)
         }
 
         with(viewModel) {
@@ -60,6 +59,7 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
         ingredientsHolder.isVisible = uiState.areIngredientsVisible
         instructionsGroup.isVisible = uiState.areInstructionsVisible
         uiState.recipeInfo?.let {
+            recipeImageLoader.loadRecipeImage(image, it.recipeSummaryEntity)
             title.text = it.recipeSummaryEntity.name
             description.text = it.recipeSummaryEntity.description
             ingredientsAdapter.submitList(it.recipeIngredients)

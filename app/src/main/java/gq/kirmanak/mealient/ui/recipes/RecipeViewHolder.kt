@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.ViewHolderRecipeBinding
+import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import timber.log.Timber
 
 class RecipeViewHolder(
@@ -18,7 +19,7 @@ class RecipeViewHolder(
     fun bind(item: RecipeSummaryEntity?) {
         Timber.v("bind() called with: item = $item")
         binding.name.text = item?.name ?: loadingPlaceholder
-        recipeImageLoader.loadRecipeImage(binding.image, item?.slug)
+        recipeImageLoader.loadRecipeImage(binding.image, item)
         item?.let { entity ->
             binding.root.setOnClickListener {
                 Timber.d("bind: item clicked $entity")

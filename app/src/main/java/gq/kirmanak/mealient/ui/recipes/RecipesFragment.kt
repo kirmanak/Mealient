@@ -14,6 +14,8 @@ import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
+import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
+import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,6 +27,9 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     @Inject
     lateinit var recipeImageLoader: RecipeImageLoader
+
+    @Inject
+    lateinit var recipePreloaderFactory: RecipePreloaderFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,19 +50,22 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private fun setupRecipeAdapter() {
         Timber.v("setupRecipeAdapter() called")
-        val adapter = RecipesPagingAdapter(recipeImageLoader, ::navigateToRecipeInfo)
-        binding.recipes.adapter = adapter
+        val recipesAdapter = RecipesPagingAdapter(recipeImageLoader, ::navigateToRecipeInfo)
+        with(binding.recipes) {
+            adapter = recipesAdapter
+            addOnScrollListener(recipePreloaderFactory.create(recipesAdapter))
+        }
         collectWhenViewResumed(viewModel.pagingData) {
             Timber.v("setupRecipeAdapter: received data update")
-            adapter.submitData(lifecycle, it)
+            recipesAdapter.submitData(lifecycle, it)
         }
-        collectWhenViewResumed(adapter.onPagesUpdatedFlow) {
+        collectWhenViewResumed(recipesAdapter.onPagesUpdatedFlow) {
             Timber.v("setupRecipeAdapter: pages updated")
             binding.refresher.isRefreshing = false
         }
         collectWhenViewResumed(binding.refresher.refreshRequestFlow()) {
             Timber.v("setupRecipeAdapter: received refresh request")
-            adapter.refresh()
+            recipesAdapter.refresh()
         }
     }
 

@@ -1,18 +1,20 @@
-package gq.kirmanak.mealient.ui.images
+package gq.kirmanak.mealient.di
 
+import com.bumptech.glide.load.model.ModelLoaderFactory
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import gq.kirmanak.mealient.di.AUTH_OK_HTTP
+import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import okhttp3.OkHttpClient
+import java.io.InputStream
 import javax.inject.Named
-import javax.inject.Singleton
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface GlideModuleEntryPoint {
 
-    @Singleton
     @Named(AUTH_OK_HTTP)
     fun provideOkHttp(): OkHttpClient
+
+    fun provideRecipeLoaderFactory(): ModelLoaderFactory<RecipeSummaryEntity, InputStream>
 }

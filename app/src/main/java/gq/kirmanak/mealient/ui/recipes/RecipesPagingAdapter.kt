@@ -6,12 +6,14 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.ViewHolderRecipeBinding
+import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import timber.log.Timber
 
 class RecipesPagingAdapter(
     private val recipeImageLoader: RecipeImageLoader,
     private val clickListener: (RecipeSummaryEntity) -> Unit
 ) : PagingDataAdapter<RecipeSummaryEntity, RecipeViewHolder>(RecipeDiffCallback) {
+
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
