@@ -17,7 +17,13 @@ buildscript {
 
     dependencies {
         // https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath "com.android.tools.build:gradle:7.2.1"
+        // https://developers.google.com/android/guides/google-services-plugin
+        classpath "com.google.gms:google-services:4.3.10"
+        // https://mvnrepository.com/artifact/com.google.firebase/firebase-crashlytics-gradle
+        classpath "com.google.firebase:firebase-crashlytics-gradle:2.8.1"
+        // https://mvnrepository.com/artifact/com.google.firebase/perf-plugin
+        classpath "com.google.firebase:perf-plugin:1.4.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"

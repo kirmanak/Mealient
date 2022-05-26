@@ -5,6 +5,9 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
     id 'dagger.hilt.android.plugin'
     id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.firebase.firebase-perf'
 }
 
 android {
@@ -177,6 +180,12 @@ dependencies {
 
     // https://developer.android.com/jetpack/androidx/releases/security
     implementation "androidx.security:security-crypto:1.0.0"
+
+    // https://mvnrepository.com/artifact/com.google.firebase/firebase-bom?repo=google
+    implementation platform("com.google.firebase:firebase-bom:30.0.2")
+    implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation "com.google.firebase:firebase-crashlytics-ktx"
+    implementation "com.google.firebase:firebase-perf-ktx"
 
     // https://github.com/junit-team/junit4/releases
     testImplementation "junit:junit:4.13.2"
