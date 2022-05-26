@@ -55,3 +55,8 @@ sonarqube {
 rootCoverage {
     generateXml true
 }
+
+ext {
+    // https://github.com/protocolbuffers/protobuf/releases
+    protobuf_version = "3.21.1"
+}

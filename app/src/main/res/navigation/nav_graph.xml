@@ -22,6 +22,9 @@
 		<action
 			android:id="@+id/action_recipesFragment_to_recipeInfoFragment"
 			app:destination="@id/recipeInfoFragment" />
+		<deepLink
+			android:id="@+id/deepLink"
+			app:uri="mealient://recipe/list" />
 	</fragment>
 	<dialog
 		android:id="@+id/recipeInfoFragment"
@@ -77,5 +80,14 @@
 			app:destination="@id/recipesFragment"
 			app:popUpTo="@id/nav_graph"
 			app:popUpToInclusive="true" />
+	</fragment>
+	<fragment
+		android:id="@+id/addRecipeFragment"
+		android:name="gq.kirmanak.mealient.ui.add.AddRecipeFragment"
+		android:label="fragment_add_recipe"
+		tools:layout="@layout/fragment_add_recipe">
+		<deepLink
+			android:id="@+id/deepLink"
+			app:uri="mealient://recipe/add" />
 	</fragment>
 </navigation>

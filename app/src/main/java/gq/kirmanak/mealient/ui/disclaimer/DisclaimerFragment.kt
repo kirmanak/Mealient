@@ -50,6 +50,8 @@ class DisclaimerFragment : Fragment(R.layout.fragment_disclaimer) {
             binding.okay.isClickable = it == 0
         }
         viewModel.startCountDown()
-        activityViewModel.updateUiState { it.copy(loginButtonVisible = false, titleVisible = true) }
+        activityViewModel.updateUiState {
+            it.copy(loginButtonVisible = false, titleVisible = true, navigationVisible = false)
+        }
     }
 }

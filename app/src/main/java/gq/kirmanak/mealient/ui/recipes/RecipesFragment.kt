@@ -34,7 +34,9 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
-        activityViewModel.updateUiState { it.copy(loginButtonVisible = true, titleVisible = false) }
+        activityViewModel.updateUiState {
+            it.copy(loginButtonVisible = true, titleVisible = false, navigationVisible = true)
+        }
         setupRecipeAdapter()
     }
 

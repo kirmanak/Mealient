@@ -9,6 +9,8 @@ plugins {
     id 'com.google.firebase.crashlytics'
     // https://plugins.gradle.org/plugin/com.guardsquare.appsweep
     id "com.guardsquare.appsweep" version "1.0.0"
+    // https://github.com/google/protobuf-gradle-plugin/releases
+    id "com.google.protobuf" version "0.8.18"
 }
 
 android {
@@ -175,7 +177,11 @@ dependencies {
     implementation "com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6"
 
     // https://developer.android.com/jetpack/androidx/releases/datastore
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    def datastore_version = "1.0.0"
+    implementation "androidx.datastore:datastore-preferences:$datastore_version"
+    implementation "androidx.datastore:datastore:$datastore_version"
+
+    implementation "com.google.protobuf:protobuf-javalite:$protobuf_version"
 
     // https://developer.android.com/jetpack/androidx/releases/security
     implementation "androidx.security:security-crypto:1.0.0"
@@ -219,4 +225,20 @@ dependencies {
 
     // https://github.com/ChuckerTeam/chucker/releases
     debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobuf_version"
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+            }
+        }
+    }
 }

@@ -3,8 +3,7 @@ package gq.kirmanak.mealient.data.baseurl.impl
 import gq.kirmanak.mealient.data.baseurl.VersionDataSource
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.data.network.ServiceFactory
-import gq.kirmanak.mealient.extensions.mapToNetworkError
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.extensions.logAndMapErrors
 import gq.kirmanak.mealient.extensions.versionInfo
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,12 +18,10 @@ class VersionDataSourceImpl @Inject constructor(
         Timber.v("getVersionInfo() called with: baseUrl = $baseUrl")
 
         val service = serviceFactory.provideService(baseUrl)
-        val response = runCatchingExceptCancel {
-            service.getVersion()
-        }.getOrElse {
-            Timber.e(it, "getVersionInfo: can't request version")
-            throw it.mapToNetworkError()
-        }
+        val response = logAndMapErrors(
+            block = { service.getVersion() },
+            logProvider = { "getVersionInfo: can't request version" }
+        )
 
         return response.versionInfo()
     }

@@ -23,3 +23,9 @@ fun Throwable.mapToNetworkError(): NetworkError = when (this) {
     is HttpException, is SerializationException -> NetworkError.NotMealie(this)
     else -> NetworkError.NoServerConnection(this)
 }
+
+inline fun <T> logAndMapErrors(block: () -> T, logProvider: () -> String): T =
+    runCatchingExceptCancel(block).getOrElse {
+        Timber.e(it, logProvider())
+        throw it.mapToNetworkError()
+    }
