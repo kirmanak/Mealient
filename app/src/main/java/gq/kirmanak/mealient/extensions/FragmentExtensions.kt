@@ -4,11 +4,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.FlowCollector
 
-inline fun <T> Fragment.collectWhenViewResumed(
+fun <T> Fragment.collectWhenViewResumed(
     flow: Flow<T>,
-    crossinline collector: suspend (T) -> Unit,
+    collector: FlowCollector<T>,
 ) = launchWhenViewResumed { flow.collect(collector) }
 
 fun Fragment.launchWhenViewResumed(
