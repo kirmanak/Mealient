@@ -216,4 +216,7 @@ dependencies {
 
     // https://github.com/square/leakcanary/releases
     debugImplementation "com.squareup.leakcanary:leakcanary-android:2.9.1"
+
+    // https://github.com/ChuckerTeam/chucker/releases
+    debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
 }

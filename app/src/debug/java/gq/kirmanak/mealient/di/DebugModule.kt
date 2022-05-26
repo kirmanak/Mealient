@@ -1,6 +1,9 @@
 package gq.kirmanak.mealient.di
 
 import android.content.Context
+import com.chuckerteam.chucker.api.ChuckerCollector
+import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.chuckerteam.chucker.api.RetentionManager
 import com.facebook.flipper.core.FlipperPlugin
 import com.facebook.flipper.plugins.databases.DatabasesFlipperPlugin
 import com.facebook.flipper.plugins.inspector.DescriptorMapping
@@ -36,6 +39,21 @@ object DebugModule {
             else -> HttpLoggingInterceptor.Level.BASIC
         }
         return interceptor
+    }
+
+    @Provides
+    @Singleton
+    @IntoSet
+    fun provideChuckerInterceptor(@ApplicationContext context: Context): Interceptor {
+        val collector = ChuckerCollector(
+            context = context,
+            showNotification = true,
+            retentionPeriod = RetentionManager.Period.ONE_HOUR,
+        )
+        return ChuckerInterceptor.Builder(context)
+            .collector(collector)
+            .alwaysReadResponseBody(true)
+            .build()
     }
 
     @Provides
