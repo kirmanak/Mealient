@@ -58,26 +58,36 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     buildFeatures {
         viewBinding true
     }
+
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
     }
+
     lint {
         disable 'ObsoleteLintCustomCheck', 'IconMissingDensityFolder'
         enable 'ConvertToWebp', 'DuplicateStrings', 'EasterEgg', 'ExpensiveAssertion', 'IconExpectedSize', 'ImplicitSamInstance', 'InvalidPackage', 'KotlinPropertyAccess', 'LambdaLast', 'MinSdkTooLow', 'NegativeMargin', 'NoHardKeywords', 'Registered', 'RequiredSize', 'UnknownNullness', 'WrongThreadInterprocedural'
     }
+
     namespace 'gq.kirmanak.mealient'
+
+    packagingOptions {
+        resources.excludes += "DebugProbesKt.bin"
+    }
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
