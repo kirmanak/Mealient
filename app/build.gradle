@@ -8,12 +8,12 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         applicationId "gq.kirmanak.mealient"
         minSdk 23
-        targetSdk 31
+        targetSdk 32
         versionCode 11
         versionName "0.2.2"
 
@@ -58,24 +58,35 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     buildFeatures {
         viewBinding true
     }
-    lintOptions {
-        disable 'ObsoleteLintCustomCheck', 'IconMissingDensityFolder'
-        enable 'ConvertToWebp', 'DuplicateStrings', 'EasterEgg', 'ExpensiveAssertion', 'IconExpectedSize', 'ImplicitSamInstance', 'InvalidPackage', 'KotlinPropertyAccess', 'LambdaLast', 'MinSdkTooLow', 'NegativeMargin', 'NoHardKeywords', 'Registered', 'RequiredSize', 'UnknownNullness', 'WrongThreadInterprocedural'
-    }
+
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
+    }
+
+    lint {
+        disable 'ObsoleteLintCustomCheck', 'IconMissingDensityFolder'
+        enable 'ConvertToWebp', 'DuplicateStrings', 'EasterEgg', 'ExpensiveAssertion', 'IconExpectedSize', 'ImplicitSamInstance', 'InvalidPackage', 'KotlinPropertyAccess', 'LambdaLast', 'MinSdkTooLow', 'NegativeMargin', 'NoHardKeywords', 'Registered', 'RequiredSize', 'UnknownNullness', 'WrongThreadInterprocedural'
+    }
+
+    namespace 'gq.kirmanak.mealient'
+
+    packagingOptions {
+        resources.excludes += "DebugProbesKt.bin"
     }
 }
 
@@ -87,7 +98,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 
 dependencies {
     // https://github.com/material-components/material-components-android
-    implementation "com.google.android.material:material:1.5.0"
+    implementation "com.google.android.material:material:1.6.0"
 
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
@@ -100,7 +111,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.4.1"
 
     // https://developer.android.com/jetpack/androidx/releases/constraintlayout
-    implementation "androidx.constraintlayout:constraintlayout:2.1.3"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
 
     // https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
@@ -127,7 +138,7 @@ dependencies {
     debugImplementation "com.squareup.okhttp3:logging-interceptor"
 
     // https://github.com/Kotlin/kotlinx.serialization/releases
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3"
 
     // https://github.com/JakeWharton/timber/releases
     implementation 'com.jakewharton.timber:timber:5.0.1'
@@ -146,10 +157,10 @@ dependencies {
     testImplementation "androidx.room:room-testing:$room_version"
 
     // https://github.com/Kotlin/kotlinx-datetime/releases
-    implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.3.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.3.3"
 
     // https://github.com/bumptech/glide/releases
-    def glide_version = "4.13.1"
+    def glide_version = "4.13.2"
     implementation "com.github.bumptech.glide:glide:$glide_version"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide_version"
     implementation("com.github.bumptech.glide:recyclerview-integration:$glide_version") {
@@ -161,20 +172,22 @@ dependencies {
     // https://github.com/androidbroadcast/ViewBindingPropertyDelegate/releases
     implementation "com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6"
 
-    // https://developer.android.com/topic/libraries/architecture/datastore
+    // https://developer.android.com/jetpack/androidx/releases/datastore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
-    // https://developer.android.com/topic/security/data#include-library
+    // https://developer.android.com/jetpack/androidx/releases/security
     implementation "androidx.security:security-crypto:1.0.0"
 
     // https://github.com/junit-team/junit4/releases
     testImplementation "junit:junit:4.13.2"
 
     // https://github.com/Kotlin/kotlinx.coroutines/releases
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
+    def coroutines_version = "1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
 
     // https://github.com/robolectric/robolectric/releases
-    testImplementation "org.robolectric:robolectric:4.7.3"
+    testImplementation "org.robolectric:robolectric:4.8.1"
 
     // https://developer.android.com/jetpack/androidx/releases/test
     testImplementation "androidx.test.ext:junit-ktx:1.1.3"
@@ -183,10 +196,10 @@ dependencies {
     testImplementation "com.google.truth:truth:1.1.3"
 
     // https://mockk.io/
-    testImplementation "io.mockk:mockk:1.12.3"
+    testImplementation "io.mockk:mockk:1.12.4"
 
     // https://github.com/facebook/flipper/releases
-    def flipper_version = "0.140.0"
+    def flipper_version = "0.147.0"
     debugImplementation "com.facebook.flipper:flipper:$flipper_version"
     debugImplementation "com.facebook.flipper:flipper-leakcanary2-plugin:$flipper_version"
     debugImplementation "com.facebook.flipper:flipper-network-plugin:$flipper_version"
@@ -195,6 +208,6 @@ dependencies {
     debugImplementation "com.facebook.soloader:soloader:0.10.3"
 
     // https://github.com/square/leakcanary/releases
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.8.1"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.9.1"
 
 }
