@@ -17,7 +17,7 @@ buildscript {
 
     dependencies {
         // https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-        classpath "com.android.tools.build:gradle:7.1.3"
+        classpath 'com.android.tools.build:gradle:7.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
