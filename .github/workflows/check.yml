@@ -10,16 +10,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Android SDK Tools
-        uses: android-actions/setup-android@v2
-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'gradle'
-
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
