@@ -8,7 +8,8 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
-    id "org.sonarqube" version "3.3"
+    // https://plugins.gradle.org/plugin/com.guardsquare.appsweep
+    id "com.guardsquare.appsweep" version "1.0.0"
 }
 
 android {
@@ -61,15 +62,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
     }
 
     buildFeatures {
