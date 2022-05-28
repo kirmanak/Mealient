@@ -31,6 +31,13 @@ buildscript {
     }
 }
 
+plugins {
+    // https://plugins.gradle.org/plugin/org.sonarqube
+    id "org.sonarqube" version "3.3"
+    // https://github.com/Guardsquare/appsweep-gradle/releases
+    id "com.guardsquare.appsweep" version "1.0.0"
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
