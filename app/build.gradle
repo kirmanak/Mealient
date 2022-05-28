@@ -227,5 +227,6 @@ sonarqube {
         property "sonar.projectKey", "kirmanak_Mealient"
         property "sonar.organization", "kirmanak"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.androidLint.reportPaths", "**/build/reports/lint-results-*.xml"
     }
 }
