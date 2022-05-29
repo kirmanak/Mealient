@@ -54,6 +54,7 @@ android {
         debug {
             minifyEnabled true
             shrinkResources true
+            testCoverageEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules-debug.pro'
         }
         release {
@@ -211,5 +212,4 @@ dependencies {
 
     // https://github.com/square/leakcanary/releases
     debugImplementation "com.squareup.leakcanary:leakcanary-android:2.9.1"
-
 }
