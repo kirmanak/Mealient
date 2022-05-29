@@ -34,6 +34,8 @@ buildscript {
 plugins {
     // https://plugins.gradle.org/plugin/org.sonarqube
     id "org.sonarqube" version "3.3"
+    // https://plugins.gradle.org/plugin/com.vanniktech.android.junit.jacoco
+    id 'com.vanniktech.android.junit.jacoco' version "0.16.0"
 }
 
 task clean(type: Delete) {
@@ -47,4 +49,9 @@ sonarqube {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.androidLint.reportPaths", "build/reports/lint-results-debug.xml"
     }
+}
+
+junitJacoco {
+    // https://github.com/jacoco/jacoco/releases
+    jacocoVersion = '0.8.8'
 }
