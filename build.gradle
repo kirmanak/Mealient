@@ -34,6 +34,8 @@ buildscript {
 plugins {
     // https://plugins.gradle.org/plugin/org.sonarqube
     id "org.sonarqube" version "3.3"
+    // https://plugins.gradle.org/plugin/nl.neotech.plugin.rootcoverage
+    id "nl.neotech.plugin.rootcoverage" version "1.5.1"
 }
 
 task clean(type: Delete) {
@@ -47,4 +49,8 @@ sonarqube {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.androidLint.reportPaths", "build/reports/lint-results-debug.xml"
     }
+}
+
+rootCoverage {
+    includeNoLocationClasses true
 }
