@@ -198,15 +198,6 @@ dependencies {
     // https://mockk.io/
     testImplementation "io.mockk:mockk:1.12.4"
 
-    // https://github.com/facebook/flipper/releases
-    def flipper_version = "0.147.0"
-    debugImplementation "com.facebook.flipper:flipper:$flipper_version"
-    debugImplementation "com.facebook.flipper:flipper-leakcanary2-plugin:$flipper_version"
-    debugImplementation "com.facebook.flipper:flipper-network-plugin:$flipper_version"
-
-    // https://github.com/facebook/SoLoader/releases
-    debugImplementation "com.facebook.soloader:soloader:0.10.3"
-
     // https://github.com/square/leakcanary/releases
     debugImplementation "com.squareup.leakcanary:leakcanary-android:2.9.1"
 }
