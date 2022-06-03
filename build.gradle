@@ -35,7 +35,7 @@ plugins {
     // https://plugins.gradle.org/plugin/org.sonarqube
     id "org.sonarqube" version "3.3"
     // https://plugins.gradle.org/plugin/nl.neotech.plugin.rootcoverage
-    id "nl.neotech.plugin.rootcoverage" version "1.5.1"
+    id "nl.neotech.plugin.rootcoverage" version "1.5.2"
 }
 
 task clean(type: Delete) {
