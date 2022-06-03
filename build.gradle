@@ -50,7 +50,3 @@ sonarqube {
         property "sonar.androidLint.reportPaths", "build/reports/lint-results-debug.xml"
     }
 }
-
-rootCoverage {
-    includeNoLocationClasses true
-}
