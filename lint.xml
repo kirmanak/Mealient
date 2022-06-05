@@ -2,5 +2,7 @@
 <lint>
     <issue id="InvalidPackage">
         <ignore regexp="kotlinx.coroutines.debug.AgentPremain" />
+        <ignore regexp="java.lang.management" />
+        <ignore regexp="javax.management" />
     </issue>
 </lint>

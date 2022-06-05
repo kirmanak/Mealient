@@ -34,6 +34,8 @@ buildscript {
 plugins {
     // https://plugins.gradle.org/plugin/org.sonarqube
     id "org.sonarqube" version "3.3"
+    // https://plugins.gradle.org/plugin/nl.neotech.plugin.rootcoverage
+    id "nl.neotech.plugin.rootcoverage" version "1.5.2"
 }
 
 task clean(type: Delete) {
@@ -46,5 +48,10 @@ sonarqube {
         property "sonar.organization", "kirmanak"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.androidLint.reportPaths", "build/reports/lint-results-debug.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco.xml"
     }
+}
+
+rootCoverage {
+    generateXml true
 }
