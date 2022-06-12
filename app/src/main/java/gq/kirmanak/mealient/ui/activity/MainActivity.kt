@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -27,14 +28,30 @@ class MainActivity : AppCompatActivity() {
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.setIcon(R.drawable.ic_toolbar)
+        binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar)
+        binding.toolbar.setNavigationOnClickListener { binding.drawer.open() }
         setToolbarRoundCorner()
         viewModel.uiStateLive.observe(this, ::onUiStateChange)
+        binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
+    }
+
+    private fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        Timber.v("onNavigationItemSelected() called with: menuItem = $menuItem")
+        menuItem.isChecked = true
+        val deepLink = when (menuItem.itemId) {
+            R.id.add_recipe -> ADD_RECIPE_DEEP_LINK
+            R.id.recipes_list -> RECIPES_LIST_DEEP_LINK
+            else -> throw IllegalArgumentException("Unknown menu item id: ${menuItem.itemId}")
+        }
+        navigateDeepLink(deepLink)
+        binding.drawer.close()
+        return true
     }
 
     private fun onUiStateChange(uiState: MainActivityUiState) {
         Timber.v("onUiStateChange() called with: uiState = $uiState")
         supportActionBar?.title = if (uiState.titleVisible) title else null
+        binding.navigationView.isVisible = uiState.navigationVisible
         invalidateOptionsMenu()
     }
 
@@ -49,8 +66,7 @@ class MainActivity : AppCompatActivity() {
         for (drawable in drawables) {
             drawable?.apply {
                 shapeAppearanceModel = shapeAppearanceModel.toBuilder()
-                    .setBottomLeftCorner(CornerFamily.ROUNDED, radius)
-                    .build()
+                    .setBottomLeftCorner(CornerFamily.ROUNDED, radius).build()
             }
         }
     }
@@ -67,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         Timber.v("onOptionsItemSelected() called with: item = $item")
         val result = when (item.itemId) {
             R.id.login -> {
-                navigateToLogin()
+                navigateDeepLink(AUTH_DEEP_LINK)
                 true
             }
             R.id.logout -> {
@@ -79,8 +95,14 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    private fun navigateToLogin() {
-        Timber.v("navigateToLogin() called")
-        findNavController(binding.navHost.id).navigate("mealient://authenticate".toUri())
+    private fun navigateDeepLink(deepLink: String) {
+        Timber.v("navigateDeepLink() called with: deepLink = $deepLink")
+        findNavController(binding.navHost.id).navigate(deepLink.toUri())
+    }
+
+    companion object {
+        private const val AUTH_DEEP_LINK = "mealient://authenticate"
+        private const val ADD_RECIPE_DEEP_LINK = "mealient://recipe/add"
+        private const val RECIPES_LIST_DEEP_LINK = "mealient://recipe/list"
     }
 }

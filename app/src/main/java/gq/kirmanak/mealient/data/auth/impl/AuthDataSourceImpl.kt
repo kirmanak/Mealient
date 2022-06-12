@@ -6,8 +6,7 @@ import gq.kirmanak.mealient.data.network.NetworkError.NotMealie
 import gq.kirmanak.mealient.data.network.NetworkError.Unauthorized
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.extensions.decodeErrorBodyOrNull
-import gq.kirmanak.mealient.extensions.mapToNetworkError
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.extensions.logAndMapErrors
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import retrofit2.Response
@@ -34,12 +33,10 @@ class AuthDataSourceImpl @Inject constructor(
         authService: AuthService,
         username: String,
         password: String
-    ): Response<GetTokenResponse> = runCatchingExceptCancel {
-        authService.getToken(username, password)
-    }.getOrElse {
-        Timber.e(it, "sendRequest: can't request token")
-        throw it.mapToNetworkError()
-    }
+    ): Response<GetTokenResponse> = logAndMapErrors(
+        block = { authService.getToken(username = username, password = password) },
+        logProvider = { "sendRequest: can't get token" },
+    )
 
     private fun parseToken(
         response: Response<GetTokenResponse>

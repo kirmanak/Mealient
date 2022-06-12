@@ -15,7 +15,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.ChannelResult
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.onClosed
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@OptIn(ExperimentalCoroutinesApi::class)
 fun SwipeRefreshLayout.refreshRequestFlow(): Flow<Unit> = callbackFlow {
     Timber.v("refreshRequestFlow() called")
     val listener = SwipeRefreshLayout.OnRefreshListener {
@@ -67,7 +65,6 @@ fun AppCompatActivity.setActionBarVisibility(isVisible: Boolean) {
         ?: Timber.w("setActionBarVisibility: action bar is null")
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 fun TextView.textChangesFlow(): Flow<CharSequence?> = callbackFlow {
     Timber.v("textChangesFlow() called")
     val textWatcher = doAfterTextChanged {
@@ -109,7 +106,6 @@ suspend fun EditText.waitUntilNotEmpty() {
     Timber.v("waitUntilNotEmpty() returned")
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 fun <T> SharedPreferences.prefsChangeFlow(
     valueReader: SharedPreferences.() -> T,
 ): Flow<T> = callbackFlow {

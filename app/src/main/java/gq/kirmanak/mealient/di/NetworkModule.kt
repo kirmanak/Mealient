@@ -45,5 +45,6 @@ object NetworkModule {
     fun createJson(): Json = Json {
         coerceInputValues = true
         ignoreUnknownKeys = true
+        encodeDefaults = true
     }
 }

@@ -22,4 +22,20 @@
 	<string name="fragment_base_url_malformed_url">Проверьте формат URL: %s</string>
 	<string name="fragment_base_url_save">Продолжить</string>
 	<string name="menu_main_toolbar_login">Войти</string>
+	<string name="fragment_add_recipe_recipe_name">Название рецепта</string>
+	<string name="fragment_add_recipe_recipe_description">Описание</string>
+	<string name="menu_bottom_navigation_recipes_list">Рецепты</string>
+	<string name="menu_bottom_navigation_add_recipe">Добавить рецепт</string>
+	<string name="fragment_add_recipe_recipe_yield">Количество порций</string>
+	<string name="fragment_add_recipe_save_button">Сохранить рецепт</string>
+	<string name="fragment_add_recipe_new_instruction">Добавить шаг</string>
+	<string name="fragment_add_recipe_new_ingredient">Добавить ингредиент</string>
+	<string name="fragment_add_recipe_public_recipe">Публичный рецепт</string>
+	<string name="fragment_add_recipe_disable_comments">Отключить комментарии</string>
+	<string name="fragment_add_recipe_ingredient_hint">Ингредиент</string>
+	<string name="fragment_add_recipe_instruction_hint">Описание шага</string>
+	<string name="fragment_add_recipe_name_error">Имя рецепта не может быть пустым</string>
+	<string name="fragment_add_recipe_save_error">Что-то пошло не так</string>
+	<string name="fragment_add_recipe_save_success">Рецепт сохранен успешно</string>
+	<string name="fragment_add_recipe_clear_button">Очистить</string>
 </resources>

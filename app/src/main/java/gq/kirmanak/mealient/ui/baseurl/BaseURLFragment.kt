@@ -28,7 +28,9 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
         Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
         binding.button.setOnClickListener(::onProceedClick)
         viewModel.uiState.observe(viewLifecycleOwner, ::onUiStateChange)
-        activityViewModel.updateUiState { it.copy(loginButtonVisible = false, titleVisible = true) }
+        activityViewModel.updateUiState {
+            it.copy(loginButtonVisible = false, titleVisible = true, navigationVisible = false)
+        }
     }
 
     private fun onProceedClick(view: View) {
