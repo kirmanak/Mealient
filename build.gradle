@@ -1,14 +1,6 @@
 buildscript {
-    ext {
-        // https://developer.android.com/jetpack/androidx/releases/navigation
-        nav_version = "2.4.2"
 
-        // https://dagger.dev/hilt/gradle-setup
-        hilt_version = "2.42"
-
-        // https://kotlinlang.org/docs/gradle.html
-        kotlin_version = "1.6.21"
-    }
+    apply from: "./gradle/versions.gradle"
 
     repositories {
         google()
@@ -16,14 +8,9 @@ buildscript {
     }
 
     dependencies {
-        // https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-        classpath "com.android.tools.build:gradle:7.2.1"
-        // https://developers.google.com/android/guides/google-services-plugin
-        classpath "com.google.gms:google-services:4.3.10"
-        // https://mvnrepository.com/artifact/com.google.firebase/firebase-crashlytics-gradle
-        classpath "com.google.firebase:firebase-crashlytics-gradle:2.8.1"
-        // https://mvnrepository.com/artifact/com.google.firebase/perf-plugin
-        classpath "com.google.firebase:perf-plugin:1.4.1"
+        classpath "com.android.tools.build:gradle:$android_plugin_version"
+        classpath "com.google.gms:google-services:$google_services_version"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:$crashlytics_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
@@ -32,10 +19,8 @@ buildscript {
 }
 
 plugins {
-    // https://plugins.gradle.org/plugin/org.sonarqube
-    id "org.sonarqube" version "3.3"
-    // https://plugins.gradle.org/plugin/nl.neotech.plugin.rootcoverage
-    id "nl.neotech.plugin.rootcoverage" version "1.5.2"
+    id "org.sonarqube" version "$sonarqube_version"
+    id "nl.neotech.plugin.rootcoverage" version "$root_coverage_version"
 }
 
 task clean(type: Delete) {
@@ -54,9 +39,4 @@ sonarqube {
 
 rootCoverage {
     generateXml true
-}
-
-ext {
-    // https://github.com/protocolbuffers/protobuf/releases
-    protobuf_version = "3.21.1"
 }

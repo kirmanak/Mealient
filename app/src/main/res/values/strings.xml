@@ -26,8 +26,6 @@
 	<string name="fragment_authentication_password_input_empty">Password can\'t be empty</string>
 	<string name="fragment_authentication_credentials_incorrect">E-mail or password is incorrect.</string>
 	<string name="fragment_authentication_unknown_error">Something went wrong, please try again.</string>
-	<string name="account_type" translatable="false">Mealient</string>
-	<string name="auth_token_type" translatable="false">mealientAuthToken</string>
 	<string name="fragment_add_recipe_recipe_name">Recipe name</string>
 	<string name="fragment_add_recipe_recipe_description">Description</string>
 	<string name="menu_bottom_navigation_add_recipe">Add recipe</string>
