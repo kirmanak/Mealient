@@ -20,6 +20,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+### Keep Protobuf classes https://github.com/protocolbuffers/protobuf/issues/6463#issuecomment-632884075 ###
+-keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
+### Keep Protobuf classes https://github.com/protocolbuffers/protobuf/issues/6463#issuecomment-632884075 ###
+
 ### Remove logging https://www.guardsquare.com/manual/configuration/examples#logging ###
 -assumenosideeffects class android.util.Log {
     public static int v(...);
