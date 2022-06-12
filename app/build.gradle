@@ -29,7 +29,6 @@ android {
             }
         }
 
-        buildConfigField "Boolean", "DEBUG_PICASSO", "false"
         buildConfigField "Boolean", "LOG_NETWORK", "false"
     }
 
