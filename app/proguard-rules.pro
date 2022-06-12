@@ -19,7 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--dontobfuscate
 
 ### Remove logging https://www.guardsquare.com/manual/configuration/examples#logging ###
 -assumenosideeffects class android.util.Log {
