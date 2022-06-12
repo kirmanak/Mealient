@@ -13,20 +13,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
-
       - name: Sign APK
         env:
           MEALIENT_KEY_STORE: ${{ secrets.MEALIENT_KEY_STORE }}
@@ -42,7 +28,7 @@ jobs:
           echo "storePassword=$MEALIENT_KEY_STORE_PASSWORD" >> keystore.properties
           echo "keyAlias=$MEALIENT_KEY_ALIAS" >> keystore.properties
           echo "keyPassword=$MEALIENT_KEY_PASSWORD" >> keystore.properties
-          ./gradlew build coverageReport sonarqube uploadToAppSweepRelease --no-daemon --no-configuration-cache
+          ./gradlew build coverageReport sonarqube uploadToAppSweepRelease --no-daemon --no-configuration-cache --no-build-cache
           cp app/build/outputs/apk/release/*.apk mealient-release.apk
 
       - name: Upload signed APK
