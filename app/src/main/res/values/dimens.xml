@@ -3,7 +3,6 @@
 	<dimen name="margin_small">8dp</dimen>
 	<dimen name="height_view_holder_recipe_image">182dp</dimen>
 	<dimen name="fragment_recipe_info_image_height">@dimen/height_view_holder_recipe_image</dimen>
-	<dimen name="bottom_padding_instructions_list_fragment_recipe_info">30dp</dimen>
 	<dimen name="main_activity_toolbar_corner_radius">32dp</dimen>
 	<dimen name="rounded_corner_size_default">15dp</dimen>
 </resources>
