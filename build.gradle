@@ -22,8 +22,6 @@ buildscript {
         classpath "com.google.gms:google-services:4.3.10"
         // https://mvnrepository.com/artifact/com.google.firebase/firebase-crashlytics-gradle
         classpath "com.google.firebase:firebase-crashlytics-gradle:2.8.1"
-        // https://mvnrepository.com/artifact/com.google.firebase/perf-plugin
-        classpath "com.google.firebase:perf-plugin:1.4.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
