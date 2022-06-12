@@ -53,10 +53,7 @@ android {
 
     buildTypes {
         debug {
-            minifyEnabled true
-            shrinkResources true
             testCoverageEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules-debug.pro'
         }
         release {
             minifyEnabled true
