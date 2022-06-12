@@ -20,8 +20,8 @@ android {
         applicationId "gq.kirmanak.mealient"
         minSdk 23
         targetSdk 32
-        versionCode 11
-        versionName "0.2.2"
+        versionCode 12
+        versionName "0.2.3"
 
         javaCompileOptions {
             annotationProcessorOptions {
