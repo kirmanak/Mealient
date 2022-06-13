@@ -87,6 +87,10 @@ android {
     packagingOptions {
         resources.excludes += "DebugProbesKt.bin"
     }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
@@ -96,6 +100,8 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 }
 
 dependencies {
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$desugar_version"
+
     implementation "com.google.android.material:material:$material_version"
 
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
