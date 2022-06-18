@@ -107,11 +107,6 @@ ext {
     // https://mockk.io/
     mockk_version = "1.12.4"
 
-    // https://github.com/facebook/flipper/releases
-    flipper_version = "0.149.0"
-    // https://github.com/facebook/SoLoader/releases
-    soloader_version = "0.10.3"
-
     // https://github.com/square/leakcanary/releases
     leakcanary_version = "2.9.1"
 

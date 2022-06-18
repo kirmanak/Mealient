@@ -181,12 +181,6 @@ dependencies {
 
     testImplementation "io.mockk:mockk:$mockk_version"
 
-    debugImplementation "com.facebook.flipper:flipper:$flipper_version"
-    debugImplementation "com.facebook.flipper:flipper-leakcanary2-plugin:$flipper_version"
-    debugImplementation "com.facebook.flipper:flipper-network-plugin:$flipper_version"
-
-    debugImplementation "com.facebook.soloader:soloader:$soloader_version"
-
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
 
     // https://github.com/ChuckerTeam/chucker/releases
