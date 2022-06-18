@@ -14,7 +14,7 @@ ext {
     kotlin_version = "1.6.21"
 
     // https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-    android_plugin_version = "7.2.1"
+    android_plugin_version = "7.4.0-alpha03"
 
     // https://developers.google.com/android/guides/google-services-plugin
     google_services_version = "4.3.10"
@@ -120,4 +120,10 @@ ext {
 
     // https://developer.android.com/studio/write/java8-support#library-desugaring
     desugar_version = "1.1.5"
+
+    // https://mvnrepository.com/artifact/androidx.test.espresso/espresso-core
+    espresso_version = "3.4.0"
+
+    // https://mvnrepository.com/artifact/androidx.test/runner
+    test_runner_version = "1.4.0"
 }

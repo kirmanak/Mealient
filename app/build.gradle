@@ -28,6 +28,8 @@ android {
         }
 
         buildConfigField "Boolean", "LOG_NETWORK", "false"
+
+        testInstrumentationRunner "gq.kirmanak.mealient.TestRunner"
     }
 
     signingConfigs {
@@ -191,6 +193,14 @@ dependencies {
 
     // https://github.com/ChuckerTeam/chucker/releases
     debugImplementation "com.github.chuckerteam.chucker:library:$chucker_version"
+
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+
+    androidTestImplementation "androidx.test:runner:$test_runner_version"
+    androidTestImplementation "androidx.test:rules:$test_runner_version"
+
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 }
 
 protobuf {
