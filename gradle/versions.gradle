@@ -11,7 +11,7 @@ ext {
     hilt_version = "2.42"
 
     // https://kotlinlang.org/docs/gradle.html
-    kotlin_version = "1.6.21"
+    kotlin_version = "1.6.10"
 
     // https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
     android_plugin_version = "7.2.1"
