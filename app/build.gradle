@@ -1,12 +1,12 @@
 plugins {
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'com.android.application'
-    id 'androidx.navigation.safeargs.kotlin'
-    id 'dagger.hilt.android.plugin'
-    id 'org.jetbrains.kotlin.plugin.serialization'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
+    id "kotlin-android"
+    id "kotlin-kapt"
+    id "com.android.application"
+    id "androidx.navigation.safeargs.kotlin"
+    id "dagger.hilt.android.plugin"
+    id "org.jetbrains.kotlin.plugin.serialization"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
     id "com.guardsquare.appsweep" version "$appsweep_version"
     id "com.google.protobuf" version "$protobuf_plugin_version"
 }
@@ -37,12 +37,12 @@ android {
                     def keystoreProperties = new Properties()
                     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
-                    keyAlias keystoreProperties['keyAlias']
-                    keyPassword keystoreProperties['keyPassword']
-                    storeFile file(keystoreProperties['storeFile'])
-                    storePassword keystoreProperties['storePassword']
+                    keyAlias keystoreProperties["keyAlias"]
+                    keyPassword keystoreProperties["keyPassword"]
+                    storeFile file(keystoreProperties["storeFile"])
+                    storePassword keystoreProperties["storePassword"]
                 } else {
-                    println 'Unable to read keystore.properties'
+                    println "Unable to read keystore.properties"
                 }
             }
         }
@@ -56,7 +56,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
         }
     }
@@ -71,18 +71,18 @@ android {
             all {
                 jacoco {
                     includeNoLocationClasses = true
-                    excludes = ['jdk.internal.*']
+                    excludes = ["jdk.internal.*"]
                 }
             }
         }
     }
 
     lint {
-        disable 'ObsoleteLintCustomCheck', 'IconMissingDensityFolder'
-        enable 'ConvertToWebp', 'DuplicateStrings', 'EasterEgg', 'ExpensiveAssertion', 'IconExpectedSize', 'ImplicitSamInstance', 'InvalidPackage', 'KotlinPropertyAccess', 'LambdaLast', 'MinSdkTooLow', 'NegativeMargin', 'NoHardKeywords', 'Registered', 'RequiredSize', 'UnknownNullness', 'WrongThreadInterprocedural'
+        disable "ObsoleteLintCustomCheck", "IconMissingDensityFolder"
+        enable "ConvertToWebp", "DuplicateStrings", "EasterEgg", "ExpensiveAssertion", "IconExpectedSize", "ImplicitSamInstance", "InvalidPackage", "KotlinPropertyAccess", "LambdaLast", "MinSdkTooLow", "NegativeMargin", "NoHardKeywords", "Registered", "RequiredSize", "UnknownNullness", "WrongThreadInterprocedural"
     }
 
-    namespace 'gq.kirmanak.mealient'
+    namespace "gq.kirmanak.mealient"
 
     packagingOptions {
         resources.excludes += "DebugProbesKt.bin"
@@ -196,7 +196,7 @@ protobuf {
         all().each { task ->
             task.builtins {
                 java {
-                    option 'lite'
+                    option "lite"
                 }
             }
         }
