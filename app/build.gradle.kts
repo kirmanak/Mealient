@@ -17,18 +17,18 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-    id("com.guardsquare.appsweep") version Dependencies.appsweep_version
-    id("com.google.protobuf") version Dependencies.protobuf_plugin_version
-    id("com.google.devtools.ksp") version Dependencies.ksp_plugin_version
+    id("com.guardsquare.appsweep") version Dependencies.appsweepVersion
+    id("com.google.protobuf") version Dependencies.protobufPluginVersion
+    id("com.google.devtools.ksp") version Dependencies.kspPluginVersion
 }
 
 android {
-    compileSdk = Dependencies.compile_sdk_version
+    compileSdk = Dependencies.compileSdkVersion
 
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
-        minSdk = Dependencies.min_sdk_version
-        targetSdk = Dependencies.target_sdk_version
+        minSdk = Dependencies.minSdkVersion
+        targetSdk = Dependencies.targetSdkVersion
         versionCode = 13
         versionName = "0.2.4"
 
@@ -130,96 +130,96 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Dependencies.desugar_version}")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Dependencies.desugarVersion}")
 
-    implementation("com.google.android.material:material:${Dependencies.material_version}")
+    implementation("com.google.android.material:material:${Dependencies.materialVersion}")
 
-    implementation("androidx.navigation:navigation-fragment-ktx:${Dependencies.nav_version}")
-    implementation("androidx.navigation:navigation-runtime-ktx:${Dependencies.nav_version}")
-    implementation("androidx.navigation:navigation-ui-ktx:${Dependencies.nav_version}")
+    implementation("androidx.navigation:navigation-fragment-ktx:${Dependencies.navVersion}")
+    implementation("androidx.navigation:navigation-runtime-ktx:${Dependencies.navVersion}")
+    implementation("androidx.navigation:navigation-ui-ktx:${Dependencies.navVersion}")
 
-    implementation("androidx.core:core-ktx:${Dependencies.core_ktx_version}")
+    implementation("androidx.core:core-ktx:${Dependencies.coreKtxVersion}")
 
-    implementation("androidx.appcompat:appcompat:${Dependencies.appcompat_version}")
+    implementation("androidx.appcompat:appcompat:${Dependencies.appcompatVersion}")
 
-    implementation("androidx.constraintlayout:constraintlayout:${Dependencies.contraint_layout_version}")
+    implementation("androidx.constraintlayout:constraintlayout:${Dependencies.contraintLayoutVersion}")
 
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:${Dependencies.swipe_refresh_layout_version}")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:${Dependencies.swipeRefreshLayoutVersion}")
 
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Dependencies.lifecycle_version}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Dependencies.lifecycle_version}")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Dependencies.lifecycleVersion}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Dependencies.lifecycleVersion}")
 
-    implementation("com.google.dagger:hilt-android:${Dependencies.hilt_version}")
-    kapt("com.google.dagger:hilt-compiler:${Dependencies.hilt_version}")
-    kaptTest("com.google.dagger:hilt-android-compiler:${Dependencies.hilt_version}")
-    testImplementation("com.google.dagger:hilt-android-testing:${Dependencies.hilt_version}")
+    implementation("com.google.dagger:hilt-android:${Dependencies.hiltVersion}")
+    kapt("com.google.dagger:hilt-compiler:${Dependencies.hiltVersion}")
+    kaptTest("com.google.dagger:hilt-android-compiler:${Dependencies.hiltVersion}")
+    testImplementation("com.google.dagger:hilt-android-testing:${Dependencies.hiltVersion}")
 
-    implementation("com.squareup.retrofit2:retrofit:${Dependencies.retrofit_version}")
+    implementation("com.squareup.retrofit2:retrofit:${Dependencies.retrofitVersion}")
 
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Dependencies.retrofit_kotlinx_serialization_version}")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Dependencies.retrofitKotlinxSerializationVersion}")
 
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:${Dependencies.okhttp_version}"))
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:${Dependencies.okhttpVersion}"))
     implementation("com.squareup.okhttp3:okhttp")
     debugImplementation("com.squareup.okhttp3:logging-interceptor")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Dependencies.kotlinx_serialization_version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Dependencies.kotlinxSerializationVersion}")
 
-    implementation("com.jakewharton.timber:timber:${Dependencies.timber_version}")
+    implementation("com.jakewharton.timber:timber:${Dependencies.timberVersion}")
 
-    implementation("androidx.paging:paging-runtime-ktx:${Dependencies.paging_version}")
-    testImplementation("androidx.paging:paging-common-ktx:${Dependencies.paging_version}")
+    implementation("androidx.paging:paging-runtime-ktx:${Dependencies.pagingVersion}")
+    testImplementation("androidx.paging:paging-common-ktx:${Dependencies.pagingVersion}")
 
-    implementation("androidx.room:room-runtime:${Dependencies.room_version}")
-    implementation("androidx.room:room-ktx:${Dependencies.room_version}")
-    implementation("androidx.room:room-paging:${Dependencies.room_version}")
-    ksp("androidx.room:room-compiler:${Dependencies.room_version}")
-    testImplementation("androidx.room:room-testing:${Dependencies.room_version}")
+    implementation("androidx.room:room-runtime:${Dependencies.roomVersion}")
+    implementation("androidx.room:room-ktx:${Dependencies.roomVersion}")
+    implementation("androidx.room:room-paging:${Dependencies.roomVersion}")
+    ksp("androidx.room:room-compiler:${Dependencies.roomVersion}")
+    testImplementation("androidx.room:room-testing:${Dependencies.roomVersion}")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:${Dependencies.kotlinx_datetime_version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:${Dependencies.kotlinxDatetimeVersion}")
 
-    implementation("com.github.bumptech.glide:glide:${Dependencies.glide_version}")
-    implementation("com.github.bumptech.glide:okhttp3-integration:${Dependencies.glide_version}")
-    implementation("com.github.bumptech.glide:recyclerview-integration:${Dependencies.glide_version}") {
+    implementation("com.github.bumptech.glide:glide:${Dependencies.glideVersion}")
+    implementation("com.github.bumptech.glide:okhttp3-integration:${Dependencies.glideVersion}")
+    implementation("com.github.bumptech.glide:recyclerview-integration:${Dependencies.glideVersion}") {
         // Excludes the support library because it's already included by Glide.
         isTransitive = false
     }
-    kapt("com.github.bumptech.glide:compiler:${Dependencies.glide_version}")
+    kapt("com.github.bumptech.glide:compiler:${Dependencies.glideVersion}")
 
-    implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:${Dependencies.view_binding_delegate_version}")
+    implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:${Dependencies.viewBindingDelegateVersion}")
 
-    implementation("androidx.datastore:datastore-preferences:${Dependencies.datastore_version}")
-    implementation("androidx.datastore:datastore:${Dependencies.datastore_version}")
+    implementation("androidx.datastore:datastore-preferences:${Dependencies.datastoreVersion}")
+    implementation("androidx.datastore:datastore:${Dependencies.datastoreVersion}")
 
-    implementation("com.google.protobuf:protobuf-javalite:${Dependencies.protobuf_version}")
+    implementation("com.google.protobuf:protobuf-javalite:${Dependencies.protobufVersion}")
 
-    implementation("androidx.security:security-crypto:${Dependencies.security_version}")
+    implementation("androidx.security:security-crypto:${Dependencies.securityVersion}")
 
-    implementation(platform("com.google.firebase:firebase-bom:${Dependencies.firebase_version}"))
+    implementation(platform("com.google.firebase:firebase-bom:${Dependencies.firebaseVersion}"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
 
-    testImplementation("junit:junit:${Dependencies.junit_version}")
+    testImplementation("junit:junit:${Dependencies.junitVersion}")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Dependencies.coroutines_version}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependencies.coroutines_version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Dependencies.coroutinesVersion}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependencies.coroutinesVersion}")
 
-    testImplementation("org.robolectric:robolectric:${Dependencies.robolectric_version}")
+    testImplementation("org.robolectric:robolectric:${Dependencies.robolectricVersion}")
 
-    testImplementation("androidx.test.ext:junit-ktx:${Dependencies.junit_ktx_version}")
+    testImplementation("androidx.test.ext:junit-ktx:${Dependencies.junitKtxVersion}")
 
-    testImplementation("com.google.truth:truth:${Dependencies.truth_version}")
+    testImplementation("com.google.truth:truth:${Dependencies.truthVersion}")
 
-    testImplementation("io.mockk:mockk:${Dependencies.mockk_version}")
+    testImplementation("io.mockk:mockk:${Dependencies.mockkVersion}")
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakcanary_version}")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakcanaryVersion}")
 
     // https://github.com/ChuckerTeam/chucker/releases
-    debugImplementation("com.github.chuckerteam.chucker:library:${Dependencies.chucker_version}")
+    debugImplementation("com.github.chuckerteam.chucker:library:${Dependencies.chuckerVersion}")
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:${Dependencies.protobuf_version}"
+        artifact = "com.google.protobuf:protoc:${Dependencies.protobufVersion}"
     }
 
     generateProtoTasks {
