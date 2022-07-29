@@ -233,3 +233,7 @@ protobuf {
         }
     }
 }
+
+kapt {
+    correctErrorTypes = true
+}
