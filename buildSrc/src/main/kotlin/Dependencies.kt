@@ -1,123 +1,125 @@
-ext {
+object Dependencies {
+    const val compileSdkVersion = 32
+    const val minSdkVersion = 23
+    const val targetSdkVersion = 32
+
     // https://github.com/protocolbuffers/protobuf/releases
-    protobuf_version = "3.21.1"
+    const val protobufVersion = "3.21.4"
+
     // https://github.com/google/protobuf-gradle-plugin/releases
-    protobuf_plugin_version = "0.8.18"
+    const val protobufPluginVersion = "0.8.19"
 
     // https://developer.android.com/jetpack/androidx/releases/navigation
-    nav_version = "2.4.2"
+    const val navVersion = "2.5.1"
 
     // https://dagger.dev/hilt/gradle-setup
-    hilt_version = "2.42"
+    const val hiltVersion = "2.43.1"
 
     // https://kotlinlang.org/docs/gradle.html
-    kotlin_version = "1.6.21"
+    const val kotlinVersion = "1.7.10"
 
     // https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-    android_plugin_version = "7.2.1"
+    const val androidPluginVersion = "7.2.1"
 
     // https://developers.google.com/android/guides/google-services-plugin
-    google_services_version = "4.3.10"
+    const val googleServicesVersion = "4.3.13"
 
     // https://mvnrepository.com/artifact/com.google.firebase/firebase-crashlytics-gradle
-    crashlytics_version = "2.9.0"
+    const val crashlyticsVersion = "2.9.1"
 
     // https://plugins.gradle.org/plugin/org.sonarqube
-    sonarqube_version = "3.4.0.2513"
+    const val sonarqubeVersion = "3.4.0.2513"
 
     // https://plugins.gradle.org/plugin/nl.neotech.plugin.rootcoverage
-    root_coverage_version = "1.5.2"
+    const val rootCoverageVersion = "1.5.3"
 
     // https://plugins.gradle.org/plugin/com.guardsquare.appsweep
-    appsweep_version = "1.0.0"
-
-    compile_sdk_version = 32
-    min_sdk_version = 23
-    target_sdk_version = 32
+    const val appsweepVersion = "1.1.0"
 
     // https://github.com/material-components/material-components-android/releases
-    material_version = "1.6.1"
+    const val materialVersion = "1.6.1"
 
     // https://developer.android.com/kotlin/ktx#core
-    core_ktx_version = "1.8.0"
+    const val coreKtxVersion = "1.8.0"
 
     // https://developer.android.com/jetpack/androidx/releases/appcompat
-    appcompat_version = "1.4.2"
+    const val appcompatVersion = "1.4.2"
 
     // https://developer.android.com/jetpack/androidx/releases/constraintlayout
-    contraint_layout_version = "2.1.4"
+    const val contraintLayoutVersion = "2.1.4"
 
     // https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout
-    swipe_refresh_layout_version = "1.1.0"
+    const val swipeRefreshLayoutVersion = "1.1.0"
 
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
-    lifecycle_version = "2.4.1"
+    const val lifecycleVersion = "2.5.1"
 
     // https://github.com/square/retrofit/tags
-    retrofit_version = "2.9.0"
+    const val retrofitVersion = "2.9.0"
+
     // https://github.com/JakeWharton/retrofit2-kotlinx-serialization-converter/tags
-    retrofit_kotlinx_serialization_version = "0.8.0"
+    const val retrofitKotlinxSerializationVersion = "0.8.0"
+
     // https://github.com/Kotlin/kotlinx.serialization/releases
-    kotlinx_serialization_version = "1.3.3"
+    const val kotlinxSerializationVersion = "1.3.3"
 
     // https://github.com/square/okhttp/tags
-    okhttp_version = "4.10.0"
+    const val okhttpVersion = "4.10.0"
 
     // https://github.com/JakeWharton/timber/releases
-    timber_version = "5.0.1"
+    const val timberVersion = "5.0.1"
 
     // https://developer.android.com/jetpack/androidx/releases/paging
-    paging_version = "3.1.1"
+    const val pagingVersion = "3.1.1"
 
     // https://developer.android.com/jetpack/androidx/releases/room
-    room_version = "2.4.2"
+    const val roomVersion = "2.4.3"
 
     // https://github.com/Kotlin/kotlinx-datetime/releases
-    kotlinx_datetime_version = "0.3.3"
+    const val kotlinxDatetimeVersion = "0.4.0"
 
     // https://github.com/bumptech/glide/releases
-    glide_version = "4.13.2"
+    const val glideVersion = "4.13.2"
 
     // https://github.com/androidbroadcast/ViewBindingPropertyDelegate/releases
-    view_binding_delegate_version = "1.5.6"
+    const val viewBindingDelegateVersion = "1.5.6"
 
     // https://developer.android.com/jetpack/androidx/releases/datastore
-    datastore_version = "1.0.0"
+    const val datastoreVersion = "1.0.0"
 
     // https://developer.android.com/jetpack/androidx/releases/security
-    security_version = "1.0.0"
+    const val securityVersion = "1.0.0"
 
     // https://mvnrepository.com/artifact/com.google.firebase/firebase-bom?repo=google
-    firebase_version = "30.1.0"
+    const val firebaseVersion = "30.3.1"
 
     // https://github.com/junit-team/junit4/releases
-    junit_version = "4.13.2"
+    const val junitVersion = "4.13.2"
+
     // https://developer.android.com/jetpack/androidx/releases/test
-    junit_ktx_version = "1.1.3"
+    const val junitKtxVersion = "1.1.3"
 
     // https://github.com/Kotlin/kotlinx.coroutines/releases
-    coroutines_version = "1.6.2"
+    const val coroutinesVersion = "1.6.4"
 
     // https://github.com/robolectric/robolectric/releases
-    robolectric_version = "4.8.1"
+    const val robolectricVersion = "4.8.1"
 
     // https://mvnrepository.com/artifact/com.google.truth/truth
-    truth_version = "1.1.3"
+    const val truthVersion = "1.1.3"
 
     // https://mockk.io/
-    mockk_version = "1.12.4"
-
-    // https://github.com/facebook/flipper/releases
-    flipper_version = "0.149.0"
-    // https://github.com/facebook/SoLoader/releases
-    soloader_version = "0.10.3"
+    const val mockkVersion = "1.12.5"
 
     // https://github.com/square/leakcanary/releases
-    leakcanary_version = "2.9.1"
+    const val leakcanaryVersion = "2.9.1"
 
     // https://github.com/ChuckerTeam/chucker/releases
-    chucker_version = "3.5.2"
+    const val chuckerVersion = "3.5.2"
 
     // https://developer.android.com/studio/write/java8-support#library-desugaring
-    desugar_version = "1.1.5"
+    const val desugarVersion = "1.1.5"
+
+    // https://github.com/google/ksp/releases
+    const val kspPluginVersion = "1.7.10-1.0.6"
 }
