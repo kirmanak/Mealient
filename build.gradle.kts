@@ -17,8 +17,8 @@ buildscript {
 }
 
 plugins {
-    id("org.sonarqube") version "${Dependencies.sonarqube_version}"
-    id("nl.neotech.plugin.rootcoverage") version "${Dependencies.root_coverage_version}"
+    id("org.sonarqube") version Dependencies.sonarqube_version
+    id("nl.neotech.plugin.rootcoverage") version Dependencies.root_coverage_version
     kotlin("jvm") version "1.7.10"
 }
 
