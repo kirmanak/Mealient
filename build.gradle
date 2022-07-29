@@ -1,6 +1,8 @@
 buildscript {
 
-    apply from: "./gradle/versions.gradle"
+    apply {
+        from "./gradle/versions.gradle"
+    }
 
     repositories {
         google()
@@ -8,19 +10,19 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:$android_plugin_version"
-        classpath "com.google.gms:google-services:$google_services_version"
-        classpath "com.google.firebase:firebase-crashlytics-gradle:$crashlytics_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        classpath("com.android.tools.build:gradle:$android_plugin_version")
+        classpath("com.google.gms:google-services:$google_services_version")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:$crashlytics_version")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")
     }
 }
 
 plugins {
-    id "org.sonarqube" version "$sonarqube_version"
-    id "nl.neotech.plugin.rootcoverage" version "$root_coverage_version"
+    id("org.sonarqube") version "$sonarqube_version"
+    id("nl.neotech.plugin.rootcoverage") version "$root_coverage_version"
 }
 
 task clean(type: Delete) {
