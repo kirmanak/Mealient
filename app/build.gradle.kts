@@ -19,6 +19,7 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("com.guardsquare.appsweep") version Dependencies.appsweep_version
     id("com.google.protobuf") version Dependencies.protobuf_plugin_version
+    id("com.google.devtools.ksp") version Dependencies.ksp_plugin_version
 }
 
 android {
@@ -31,10 +32,8 @@ android {
         versionCode = 13
         versionName = "0.2.4"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
 
         buildConfigField("Boolean", "LOG_NETWORK", "false")
@@ -173,7 +172,7 @@ dependencies {
     implementation("androidx.room:room-runtime:${Dependencies.room_version}")
     implementation("androidx.room:room-ktx:${Dependencies.room_version}")
     implementation("androidx.room:room-paging:${Dependencies.room_version}")
-    kapt("androidx.room:room-compiler:${Dependencies.room_version}")
+    ksp("androidx.room:room-compiler:${Dependencies.room_version}")
     testImplementation("androidx.room:room-testing:${Dependencies.room_version}")
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:${Dependencies.kotlinx_datetime_version}")

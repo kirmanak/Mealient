@@ -119,4 +119,7 @@ object Dependencies {
 
     // https://developer.android.com/studio/write/java8-support#library-desugaring
     const val desugar_version = "1.1.5"
+
+    // https://github.com/google/ksp/releases
+    const val ksp_plugin_version = "1.7.10-1.0.6"
 }
