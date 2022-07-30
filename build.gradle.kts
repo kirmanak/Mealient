@@ -6,13 +6,13 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:${Dependencies.androidPluginVersion}")
-        classpath("com.google.gms:google-services:${Dependencies.googleServicesVersion}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:${Dependencies.crashlyticsVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dependencies.kotlinVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-serialization:${Dependencies.kotlinVersion}")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Dependencies.navVersion}")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:${Dependencies.hiltVersion}")
+        classpath(libs.android.gradlePlugin)
+        classpath(libs.google.servicesPlugin)
+        classpath(libs.firebase.crashlyticsPlugin)
+        classpath(libs.jetbrains.kotlinPlugin)
+        classpath(libs.jetbrains.serializationPlugin)
+        classpath(libs.navigation.safeArgsPlugin)
+        classpath(libs.dagger.hiltPlugin)
     }
 }
 

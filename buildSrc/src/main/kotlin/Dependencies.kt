@@ -15,18 +15,6 @@ object Dependencies {
     // https://dagger.dev/hilt/gradle-setup
     const val hiltVersion = "2.43.1"
 
-    // https://kotlinlang.org/docs/gradle.html
-    const val kotlinVersion = "1.7.10"
-
-    // https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-    const val androidPluginVersion = "7.2.1"
-
-    // https://developers.google.com/android/guides/google-services-plugin
-    const val googleServicesVersion = "4.3.13"
-
-    // https://mvnrepository.com/artifact/com.google.firebase/firebase-crashlytics-gradle
-    const val crashlyticsVersion = "2.9.1"
-
     // https://plugins.gradle.org/plugin/org.sonarqube
     const val sonarqubeVersion = "3.4.0.2513"
 
