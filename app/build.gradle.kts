@@ -23,12 +23,12 @@ plugins {
 }
 
 android {
-    compileSdk = Dependencies.compileSdkVersion
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
-        minSdk = Dependencies.minSdkVersion
-        targetSdk = Dependencies.targetSdkVersion
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 13
         versionName = "0.2.4"
 

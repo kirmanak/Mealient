@@ -1,4 +1,8 @@
 [versions]
+compileSdk = "32"
+minSdk = "23"
+targetSdk = "32"
+
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
 androidGradlePlugin = "7.2.1"
 # https://developers.google.com/android/guides/google-services-plugin
