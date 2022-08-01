@@ -17,18 +17,18 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-    id("com.guardsquare.appsweep") version Dependencies.appsweepVersion
-    id("com.google.protobuf") version Dependencies.protobufPluginVersion
-    id("com.google.devtools.ksp") version Dependencies.kspPluginVersion
+    alias(libs.plugins.appsweep)
+    alias(libs.plugins.protobuf)
+    alias(libs.plugins.ksp)
 }
 
 android {
-    compileSdk = Dependencies.compileSdkVersion
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
-        minSdk = Dependencies.minSdkVersion
-        targetSdk = Dependencies.targetSdkVersion
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 13
         versionName = "0.2.4"
 
@@ -130,96 +130,95 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Dependencies.desugarVersion}")
+    coreLibraryDesugaring(libs.android.tools.desugar)
 
-    implementation("com.google.android.material:material:${Dependencies.materialVersion}")
+    implementation(libs.android.material.material)
 
-    implementation("androidx.navigation:navigation-fragment-ktx:${Dependencies.navVersion}")
-    implementation("androidx.navigation:navigation-runtime-ktx:${Dependencies.navVersion}")
-    implementation("androidx.navigation:navigation-ui-ktx:${Dependencies.navVersion}")
+    implementation(libs.androidx.navigation.fragmentKtx)
+    implementation(libs.androidx.navigation.runtimeKtx)
+    implementation(libs.androidx.navigation.uiKtx)
 
-    implementation("androidx.core:core-ktx:${Dependencies.coreKtxVersion}")
+    implementation(libs.androidx.coreKtx)
 
-    implementation("androidx.appcompat:appcompat:${Dependencies.appcompatVersion}")
+    implementation(libs.androidx.appcompat)
 
-    implementation("androidx.constraintlayout:constraintlayout:${Dependencies.contraintLayoutVersion}")
+    implementation(libs.androidx.constraintLayout)
 
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:${Dependencies.swipeRefreshLayoutVersion}")
+    implementation(libs.androidx.swipeRefreshLayout)
 
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Dependencies.lifecycleVersion}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Dependencies.lifecycleVersion}")
+    implementation(libs.androidx.lifecycle.livedataKtx)
+    implementation(libs.androidx.lifecycle.viewmodelKtx)
 
-    implementation("com.google.dagger:hilt-android:${Dependencies.hiltVersion}")
-    kapt("com.google.dagger:hilt-compiler:${Dependencies.hiltVersion}")
-    kaptTest("com.google.dagger:hilt-android-compiler:${Dependencies.hiltVersion}")
-    testImplementation("com.google.dagger:hilt-android-testing:${Dependencies.hiltVersion}")
+    implementation(libs.google.dagger.hiltAndroid)
+    kapt(libs.google.dagger.hiltCompiler)
+    kaptTest(libs.google.dagger.hiltAndroidCompiler)
+    testImplementation(libs.google.dagger.hiltAndroidTesting)
 
-    implementation("com.squareup.retrofit2:retrofit:${Dependencies.retrofitVersion}")
+    implementation(libs.squareup.retrofit)
 
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Dependencies.retrofitKotlinxSerializationVersion}")
+    implementation(libs.jakewharton.retrofitSerialization)
 
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:${Dependencies.okhttpVersion}"))
-    implementation("com.squareup.okhttp3:okhttp")
-    debugImplementation("com.squareup.okhttp3:logging-interceptor")
+    implementation(platform(libs.okhttp3.bom))
+    implementation(libs.okhttp3.okhttp)
+    debugImplementation(libs.okhttp3.loggingInterceptor)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Dependencies.kotlinxSerializationVersion}")
+    implementation(libs.jetbrains.kotlinx.serialization)
 
-    implementation("com.jakewharton.timber:timber:${Dependencies.timberVersion}")
+    implementation(libs.jakewharton.timber)
 
-    implementation("androidx.paging:paging-runtime-ktx:${Dependencies.pagingVersion}")
-    testImplementation("androidx.paging:paging-common-ktx:${Dependencies.pagingVersion}")
+    implementation(libs.androidx.paging.runtimeKtx)
+    testImplementation(libs.androidx.paging.commonKtx)
 
-    implementation("androidx.room:room-runtime:${Dependencies.roomVersion}")
-    implementation("androidx.room:room-ktx:${Dependencies.roomVersion}")
-    implementation("androidx.room:room-paging:${Dependencies.roomVersion}")
-    ksp("androidx.room:room-compiler:${Dependencies.roomVersion}")
-    testImplementation("androidx.room:room-testing:${Dependencies.roomVersion}")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+    ksp(libs.androidx.room.compiler)
+    testImplementation(libs.androidx.room.testing)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:${Dependencies.kotlinxDatetimeVersion}")
+    implementation(libs.jetbrains.kotlinx.datetime)
 
-    implementation("com.github.bumptech.glide:glide:${Dependencies.glideVersion}")
-    implementation("com.github.bumptech.glide:okhttp3-integration:${Dependencies.glideVersion}")
-    implementation("com.github.bumptech.glide:recyclerview-integration:${Dependencies.glideVersion}") {
+    implementation(libs.bumptech.glide.glide)
+    implementation(libs.bumptech.glide.okhttp3)
+    implementation(libs.bumptech.glide.recyclerview) {
         // Excludes the support library because it's already included by Glide.
         isTransitive = false
     }
-    kapt("com.github.bumptech.glide:compiler:${Dependencies.glideVersion}")
+    kapt(libs.bumptech.glide.compiler)
 
-    implementation("com.github.kirich1409:viewbindingpropertydelegate-noreflection:${Dependencies.viewBindingDelegateVersion}")
+    implementation(libs.kirich1409.viewBinding)
 
-    implementation("androidx.datastore:datastore-preferences:${Dependencies.datastoreVersion}")
-    implementation("androidx.datastore:datastore:${Dependencies.datastoreVersion}")
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.datastore)
 
-    implementation("com.google.protobuf:protobuf-javalite:${Dependencies.protobufVersion}")
+    implementation(libs.google.protobuf.javalite)
 
-    implementation("androidx.security:security-crypto:${Dependencies.securityVersion}")
+    implementation(libs.androidx.security.crypto)
 
-    implementation(platform("com.google.firebase:firebase-bom:${Dependencies.firebaseVersion}"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.google.firebase.analyticsKtx)
+    implementation(libs.google.firebase.crashlyticsKtx)
 
-    testImplementation("junit:junit:${Dependencies.junitVersion}")
+    testImplementation(libs.junit)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Dependencies.coroutinesVersion}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependencies.coroutinesVersion}")
+    implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
+    testImplementation(libs.jetbrains.kotlinx.coroutinesTest)
 
-    testImplementation("org.robolectric:robolectric:${Dependencies.robolectricVersion}")
+    testImplementation(libs.robolectric)
 
-    testImplementation("androidx.test.ext:junit-ktx:${Dependencies.junitKtxVersion}")
+    testImplementation(libs.androidx.test.junit)
 
-    testImplementation("com.google.truth:truth:${Dependencies.truthVersion}")
+    testImplementation(libs.google.truth)
 
-    testImplementation("io.mockk:mockk:${Dependencies.mockkVersion}")
+    testImplementation(libs.io.mockk)
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependencies.leakcanaryVersion}")
+    debugImplementation(libs.squareup.leakcanary)
 
-    // https://github.com/ChuckerTeam/chucker/releases
-    debugImplementation("com.github.chuckerteam.chucker:library:${Dependencies.chuckerVersion}")
+    debugImplementation(libs.chuckerteam.chucker)
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:${Dependencies.protobufVersion}"
+        artifact = libs.google.protobuf.protoc.get().toString()
     }
 
     generateProtoTasks {

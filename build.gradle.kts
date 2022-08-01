@@ -6,19 +6,19 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:${Dependencies.androidPluginVersion}")
-        classpath("com.google.gms:google-services:${Dependencies.googleServicesVersion}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:${Dependencies.crashlyticsVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dependencies.kotlinVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-serialization:${Dependencies.kotlinVersion}")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Dependencies.navVersion}")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:${Dependencies.hiltVersion}")
+        classpath(libs.android.gradlePlugin)
+        classpath(libs.google.servicesPlugin)
+        classpath(libs.google.firebase.crashlyticsPlugin)
+        classpath(libs.google.dagger.hiltPlugin)
+        classpath(libs.jetbrains.kotlinPlugin)
+        classpath(libs.jetbrains.serializationPlugin)
+        classpath(libs.androidx.navigation.safeArgsPlugin)
     }
 }
 
 plugins {
-    id("org.sonarqube") version Dependencies.sonarqubeVersion
-    id("nl.neotech.plugin.rootcoverage") version Dependencies.rootCoverageVersion
+    alias(libs.plugins.sonarqube)
+    alias(libs.plugins.rootcoverage)
 }
 
 sonarqube {
