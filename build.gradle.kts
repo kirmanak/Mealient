@@ -8,11 +8,11 @@ buildscript {
     dependencies {
         classpath(libs.android.gradlePlugin)
         classpath(libs.google.servicesPlugin)
-        classpath(libs.firebase.crashlyticsPlugin)
+        classpath(libs.google.firebase.crashlyticsPlugin)
+        classpath(libs.google.dagger.hiltPlugin)
         classpath(libs.jetbrains.kotlinPlugin)
         classpath(libs.jetbrains.serializationPlugin)
-        classpath(libs.navigation.safeArgsPlugin)
-        classpath(libs.dagger.hiltPlugin)
+        classpath(libs.androidx.navigation.safeArgsPlugin)
     }
 }
 

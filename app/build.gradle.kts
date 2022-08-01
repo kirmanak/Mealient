@@ -130,15 +130,15 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${Dependencies.desugarVersion}")
+    coreLibraryDesugaring(libs.android.tools.desugar)
 
-    implementation("com.google.android.material:material:${Dependencies.materialVersion}")
+    implementation(libs.android.material.material)
 
-    implementation("androidx.navigation:navigation-fragment-ktx:${Dependencies.navVersion}")
-    implementation("androidx.navigation:navigation-runtime-ktx:${Dependencies.navVersion}")
-    implementation("androidx.navigation:navigation-ui-ktx:${Dependencies.navVersion}")
+    implementation(libs.androidx.navigation.fragmentKtx)
+    implementation(libs.androidx.navigation.runtimeKtx)
+    implementation(libs.androidx.navigation.uiKtx)
 
-    implementation("androidx.core:core-ktx:${Dependencies.coreKtxVersion}")
+    implementation(libs.androidx.coreKtx)
 
     implementation("androidx.appcompat:appcompat:${Dependencies.appcompatVersion}")
 
