@@ -17,8 +17,8 @@ buildscript {
 }
 
 plugins {
-    id("org.sonarqube") version Dependencies.sonarqubeVersion
-    id("nl.neotech.plugin.rootcoverage") version Dependencies.rootCoverageVersion
+    alias(libs.plugins.sonarqube)
+    alias(libs.plugins.rootcoverage)
 }
 
 sonarqube {

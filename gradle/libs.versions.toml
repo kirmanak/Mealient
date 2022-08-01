@@ -164,3 +164,10 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 chuckerteam-chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
+
+[plugins]
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+rootcoverage = { id = "nl.neotech.plugin.rootcoverage", version.ref = "rootCoverage" }
+appsweep = { id = "com.guardsquare.appsweep", version.ref = "appsweep" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "kspPlugin" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }

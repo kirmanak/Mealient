@@ -17,9 +17,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-    id("com.guardsquare.appsweep") version Dependencies.appsweepVersion
-    id("com.google.protobuf") version Dependencies.protobufPluginVersion
-    id("com.google.devtools.ksp") version Dependencies.kspPluginVersion
+    alias(libs.plugins.appsweep)
+    alias(libs.plugins.protobuf)
+    alias(libs.plugins.ksp)
 }
 
 android {
