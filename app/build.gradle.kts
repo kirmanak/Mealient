@@ -4,7 +4,6 @@ import com.google.protobuf.gradle.builtins
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.protobuf
 import com.google.protobuf.gradle.protoc
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.util.*
 
@@ -104,19 +103,6 @@ android {
 
     packagingOptions {
         resources.excludes += "DebugProbesKt.bin"
-    }
-}
-
-tasks.withType<Test>().configureEach {
-    configure<JacocoTaskExtension> {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
-    }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
     }
 }
 
