@@ -9,9 +9,8 @@ import java.io.FileInputStream
 import java.util.*
 
 plugins {
-    id("kotlin-android")
+    id("gq.kirmanak.mealient.application")
     id("kotlin-kapt")
-    id("com.android.application")
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
     id("org.jetbrains.kotlin.plugin.serialization")
@@ -23,12 +22,8 @@ plugins {
 }
 
 android {
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 13
         versionName = "0.2.4"
 
@@ -110,10 +105,6 @@ android {
     packagingOptions {
         resources.excludes += "DebugProbesKt.bin"
     }
-
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-    }
 }
 
 tasks.withType<Test>().configureEach {
@@ -130,8 +121,6 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
-    coreLibraryDesugaring(libs.android.tools.desugar)
-
     implementation(libs.android.material.material)
 
     implementation(libs.androidx.navigation.fragmentKtx)
