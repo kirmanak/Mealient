@@ -2,14 +2,14 @@ package gq.kirmanak.mealient.extensions
 
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.data.baseurl.impl.VersionResponse
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeIngredientEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeInstructionEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeIngredientResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeSummaryResponse
+import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 
 fun GetRecipeResponse.toRecipeEntity() = RecipeEntity(
     remoteId = remoteId,

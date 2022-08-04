@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.extensions
+package gq.kirmanak.mealient.database
 
 import com.google.common.truth.Truth.assertThat
 import kotlinx.datetime.LocalDate

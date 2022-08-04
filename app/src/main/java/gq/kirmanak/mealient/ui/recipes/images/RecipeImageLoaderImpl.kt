@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import dagger.hilt.android.scopes.FragmentScoped
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import timber.log.Timber
 import javax.inject.Inject
 

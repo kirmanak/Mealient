@@ -1,6 +1,6 @@
 package gq.kirmanak.mealient.ui.recipes.info
 
-import gq.kirmanak.mealient.data.recipes.impl.FullRecipeInfo
+import gq.kirmanak.mealient.database.recipe.entity.FullRecipeInfo
 
 data class RecipeInfoUiState(
     val areIngredientsVisible: Boolean = false,

@@ -1,10 +1,10 @@
 package gq.kirmanak.mealient.data.recipes.db
 
 import androidx.paging.PagingSource
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.data.recipes.impl.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeSummaryResponse
+import gq.kirmanak.mealient.database.recipe.entity.FullRecipeInfo
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 
 interface RecipeStorage {
     suspend fun saveRecipes(recipes: List<GetRecipeSummaryResponse>)

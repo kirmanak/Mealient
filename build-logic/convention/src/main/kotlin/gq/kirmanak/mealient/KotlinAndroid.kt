@@ -30,6 +30,38 @@ internal fun Project.configureKotlinAndroid(
             freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
         }
 
+        lint {
+            disable += listOf("ObsoleteLintCustomCheck", "IconMissingDensityFolder")
+            enable += listOf(
+                "ConvertToWebp",
+                "DuplicateStrings",
+                "EasterEgg",
+                "ExpensiveAssertion",
+                "IconExpectedSize",
+                "ImplicitSamInstance",
+                "InvalidPackage",
+                "KotlinPropertyAccess",
+                "LambdaLast",
+                "MinSdkTooLow",
+                "NegativeMargin",
+                "NoHardKeywords",
+                "Registered",
+                "RequiredSize",
+                "UnknownNullness",
+                "WrongThreadInterprocedural"
+            )
+        }
+
+        buildFeatures {
+            viewBinding = true
+        }
+
+        testOptions {
+            unitTests {
+                isIncludeAndroidResources = true
+            }
+        }
+
         dependencies {
             add("coreLibraryDesugaring", libs.findLibrary("android-tools-desugar").get())
         }

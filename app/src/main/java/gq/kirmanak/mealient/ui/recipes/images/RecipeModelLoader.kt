@@ -5,8 +5,8 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.ModelCache
 import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.io.InputStream

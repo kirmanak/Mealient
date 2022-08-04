@@ -1,12 +1,11 @@
-package gq.kirmanak.mealient.data
+package gq.kirmanak.mealient.database
 
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import gq.kirmanak.mealient.data.recipes.db.RecipeDao
-import gq.kirmanak.mealient.data.recipes.db.entity.*
-import gq.kirmanak.mealient.extensions.RoomTypeConverters
+import gq.kirmanak.mealient.database.recipe.RecipeDao
+import gq.kirmanak.mealient.database.recipe.entity.*
 
 @Database(
     version = 2,

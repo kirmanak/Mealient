@@ -16,5 +16,8 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
 rootProject.name = "Mealient"
+
 include(":app")
+include(":database")

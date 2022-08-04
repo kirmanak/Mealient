@@ -1,8 +1,8 @@
 package gq.kirmanak.mealient.ui.recipes.images
 
 import com.bumptech.glide.load.model.*
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import timber.log.Timber
 import java.io.InputStream
 import javax.inject.Inject

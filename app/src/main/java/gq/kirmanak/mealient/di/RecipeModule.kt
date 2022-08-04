@@ -16,13 +16,13 @@ import gq.kirmanak.mealient.data.network.createServiceFactory
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorageImpl
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProviderImpl
 import gq.kirmanak.mealient.data.recipes.impl.RecipeRepoImpl
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSourceImpl
 import gq.kirmanak.mealient.data.recipes.network.RecipeService
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.ui.recipes.images.RecipeModelLoaderFactory
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient

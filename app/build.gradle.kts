@@ -17,7 +17,6 @@ plugins {
     id("com.google.firebase.crashlytics")
     alias(libs.plugins.appsweep)
     alias(libs.plugins.protobuf)
-    alias(libs.plugins.ksp)
 }
 
 android {
@@ -25,10 +24,6 @@ android {
         applicationId = "gq.kirmanak.mealient"
         versionCode = 13
         versionName = "0.2.4"
-
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
 
         buildConfigField("Boolean", "LOG_NETWORK", "false")
     }
@@ -67,38 +62,6 @@ android {
         }
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
-
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-        }
-    }
-
-    lint {
-        disable += listOf("ObsoleteLintCustomCheck", "IconMissingDensityFolder")
-        enable += listOf(
-            "ConvertToWebp",
-            "DuplicateStrings",
-            "EasterEgg",
-            "ExpensiveAssertion",
-            "IconExpectedSize",
-            "ImplicitSamInstance",
-            "InvalidPackage",
-            "KotlinPropertyAccess",
-            "LambdaLast",
-            "MinSdkTooLow",
-            "NegativeMargin",
-            "NoHardKeywords",
-            "Registered",
-            "RequiredSize",
-            "UnknownNullness",
-            "WrongThreadInterprocedural"
-        )
-    }
-
     namespace = "gq.kirmanak.mealient"
 
     packagingOptions {
@@ -107,6 +70,9 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":database"))
+
     implementation(libs.android.material.material)
 
     implementation(libs.androidx.navigation.fragmentKtx)
@@ -144,11 +110,6 @@ dependencies {
     implementation(libs.androidx.paging.runtimeKtx)
     testImplementation(libs.androidx.paging.commonKtx)
 
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.paging)
-    ksp(libs.androidx.room.compiler)
-    testImplementation(libs.androidx.room.testing)
 
     implementation(libs.jetbrains.kotlinx.datetime)
 

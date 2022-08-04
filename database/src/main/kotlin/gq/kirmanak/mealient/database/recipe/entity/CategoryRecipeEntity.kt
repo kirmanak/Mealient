@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.recipes.db.entity
+package gq.kirmanak.mealient.database.recipe.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

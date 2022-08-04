@@ -5,8 +5,8 @@ import androidx.paging.LoadType.*
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.network.NetworkError.Unauthorized
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARIES
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
