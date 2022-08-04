@@ -5,7 +5,7 @@ import androidx.paging.PagingDataAdapter
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
 import dagger.hilt.android.scopes.FragmentScoped
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import javax.inject.Inject
 
 @FragmentScoped

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.ViewHolderRecipeBinding
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import timber.log.Timber

@@ -8,7 +8,7 @@ import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
 import dagger.hilt.android.EntryPointAccessors.fromApplication
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.di.GlideModuleEntryPoint
 import timber.log.Timber
 import java.io.InputStream

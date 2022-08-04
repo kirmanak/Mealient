@@ -1,11 +1,7 @@
-package gq.kirmanak.mealient.data.recipes.impl
+package gq.kirmanak.mealient.database.recipe.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeIngredientEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeInstructionEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
 
 data class FullRecipeInfo(
     @Embedded val recipeEntity: RecipeEntity,

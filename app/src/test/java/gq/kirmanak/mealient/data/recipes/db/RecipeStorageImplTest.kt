@@ -2,11 +2,11 @@ package gq.kirmanak.mealient.data.recipes.db
 
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
-import gq.kirmanak.mealient.data.AppDb
-import gq.kirmanak.mealient.data.recipes.db.entity.CategoryEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.CategoryRecipeEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.TagEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.TagRecipeEntity
+import gq.kirmanak.mealient.database.AppDb
+import gq.kirmanak.mealient.database.recipe.entity.CategoryEntity
+import gq.kirmanak.mealient.database.recipe.entity.CategoryRecipeEntity
+import gq.kirmanak.mealient.database.recipe.entity.TagEntity
+import gq.kirmanak.mealient.database.recipe.entity.TagRecipeEntity
 import gq.kirmanak.mealient.test.HiltRobolectricTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.BREAD_INGREDIENT
 import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_BREAD_RECIPE_INGREDIENT_ENTITY

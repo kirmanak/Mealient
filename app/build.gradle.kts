@@ -4,14 +4,12 @@ import com.google.protobuf.gradle.builtins
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.protobuf
 import com.google.protobuf.gradle.protoc
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.util.*
 
 plugins {
-    id("kotlin-android")
+    id("gq.kirmanak.mealient.application")
     id("kotlin-kapt")
-    id("com.android.application")
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
     id("org.jetbrains.kotlin.plugin.serialization")
@@ -19,22 +17,13 @@ plugins {
     id("com.google.firebase.crashlytics")
     alias(libs.plugins.appsweep)
     alias(libs.plugins.protobuf)
-    alias(libs.plugins.ksp)
 }
 
 android {
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 13
         versionName = "0.2.4"
-
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
 
         buildConfigField("Boolean", "LOG_NETWORK", "false")
     }
@@ -73,64 +62,16 @@ android {
         }
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
-
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-        }
-    }
-
-    lint {
-        disable += listOf("ObsoleteLintCustomCheck", "IconMissingDensityFolder")
-        enable += listOf(
-            "ConvertToWebp",
-            "DuplicateStrings",
-            "EasterEgg",
-            "ExpensiveAssertion",
-            "IconExpectedSize",
-            "ImplicitSamInstance",
-            "InvalidPackage",
-            "KotlinPropertyAccess",
-            "LambdaLast",
-            "MinSdkTooLow",
-            "NegativeMargin",
-            "NoHardKeywords",
-            "Registered",
-            "RequiredSize",
-            "UnknownNullness",
-            "WrongThreadInterprocedural"
-        )
-    }
-
     namespace = "gq.kirmanak.mealient"
 
     packagingOptions {
         resources.excludes += "DebugProbesKt.bin"
     }
-
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-    }
-}
-
-tasks.withType<Test>().configureEach {
-    configure<JacocoTaskExtension> {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
-    }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
-    }
 }
 
 dependencies {
-    coreLibraryDesugaring(libs.android.tools.desugar)
+
+    implementation(project(":database"))
 
     implementation(libs.android.material.material)
 
@@ -169,11 +110,6 @@ dependencies {
     implementation(libs.androidx.paging.runtimeKtx)
     testImplementation(libs.androidx.paging.commonKtx)
 
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.paging)
-    ksp(libs.androidx.room.compiler)
-    testImplementation(libs.androidx.room.testing)
 
     implementation(libs.jetbrains.kotlinx.datetime)
 

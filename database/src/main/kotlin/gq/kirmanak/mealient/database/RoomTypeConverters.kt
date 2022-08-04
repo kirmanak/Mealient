@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.extensions
+package gq.kirmanak.mealient.database
 
 import androidx.room.TypeConverter
 import kotlinx.datetime.*

@@ -2,7 +2,7 @@ package gq.kirmanak.mealient.ui.recipes
 
 import androidx.recyclerview.widget.RecyclerView
 import gq.kirmanak.mealient.R
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.ViewHolderRecipeBinding
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import timber.log.Timber

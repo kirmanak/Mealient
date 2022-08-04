@@ -1,9 +1,8 @@
-package gq.kirmanak.mealient.data.recipes.db
+package gq.kirmanak.mealient.database.recipe
 
 import androidx.paging.PagingSource
 import androidx.room.*
-import gq.kirmanak.mealient.data.recipes.db.entity.*
-import gq.kirmanak.mealient.data.recipes.impl.FullRecipeInfo
+import gq.kirmanak.mealient.database.recipe.entity.*
 
 @Dao
 interface RecipeDao {

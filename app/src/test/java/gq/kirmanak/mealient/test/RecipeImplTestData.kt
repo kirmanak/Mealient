@@ -1,14 +1,10 @@
 package gq.kirmanak.mealient.test
 
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeIngredientEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeInstructionEntity
-import gq.kirmanak.mealient.data.recipes.db.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.data.recipes.impl.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeIngredientResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeResponse
 import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeSummaryResponse
+import gq.kirmanak.mealient.database.recipe.entity.*
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
