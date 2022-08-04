@@ -39,5 +39,4 @@ dependencies {
     testImplementation(libs.google.truth)
 
     testImplementation(libs.io.mockk)
-
 }

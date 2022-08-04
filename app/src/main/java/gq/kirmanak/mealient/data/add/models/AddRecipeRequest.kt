@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.data.add.models
 
+import gq.kirmanak.mealient.datastore.recipe.AddRecipeInput
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

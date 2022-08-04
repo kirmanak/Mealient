@@ -2,8 +2,8 @@ package gq.kirmanak.mealient.data.add.impl
 
 import androidx.datastore.core.DataStore
 import gq.kirmanak.mealient.data.add.AddRecipeStorage
-import gq.kirmanak.mealient.data.add.models.AddRecipeInput
 import gq.kirmanak.mealient.data.add.models.AddRecipeRequest
+import gq.kirmanak.mealient.datastore.recipe.AddRecipeInput
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber

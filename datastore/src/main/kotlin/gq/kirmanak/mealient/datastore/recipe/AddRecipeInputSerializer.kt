@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.add.models
+package gq.kirmanak.mealient.datastore.recipe
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
