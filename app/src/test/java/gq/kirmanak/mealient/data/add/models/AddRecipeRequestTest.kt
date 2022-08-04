@@ -1,21 +1,22 @@
 package gq.kirmanak.mealient.data.add.models
 
 import com.google.common.truth.Truth.assertThat
+import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import org.junit.Test
 
 class AddRecipeRequestTest {
 
     @Test
     fun `when construct from input then fills fields correctly`() {
-        val input = AddRecipeInput.newBuilder()
-            .setRecipeName("Recipe name")
-            .setRecipeDescription("Recipe description")
-            .setRecipeYield("Recipe yield")
-            .addAllRecipeIngredients(listOf("Recipe ingredient 1", "Recipe ingredient 2"))
-            .addAllRecipeInstructions(listOf("Recipe instruction 1", "Recipe instruction 2"))
-            .setIsRecipePublic(false)
-            .setAreCommentsDisabled(true)
-            .build()
+        val input = AddRecipeDraft(
+            recipeName = "Recipe name",
+            recipeDescription = "Recipe description",
+            recipeYield = "Recipe yield",
+            recipeInstructions = listOf("Recipe instruction 1", "Recipe instruction 2"),
+            recipeIngredients = listOf("Recipe ingredient 1", "Recipe ingredient 2"),
+            isRecipePublic = false,
+            areCommentsDisabled = true,
+        )
 
         val expected = AddRecipeRequest(
             name = "Recipe name",
@@ -58,16 +59,16 @@ class AddRecipeRequestTest {
             )
         )
 
-        val expected = AddRecipeInput.newBuilder()
-            .setRecipeName("Recipe name")
-            .setRecipeDescription("Recipe description")
-            .setRecipeYield("Recipe yield")
-            .addAllRecipeIngredients(listOf("Recipe ingredient 1", "Recipe ingredient 2"))
-            .addAllRecipeInstructions(listOf("Recipe instruction 1", "Recipe instruction 2"))
-            .setIsRecipePublic(false)
-            .setAreCommentsDisabled(true)
-            .build()
+        val expected = AddRecipeDraft(
+            recipeName = "Recipe name",
+            recipeDescription = "Recipe description",
+            recipeYield = "Recipe yield",
+            recipeInstructions = listOf("Recipe instruction 1", "Recipe instruction 2"),
+            recipeIngredients = listOf("Recipe ingredient 1", "Recipe ingredient 2"),
+            isRecipePublic = false,
+            areCommentsDisabled = true,
+        )
 
-        assertThat(request.toInput()).isEqualTo(expected)
+        assertThat(request.toDraft()).isEqualTo(expected)
     }
 }

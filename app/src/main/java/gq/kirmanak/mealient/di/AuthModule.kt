@@ -2,9 +2,6 @@ package gq.kirmanak.mealient.di
 
 import android.accounts.AccountManager
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -32,7 +29,6 @@ import javax.inject.Singleton
 interface AuthModule {
 
     companion object {
-        const val ENCRYPTED = "encrypted"
 
         @Provides
         @Singleton
@@ -48,23 +44,6 @@ interface AuthModule {
         @Singleton
         fun provideAccountManager(@ApplicationContext context: Context): AccountManager {
             return AccountManager.get(context)
-        }
-
-        @Provides
-        @Singleton
-        @Named(ENCRYPTED)
-        fun provideEncryptedSharedPreferences(
-            @ApplicationContext applicationContext: Context,
-        ): SharedPreferences {
-            val keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC
-            val mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec)
-            return EncryptedSharedPreferences.create(
-                ENCRYPTED,
-                mainKeyAlias,
-                applicationContext,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-            )
         }
     }
 

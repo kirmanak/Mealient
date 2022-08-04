@@ -1,6 +1,6 @@
 package gq.kirmanak.mealient.data.add.models
 
-import gq.kirmanak.mealient.datastore.recipe.AddRecipeInput
+import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -21,27 +21,27 @@ data class AddRecipeRequest(
     @SerialName("assets") val assets: List<String> = emptyList(),
     @SerialName("settings") val settings: AddRecipeSettings = AddRecipeSettings(),
 ) {
-    constructor(input: AddRecipeInput) : this(
+    constructor(input: AddRecipeDraft) : this(
         name = input.recipeName,
         description = input.recipeDescription,
         recipeYield = input.recipeYield,
-        recipeIngredient = input.recipeIngredientsList.map { AddRecipeIngredient(note = it) },
-        recipeInstructions = input.recipeInstructionsList.map { AddRecipeInstruction(text = it) },
+        recipeIngredient = input.recipeIngredients.map { AddRecipeIngredient(note = it) },
+        recipeInstructions = input.recipeInstructions.map { AddRecipeInstruction(text = it) },
         settings = AddRecipeSettings(
             public = input.isRecipePublic,
             disableComments = input.areCommentsDisabled,
         )
     )
 
-    fun toInput(): AddRecipeInput = AddRecipeInput.newBuilder()
-        .setRecipeName(name)
-        .setRecipeDescription(description)
-        .setRecipeYield(recipeYield)
-        .setIsRecipePublic(settings.public)
-        .setAreCommentsDisabled(settings.disableComments)
-        .addAllRecipeIngredients(recipeIngredient.map { it.note })
-        .addAllRecipeInstructions(recipeInstructions.map { it.text })
-        .build()
+    fun toDraft(): AddRecipeDraft = AddRecipeDraft(
+        recipeName = name,
+        recipeDescription = description,
+        recipeYield = recipeYield,
+        recipeInstructions = recipeInstructions.map { it.text },
+        recipeIngredients = recipeIngredient.map { it.note },
+        isRecipePublic = settings.public,
+        areCommentsDisabled = settings.disableComments,
+    )
 }
 
 @Serializable

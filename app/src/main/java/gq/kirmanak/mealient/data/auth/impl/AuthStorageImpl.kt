@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.edit
 import gq.kirmanak.mealient.data.auth.AuthStorage
-import gq.kirmanak.mealient.di.AuthModule.Companion.ENCRYPTED
+import gq.kirmanak.mealient.datastore.DataStoreModule.Companion.ENCRYPTED
 import gq.kirmanak.mealient.extensions.prefsChangeFlow
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

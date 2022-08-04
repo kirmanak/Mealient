@@ -120,9 +120,6 @@ dependencies {
     implementation(libs.kirich1409.viewBinding)
 
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.datastore.datastore)
-
-    implementation(libs.androidx.security.crypto)
 
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.analyticsKtx)
