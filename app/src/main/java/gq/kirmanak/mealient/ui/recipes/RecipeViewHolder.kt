@@ -4,25 +4,42 @@ import androidx.recyclerview.widget.RecyclerView
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.ViewHolderRecipeBinding
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
-import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RecipeViewHolder(
+class RecipeViewHolder private constructor(
+    private val logger: Logger,
     private val binding: ViewHolderRecipeBinding,
     private val recipeImageLoader: RecipeImageLoader,
     private val clickListener: (RecipeSummaryEntity) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
+
+    @Singleton
+    class Factory @Inject constructor(
+        private val logger: Logger,
+    ) {
+
+        fun build(
+            recipeImageLoader: RecipeImageLoader,
+            binding: ViewHolderRecipeBinding,
+            clickListener: (RecipeSummaryEntity) -> Unit,
+        ) = RecipeViewHolder(logger, binding, recipeImageLoader, clickListener)
+
+    }
+
     private val loadingPlaceholder by lazy {
         binding.root.resources.getString(R.string.view_holder_recipe_text_placeholder)
     }
 
     fun bind(item: RecipeSummaryEntity?) {
-        Timber.v("bind() called with: item = $item")
+        logger.v { "bind() called with: item = $item" }
         binding.name.text = item?.name ?: loadingPlaceholder
         recipeImageLoader.loadRecipeImage(binding.image, item)
         item?.let { entity ->
             binding.root.setOnClickListener {
-                Timber.d("bind: item clicked $entity")
+                logger.d { "bind: item clicked $entity" }
                 clickListener(entity)
             }
         }

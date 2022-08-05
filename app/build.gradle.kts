@@ -1,9 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.google.protobuf.gradle.builtins
-import com.google.protobuf.gradle.generateProtoTasks
-import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.protoc
 import java.io.FileInputStream
 import java.util.*
 
@@ -16,7 +12,6 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     alias(libs.plugins.appsweep)
-    alias(libs.plugins.protobuf)
 }
 
 android {
@@ -72,6 +67,8 @@ android {
 dependencies {
 
     implementation(project(":database"))
+    implementation(project(":datastore"))
+    implementation(project(":logging"))
 
     implementation(libs.android.material.material)
 
@@ -105,8 +102,6 @@ dependencies {
 
     implementation(libs.jetbrains.kotlinx.serialization)
 
-    implementation(libs.jakewharton.timber)
-
     implementation(libs.androidx.paging.runtimeKtx)
     testImplementation(libs.androidx.paging.commonKtx)
 
@@ -124,11 +119,6 @@ dependencies {
     implementation(libs.kirich1409.viewBinding)
 
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.datastore.datastore)
-
-    implementation(libs.google.protobuf.javalite)
-
-    implementation(libs.androidx.security.crypto)
 
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.analyticsKtx)
@@ -150,24 +140,4 @@ dependencies {
     debugImplementation(libs.squareup.leakcanary)
 
     debugImplementation(libs.chuckerteam.chucker)
-}
-
-protobuf {
-    protoc {
-        artifact = libs.google.protobuf.protoc.get().toString()
-    }
-
-    generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
-                val java by registering {
-                    option("lite")
-                }
-            }
-        }
-    }
-}
-
-kapt {
-    correctErrorTypes = true
 }

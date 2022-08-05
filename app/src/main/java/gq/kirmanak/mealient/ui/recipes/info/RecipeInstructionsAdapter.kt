@@ -8,11 +8,23 @@ import androidx.recyclerview.widget.RecyclerView
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.databinding.ViewHolderInstructionBinding
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.info.RecipeInstructionsAdapter.RecipeInstructionViewHolder
-import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RecipeInstructionsAdapter :
-    ListAdapter<RecipeInstructionEntity, RecipeInstructionViewHolder>(RecipeInstructionDiffCallback) {
+class RecipeInstructionsAdapter private constructor(
+    private val logger: Logger,
+    private val recipeInstructionViewHolderFactory: RecipeInstructionViewHolder.Factory,
+) : ListAdapter<RecipeInstructionEntity, RecipeInstructionViewHolder>(RecipeInstructionDiffCallback) {
+
+    @Singleton
+    class Factory @Inject constructor(
+        private val logger: Logger,
+        private val recipeInstructionViewHolderFactory: RecipeInstructionViewHolder.Factory,
+    ) {
+        fun build() = RecipeInstructionsAdapter(logger, recipeInstructionViewHolderFactory)
+    }
 
     private object RecipeInstructionDiffCallback :
         DiffUtil.ItemCallback<RecipeInstructionEntity>() {
@@ -27,11 +39,19 @@ class RecipeInstructionsAdapter :
         ): Boolean = oldItem == newItem
     }
 
-    class RecipeInstructionViewHolder(
-        private val binding: ViewHolderInstructionBinding
+    class RecipeInstructionViewHolder private constructor(
+        private val binding: ViewHolderInstructionBinding,
+        private val logger: Logger,
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        @Singleton
+        class Factory @Inject constructor(private val logger: Logger) {
+            fun build(binding: ViewHolderInstructionBinding) =
+                RecipeInstructionViewHolder(binding, logger)
+        }
+
         fun bind(item: RecipeInstructionEntity, position: Int) {
-            Timber.v("bind() called with: item = $item, position = $position")
+            logger.v { "bind() called with: item = $item, position = $position" }
             binding.step.text = binding.root.resources.getString(
                 R.string.view_holder_recipe_instructions_step, position + 1
             )
@@ -40,17 +60,17 @@ class RecipeInstructionsAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeInstructionViewHolder {
-        Timber.v("onCreateViewHolder() called with: parent = $parent, viewType = $viewType")
+        logger.v { "onCreateViewHolder() called with: parent = $parent, viewType = $viewType" }
         val inflater = LayoutInflater.from(parent.context)
-        return RecipeInstructionViewHolder(
-            ViewHolderInstructionBinding.inflate(inflater, parent, false)
+        return recipeInstructionViewHolderFactory.build(
+            ViewHolderInstructionBinding.inflate(inflater, parent, false),
         )
     }
 
     override fun onBindViewHolder(holder: RecipeInstructionViewHolder, position: Int) {
-        Timber.v("onBindViewHolder() called with: holder = $holder, position = $position")
+        logger.v { "onBindViewHolder() called with: holder = $holder, position = $position" }
         val item = getItem(position)
-        Timber.d("onBindViewHolder: item is $item")
+        logger.d { "onBindViewHolder: item is $item" }
         holder.bind(item, position)
     }
 }

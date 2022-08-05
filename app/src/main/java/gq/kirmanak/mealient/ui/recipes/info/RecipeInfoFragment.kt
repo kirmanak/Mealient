@@ -14,8 +14,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.FragmentRecipeInfoBinding
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -24,8 +24,17 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
     private val binding by viewBinding(FragmentRecipeInfoBinding::bind)
     private val arguments by navArgs<RecipeInfoFragmentArgs>()
     private val viewModel by viewModels<RecipeInfoViewModel>()
-    private val ingredientsAdapter = RecipeIngredientsAdapter()
-    private val instructionsAdapter = RecipeInstructionsAdapter()
+    private val ingredientsAdapter by lazy { recipeIngredientsAdapterFactory.build() }
+    private val instructionsAdapter by lazy { recipeInstructionsAdapterFactory.build() }
+
+    @Inject
+    lateinit var recipeInstructionsAdapterFactory: RecipeInstructionsAdapter.Factory
+
+    @Inject
+    lateinit var recipeIngredientsAdapterFactory: RecipeIngredientsAdapter.Factory
+
+    @Inject
+    lateinit var logger: Logger
 
     @Inject
     lateinit var recipeImageLoader: RecipeImageLoader
@@ -35,13 +44,13 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Timber.v("onCreateView() called")
+        logger.v { "onCreateView() called" }
         return FragmentRecipeInfoBinding.inflate(inflater, container, false).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.v("onViewCreated() called")
+        logger.v { "onViewCreated() called" }
 
         with(binding) {
             ingredientsList.adapter = ingredientsAdapter
@@ -55,7 +64,7 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
     }
 
     private fun onUiStateChange(uiState: RecipeInfoUiState) = with(binding) {
-        Timber.v("onUiStateChange() called")
+        logger.v { "onUiStateChange() called" }
         ingredientsHolder.isVisible = uiState.areIngredientsVisible
         instructionsGroup.isVisible = uiState.areInstructionsVisible
         uiState.recipeInfo?.let {
@@ -72,7 +81,7 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Timber.v("onDestroyView() called")
+        logger.v { "onDestroyView() called" }
         // Prevent RV leaking through mObservers list in adapter
         with(binding) {
             ingredientsList.adapter = null

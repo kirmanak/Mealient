@@ -7,10 +7,10 @@ import gq.kirmanak.mealient.data.network.NetworkError.Unauthorized
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.extensions.decodeErrorBodyOrNull
 import gq.kirmanak.mealient.extensions.logAndMapErrors
+import gq.kirmanak.mealient.logging.Logger
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import retrofit2.Response
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,14 +18,15 @@ import javax.inject.Singleton
 class AuthDataSourceImpl @Inject constructor(
     private val authServiceFactory: ServiceFactory<AuthService>,
     private val json: Json,
+    private val logger: Logger,
 ) : AuthDataSource {
 
     override suspend fun authenticate(username: String, password: String): String {
-        Timber.v("authenticate() called with: username = $username, password = $password")
+        logger.v { "authenticate() called with: username = $username, password = $password" }
         val authService = authServiceFactory.provideService()
         val response = sendRequest(authService, username, password)
         val accessToken = parseToken(response)
-        Timber.v("authenticate() returned: $accessToken")
+        logger.v { "authenticate() returned: $accessToken" }
         return accessToken
     }
 
@@ -34,6 +35,7 @@ class AuthDataSourceImpl @Inject constructor(
         username: String,
         password: String
     ): Response<GetTokenResponse> = logAndMapErrors(
+        logger,
         block = { authService.getToken(username = username, password = password) },
         logProvider = { "sendRequest: can't get token" },
     )
@@ -44,7 +46,7 @@ class AuthDataSourceImpl @Inject constructor(
         response.body()?.accessToken ?: throw NotMealie(NullPointerException("Body is null"))
     } else {
         val cause = HttpException(response)
-        val errorDetail: ErrorDetail? = response.decodeErrorBodyOrNull(json)
+        val errorDetail: ErrorDetail? = response.decodeErrorBodyOrNull(json, logger)
         throw when (errorDetail?.detail) {
             "Unauthorized" -> Unauthorized(cause)
             else -> NotMealie(cause)

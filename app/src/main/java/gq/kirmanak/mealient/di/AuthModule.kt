@@ -2,9 +2,6 @@ package gq.kirmanak.mealient.di
 
 import android.accounts.AccountManager
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -22,6 +19,7 @@ import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.data.network.RetrofitBuilder
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.data.network.createServiceFactory
+import gq.kirmanak.mealient.logging.Logger
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import javax.inject.Named
@@ -32,39 +30,25 @@ import javax.inject.Singleton
 interface AuthModule {
 
     companion object {
-        const val ENCRYPTED = "encrypted"
 
         @Provides
         @Singleton
         fun provideAuthServiceFactory(
             @Named(NO_AUTH_OK_HTTP) okHttpClient: OkHttpClient,
             json: Json,
+            logger: Logger,
             baseURLStorage: BaseURLStorage,
         ): ServiceFactory<AuthService> {
-            return RetrofitBuilder(okHttpClient, json).createServiceFactory(baseURLStorage)
+            return RetrofitBuilder(okHttpClient, json, logger).createServiceFactory(
+                baseURLStorage,
+                logger
+            )
         }
 
         @Provides
         @Singleton
         fun provideAccountManager(@ApplicationContext context: Context): AccountManager {
             return AccountManager.get(context)
-        }
-
-        @Provides
-        @Singleton
-        @Named(ENCRYPTED)
-        fun provideEncryptedSharedPreferences(
-            @ApplicationContext applicationContext: Context,
-        ): SharedPreferences {
-            val keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC
-            val mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec)
-            return EncryptedSharedPreferences.create(
-                ENCRYPTED,
-                mainKeyAlias,
-                applicationContext,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-            )
         }
     }
 

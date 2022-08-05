@@ -10,7 +10,7 @@ import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.FullRecipeInfo
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
-import timber.log.Timber
+import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,9 +21,10 @@ class RecipeRepoImpl @Inject constructor(
     private val storage: RecipeStorage,
     private val pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>,
     private val dataSource: RecipeDataSource,
+    private val logger: Logger,
 ) : RecipeRepo {
     override fun createPager(): Pager<Int, RecipeSummaryEntity> {
-        Timber.v("createPager() called")
+        logger.v { "createPager() called" }
         val pagingConfig = PagingConfig(pageSize = 5, enablePlaceholders = true)
         return Pager(
             config = pagingConfig,
@@ -33,17 +34,17 @@ class RecipeRepoImpl @Inject constructor(
     }
 
     override suspend fun clearLocalData() {
-        Timber.v("clearLocalData() called")
+        logger.v { "clearLocalData() called" }
         storage.clearAllLocalData()
     }
 
     override suspend fun loadRecipeInfo(recipeId: Long, recipeSlug: String): FullRecipeInfo {
-        Timber.v("loadRecipeInfo() called with: recipeId = $recipeId, recipeSlug = $recipeSlug")
+        logger.v { "loadRecipeInfo() called with: recipeId = $recipeId, recipeSlug = $recipeSlug" }
 
         runCatchingExceptCancel {
             storage.saveRecipeInfo(dataSource.requestRecipeInfo(recipeSlug))
         }.onFailure {
-            Timber.e(it, "loadRecipeInfo: can't update full recipe info")
+            logger.e(it) { "loadRecipeInfo: can't update full recipe info" }
         }
 
         return storage.queryRecipeInfo(recipeId)

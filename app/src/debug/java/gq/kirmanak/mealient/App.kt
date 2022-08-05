@@ -2,14 +2,17 @@ package gq.kirmanak.mealient
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import timber.log.Timber
+import gq.kirmanak.mealient.logging.Logger
+import javax.inject.Inject
 
 @HiltAndroidApp
 class App : Application() {
 
+    @Inject
+    lateinit var logger: Logger
+
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(Timber.DebugTree())
-        Timber.v("onCreate() called")
+        logger.v { "onCreate() called" }
     }
 }

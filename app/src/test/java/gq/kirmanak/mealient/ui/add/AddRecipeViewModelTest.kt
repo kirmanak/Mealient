@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.ui.add
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
 import gq.kirmanak.mealient.data.add.models.AddRecipeRequest
+import gq.kirmanak.mealient.logging.Logger
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -27,13 +28,16 @@ class AddRecipeViewModelTest {
     @MockK(relaxUnitFun = true)
     lateinit var addRecipeRepo: AddRecipeRepo
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     lateinit var subject: AddRecipeViewModel
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        subject = AddRecipeViewModel(addRecipeRepo)
+        subject = AddRecipeViewModel(addRecipeRepo, logger)
     }
 
     @After

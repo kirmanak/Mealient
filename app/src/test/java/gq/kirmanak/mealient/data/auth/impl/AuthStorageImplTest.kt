@@ -10,10 +10,13 @@ import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl.Companion.AUTH_HEADER_KEY
 import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl.Companion.EMAIL_KEY
 import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl.Companion.PASSWORD_KEY
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
 import gq.kirmanak.mealient.test.HiltRobolectricTest
+import io.mockk.MockKAnnotations
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -29,14 +32,18 @@ class AuthStorageImplTest : HiltRobolectricTest() {
     @ApplicationContext
     lateinit var context: Context
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     lateinit var subject: AuthStorage
 
     lateinit var sharedPreferences: SharedPreferences
 
     @Before
     fun setUp() {
+        MockKAnnotations.init(this)
         sharedPreferences = context.getSharedPreferences("test", Context.MODE_PRIVATE)
-        subject = AuthStorageImpl(sharedPreferences)
+        subject = AuthStorageImpl(sharedPreferences, logger)
     }
 
     @Test

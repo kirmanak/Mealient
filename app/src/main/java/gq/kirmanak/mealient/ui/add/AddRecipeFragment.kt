@@ -20,8 +20,9 @@ import gq.kirmanak.mealient.databinding.FragmentAddRecipeBinding
 import gq.kirmanak.mealient.databinding.ViewSingleInputBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
-import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
@@ -30,9 +31,12 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
     private val viewModel by viewModels<AddRecipeViewModel>()
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
 
+    @Inject
+    lateinit var logger: Logger
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
+        logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
         activityViewModel.updateUiState {
             it.copy(loginButtonVisible = true, titleVisible = false, navigationVisible = true)
         }
@@ -42,12 +46,12 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
     }
 
     private fun observeAddRecipeResult() {
-        Timber.v("observeAddRecipeResult() called")
+        logger.v { "observeAddRecipeResult() called" }
         collectWhenViewResumed(viewModel.addRecipeResult, ::onRecipeSaveResult)
     }
 
     private fun onRecipeSaveResult(isSuccessful: Boolean) = with(binding) {
-        Timber.v("onRecipeSaveResult() called with: isSuccessful = $isSuccessful")
+        logger.v { "onRecipeSaveResult() called with: isSuccessful = $isSuccessful" }
 
         listOf(clearButton, saveRecipeButton).forEach { it.isEnabled = true }
 
@@ -60,12 +64,13 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
     }
 
     private fun setupViews() = with(binding) {
-        Timber.v("setupViews() called")
+        logger.v { "setupViews() called" }
         saveRecipeButton.setOnClickListener {
             recipeNameInput.checkIfInputIsEmpty(
                 inputLayout = recipeNameInputLayout,
                 lifecycleOwner = viewLifecycleOwner,
-                stringId = R.string.fragment_add_recipe_name_error
+                stringId = R.string.fragment_add_recipe_name_error,
+                logger = logger,
             ) ?: return@setOnClickListener
 
             listOf(saveRecipeButton, clearButton).forEach { it.isEnabled = false }
@@ -98,7 +103,7 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
     }
 
     private fun inflateInputRow(flow: Flow, @StringRes hintId: Int, text: String? = null) {
-        Timber.v("inflateInputRow() called with: flow = $flow, hintId = $hintId, text = $text")
+        logger.v { "inflateInputRow() called with: flow = $flow, hintId = $hintId, text = $text" }
         val fragmentRoot = binding.holder
         val inputBinding = ViewSingleInputBinding.inflate(layoutInflater, fragmentRoot, false)
         val root = inputBinding.root
@@ -116,7 +121,7 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
     }
 
     private fun saveValues() = with(binding) {
-        Timber.v("saveValues() called")
+        logger.v { "saveValues() called" }
         val instructions = parseInputRows(instructionsFlow).map { AddRecipeInstruction(text = it) }
         val ingredients = parseInputRows(ingredientsFlow).map { AddRecipeIngredient(note = it) }
         val settings = AddRecipeSettings(
@@ -144,7 +149,7 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
             .toList()
 
     private fun onSavedInputLoaded(request: AddRecipeRequest) = with(binding) {
-        Timber.v("onSavedInputLoaded() called with: request = $request")
+        logger.v { "onSavedInputLoaded() called with: request = $request" }
         recipeNameInput.setText(request.name)
         recipeDescriptionInput.setText(request.description)
         recipeYieldInput.setText(request.recipeYield)
@@ -159,13 +164,13 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
     }
 
     private fun Iterable<String>.showIn(flow: Flow, @StringRes hintId: Int) {
-        Timber.v("showIn() called with: flow = $flow, hintId = $hintId")
+        logger.v { "showIn() called with: flow = $flow, hintId = $hintId" }
         flow.removeAllViews()
         forEach { inflateInputRow(flow = flow, hintId = hintId, text = it) }
     }
 
     private fun Flow.removeAllViews() {
-        Timber.v("removeAllViews() called")
+        logger.v { "removeAllViews() called" }
         for (id in referencedIds.iterator()) {
             val view = binding.holder.findViewById<View>(id) ?: continue
             removeView(view)

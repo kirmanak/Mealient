@@ -12,9 +12,10 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.databinding.FragmentBaseUrlBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.OperationUiState
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
-import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
@@ -23,9 +24,12 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
     private val viewModel by viewModels<BaseURLViewModel>()
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
 
+    @Inject
+    lateinit var logger: Logger
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
+        logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
         binding.button.setOnClickListener(::onProceedClick)
         viewModel.uiState.observe(viewLifecycleOwner, ::onUiStateChange)
         activityViewModel.updateUiState {
@@ -34,17 +38,18 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
     }
 
     private fun onProceedClick(view: View) {
-        Timber.v("onProceedClick() called with: view = $view")
+        logger.v { "onProceedClick() called with: view = $view" }
         val url = binding.urlInput.checkIfInputIsEmpty(
             inputLayout = binding.urlInputLayout,
             lifecycleOwner = viewLifecycleOwner,
             stringId = R.string.fragment_baseurl_url_input_empty,
+            logger = logger,
         ) ?: return
         viewModel.saveBaseUrl(url)
     }
 
     private fun onUiStateChange(uiState: OperationUiState<Unit>) = with(binding) {
-        Timber.v("onUiStateChange() called with: uiState = $uiState")
+        logger.v { "onUiStateChange() called with: uiState = $uiState" }
         if (uiState.isSuccess) {
             findNavController().navigate(BaseURLFragmentDirections.actionBaseURLFragmentToRecipesFragment())
             return

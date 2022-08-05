@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "gq.kirmanak.mealient.data.add.models";
+option java_package = "gq.kirmanak.mealient.datastore.recipe";
 option java_multiple_files = true;
 
 message AddRecipeInput {

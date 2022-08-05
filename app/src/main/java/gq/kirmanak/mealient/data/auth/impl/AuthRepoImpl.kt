@@ -4,9 +4,9 @@ import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,13 +14,14 @@ import javax.inject.Singleton
 class AuthRepoImpl @Inject constructor(
     private val authStorage: AuthStorage,
     private val authDataSource: AuthDataSource,
+    private val logger: Logger,
 ) : AuthRepo {
 
     override val isAuthorizedFlow: Flow<Boolean>
         get() = authStorage.authHeaderFlow.map { it != null }
 
     override suspend fun authenticate(email: String, password: String) {
-        Timber.v("authenticate() called with: email = $email, password = $password")
+        logger.v { "authenticate() called with: email = $email, password = $password" }
         authDataSource.authenticate(email, password)
             .let { AUTH_HEADER_FORMAT.format(it) }
             .let { authStorage.setAuthHeader(it) }
@@ -35,14 +36,14 @@ class AuthRepoImpl @Inject constructor(
     }
 
     override suspend fun logout() {
-        Timber.v("logout() called")
+        logger.v { "logout() called" }
         authStorage.setEmail(null)
         authStorage.setPassword(null)
         authStorage.setAuthHeader(null)
     }
 
     override suspend fun invalidateAuthHeader() {
-        Timber.v("invalidateAuthHeader() called")
+        logger.v { "invalidateAuthHeader() called" }
         val email = authStorage.getEmail() ?: return
         val password = authStorage.getPassword() ?: return
         runCatchingExceptCancel { authenticate(email, password) }

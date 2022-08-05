@@ -11,20 +11,21 @@ import gq.kirmanak.mealient.extensions.recipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
 import gq.kirmanak.mealient.extensions.toRecipeInstructionEntity
-import timber.log.Timber
+import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RecipeStorageImpl @Inject constructor(
-    private val db: AppDb
+    private val db: AppDb,
+    private val logger: Logger,
 ) : RecipeStorage {
     private val recipeDao: RecipeDao by lazy { db.recipeDao() }
 
     override suspend fun saveRecipes(
         recipes: List<GetRecipeSummaryResponse>
     ) = db.withTransaction {
-        Timber.v("saveRecipes() called with $recipes")
+        logger.v { "saveRecipes() called with $recipes" }
 
         val tagEntities = mutableSetOf<TagEntity>()
         tagEntities.addAll(recipeDao.queryAllTags())
@@ -91,12 +92,12 @@ class RecipeStorageImpl @Inject constructor(
 
 
     override fun queryRecipes(): PagingSource<Int, RecipeSummaryEntity> {
-        Timber.v("queryRecipes() called")
+        logger.v { "queryRecipes() called" }
         return recipeDao.queryRecipesByPages()
     }
 
     override suspend fun refreshAll(recipes: List<GetRecipeSummaryResponse>) {
-        Timber.v("refreshAll() called with: recipes = $recipes")
+        logger.v { "refreshAll() called with: recipes = $recipes" }
         db.withTransaction {
             recipeDao.removeAllRecipes()
             saveRecipes(recipes)
@@ -104,7 +105,7 @@ class RecipeStorageImpl @Inject constructor(
     }
 
     override suspend fun clearAllLocalData() {
-        Timber.v("clearAllLocalData() called")
+        logger.v { "clearAllLocalData() called" }
         db.withTransaction {
             recipeDao.removeAllRecipes()
             recipeDao.removeAllCategories()
@@ -113,7 +114,7 @@ class RecipeStorageImpl @Inject constructor(
     }
 
     override suspend fun saveRecipeInfo(recipe: GetRecipeResponse) {
-        Timber.v("saveRecipeInfo() called with: recipe = $recipe")
+        logger.v { "saveRecipeInfo() called with: recipe = $recipe" }
         db.withTransaction {
             recipeDao.insertRecipe(recipe.toRecipeEntity())
 
@@ -132,11 +133,11 @@ class RecipeStorageImpl @Inject constructor(
     }
 
     override suspend fun queryRecipeInfo(recipeId: Long): FullRecipeInfo {
-        Timber.v("queryRecipeInfo() called with: recipeId = $recipeId")
+        logger.v { "queryRecipeInfo() called with: recipeId = $recipeId" }
         val fullRecipeInfo = checkNotNull(recipeDao.queryFullRecipeInfo(recipeId)) {
             "Can't find recipe by id $recipeId in DB"
         }
-        Timber.v("queryRecipeInfo() returned: $fullRecipeInfo")
+        logger.v { "queryRecipeInfo() returned: $fullRecipeInfo" }
         return fullRecipeInfo
     }
 }

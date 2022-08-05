@@ -3,15 +3,16 @@ package gq.kirmanak.mealient.ui.activity
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
+import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val authRepo: AuthRepo,
+    private val logger: Logger,
 ) : ViewModel() {
 
     private val _uiState = MutableLiveData(MainActivityUiState())
@@ -32,7 +33,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun logout() {
-        Timber.v("logout() called")
+        logger.v { "logout() called" }
         viewModelScope.launch { authRepo.logout() }
     }
 }
