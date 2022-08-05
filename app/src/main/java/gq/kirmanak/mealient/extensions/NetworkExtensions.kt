@@ -8,28 +8,23 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import retrofit2.HttpException
 import retrofit2.Response
-import java.io.InputStream
-
-inline fun <T, reified R> Response<T>.decodeErrorBodyOrNull(json: Json, logger: Logger): R? =
-    errorBody()?.byteStream()?.let { json.decodeFromStreamOrNull<R>(it, logger) }
 
 @OptIn(ExperimentalSerializationApi::class)
-inline fun <reified T> Json.decodeFromStreamOrNull(stream: InputStream, logger: Logger): T? =
-    runCatching { decodeFromStream<T>(stream) }
-        .onFailure { logger.e(it) { "decodeFromStreamOrNull: can't decode" } }
-        .getOrNull()
+inline fun <T, reified R> Json.decodeErrorBody(response: Response<T>): R =
+    checkNotNull(response.errorBody()) { "Can't decode absent error body" }
+        .byteStream()
+        .let(::decodeFromStream)
+
 
 fun Throwable.mapToNetworkError(): NetworkError = when (this) {
     is HttpException, is SerializationException -> NetworkError.NotMealie(this)
     else -> NetworkError.NoServerConnection(this)
 }
 
-inline fun <T> logAndMapErrors(
-    logger: Logger,
+inline fun <T> Logger.logAndMapErrors(
     block: () -> T,
     noinline logProvider: () -> String
-): T =
-    runCatchingExceptCancel(block).getOrElse {
-        logger.e(it, messageSupplier = logProvider)
-        throw it.mapToNetworkError()
-    }
+): T = runCatchingExceptCancel(block).getOrElse {
+    e(it, messageSupplier = logProvider)
+    throw it.mapToNetworkError()
+}

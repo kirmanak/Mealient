@@ -17,8 +17,7 @@ class AddRecipeDataSourceImpl @Inject constructor(
     override suspend fun addRecipe(recipe: AddRecipeRequest): String {
         logger.v { "addRecipe() called with: recipe = $recipe" }
         val service = addRecipeServiceFactory.provideService()
-        val response = logAndMapErrors(
-            logger,
+        val response = logger.logAndMapErrors(
             block = { service.addRecipe(recipe) },
             logProvider = { "addRecipe: can't add recipe" }
         )

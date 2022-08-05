@@ -5,7 +5,7 @@ import gq.kirmanak.mealient.data.network.ErrorDetail
 import gq.kirmanak.mealient.data.network.NetworkError.NotMealie
 import gq.kirmanak.mealient.data.network.NetworkError.Unauthorized
 import gq.kirmanak.mealient.data.network.ServiceFactory
-import gq.kirmanak.mealient.extensions.decodeErrorBodyOrNull
+import gq.kirmanak.mealient.extensions.decodeErrorBody
 import gq.kirmanak.mealient.extensions.logAndMapErrors
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.serialization.json.Json
@@ -34,8 +34,7 @@ class AuthDataSourceImpl @Inject constructor(
         authService: AuthService,
         username: String,
         password: String
-    ): Response<GetTokenResponse> = logAndMapErrors(
-        logger,
+    ): Response<GetTokenResponse> = logger.logAndMapErrors(
         block = { authService.getToken(username = username, password = password) },
         logProvider = { "sendRequest: can't get token" },
     )
@@ -46,7 +45,9 @@ class AuthDataSourceImpl @Inject constructor(
         response.body()?.accessToken ?: throw NotMealie(NullPointerException("Body is null"))
     } else {
         val cause = HttpException(response)
-        val errorDetail: ErrorDetail? = response.decodeErrorBodyOrNull(json, logger)
+        val errorDetail = json.runCatching<Json, ErrorDetail> { decodeErrorBody(response) }
+            .onFailure { logger.e(it) { "Can't decode error body" } }
+            .getOrNull()
         throw when (errorDetail?.detail) {
             "Unauthorized" -> Unauthorized(cause)
             else -> NotMealie(cause)
