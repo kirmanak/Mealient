@@ -15,6 +15,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":logging"))
+
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.datastore)
 

@@ -6,7 +6,7 @@ interface AddRecipeStorage {
 
     val updates: Flow<AddRecipeDraft>
 
-    suspend fun save(addRecipeRequest: AddRecipeDraft)
+    suspend fun save(addRecipeDraft: AddRecipeDraft)
 
     suspend fun clear()
 }
