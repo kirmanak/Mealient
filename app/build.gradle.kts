@@ -105,7 +105,6 @@ dependencies {
     implementation(libs.androidx.paging.runtimeKtx)
     testImplementation(libs.androidx.paging.commonKtx)
 
-
     implementation(libs.jetbrains.kotlinx.datetime)
 
     implementation(libs.bumptech.glide.glide)
