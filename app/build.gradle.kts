@@ -68,6 +68,7 @@ dependencies {
 
     implementation(project(":database"))
     implementation(project(":datastore"))
+    implementation(project(":logging"))
 
     implementation(libs.android.material.material)
 
