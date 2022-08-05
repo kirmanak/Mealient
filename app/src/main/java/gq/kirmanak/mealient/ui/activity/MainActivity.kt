@@ -13,18 +13,23 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
-import timber.log.Timber
+import gq.kirmanak.mealient.logging.Logger
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: MainActivityBinding
     private val viewModel by viewModels<MainActivityViewModel>()
     private val title: String by lazy { getString(R.string.app_name) }
     private val uiState: MainActivityUiState get() = viewModel.uiState
 
+    @Inject
+    lateinit var logger: Logger
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.v("onCreate() called with: savedInstanceState = $savedInstanceState")
+        logger.v { "onCreate() called with: savedInstanceState = $savedInstanceState" }
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
@@ -36,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        Timber.v("onNavigationItemSelected() called with: menuItem = $menuItem")
+        logger.v { "onNavigationItemSelected() called with: menuItem = $menuItem" }
         menuItem.isChecked = true
         val deepLink = when (menuItem.itemId) {
             R.id.add_recipe -> ADD_RECIPE_DEEP_LINK
@@ -49,19 +54,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onUiStateChange(uiState: MainActivityUiState) {
-        Timber.v("onUiStateChange() called with: uiState = $uiState")
+        logger.v { "onUiStateChange() called with: uiState = $uiState" }
         supportActionBar?.title = if (uiState.titleVisible) title else null
         binding.navigationView.isVisible = uiState.navigationVisible
         invalidateOptionsMenu()
     }
 
     private fun setToolbarRoundCorner() {
-        Timber.v("setToolbarRoundCorner() called")
+        logger.v { "setToolbarRoundCorner() called" }
         val drawables = listOf(
             binding.toolbarHolder.background as? MaterialShapeDrawable,
             binding.toolbar.background as? MaterialShapeDrawable,
         )
-        Timber.d("setToolbarRoundCorner: drawables = $drawables")
+        logger.d { "setToolbarRoundCorner: drawables = $drawables" }
         val radius = resources.getDimension(R.dimen.main_activity_toolbar_corner_radius)
         for (drawable in drawables) {
             drawable?.apply {
@@ -72,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        Timber.v("onCreateOptionsMenu() called with: menu = $menu")
+        logger.v { "onCreateOptionsMenu() called with: menu = $menu" }
         menuInflater.inflate(R.menu.main_toolbar, menu)
         menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
         menu.findItem(R.id.login).isVisible = uiState.canShowLogin
@@ -80,7 +85,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Timber.v("onOptionsItemSelected() called with: item = $item")
+        logger.v { "onOptionsItemSelected() called with: item = $item" }
         val result = when (item.itemId) {
             R.id.login -> {
                 navigateDeepLink(AUTH_DEEP_LINK)
@@ -96,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateDeepLink(deepLink: String) {
-        Timber.v("navigateDeepLink() called with: deepLink = $deepLink")
+        logger.v { "navigateDeepLink() called with: deepLink = $deepLink" }
         findNavController(binding.navHost.id).navigate(deepLink.toUri())
     }
 

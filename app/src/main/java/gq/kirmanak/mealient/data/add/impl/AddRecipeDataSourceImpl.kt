@@ -18,7 +18,9 @@ class AddRecipeDataSourceImpl @Inject constructor(
         logger.v { "addRecipe() called with: recipe = $recipe" }
         val service = addRecipeServiceFactory.provideService()
         val response = logAndMapErrors(
-            block = { service.addRecipe(recipe) }, logProvider = { "addRecipe: can't add recipe" }
+            logger,
+            block = { service.addRecipe(recipe) },
+            logProvider = { "addRecipe: can't add recipe" }
         )
         logger.v { "addRecipe() response = $response" }
         return response

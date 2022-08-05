@@ -13,27 +13,34 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecipesFragment : Fragment(R.layout.fragment_recipes) {
+
     private val binding by viewBinding(FragmentRecipesBinding::bind)
     private val viewModel by viewModels<RecipeViewModel>()
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
 
     @Inject
+    lateinit var logger: Logger
+
+    @Inject
     lateinit var recipeImageLoader: RecipeImageLoader
+
+    @Inject
+    lateinit var recipePagingAdapterFactory: RecipesPagingAdapter.Factory
 
     @Inject
     lateinit var recipePreloaderFactory: RecipePreloaderFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.v("onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
+        logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
         activityViewModel.updateUiState {
             it.copy(loginButtonVisible = true, titleVisible = false, navigationVisible = true)
         }
@@ -41,7 +48,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     }
 
     private fun navigateToRecipeInfo(recipeSummaryEntity: RecipeSummaryEntity) {
-        Timber.v("navigateToRecipeInfo() called with: recipeSummaryEntity = $recipeSummaryEntity")
+        logger.v { "navigateToRecipeInfo() called with: recipeSummaryEntity = $recipeSummaryEntity" }
         findNavController().navigate(
             RecipesFragmentDirections.actionRecipesFragmentToRecipeInfoFragment(
                 recipeSlug = recipeSummaryEntity.slug,
@@ -51,29 +58,32 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     }
 
     private fun setupRecipeAdapter() {
-        Timber.v("setupRecipeAdapter() called")
-        val recipesAdapter = RecipesPagingAdapter(recipeImageLoader, ::navigateToRecipeInfo)
+        logger.v { "setupRecipeAdapter() called" }
+        val recipesAdapter = recipePagingAdapterFactory.build(
+            recipeImageLoader = recipeImageLoader,
+            clickListener = ::navigateToRecipeInfo
+        )
         with(binding.recipes) {
             adapter = recipesAdapter
             addOnScrollListener(recipePreloaderFactory.create(recipesAdapter))
         }
         collectWhenViewResumed(viewModel.pagingData) {
-            Timber.v("setupRecipeAdapter: received data update")
+            logger.v { "setupRecipeAdapter: received data update" }
             recipesAdapter.submitData(lifecycle, it)
         }
         collectWhenViewResumed(recipesAdapter.onPagesUpdatedFlow) {
-            Timber.v("setupRecipeAdapter: pages updated")
+            logger.v { "setupRecipeAdapter: pages updated" }
             binding.refresher.isRefreshing = false
         }
-        collectWhenViewResumed(binding.refresher.refreshRequestFlow()) {
-            Timber.v("setupRecipeAdapter: received refresh request")
+        collectWhenViewResumed(binding.refresher.refreshRequestFlow(logger)) {
+            logger.v { "setupRecipeAdapter: received refresh request" }
             recipesAdapter.refresh()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Timber.v("onDestroyView() called")
+        logger.v { "onDestroyView() called" }
         // Prevent RV leaking through mObservers list in adapter
         binding.recipes.adapter = null
     }

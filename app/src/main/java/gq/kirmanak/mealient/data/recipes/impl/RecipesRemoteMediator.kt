@@ -8,7 +8,7 @@ import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
-import timber.log.Timber
+import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,6 +18,7 @@ class RecipesRemoteMediator @Inject constructor(
     private val storage: RecipeStorage,
     private val network: RecipeDataSource,
     private val pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>,
+    private val logger: Logger,
 ) : RemoteMediator<Int, RecipeSummaryEntity>() {
 
     @VisibleForTesting
@@ -27,10 +28,10 @@ class RecipesRemoteMediator @Inject constructor(
         loadType: LoadType,
         state: PagingState<Int, RecipeSummaryEntity>
     ): MediatorResult {
-        Timber.v("load() called with: lastRequestEnd = $lastRequestEnd, loadType = $loadType, state = $state")
+        logger.v { "load() called with: lastRequestEnd = $lastRequestEnd, loadType = $loadType, state = $state" }
 
         if (loadType == PREPEND) {
-            Timber.i("load: early exit, PREPEND isn't supported")
+            logger.i { "load: early exit, PREPEND isn't supported" }
             return MediatorResult.Success(endOfPaginationReached = true)
         }
 
@@ -43,7 +44,7 @@ class RecipesRemoteMediator @Inject constructor(
             else storage.saveRecipes(recipes)
             recipes.size
         }.getOrElse {
-            Timber.e(it, "load: can't load recipes")
+            logger.e(it) { "load: can't load recipes" }
             return MediatorResult.Error(it)
         }
 
@@ -53,7 +54,7 @@ class RecipesRemoteMediator @Inject constructor(
         // Read that trick here https://github.com/android/architecture-components-samples/issues/889#issuecomment-880847858
         pagingSourceFactory.invalidate()
 
-        Timber.d("load: expectedCount = $limit, received $count")
+        logger.d { "load: expectedCount = $limit, received $count" }
         lastRequestEnd = start + count
         return MediatorResult.Success(endOfPaginationReached = count < limit)
     }

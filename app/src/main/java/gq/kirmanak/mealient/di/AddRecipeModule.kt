@@ -16,6 +16,7 @@ import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.data.network.createServiceFactory
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeStorage
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeStorageImpl
+import gq.kirmanak.mealient.logging.Logger
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import javax.inject.Named
@@ -32,9 +33,13 @@ interface AddRecipeModule {
         fun provideAddRecipeServiceFactory(
             @Named(AUTH_OK_HTTP) okHttpClient: OkHttpClient,
             json: Json,
+            logger: Logger,
             baseURLStorage: BaseURLStorage,
         ): ServiceFactory<AddRecipeService> {
-            return RetrofitBuilder(okHttpClient, json).createServiceFactory(baseURLStorage)
+            return RetrofitBuilder(okHttpClient, json, logger).createServiceFactory(
+                baseURLStorage,
+                logger
+            )
         }
     }
 

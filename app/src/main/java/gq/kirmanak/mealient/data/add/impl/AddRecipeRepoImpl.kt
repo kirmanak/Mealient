@@ -8,10 +8,10 @@ import gq.kirmanak.mealient.data.add.models.AddRecipeRequest
 import gq.kirmanak.mealient.data.add.models.AddRecipeSettings
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeStorage
+import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,6 +19,7 @@ import javax.inject.Singleton
 class AddRecipeRepoImpl @Inject constructor(
     private val addRecipeDataSource: AddRecipeDataSource,
     private val addRecipeStorage: AddRecipeStorage,
+    private val logger: Logger,
 ) : AddRecipeRepo {
 
     override val addRecipeRequestFlow: Flow<AddRecipeRequest>
@@ -37,7 +38,7 @@ class AddRecipeRepoImpl @Inject constructor(
         }
 
     override suspend fun preserve(recipe: AddRecipeRequest) {
-        Timber.v("preserveRecipe() called with: recipe = $recipe")
+        logger.v { "preserveRecipe() called with: recipe = $recipe" }
         val input = AddRecipeDraft(
             recipeName = recipe.name,
             recipeDescription = recipe.description,
@@ -51,12 +52,12 @@ class AddRecipeRepoImpl @Inject constructor(
     }
 
     override suspend fun clear() {
-        Timber.v("clear() called")
+        logger.v { "clear() called" }
         addRecipeStorage.clear()
     }
 
     override suspend fun saveRecipe(): String {
-        Timber.v("saveRecipe() called")
+        logger.v { "saveRecipe() called" }
         return addRecipeDataSource.addRecipe(addRecipeRequestFlow.first())
     }
 }

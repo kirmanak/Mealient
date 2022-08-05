@@ -41,8 +41,6 @@ retrofitKotlinxSerialization = "0.8.0"
 kotlinxSerialization = "1.3.3"
 # https://github.com/square/okhttp/tags
 okhttp = "4.10.0"
-# https://github.com/JakeWharton/timber/releases
-timber = "5.0.1"
 # https://developer.android.com/jetpack/androidx/releases/paging
 paging = "3.1.1"
 # https://developer.android.com/jetpack/androidx/releases/room
@@ -140,7 +138,6 @@ androidx-test-junit = { group = "androidx.test.ext", name = "junit-ktx", version
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security" }
 
 jakewharton-retrofitSerialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerialization" }
-jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 

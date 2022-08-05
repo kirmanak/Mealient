@@ -102,8 +102,6 @@ dependencies {
 
     implementation(libs.jetbrains.kotlinx.serialization)
 
-    implementation(libs.jakewharton.timber)
-
     implementation(libs.androidx.paging.runtimeKtx)
     testImplementation(libs.androidx.paging.commonKtx)
 

@@ -7,17 +7,40 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.databinding.ViewHolderIngredientBinding
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.info.RecipeIngredientsAdapter.RecipeIngredientViewHolder
-import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RecipeIngredientsAdapter :
-    ListAdapter<RecipeIngredientEntity, RecipeIngredientViewHolder>(RecipeIngredientDiffCallback) {
+class RecipeIngredientsAdapter private constructor(
+    private val recipeIngredientViewHolderFactory: RecipeIngredientViewHolder.Factory,
+    private val logger: Logger,
+) : ListAdapter<RecipeIngredientEntity, RecipeIngredientViewHolder>(RecipeIngredientDiffCallback) {
 
-    class RecipeIngredientViewHolder(
-        private val binding: ViewHolderIngredientBinding
+    @Singleton
+    class Factory @Inject constructor(
+        private val recipeIngredientViewHolderFactory: RecipeIngredientViewHolder.Factory,
+        private val logger: Logger,
+    ) {
+        fun build() = RecipeIngredientsAdapter(recipeIngredientViewHolderFactory, logger)
+    }
+
+    class RecipeIngredientViewHolder private constructor(
+        private val binding: ViewHolderIngredientBinding,
+        private val logger: Logger,
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        @Singleton
+        class Factory @Inject constructor(
+            private val logger: Logger,
+        ) {
+
+            fun build(binding: ViewHolderIngredientBinding) =
+                RecipeIngredientViewHolder(binding, logger)
+        }
+
         fun bind(item: RecipeIngredientEntity) {
-            Timber.v("bind() called with: item = $item")
+            logger.v { "bind() called with: item = $item" }
             binding.checkBox.text = item.note
         }
     }
@@ -35,17 +58,17 @@ class RecipeIngredientsAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeIngredientViewHolder {
-        Timber.v("onCreateViewHolder() called with: parent = $parent, viewType = $viewType")
+        logger.v { "onCreateViewHolder() called with: parent = $parent, viewType = $viewType" }
         val inflater = LayoutInflater.from(parent.context)
-        return RecipeIngredientViewHolder(
+        return recipeIngredientViewHolderFactory.build(
             ViewHolderIngredientBinding.inflate(inflater, parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: RecipeIngredientViewHolder, position: Int) {
-        Timber.v("onBindViewHolder() called with: holder = $holder, position = $position")
+        logger.v { "onBindViewHolder() called with: holder = $holder, position = $position" }
         val item = getItem(position)
-        Timber.d("onBindViewHolder: item is $item")
+        logger.d { "onBindViewHolder: item is $item" }
         holder.bind(item)
     }
 }

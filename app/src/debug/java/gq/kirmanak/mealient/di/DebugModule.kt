@@ -11,9 +11,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import gq.kirmanak.mealient.BuildConfig
+import gq.kirmanak.mealient.logging.Logger
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
-import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
@@ -22,8 +22,8 @@ object DebugModule {
     @Provides
     @Singleton
     @IntoSet
-    fun provideLoggingInterceptor(): Interceptor {
-        val interceptor = HttpLoggingInterceptor { message -> Timber.tag("OkHttp").v(message) }
+    fun provideLoggingInterceptor(logger: Logger): Interceptor {
+        val interceptor = HttpLoggingInterceptor { message -> logger.v(tag = "OkHttp") { message } }
         interceptor.level = when {
             BuildConfig.LOG_NETWORK -> HttpLoggingInterceptor.Level.BODY
             else -> HttpLoggingInterceptor.Level.BASIC
