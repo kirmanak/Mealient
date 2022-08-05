@@ -6,6 +6,7 @@ import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
 import gq.kirmanak.mealient.test.RecipeImplTestData.GET_CAKE_RESPONSE
 import io.mockk.MockKAnnotations
@@ -32,12 +33,15 @@ class RecipeRepoImplTest {
     @MockK
     lateinit var pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     lateinit var subject: RecipeRepo
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = RecipeRepoImpl(remoteMediator, storage, pagingSourceFactory, dataSource)
+        subject = RecipeRepoImpl(remoteMediator, storage, pagingSourceFactory, dataSource, logger)
     }
 
     @Test

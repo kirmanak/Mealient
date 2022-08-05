@@ -7,6 +7,7 @@ import gq.kirmanak.mealient.data.network.NetworkError.Unauthorized
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARIES
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -38,10 +39,13 @@ class RecipesRemoteMediatorTest {
     @MockK(relaxUnitFun = true)
     lateinit var pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = RecipesRemoteMediator(storage, dataSource, pagingSourceFactory)
+        subject = RecipesRemoteMediator(storage, dataSource, pagingSourceFactory, logger)
     }
 
     @Test

@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.ui.disclaimer
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
+import gq.kirmanak.mealient.logging.Logger
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,12 +18,15 @@ class DisclaimerViewModelTest {
     @MockK(relaxUnitFun = true)
     lateinit var storage: DisclaimerStorage
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     lateinit var subject: DisclaimerViewModel
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = DisclaimerViewModel(storage)
+        subject = DisclaimerViewModel(storage, logger)
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.add.models.AddRecipeRequest
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.data.network.ServiceFactory
+import gq.kirmanak.mealient.logging.Logger
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -22,13 +23,16 @@ class AddRecipeDataSourceImplTest {
     @MockK
     lateinit var service: AddRecipeService
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     lateinit var subject: AddRecipeDataSourceImpl
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         coEvery { serviceProvider.provideService(any()) } returns service
-        subject = AddRecipeDataSourceImpl(serviceProvider)
+        subject = AddRecipeDataSourceImpl(serviceProvider, logger)
     }
 
     @Test(expected = NetworkError.NotMealie::class)

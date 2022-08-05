@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
@@ -26,12 +27,15 @@ class AuthRepoImplTest {
     @MockK(relaxUnitFun = true)
     lateinit var storage: AuthStorage
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     lateinit var subject: AuthRepo
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = AuthRepoImpl(storage, dataSource)
+        subject = AuthRepoImpl(storage, dataSource, logger)
     }
 
     @Test

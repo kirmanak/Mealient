@@ -6,6 +6,7 @@ import gq.kirmanak.mealient.data.baseurl.impl.VersionResponse
 import gq.kirmanak.mealient.data.baseurl.impl.VersionService
 import gq.kirmanak.mealient.data.network.NetworkError
 import gq.kirmanak.mealient.data.network.ServiceFactory
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.toJsonResponseBody
 import io.mockk.MockKAnnotations
@@ -28,12 +29,15 @@ class VersionDataSourceImplTest {
     @MockK
     lateinit var versionServiceFactory: ServiceFactory<VersionService>
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     lateinit var subject: VersionDataSource
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = VersionDataSourceImpl(versionServiceFactory)
+        subject = VersionDataSourceImpl(versionServiceFactory, logger)
         coEvery { versionServiceFactory.provideService(eq(TEST_BASE_URL)) } returns versionService
     }
 

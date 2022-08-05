@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.network.NetworkError.*
 import gq.kirmanak.mealient.data.network.ServiceFactory
 import gq.kirmanak.mealient.di.NetworkModule
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
@@ -26,12 +27,15 @@ class AuthDataSourceImplTest {
     @MockK
     lateinit var authServiceFactory: ServiceFactory<AuthService>
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     lateinit var subject: AuthDataSourceImpl
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = AuthDataSourceImpl(authServiceFactory, NetworkModule.createJson())
+        subject = AuthDataSourceImpl(authServiceFactory, NetworkModule.createJson(), logger)
         coEvery { authServiceFactory.provideService(any()) } returns authService
     }
 

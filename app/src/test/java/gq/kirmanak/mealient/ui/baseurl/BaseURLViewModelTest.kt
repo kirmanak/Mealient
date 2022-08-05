@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.ui.baseurl
 import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.data.baseurl.VersionDataSource
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.RobolectricTest
 import io.mockk.MockKAnnotations
@@ -24,12 +25,15 @@ class BaseURLViewModelTest : RobolectricTest() {
     @MockK
     lateinit var versionDataSource: VersionDataSource
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     lateinit var subject: BaseURLViewModel
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = BaseURLViewModel(baseURLStorage, versionDataSource)
+        subject = BaseURLViewModel(baseURLStorage, versionDataSource, logger)
     }
 
     @Test

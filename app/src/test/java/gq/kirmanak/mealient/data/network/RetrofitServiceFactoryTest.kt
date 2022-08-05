@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.data.network
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.data.baseurl.impl.VersionService
+import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
@@ -27,12 +28,15 @@ class RetrofitServiceFactoryTest {
     @MockK
     lateinit var versionService: VersionService
 
+    @MockK(relaxUnitFun = true)
+    lateinit var logger: Logger
+
     lateinit var subject: ServiceFactory<VersionService>
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = retrofitBuilder.createServiceFactory(baseURLStorage)
+        subject = retrofitBuilder.createServiceFactory(baseURLStorage, logger)
         coEvery { retrofitBuilder.buildRetrofit(any()) } returns retrofit
         every { retrofit.create(eq(VersionService::class.java)) } returns versionService
         coEvery { baseURLStorage.requireBaseURL() } returns TEST_BASE_URL
