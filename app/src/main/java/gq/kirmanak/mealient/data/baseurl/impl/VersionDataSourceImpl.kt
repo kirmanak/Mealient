@@ -19,8 +19,7 @@ class VersionDataSourceImpl @Inject constructor(
         logger.v { "getVersionInfo() called with: baseUrl = $baseUrl" }
 
         val service = serviceFactory.provideService(baseUrl)
-        val response = logAndMapErrors(
-            logger,
+        val response = logger.logAndMapErrors(
             block = { service.getVersion() },
             logProvider = { "getVersionInfo: can't request version" }
         )
