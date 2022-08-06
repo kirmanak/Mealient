@@ -1,6 +1,6 @@
 package gq.kirmanak.mealient.data.add
 
-import gq.kirmanak.mealient.data.add.models.AddRecipeRequest
+import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
 import kotlinx.coroutines.flow.Flow
 
 interface AddRecipeRepo {

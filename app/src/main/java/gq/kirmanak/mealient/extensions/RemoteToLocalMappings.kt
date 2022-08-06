@@ -1,15 +1,12 @@
 package gq.kirmanak.mealient.extensions
 
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
-import gq.kirmanak.mealient.data.baseurl.impl.VersionResponse
-import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeIngredientResponse
-import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeInstructionResponse
-import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeResponse
-import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.datasource.models.*
+import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 
 fun GetRecipeResponse.toRecipeEntity() = RecipeEntity(
     remoteId = remoteId,
@@ -46,3 +43,25 @@ fun GetRecipeSummaryResponse.recipeEntity() = RecipeSummaryEntity(
 )
 
 fun VersionResponse.versionInfo() = VersionInfo(production, version, demoStatus)
+
+fun AddRecipeDraft.toAddRecipeRequest() = AddRecipeRequest(
+    name = recipeName,
+    description = recipeDescription,
+    recipeYield = recipeYield,
+    recipeIngredient = recipeIngredients.map { AddRecipeIngredient(note = it) },
+    recipeInstructions = recipeInstructions.map { AddRecipeInstruction(text = it) },
+    settings = AddRecipeSettings(
+        public = isRecipePublic,
+        disableComments = areCommentsDisabled,
+    )
+)
+
+fun AddRecipeRequest.toDraft(): AddRecipeDraft = AddRecipeDraft(
+    recipeName = name,
+    recipeDescription = description,
+    recipeYield = recipeYield,
+    recipeInstructions = recipeInstructions.map { it.text },
+    recipeIngredients = recipeIngredient.map { it.note },
+    isRecipePublic = settings.public,
+    areCommentsDisabled = settings.disableComments,
+)

@@ -2,8 +2,10 @@ package gq.kirmanak.mealient.data.add.impl
 
 import gq.kirmanak.mealient.data.add.AddRecipeDataSource
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
-import gq.kirmanak.mealient.data.add.models.AddRecipeRequest
+import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeStorage
+import gq.kirmanak.mealient.extensions.toAddRecipeRequest
+import gq.kirmanak.mealient.extensions.toDraft
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -19,7 +21,7 @@ class AddRecipeRepoImpl @Inject constructor(
 ) : AddRecipeRepo {
 
     override val addRecipeRequestFlow: Flow<AddRecipeRequest>
-        get() = addRecipeStorage.updates.map { AddRecipeRequest(it) }
+        get() = addRecipeStorage.updates.map { it.toAddRecipeRequest() }
 
     override suspend fun preserve(recipe: AddRecipeRequest) {
         logger.v { "preserveRecipe() called with: recipe = $recipe" }
