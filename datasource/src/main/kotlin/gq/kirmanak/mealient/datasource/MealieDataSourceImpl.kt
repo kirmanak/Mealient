@@ -54,12 +54,11 @@ class MealieDataSourceImpl @Inject constructor(
 
     override suspend fun requestRecipes(
         baseUrl: String, token: String?, start: Int, limit: Int
-    ): List<GetRecipeSummaryResponse> =
-        makeCall(
-            block = { getRecipeSummary("$baseUrl/api/recipes/summary", token, start, limit) },
-            logMethod = { "requestRecipes" },
-            logParameters = { "baseUrl = $baseUrl, token = $token, start = $start, limit = $limit" }
-        ).getOrThrowUnauthorized()
+    ): List<GetRecipeSummaryResponse> = makeCall(
+        block = { getRecipeSummary("$baseUrl/api/recipes/summary", token, start, limit) },
+        logMethod = { "requestRecipes" },
+        logParameters = { "baseUrl = $baseUrl, token = $token, start = $start, limit = $limit" }
+    ).getOrThrowUnauthorized()
 
     override suspend fun requestRecipeInfo(
         baseUrl: String, token: String?, slug: String
