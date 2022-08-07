@@ -17,6 +17,8 @@ interface DatabaseModule {
         @Provides
         @Singleton
         fun createDb(@ApplicationContext context: Context): AppDb =
-            Room.databaseBuilder(context, AppDb::class.java, "app.db").build()
+            Room.databaseBuilder(context, AppDb::class.java, "app.db")
+                .fallbackToDestructiveMigrationFrom(2)
+                .build()
     }
 }

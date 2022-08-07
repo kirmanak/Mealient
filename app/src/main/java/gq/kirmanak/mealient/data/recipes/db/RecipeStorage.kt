@@ -17,5 +17,5 @@ interface RecipeStorage {
 
     suspend fun saveRecipeInfo(recipe: GetRecipeResponse)
 
-    suspend fun queryRecipeInfo(recipeId: Long): FullRecipeInfo
+    suspend fun queryRecipeInfo(recipeId: String): FullRecipeInfo
 }

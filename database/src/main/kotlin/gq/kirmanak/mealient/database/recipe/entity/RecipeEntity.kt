@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "recipe")
 data class RecipeEntity(
-    @PrimaryKey @ColumnInfo(name = "remote_id") val remoteId: Long,
+    @PrimaryKey @ColumnInfo(name = "remote_id") val remoteId: String,
     @ColumnInfo(name = "recipe_yield") val recipeYield: String,
 )

@@ -35,6 +35,14 @@ interface MealieService {
     ): List<GetRecipeSummaryResponse>
 
     @GET
+    suspend fun getRecipeSummaryV1(
+        @Url url: String,
+        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int,
+    ): GetRecipesResponseV1
+
+    @GET
     suspend fun getRecipe(
         @Url url: String,
         @Header(AUTHORIZATION_HEADER_NAME) token: String?,

@@ -10,5 +10,5 @@ data class GetRecipeIngredientResponse(
     @SerialName("unit") val unit: String = "",
     @SerialName("food") val food: String = "",
     @SerialName("disableAmount") val disableAmount: Boolean,
-    @SerialName("quantity") val quantity: Int,
+    @SerialName("quantity") val quantity: Double,
 )

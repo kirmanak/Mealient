@@ -25,5 +25,5 @@ import androidx.room.Index
 )
 data class CategoryRecipeEntity(
     @ColumnInfo(name = "category_id") val categoryId: Long,
-    @ColumnInfo(name = "recipe_id", index = true) val recipeId: Long
+    @ColumnInfo(name = "recipe_id", index = true) val recipeId: String,
 )

@@ -45,6 +45,19 @@ class MealieDataSourceImpl @Inject constructor(
         logMethod = { "getVersionInfo" },
         logParameters = { "baseUrl = $baseUrl" },
     ).getOrElse {
+        when (it) {
+            is HttpException, is SerializationException -> getVersionInfoV1(baseUrl)
+            is SocketTimeoutException,
+            is ConnectException -> throw NetworkError.NoServerConnection(it)
+            else -> throw NetworkError.MalformedUrl(it)
+        }
+    }
+
+    private suspend fun getVersionInfoV1(baseUrl: String): VersionResponse = makeCall(
+        block = { getVersion("$baseUrl/api/app/about") },
+        logMethod = { "getVersionInfoV1" },
+        logParameters = { "baseUrl = $baseUrl" },
+    ).getOrElse {
         throw when (it) {
             is HttpException, is SerializationException -> NetworkError.NotMealie(it)
             is SocketTimeoutException, is ConnectException -> NetworkError.NoServerConnection(it)
@@ -58,7 +71,23 @@ class MealieDataSourceImpl @Inject constructor(
         block = { getRecipeSummary("$baseUrl/api/recipes/summary", token, start, limit) },
         logMethod = { "requestRecipes" },
         logParameters = { "baseUrl = $baseUrl, token = $token, start = $start, limit = $limit" }
-    ).getOrThrowUnauthorized()
+    ).getOrElse {
+        val code = (it as? HttpException)?.code() ?: throw it
+        if (code == 404) requestRecipesV1(baseUrl, token, start, limit) else throw it
+    }
+
+    private suspend fun requestRecipesV1(
+        baseUrl: String, token: String?, start: Int, limit: Int
+    ): List<GetRecipeSummaryResponse> {
+        // Imagine start is 30 and limit is 15. It means that we already have page 1 and 2, now we need page 3
+        val perPage = limit
+        val page = start / perPage + 1
+        return makeCall(
+            block = { getRecipeSummaryV1("$baseUrl/api/recipes", token, page, perPage) },
+            logMethod = { "requestRecipesV1" },
+            logParameters = { "baseUrl = $baseUrl, token = $token, start = $start, limit = $limit" }
+        ).map { it.items }.getOrThrowUnauthorized()
+    }
 
     override suspend fun requestRecipeInfo(
         baseUrl: String, token: String?, slug: String

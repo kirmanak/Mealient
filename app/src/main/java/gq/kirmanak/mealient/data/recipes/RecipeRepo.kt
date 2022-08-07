@@ -9,5 +9,5 @@ interface RecipeRepo {
 
     suspend fun clearLocalData()
 
-    suspend fun loadRecipeInfo(recipeId: Long, recipeSlug: String): FullRecipeInfo
+    suspend fun loadRecipeInfo(recipeId: String, recipeSlug: String): FullRecipeInfo
 }

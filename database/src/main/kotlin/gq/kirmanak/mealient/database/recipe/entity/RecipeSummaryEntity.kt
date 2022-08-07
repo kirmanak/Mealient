@@ -8,7 +8,7 @@ import kotlinx.datetime.LocalDateTime
 
 @Entity(tableName = "recipe_summaries")
 data class RecipeSummaryEntity(
-    @PrimaryKey @ColumnInfo(name = "remote_id") val remoteId: Long,
+    @PrimaryKey @ColumnInfo(name = "remote_id") val remoteId: String,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "slug") val slug: String,
     @ColumnInfo(name = "image") val image: String?,

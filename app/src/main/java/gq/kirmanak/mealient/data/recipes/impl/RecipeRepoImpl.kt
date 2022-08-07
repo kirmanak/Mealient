@@ -38,7 +38,7 @@ class RecipeRepoImpl @Inject constructor(
         storage.clearAllLocalData()
     }
 
-    override suspend fun loadRecipeInfo(recipeId: Long, recipeSlug: String): FullRecipeInfo {
+    override suspend fun loadRecipeInfo(recipeId: String, recipeSlug: String): FullRecipeInfo {
         logger.v { "loadRecipeInfo() called with: recipeId = $recipeId, recipeSlug = $recipeSlug" }
 
         runCatchingExceptCancel {

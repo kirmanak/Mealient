@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetRecipeResponse(
-    @SerialName("id") val remoteId: Long,
+    @SerialName("id") val remoteId: String,
     @SerialName("name") val name: String,
     @SerialName("slug") val slug: String,
     @SerialName("image") val image: String,

@@ -13,7 +13,7 @@ fun GetRecipeResponse.toRecipeEntity() = RecipeEntity(
     recipeYield = recipeYield
 )
 
-fun GetRecipeIngredientResponse.toRecipeIngredientEntity(remoteId: Long) =
+fun GetRecipeIngredientResponse.toRecipeIngredientEntity(remoteId: String) =
     RecipeIngredientEntity(
         recipeId = remoteId,
         title = title,
@@ -24,7 +24,7 @@ fun GetRecipeIngredientResponse.toRecipeIngredientEntity(remoteId: Long) =
         quantity = quantity
     )
 
-fun GetRecipeInstructionResponse.toRecipeInstructionEntity(remoteId: Long) =
+fun GetRecipeInstructionResponse.toRecipeInstructionEntity(remoteId: String) =
     RecipeInstructionEntity(
         recipeId = remoteId,
         title = title,

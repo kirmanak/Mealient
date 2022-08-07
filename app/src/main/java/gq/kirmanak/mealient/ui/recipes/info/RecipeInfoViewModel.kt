@@ -20,7 +20,7 @@ class RecipeInfoViewModel @Inject constructor(
     private val _uiState = MutableLiveData(RecipeInfoUiState())
     val uiState: LiveData<RecipeInfoUiState> get() = _uiState
 
-    fun loadRecipeInfo(recipeId: Long, recipeSlug: String) {
+    fun loadRecipeInfo(recipeId: String, recipeSlug: String) {
         logger.v { "loadRecipeInfo() called with: recipeId = $recipeId, recipeSlug = $recipeSlug" }
         _uiState.value = RecipeInfoUiState()
         viewModelScope.launch {

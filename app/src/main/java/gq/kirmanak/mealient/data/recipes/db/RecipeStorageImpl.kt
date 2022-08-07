@@ -132,7 +132,7 @@ class RecipeStorageImpl @Inject constructor(
         }
     }
 
-    override suspend fun queryRecipeInfo(recipeId: Long): FullRecipeInfo {
+    override suspend fun queryRecipeInfo(recipeId: String): FullRecipeInfo {
         logger.v { "queryRecipeInfo() called with: recipeId = $recipeId" }
         val fullRecipeInfo = checkNotNull(recipeDao.queryFullRecipeInfo(recipeId)) {
             "Can't find recipe by id $recipeId in DB"

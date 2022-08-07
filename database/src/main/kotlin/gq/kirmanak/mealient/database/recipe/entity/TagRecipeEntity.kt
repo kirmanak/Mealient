@@ -23,5 +23,5 @@ import androidx.room.ForeignKey
 )
 data class TagRecipeEntity(
     @ColumnInfo(name = "tag_id") val tagId: Long,
-    @ColumnInfo(name = "recipe_id", index = true) val recipeId: Long
+    @ColumnInfo(name = "recipe_id", index = true) val recipeId: String,
 )
