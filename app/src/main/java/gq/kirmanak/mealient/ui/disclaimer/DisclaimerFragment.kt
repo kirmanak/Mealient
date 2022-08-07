@@ -53,6 +53,7 @@ class DisclaimerFragment : Fragment(R.layout.fragment_disclaimer) {
                 R.plurals.fragment_disclaimer_button_okay_timer, it, it
             ) else getString(R.string.fragment_disclaimer_button_okay)
             binding.okay.isClickable = it == 0
+            binding.okay.isEnabled = it == 0
         }
         viewModel.startCountDown()
         activityViewModel.updateUiState {
