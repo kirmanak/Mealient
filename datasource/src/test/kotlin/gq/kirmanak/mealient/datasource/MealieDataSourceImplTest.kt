@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.datasource
 
 import com.google.common.truth.Truth.assertThat
+import gq.kirmanak.mealient.datasource.models.GetTokenResponse
 import gq.kirmanak.mealient.datasource.models.NetworkError
 import gq.kirmanak.mealient.datasource.models.VersionResponse
 import gq.kirmanak.mealient.logging.Logger
@@ -16,6 +17,7 @@ import org.junit.Before
 import org.junit.Test
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 import java.net.ConnectException
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -63,7 +65,53 @@ class MealieDataSourceImplTest {
         assertThat(subject.getVersionInfo(TEST_BASE_URL)).isSameInstanceAs(versionResponse)
     }
 
+    @Test
+    fun `when authentication is successful then token is correct`() = runTest {
+        coEvery { service.getToken(any(), any(), any()) } returns GetTokenResponse(TEST_TOKEN)
+        assertThat(callAuthenticate()).isEqualTo(TEST_TOKEN)
+    }
+
+    @Test(expected = NetworkError.Unauthorized::class)
+    fun `when authenticate receives 401 and Unauthorized then throws Unauthorized`() = runTest {
+        val body = "{\"detail\":\"Unauthorized\"}".toJsonResponseBody()
+        coEvery {
+            service.getToken(any(), any(), any())
+        } throws HttpException(Response.error<GetTokenResponse>(401, body))
+        callAuthenticate()
+    }
+
+    @Test(expected = HttpException::class)
+    fun `when authenticate receives 401 but not Unauthorized then throws NotMealie`() = runTest {
+        val body = "{\"detail\":\"Something\"}".toJsonResponseBody()
+        coEvery {
+            service.getToken(any(), any(), any())
+        } throws HttpException(Response.error<GetTokenResponse>(401, body))
+        callAuthenticate()
+    }
+
+    @Test(expected = SerializationException::class)
+    fun `when authenticate receives 404 and empty body then throws NotMealie`() = runTest {
+        val body = "".toJsonResponseBody()
+        coEvery {
+            service.getToken(any(), any(), any())
+        } throws HttpException(Response.error<GetTokenResponse>(401, body))
+        callAuthenticate()
+    }
+
+    @Test(expected = IOException::class)
+    fun `when authenticate and getToken throws then throws NoServerConnection`() = runTest {
+        coEvery { service.getToken(any(), any(), any()) } throws IOException("Server not found")
+        callAuthenticate()
+    }
+
+    private suspend fun callAuthenticate(): String =
+        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, TEST_BASE_URL)
+
     companion object {
-        private const val TEST_BASE_URL = ""
+        const val TEST_USERNAME = "TEST_USERNAME"
+        const val TEST_PASSWORD = "TEST_PASSWORD"
+        const val TEST_BASE_URL = "https://example.com/"
+        const val TEST_TOKEN = "TEST_TOKEN"
+        const val TEST_AUTH_HEADER = "Bearer TEST_TOKEN"
     }
 }
