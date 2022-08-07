@@ -8,6 +8,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import okhttp3.ResponseBody
 import retrofit2.HttpException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,6 +47,7 @@ class MealieDataSourceImpl @Inject constructor(
     ).getOrElse {
         throw when (it) {
             is HttpException, is SerializationException -> NetworkError.NotMealie(it)
+            is SocketTimeoutException, is ConnectException -> NetworkError.NoServerConnection(it)
             else -> NetworkError.MalformedUrl(it)
         }
     }
