@@ -2,7 +2,7 @@ package gq.kirmanak.mealient.ui.add
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
-import gq.kirmanak.mealient.data.add.models.AddRecipeRequest
+import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
 import gq.kirmanak.mealient.logging.Logger
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery

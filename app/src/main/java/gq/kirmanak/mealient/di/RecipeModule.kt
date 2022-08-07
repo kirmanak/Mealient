@@ -9,10 +9,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import gq.kirmanak.mealient.R
-import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
-import gq.kirmanak.mealient.data.network.RetrofitBuilder
-import gq.kirmanak.mealient.data.network.ServiceFactory
-import gq.kirmanak.mealient.data.network.createServiceFactory
+import gq.kirmanak.mealient.data.network.MealieDataSourceWrapper
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorageImpl
@@ -20,15 +17,9 @@ import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProviderImpl
 import gq.kirmanak.mealient.data.recipes.impl.RecipeRepoImpl
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
-import gq.kirmanak.mealient.data.recipes.network.RecipeDataSourceImpl
-import gq.kirmanak.mealient.data.recipes.network.RecipeService
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.images.RecipeModelLoaderFactory
-import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
 import java.io.InputStream
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -37,7 +28,7 @@ interface RecipeModule {
 
     @Binds
     @Singleton
-    fun provideRecipeDataSource(recipeDataSourceImpl: RecipeDataSourceImpl): RecipeDataSource
+    fun provideRecipeDataSource(mealieDataSourceWrapper: MealieDataSourceWrapper): RecipeDataSource
 
     @Binds
     @Singleton
@@ -56,20 +47,6 @@ interface RecipeModule {
     fun bindModelLoaderFactory(recipeModelLoaderFactory: RecipeModelLoaderFactory): ModelLoaderFactory<RecipeSummaryEntity, InputStream>
 
     companion object {
-
-        @Provides
-        @Singleton
-        fun provideRecipeServiceFactory(
-            @Named(AUTH_OK_HTTP) okHttpClient: OkHttpClient,
-            json: Json,
-            logger: Logger,
-            baseURLStorage: BaseURLStorage,
-        ): ServiceFactory<RecipeService> {
-            return RetrofitBuilder(okHttpClient, json, logger).createServiceFactory(
-                baseURLStorage,
-                logger
-            )
-        }
 
         @Provides
         @Singleton

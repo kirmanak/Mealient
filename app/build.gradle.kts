@@ -8,7 +8,6 @@ plugins {
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
-    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     alias(libs.plugins.appsweep)
@@ -19,8 +18,6 @@ android {
         applicationId = "gq.kirmanak.mealient"
         versionCode = 13
         versionName = "0.2.4"
-
-        buildConfigField("Boolean", "LOG_NETWORK", "false")
     }
 
     signingConfigs {
@@ -68,6 +65,7 @@ dependencies {
 
     implementation(project(":database"))
     implementation(project(":datastore"))
+    implementation(project(":datasource"))
     implementation(project(":logging"))
 
     implementation(libs.android.material.material)
@@ -91,16 +89,6 @@ dependencies {
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
-
-    implementation(libs.squareup.retrofit)
-
-    implementation(libs.jakewharton.retrofitSerialization)
-
-    implementation(platform(libs.okhttp3.bom))
-    implementation(libs.okhttp3.okhttp)
-    debugImplementation(libs.okhttp3.loggingInterceptor)
-
-    implementation(libs.jetbrains.kotlinx.serialization)
 
     implementation(libs.androidx.paging.runtimeKtx)
     testImplementation(libs.androidx.paging.commonKtx)
@@ -137,6 +125,4 @@ dependencies {
     testImplementation(libs.io.mockk)
 
     debugImplementation(libs.squareup.leakcanary)
-
-    debugImplementation(libs.chuckerteam.chucker)
 }

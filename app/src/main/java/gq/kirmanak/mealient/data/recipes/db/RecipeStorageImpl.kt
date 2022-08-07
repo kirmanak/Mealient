@@ -2,11 +2,11 @@ package gq.kirmanak.mealient.data.recipes.db
 
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
-import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeResponse
-import gq.kirmanak.mealient.data.recipes.network.response.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.database.AppDb
 import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.entity.*
+import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
+import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.extensions.recipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
