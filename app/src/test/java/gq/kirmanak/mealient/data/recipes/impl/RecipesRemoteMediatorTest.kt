@@ -3,10 +3,10 @@ package gq.kirmanak.mealient.data.recipes.impl
 import androidx.paging.*
 import androidx.paging.LoadType.*
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.data.network.NetworkError.Unauthorized
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.datasource.models.NetworkError.Unauthorized
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARIES
 import io.mockk.MockKAnnotations
