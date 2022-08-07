@@ -1,13 +1,17 @@
-package gq.kirmanak.mealient.data.add.models
+package gq.kirmanak.mealient.extensions
 
 import com.google.common.truth.Truth.assertThat
+import gq.kirmanak.mealient.datasource.models.AddRecipeIngredient
+import gq.kirmanak.mealient.datasource.models.AddRecipeInstruction
+import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
+import gq.kirmanak.mealient.datasource.models.AddRecipeSettings
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import org.junit.Test
 
-class AddRecipeRequestTest {
+class RemoteToLocalMappingsTest {
 
     @Test
-    fun `when construct from input then fills fields correctly`() {
+    fun `when toAddRecipeRequest then fills fields correctly`() {
         val input = AddRecipeDraft(
             recipeName = "Recipe name",
             recipeDescription = "Recipe description",
@@ -36,11 +40,11 @@ class AddRecipeRequestTest {
             )
         )
 
-        assertThat(AddRecipeRequest(input)).isEqualTo(expected)
+        assertThat(input.toAddRecipeRequest()).isEqualTo(expected)
     }
 
     @Test
-    fun `when toInput then fills fields correctly`() {
+    fun `when toDraft then fills fields correctly`() {
         val request = AddRecipeRequest(
             name = "Recipe name",
             description = "Recipe description",
