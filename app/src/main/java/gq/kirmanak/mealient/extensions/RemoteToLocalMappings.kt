@@ -42,7 +42,7 @@ fun GetRecipeSummaryResponse.recipeEntity() = RecipeSummaryEntity(
     dateUpdated = dateUpdated,
 )
 
-fun VersionResponse.versionInfo() = VersionInfo(production, version, demoStatus)
+fun VersionResponse.toVersionInfo() = VersionInfo(production, version, demoStatus)
 
 fun AddRecipeDraft.toAddRecipeRequest() = AddRecipeRequest(
     name = recipeName,

@@ -7,7 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.data.baseurl.VersionDataSource
 import gq.kirmanak.mealient.data.baseurl.impl.BaseURLStorageImpl
-import gq.kirmanak.mealient.data.baseurl.impl.VersionDataSourceImpl
+import gq.kirmanak.mealient.data.network.MealieDataSourceWrapper
 import javax.inject.Singleton
 
 @Module
@@ -16,7 +16,7 @@ interface BaseURLModule {
 
     @Binds
     @Singleton
-    fun bindVersionDataSource(versionDataSourceImpl: VersionDataSourceImpl): VersionDataSource
+    fun bindVersionDataSource(mealieDataSourceWrapper: MealieDataSourceWrapper): VersionDataSource
 
     @Binds
     @Singleton
