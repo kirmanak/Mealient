@@ -1,6 +1,6 @@
 [versions]
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-androidGradlePlugin = "7.2.1"
+androidGradlePlugin = "7.2.2"
 # https://developers.google.com/android/guides/google-services-plugin
 googleServicesPlugin = "4.3.13"
 # https://mvnrepository.com/artifact/com.google.firebase/firebase-crashlytics-gradle
@@ -10,9 +10,9 @@ kotlin = "1.7.10"
 # https://developer.android.com/jetpack/androidx/releases/navigation
 googleNavigation = "2.5.1"
 # https://dagger.dev/hilt/gradle-setup
-hilt = "2.43.1"
+hilt = "2.43.2"
 # https://github.com/protocolbuffers/protobuf/releases
-protobuf = "3.21.4"
+protobuf = "3.21.5"
 # https://github.com/google/protobuf-gradle-plugin/releases
 protobufPlugin = "0.8.19"
 # https://plugins.gradle.org/plugin/org.sonarqube
@@ -20,13 +20,13 @@ sonarqube = "3.4.0.2513"
 # https://plugins.gradle.org/plugin/nl.neotech.plugin.rootcoverage
 rootCoverage = "1.5.3"
 # https://plugins.gradle.org/plugin/com.guardsquare.appsweep
-appsweep = "1.1.0"
+appsweep = "1.2.0"
 # https://github.com/material-components/material-components-android/releases
 material = "1.6.1"
 # https://developer.android.com/kotlin/ktx#core
 coreKtx = "1.8.0"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
-appcompat = "1.4.2"
+appcompat = "1.5.0"
 # https://developer.android.com/jetpack/androidx/releases/constraintlayout
 contraintLayout = "2.1.4"
 # https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout
@@ -56,7 +56,7 @@ datastore = "1.0.0"
 # https://developer.android.com/jetpack/androidx/releases/security
 security = "1.0.0"
 # https://mvnrepository.com/artifact/com.google.firebase/firebase-bom?repo=google
-firebase = "30.3.1"
+firebase = "30.3.2"
 # https://github.com/junit-team/junit4/releases
 junit = "4.13.2"
 # https://developer.android.com/jetpack/androidx/releases/test
@@ -74,7 +74,7 @@ leakcanary = "2.9.1"
 # https://github.com/ChuckerTeam/chucker/releases
 chucker = "3.5.2"
 # https://developer.android.com/studio/write/java8-support#library-desugaring
-desugar = "1.1.5"
+desugar = "1.1.6"
 # https://github.com/google/ksp/releases
 kspPlugin = "1.7.10-1.0.6"
 
