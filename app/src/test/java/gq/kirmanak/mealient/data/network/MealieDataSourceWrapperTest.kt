@@ -1,16 +1,19 @@
 package gq.kirmanak.mealient.data.network
 
 import gq.kirmanak.mealient.data.auth.AuthRepo
-import gq.kirmanak.mealient.data.baseurl.ServerInfoStorage
+import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
+import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
-import gq.kirmanak.mealient.test.RecipeImplTestData.GET_CAKE_RESPONSE
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerifyAll
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -18,35 +21,40 @@ import org.junit.Test
 import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class MealieDataSourceV0WrapperTest {
+class MealieDataSourceWrapperTest {
 
     @MockK
-    lateinit var serverInfoStorage: ServerInfoStorage
+    lateinit var serverInfoRepo: ServerInfoRepo
 
     @MockK(relaxUnitFun = true)
     lateinit var authRepo: AuthRepo
 
     @MockK
-    lateinit var mealieDataSourceV0: MealieDataSourceV0
+    lateinit var v0Source: MealieDataSourceV0
+
+    @MockK
+    lateinit var v1Source: MealieDataSourceV1
 
     lateinit var subject: MealieDataSourceWrapper
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = MealieDataSourceWrapper(serverInfoStorage, authRepo, mealieDataSourceV0)
+        subject = MealieDataSourceWrapper(serverInfoRepo, authRepo, v0Source, v1Source)
     }
 
     @Test
     fun `when withAuthHeader fails with Unauthorized then invalidates auth`() = runTest {
-        coEvery { serverInfoStorage.requireBaseURL() } returns TEST_BASE_URL
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION
+        coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
         coEvery { authRepo.getAuthHeader() } returns null andThen TEST_AUTH_HEADER
         coEvery {
-            mealieDataSourceV0.requestRecipeInfo(eq(TEST_BASE_URL), isNull(), eq("cake"))
+            v0Source.requestRecipeInfo(eq(TEST_BASE_URL), isNull(), eq("cake"))
         } throws NetworkError.Unauthorized(IOException())
+        val successResponse = mockk<GetRecipeResponseV0>(relaxed = true)
         coEvery {
-            mealieDataSourceV0.requestRecipeInfo(eq(TEST_BASE_URL), eq(TEST_AUTH_HEADER), eq("cake"))
-        } returns GET_CAKE_RESPONSE
+            v0Source.requestRecipeInfo(eq(TEST_BASE_URL), eq(TEST_AUTH_HEADER), eq("cake"))
+        } returns successResponse
         subject.requestRecipeInfo("cake")
         coVerifyAll {
             authRepo.getAuthHeader()

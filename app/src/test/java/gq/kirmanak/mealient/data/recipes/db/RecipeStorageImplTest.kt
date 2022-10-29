@@ -73,10 +73,10 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         val actual = appDb.recipeDao().queryAllCategoryRecipes()
         assertThat(actual).containsExactly(
-            CategoryRecipeEntity(categoryId = 1, recipeId = 1),
-            CategoryRecipeEntity(categoryId = 2, recipeId = 1),
-            CategoryRecipeEntity(categoryId = 3, recipeId = 2),
-            CategoryRecipeEntity(categoryId = 2, recipeId = 2)
+            CategoryRecipeEntity(categoryId = 1, recipeId = "1"),
+            CategoryRecipeEntity(categoryId = 2, recipeId = "1"),
+            CategoryRecipeEntity(categoryId = 3, recipeId = "2"),
+            CategoryRecipeEntity(categoryId = 2, recipeId = "2")
         )
     }
 
@@ -85,10 +85,10 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.saveRecipes(TEST_RECIPE_SUMMARIES)
         val actual = appDb.recipeDao().queryAllTagRecipes()
         assertThat(actual).containsExactly(
-            TagRecipeEntity(tagId = 1, recipeId = 1),
-            TagRecipeEntity(tagId = 2, recipeId = 1),
-            TagRecipeEntity(tagId = 3, recipeId = 2),
-            TagRecipeEntity(tagId = 1, recipeId = 2),
+            TagRecipeEntity(tagId = 1, recipeId = "1"),
+            TagRecipeEntity(tagId = 2, recipeId = "1"),
+            TagRecipeEntity(tagId = 3, recipeId = "2"),
+            TagRecipeEntity(tagId = 1, recipeId = "2"),
         )
     }
 
@@ -106,8 +106,8 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
         val actual = appDb.recipeDao().queryAllCategoryRecipes()
         assertThat(actual).containsExactly(
-            CategoryRecipeEntity(categoryId = 1, recipeId = 1),
-            CategoryRecipeEntity(categoryId = 2, recipeId = 1),
+            CategoryRecipeEntity(categoryId = 1, recipeId = "1"),
+            CategoryRecipeEntity(categoryId = 2, recipeId = "1"),
         )
     }
 
@@ -117,8 +117,8 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.refreshAll(listOf(RECIPE_SUMMARY_CAKE))
         val actual = appDb.recipeDao().queryAllTagRecipes()
         assertThat(actual).containsExactly(
-            TagRecipeEntity(tagId = 1, recipeId = 1),
-            TagRecipeEntity(tagId = 2, recipeId = 1),
+            TagRecipeEntity(tagId = 1, recipeId = "1"),
+            TagRecipeEntity(tagId = 2, recipeId = "1"),
         )
     }
 
@@ -150,7 +150,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     fun `when saveRecipeInfo then saves recipe info`() = runTest {
         subject.saveRecipes(listOf(RECIPE_SUMMARY_CAKE))
         subject.saveRecipeInfo(GET_CAKE_RESPONSE)
-        val actual = appDb.recipeDao().queryFullRecipeInfo(1)
+        val actual = appDb.recipeDao().queryFullRecipeInfo("1")
         assertThat(actual).isEqualTo(FULL_CAKE_INFO_ENTITY)
     }
 
@@ -159,7 +159,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.saveRecipes(listOf(RECIPE_SUMMARY_CAKE, RECIPE_SUMMARY_PORRIDGE))
         subject.saveRecipeInfo(GET_CAKE_RESPONSE)
         subject.saveRecipeInfo(GET_PORRIDGE_RESPONSE)
-        val actual = appDb.recipeDao().queryFullRecipeInfo(2)
+        val actual = appDb.recipeDao().queryFullRecipeInfo("2")
         assertThat(actual).isEqualTo(FULL_PORRIDGE_INFO_ENTITY)
     }
 
@@ -169,7 +169,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.saveRecipeInfo(GET_CAKE_RESPONSE)
         val newRecipe = GET_CAKE_RESPONSE.copy(recipeIngredients = listOf(BREAD_INGREDIENT))
         subject.saveRecipeInfo(newRecipe)
-        val actual = appDb.recipeDao().queryFullRecipeInfo(1)?.recipeIngredients
+        val actual = appDb.recipeDao().queryFullRecipeInfo("1")?.recipeIngredients
         val expected = listOf(CAKE_BREAD_RECIPE_INGREDIENT_ENTITY.copy(localId = 3))
         assertThat(actual).isEqualTo(expected)
     }
@@ -180,7 +180,7 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.saveRecipeInfo(GET_CAKE_RESPONSE)
         val newRecipe = GET_CAKE_RESPONSE.copy(recipeInstructions = listOf(MIX_INSTRUCTION))
         subject.saveRecipeInfo(newRecipe)
-        val actual = appDb.recipeDao().queryFullRecipeInfo(1)?.recipeInstructions
+        val actual = appDb.recipeDao().queryFullRecipeInfo("1")?.recipeInstructions
         val expected = listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY.copy(localId = 3))
         assertThat(actual).isEqualTo(expected)
     }

@@ -23,24 +23,20 @@ class ServerInfoStorageImplTest {
     lateinit var subject: ServerInfoStorage
 
     private val baseUrlKey = stringPreferencesKey("baseUrlKey")
+    private val serverVersionKey = stringPreferencesKey("serverVersionKey")
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         subject = ServerInfoStorageImpl(preferencesStorage)
         every { preferencesStorage.baseUrlKey } returns baseUrlKey
+        every { preferencesStorage.serverVersionKey } returns serverVersionKey
     }
 
     @Test
     fun `when getBaseURL and preferences storage empty then null`() = runTest {
         coEvery { preferencesStorage.getValue(eq(baseUrlKey)) } returns null
         assertThat(subject.getBaseURL()).isNull()
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `when requireBaseURL and preferences storage empty then IllegalStateException`() = runTest {
-        coEvery { preferencesStorage.getValue(eq(baseUrlKey)) } returns null
-        subject.requireBaseURL()
     }
 
     @Test
@@ -50,17 +46,14 @@ class ServerInfoStorageImplTest {
     }
 
     @Test
-    fun `when requireBaseURL and preferences storage has value then value`() = runTest {
-        coEvery { preferencesStorage.getValue(eq(baseUrlKey)) } returns "baseUrl"
-        assertThat(subject.requireBaseURL()).isEqualTo("baseUrl")
-    }
-
-    @Test
     fun `when storeBaseURL then calls preferences storage`() = runTest {
         subject.storeBaseURL("baseUrl", "v0.5.6")
         coVerify {
             preferencesStorage.baseUrlKey
-            preferencesStorage.storeValues(eq(Pair(baseUrlKey, "baseUrl")))
+            preferencesStorage.storeValues(
+                eq(Pair(baseUrlKey, "baseUrl")),
+                eq(Pair(serverVersionKey, "v0.5.6")),
+            )
         }
     }
 }

@@ -1,7 +1,7 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.data.baseurl.ServerInfoStorage
+import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.logging.Logger
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -17,7 +17,7 @@ class RecipeImageUrlProviderImplTest {
     lateinit var subject: RecipeImageUrlProvider
 
     @MockK
-    lateinit var serverInfoStorage: ServerInfoStorage
+    lateinit var serverInfoRepo: ServerInfoRepo
 
     @MockK(relaxUnitFun = true)
     lateinit var logger: Logger
@@ -25,7 +25,7 @@ class RecipeImageUrlProviderImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = RecipeImageUrlProviderImpl(serverInfoStorage, logger)
+        subject = RecipeImageUrlProviderImpl(serverInfoRepo, logger)
         prepareBaseURL("https://google.com/")
     }
 
@@ -81,6 +81,6 @@ class RecipeImageUrlProviderImplTest {
     }
 
     private fun prepareBaseURL(baseURL: String?) {
-        coEvery { serverInfoStorage.getBaseURL() } returns baseURL
+        coEvery { serverInfoRepo.getUrl() } returns baseURL
     }
 }

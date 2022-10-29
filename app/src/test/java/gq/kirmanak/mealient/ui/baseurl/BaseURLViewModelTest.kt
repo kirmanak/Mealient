@@ -1,6 +1,6 @@
 package gq.kirmanak.mealient.ui.baseurl
 
-import gq.kirmanak.mealient.data.baseurl.ServerInfoStorage
+import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.baseurl.VersionDataSource
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.logging.Logger
@@ -21,7 +21,7 @@ import org.junit.Test
 class BaseURLViewModelTest : RobolectricTest() {
 
     @MockK(relaxUnitFun = true)
-    lateinit var serverInfoStorage: ServerInfoStorage
+    lateinit var serverInfoRepo: ServerInfoRepo
 
     @MockK
     lateinit var versionDataSource: VersionDataSource
@@ -34,7 +34,7 @@ class BaseURLViewModelTest : RobolectricTest() {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = BaseURLViewModel(serverInfoStorage, versionDataSource, logger)
+        subject = BaseURLViewModel(serverInfoRepo, versionDataSource, logger)
     }
 
     @Test
@@ -44,6 +44,6 @@ class BaseURLViewModelTest : RobolectricTest() {
         } returns VersionInfo(TEST_VERSION)
         subject.saveBaseUrl(TEST_BASE_URL)
         advanceUntilIdle()
-        coVerify { serverInfoStorage.storeBaseURL(eq(TEST_BASE_URL), eq(TEST_VERSION)) }
+        coVerify { serverInfoRepo.storeBaseURL(eq(TEST_BASE_URL), eq(TEST_VERSION)) }
     }
 }

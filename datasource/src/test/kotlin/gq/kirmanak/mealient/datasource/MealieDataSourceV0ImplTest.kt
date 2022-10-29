@@ -35,7 +35,8 @@ class MealieDataSourceV0ImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = MealieDataSourceV0Impl(logger, service, Json)
+        val networkRequestWrapper: NetworkRequestWrapper = NetworkRequestWrapperImpl(logger)
+        subject = MealieDataSourceV0Impl(networkRequestWrapper, service, Json)
     }
 
     @Test(expected = NetworkError.NotMealie::class)
@@ -113,6 +114,5 @@ class MealieDataSourceV0ImplTest {
         const val TEST_PASSWORD = "TEST_PASSWORD"
         const val TEST_BASE_URL = "https://example.com/"
         const val TEST_TOKEN = "TEST_TOKEN"
-        const val TEST_AUTH_HEADER = "Bearer TEST_TOKEN"
     }
 }

@@ -4,7 +4,6 @@ import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
 import gq.kirmanak.mealient.datasource.decode
 import gq.kirmanak.mealient.datasource.v0.models.*
-import gq.kirmanak.mealient.logging.Logger
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
@@ -16,7 +15,6 @@ import javax.inject.Singleton
 @Singleton
 class MealieDataSourceV0Impl @Inject constructor(
     private val networkRequestWrapper: NetworkRequestWrapper,
-    private val logger: Logger,
     private val service: MealieServiceV0,
     private val json: Json,
 ) : MealieDataSourceV0 {
