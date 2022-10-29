@@ -16,6 +16,9 @@ import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import gq.kirmanak.mealient.extensions.toFullRecipeInfo
 import gq.kirmanak.mealient.extensions.toRecipeSummaryInfo
 import gq.kirmanak.mealient.extensions.toVersionInfo
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,31 +26,38 @@ import javax.inject.Singleton
 class MealieDataSourceWrapper @Inject constructor(
     private val baseURLStorage: BaseURLStorage,
     private val authRepo: AuthRepo,
-    private val V0source: MealieDataSourceV0,
-    private val V1Source: MealieDataSourceV1,
+    private val v0source: MealieDataSourceV0,
+    private val v1Source: MealieDataSourceV1,
 ) : AddRecipeDataSource, RecipeDataSource, VersionDataSource {
 
     override suspend fun addRecipe(recipe: AddRecipeRequestV0): String =
-        withAuthHeader { token -> V0source.addRecipe(getUrl(), token, recipe) }
+        withAuthHeader { token -> v0source.addRecipe(getUrl(), token, recipe) }
 
-    override suspend fun getVersionInfo(baseUrl: String): VersionInfo =
-        runCatchingExceptCancel {
-            V0source.getVersionInfo(baseUrl).toVersionInfo()
-        }.getOrElse {
-            if (it is NetworkError.NotMealie) {
-                V1Source.getVersionInfo(baseUrl).toVersionInfo()
-            } else {
-                throw it
+    override suspend fun getVersionInfo(baseUrl: String): VersionInfo {
+        val responses = coroutineScope {
+            val v0Deferred = async {
+                runCatchingExceptCancel { v0source.getVersionInfo(baseUrl).toVersionInfo() }
             }
+            val v1Deferred = async {
+                runCatchingExceptCancel { v1Source.getVersionInfo(baseUrl).toVersionInfo() }
+            }
+            listOf(v0Deferred, v1Deferred).awaitAll()
         }
+        val firstSuccess = responses.firstNotNullOfOrNull { it.getOrNull() }
+        if (firstSuccess == null) {
+            throw responses.firstNotNullOf { it.exceptionOrNull() }
+        } else {
+            return firstSuccess
+        }
+    }
 
     override suspend fun requestRecipes(start: Int, limit: Int): List<RecipeSummaryInfo> =
         withAuthHeader { token ->
             val url = getUrl()
             if (isV1()) {
-                V1Source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
+                v1Source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
             } else {
-                V0source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
+                v0source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
             }
         }
 
@@ -55,9 +65,9 @@ class MealieDataSourceWrapper @Inject constructor(
         withAuthHeader { token ->
             val url = getUrl()
             if (isV1()) {
-                V1Source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
+                v1Source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
             } else {
-                V0source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
+                v0source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
             }
         }
 

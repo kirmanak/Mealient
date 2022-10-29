@@ -7,9 +7,9 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthDataSourceImpl @Inject constructor(
-    private val V0Source: MealieDataSourceV0,
+    private val v0Source: MealieDataSourceV0,
 ) : AuthDataSource {
 
     override suspend fun authenticate(username: String, password: String, baseUrl: String): String =
-        V0Source.authenticate(baseUrl, username, password)
+        v0Source.authenticate(baseUrl, username, password)
 }
