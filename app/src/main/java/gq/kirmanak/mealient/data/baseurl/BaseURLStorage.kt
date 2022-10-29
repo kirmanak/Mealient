@@ -8,5 +8,7 @@ interface BaseURLStorage {
 
     suspend fun storeBaseURL(baseURL: String, version: String)
 
+    suspend fun storeServerVersion(version: String)
+
     suspend fun getServerVersion(): String?
 }

@@ -66,7 +66,14 @@ class MealieDataSourceWrapper @Inject constructor(
 
     private suspend fun getUrl() = baseURLStorage.requireBaseURL()
 
-    private suspend fun isV1() = baseURLStorage.getServerVersion().orEmpty().startsWith("v1")
+    private suspend fun isV1(): Boolean {
+        var version = baseURLStorage.getServerVersion()
+        if (version == null) {
+            version = getVersionInfo(getUrl()).version
+            baseURLStorage.storeServerVersion(version)
+        }
+        return version.startsWith("v1")
+    }
 
     private suspend inline fun <T> withAuthHeader(block: (String?) -> T): T =
         runCatching { block(authRepo.getAuthHeader()) }.getOrElse {

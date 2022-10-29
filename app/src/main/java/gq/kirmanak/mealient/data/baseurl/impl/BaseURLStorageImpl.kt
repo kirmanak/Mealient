@@ -32,5 +32,9 @@ class BaseURLStorageImpl @Inject constructor(
 
     override suspend fun getServerVersion(): String? = getValue(serverVersionKey)
 
+    override suspend fun storeServerVersion(version: String) {
+        preferencesStorage.storeValues(Pair(serverVersionKey, version))
+    }
+
     private suspend fun <T> getValue(key: Preferences.Key<T>): T? = preferencesStorage.getValue(key)
 }
