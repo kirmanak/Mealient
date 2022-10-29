@@ -54,7 +54,7 @@ class MealieDataSourceV1Impl @Inject constructor(
         perPage: Int
     ): List<GetRecipeSummaryResponseV1> = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.getRecipeSummary("$baseUrl/api/recipes", token, page, perPage) },
-        logMethod = { "requestRecipesV1" },
+        logMethod = { "requestRecipes" },
         logParameters = { "baseUrl = $baseUrl, token = $token, page = $page, perPage = $perPage" }
     ).items
 
