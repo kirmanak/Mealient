@@ -44,4 +44,9 @@ class ServerInfoRepoImpl @Inject constructor(
         version.startsWith("v1") -> ServerVersion.V1
         else -> throw NetworkError.NotMealie(IllegalStateException("Server version is unknown: $version"))
     }
+
+    override suspend fun storeBaseURL(baseURL: String, version: String) {
+        logger.v { "storeBaseURL() called with: baseURL = $baseURL, version = $version" }
+        serverInfoStorage.storeBaseURL(baseURL, version)
+    }
 }
