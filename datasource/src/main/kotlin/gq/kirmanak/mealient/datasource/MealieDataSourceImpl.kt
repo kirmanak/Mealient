@@ -46,22 +46,11 @@ class MealieDataSourceImpl @Inject constructor(
         logParameters = { "baseUrl = $baseUrl" },
     ).getOrElse {
         when (it) {
-            is HttpException, is SerializationException -> getVersionInfoV1(baseUrl)
-            is SocketTimeoutException,
-            is ConnectException -> throw NetworkError.NoServerConnection(it)
+            is HttpException, is SerializationException -> throw NetworkError.NotMealie(it)
+            is SocketTimeoutException, is ConnectException -> throw NetworkError.NoServerConnection(
+                it
+            )
             else -> throw NetworkError.MalformedUrl(it)
-        }
-    }
-
-    private suspend fun getVersionInfoV1(baseUrl: String): VersionResponse = makeCall(
-        block = { getVersion("$baseUrl/api/app/about") },
-        logMethod = { "getVersionInfoV1" },
-        logParameters = { "baseUrl = $baseUrl" },
-    ).getOrElse {
-        throw when (it) {
-            is HttpException, is SerializationException -> NetworkError.NotMealie(it)
-            is SocketTimeoutException, is ConnectException -> NetworkError.NoServerConnection(it)
-            else -> NetworkError.MalformedUrl(it)
         }
     }
 

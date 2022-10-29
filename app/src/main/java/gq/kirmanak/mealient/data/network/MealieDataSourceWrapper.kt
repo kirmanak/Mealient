@@ -29,7 +29,15 @@ class MealieDataSourceWrapper @Inject constructor(
         withAuthHeader { token -> mealieDataSource.addRecipe(getUrl(), token, recipe) }
 
     override suspend fun getVersionInfo(baseUrl: String): VersionInfo =
-        mealieDataSource.getVersionInfo(baseUrl).toVersionInfo()
+        runCatchingExceptCancel {
+            mealieDataSource.getVersionInfo(baseUrl).toVersionInfo()
+        }.getOrElse {
+            if (it is NetworkError.NotMealie) {
+                mealieDataSourceV1.getVersionInfo(baseUrl).toVersionInfo()
+            } else {
+                throw it
+            }
+        }
 
     override suspend fun requestRecipes(start: Int, limit: Int): List<GetRecipeSummaryResponseV1> =
         withAuthHeader { token ->
