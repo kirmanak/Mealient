@@ -2,13 +2,11 @@ package gq.kirmanak.mealient.datasource.v0
 
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
+import gq.kirmanak.mealient.datasource.decode
 import gq.kirmanak.mealient.datasource.v0.models.*
 import gq.kirmanak.mealient.logging.Logger
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import okhttp3.ResponseBody
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -43,7 +41,7 @@ class MealieDataSourceV0Impl @Inject constructor(
         logParameters = { "baseUrl = $baseUrl, username = $username, password = $password" }
     ).map { it.accessToken }.getOrElse {
         val errorBody = (it as? HttpException)?.response()?.errorBody() ?: throw it
-        val errorDetailV0 = errorBody.decode<ErrorDetailV0>()
+        val errorDetailV0 = errorBody.decode<ErrorDetailV0>(json)
         throw if (errorDetailV0.detail == "Unauthorized") NetworkError.Unauthorized(it) else it
     }
 
@@ -81,7 +79,4 @@ class MealieDataSourceV0Impl @Inject constructor(
         logMethod = { "requestRecipeInfo" },
         logParameters = { "baseUrl = $baseUrl, token = $token, slug = $slug" }
     )
-
-    @OptIn(ExperimentalSerializationApi::class)
-    private inline fun <reified R> ResponseBody.decode(): R = json.decodeFromStream(byteStream())
 }

@@ -2,7 +2,9 @@ package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
+import gq.kirmanak.mealient.datasource.decode
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
+import gq.kirmanak.mealient.datasource.v1.models.ErrorDetailV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
@@ -29,8 +31,18 @@ class MealieDataSourceV1Impl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun authenticate(baseUrl: String, username: String, password: String): String {
-        TODO("Not yet implemented")
+    override suspend fun authenticate(
+        baseUrl: String,
+        username: String,
+        password: String,
+    ): String = networkRequestWrapper.makeCall(
+        block = { service.getToken("$baseUrl/api/auth/token", username, password) },
+        logMethod = { "authenticate" },
+        logParameters = { "baseUrl = $baseUrl, username = $username, password = $password" }
+    ).map { it.accessToken }.getOrElse {
+        val errorBody = (it as? HttpException)?.response()?.errorBody() ?: throw it
+        val errorDetailV0 = errorBody.decode<ErrorDetailV1>(json)
+        throw if (errorDetailV0.detail == "Unauthorized") NetworkError.Unauthorized(it) else it
     }
 
     override suspend fun getVersionInfo(
