@@ -14,13 +14,23 @@ class BaseURLStorageImpl @Inject constructor(
     private val baseUrlKey: Preferences.Key<String>
         get() = preferencesStorage.baseUrlKey
 
-    override suspend fun getBaseURL(): String? = preferencesStorage.getValue(baseUrlKey)
+    private val serverVersionKey: Preferences.Key<String>
+        get() = preferencesStorage.serverVersionKey
+
+    override suspend fun getBaseURL(): String? = getValue(baseUrlKey)
 
     override suspend fun requireBaseURL(): String = checkNotNull(getBaseURL()) {
         "Base URL was null when it was required"
     }
 
-    override suspend fun storeBaseURL(baseURL: String) {
-        preferencesStorage.storeValues(Pair(baseUrlKey, baseURL))
+    override suspend fun storeBaseURL(baseURL: String, version: String) {
+        preferencesStorage.storeValues(
+            Pair(baseUrlKey, baseURL),
+            Pair(serverVersionKey, version),
+        )
     }
+
+    override suspend fun getServerVersion(): String? = getValue(serverVersionKey)
+
+    private suspend fun <T> getValue(key: Preferences.Key<T>): T? = preferencesStorage.getValue(key)
 }

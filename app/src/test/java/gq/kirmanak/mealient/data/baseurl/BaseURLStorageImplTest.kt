@@ -57,7 +57,7 @@ class BaseURLStorageImplTest {
 
     @Test
     fun `when storeBaseURL then calls preferences storage`() = runTest {
-        subject.storeBaseURL("baseUrl")
+        subject.storeBaseURL("baseUrl", "v0.5.6")
         coVerify {
             preferencesStorage.baseUrlKey
             preferencesStorage.storeValues(eq(Pair(baseUrlKey, "baseUrl")))

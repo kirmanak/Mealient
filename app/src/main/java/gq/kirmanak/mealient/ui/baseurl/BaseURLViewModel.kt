@@ -35,8 +35,8 @@ class BaseURLViewModel @Inject constructor(
         logger.v { "checkBaseURL() called with: baseURL = $baseURL" }
         val result = runCatchingExceptCancel {
             // If it returns proper version info then it must be a Mealie
-            versionDataSource.getVersionInfo(baseURL)
-            baseURLStorage.storeBaseURL(baseURL)
+            val version = versionDataSource.getVersionInfo(baseURL).version
+            baseURLStorage.storeBaseURL(baseURL, version)
         }
         logger.i { "checkBaseURL: result is $result" }
         _uiState.value = OperationUiState.fromResult(result)

@@ -41,7 +41,9 @@ class MealieDataSourceWrapper @Inject constructor(
 
     override suspend fun requestRecipes(start: Int, limit: Int): List<GetRecipeSummaryResponseV1> =
         withAuthHeader { token ->
-            runCatchingExceptCancel {
+            if (isV1()) {
+                mealieDataSourceV1.requestRecipes(getUrl(), token, start, limit)
+            } else {
                 mealieDataSource.requestRecipes(getUrl(), token, start, limit).map {
                     GetRecipeSummaryResponseV1(
                         remoteId = it.remoteId.toString(),
@@ -56,12 +58,6 @@ class MealieDataSourceWrapper @Inject constructor(
                         dateUpdated = it.dateUpdated,
                     )
                 }
-            }.getOrElse {
-                if (it is NetworkError.NotMealie) {
-                    mealieDataSourceV1.requestRecipes(getUrl(), token, start, limit)
-                } else {
-                    throw it
-                }
             }
         }
 
@@ -69,6 +65,8 @@ class MealieDataSourceWrapper @Inject constructor(
         withAuthHeader { token -> mealieDataSource.requestRecipeInfo(getUrl(), token, slug) }
 
     private suspend fun getUrl() = baseURLStorage.requireBaseURL()
+
+    private suspend fun isV1() = baseURLStorage.getServerVersion().orEmpty().startsWith("v1")
 
     private suspend inline fun <T> withAuthHeader(block: (String?) -> T): T =
         runCatching { block(authRepo.getAuthHeader()) }.getOrElse {

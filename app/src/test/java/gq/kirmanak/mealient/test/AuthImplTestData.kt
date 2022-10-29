@@ -7,4 +7,5 @@ object AuthImplTestData {
     const val TEST_TOKEN = "TEST_TOKEN"
     const val TEST_AUTH_HEADER = "Bearer TEST_TOKEN"
     const val TEST_URL = "TEST_URL"
+    const val TEST_VERSION = "v0.5.6"
 }

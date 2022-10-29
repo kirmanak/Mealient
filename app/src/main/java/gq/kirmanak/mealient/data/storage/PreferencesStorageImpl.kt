@@ -18,6 +18,8 @@ class PreferencesStorageImpl @Inject constructor(
 
     override val baseUrlKey = stringPreferencesKey("baseUrl")
 
+    override val serverVersionKey = stringPreferencesKey("serverVersion")
+
     override val isDisclaimerAcceptedKey = booleanPreferencesKey("isDisclaimedAccepted")
 
     override suspend fun <T> getValue(key: Preferences.Key<T>): T? {
