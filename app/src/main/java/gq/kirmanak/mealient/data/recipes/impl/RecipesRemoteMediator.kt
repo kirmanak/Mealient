@@ -7,7 +7,7 @@ import androidx.paging.LoadType.REFRESH
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -8,10 +8,10 @@ import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
 import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import gq.kirmanak.mealient.extensions.toFullRecipeInfo
 import gq.kirmanak.mealient.extensions.toRecipeSummaryInfo
 import javax.inject.Inject

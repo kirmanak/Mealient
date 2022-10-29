@@ -4,7 +4,7 @@ import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

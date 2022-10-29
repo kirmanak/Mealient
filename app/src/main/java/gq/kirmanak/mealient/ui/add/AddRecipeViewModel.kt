@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

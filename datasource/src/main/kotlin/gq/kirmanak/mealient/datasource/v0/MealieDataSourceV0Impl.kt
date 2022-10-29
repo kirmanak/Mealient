@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.datasource.v0
 
 import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.datasource.v0.models.*
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -80,7 +81,7 @@ class MealieDataSourceV0Impl @Inject constructor(
         crossinline logParameters: () -> String,
     ): Result<T> {
         logger.v { "${logMethod()} called with: ${logParameters()}" }
-        return mealieServiceV0.runCatching { block() }
+        return runCatchingExceptCancel { mealieServiceV0.block() }
             .onFailure { logger.e(it) { "${logMethod()} request failed with: ${logParameters()}" } }
             .onSuccess { logger.d { "${logMethod()} request succeeded with ${logParameters()}" } }
     }

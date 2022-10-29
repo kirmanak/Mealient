@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
@@ -72,7 +73,7 @@ class MealieDataSourceV1Impl @Inject constructor(
         crossinline logParameters: () -> String,
     ): Result<T> {
         logger.v { "${logMethod()} called with: ${logParameters()}" }
-        return mealieService.runCatching { block() }
+        return runCatchingExceptCancel { mealieService.block() }
             .onFailure { logger.e(it) { "${logMethod()} request failed with: ${logParameters()}" } }
             .onSuccess { logger.d { "${logMethod()} request succeeded with ${logParameters()}" } }
     }

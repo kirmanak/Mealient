@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.launch
 import javax.inject.Inject

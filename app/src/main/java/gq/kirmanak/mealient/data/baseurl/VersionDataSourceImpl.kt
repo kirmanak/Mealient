@@ -1,8 +1,8 @@
 package gq.kirmanak.mealient.data.baseurl
 
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import gq.kirmanak.mealient.extensions.toVersionInfo
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

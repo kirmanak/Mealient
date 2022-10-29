@@ -5,6 +5,7 @@ import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.baseurl.ServerInfoStorage
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
@@ -72,7 +73,7 @@ class AuthRepoImplTest {
     fun `when authenticate fails then does not change storage`() = runTest {
         coEvery { dataSource.authenticate(any(), any(), any()) } throws RuntimeException()
         coEvery { serverInfoStorage.requireBaseURL() } returns TEST_BASE_URL
-        runCatching { subject.authenticate("invalid", "") }
+        runCatchingExceptCancel { subject.authenticate("invalid", "") }
         confirmVerified(storage)
     }
 
