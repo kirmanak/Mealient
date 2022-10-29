@@ -1,6 +1,6 @@
 [versions]
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-androidGradlePlugin = "7.3.0"
+androidGradlePlugin = "7.3.1"
 # https://developers.google.com/android/guides/google-services-plugin
 googleServicesPlugin = "4.3.14"
 # https://mvnrepository.com/artifact/com.google.firebase/firebase-crashlytics-gradle
@@ -8,21 +8,21 @@ firebaseCrashlytics = "2.9.2"
 # https://kotlinlang.org/docs/gradle.html
 kotlin = "1.7.20"
 # https://developer.android.com/jetpack/androidx/releases/navigation
-googleNavigation = "2.5.2"
+googleNavigation = "2.5.3"
 # https://dagger.dev/hilt/gradle-setup
 hilt = "2.44"
 # https://github.com/protocolbuffers/protobuf/releases
-protobuf = "3.21.7"
+protobuf = "3.21.9"
 # https://github.com/google/protobuf-gradle-plugin/releases
-protobufPlugin = "0.8.19"
+protobufPlugin = "0.9.1"
 # https://plugins.gradle.org/plugin/org.sonarqube
-sonarqube = "3.4.0.2513"
+sonarqube = "3.5.0.2730"
 # https://plugins.gradle.org/plugin/nl.neotech.plugin.rootcoverage
 rootCoverage = "1.6.0"
 # https://plugins.gradle.org/plugin/com.guardsquare.appsweep
-appsweep = "1.2.0"
+appsweep = "1.4.0"
 # https://github.com/material-components/material-components-android/releases
-material = "1.6.1"
+material = "1.7.0"
 # https://developer.android.com/kotlin/ktx#core
 coreKtx = "1.9.0"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
@@ -38,7 +38,7 @@ retrofit = "2.9.0"
 # https://github.com/JakeWharton/retrofit2-kotlinx-serialization-converter/tags
 retrofitKotlinxSerialization = "0.8.0"
 # https://github.com/Kotlin/kotlinx.serialization/releases
-kotlinxSerialization = "1.4.0"
+kotlinxSerialization = "1.4.1"
 # https://github.com/square/okhttp/tags
 okhttp = "4.10.0"
 # https://developer.android.com/jetpack/androidx/releases/paging
@@ -48,7 +48,7 @@ room = "2.4.3"
 # https://github.com/Kotlin/kotlinx-datetime/releases
 kotlinxDatetime = "0.4.0"
 # https://github.com/bumptech/glide/releases
-glide = "4.14.1"
+glide = "4.14.2"
 # https://github.com/androidbroadcast/ViewBindingPropertyDelegate/releases
 viewBindingDelegate = "1.5.6"
 # https://developer.android.com/jetpack/androidx/releases/datastore
@@ -56,7 +56,7 @@ datastore = "1.0.0"
 # https://developer.android.com/jetpack/androidx/releases/security
 security = "1.0.0"
 # https://mvnrepository.com/artifact/com.google.firebase/firebase-bom?repo=google
-firebase = "30.5.0"
+firebase = "31.0.1"
 # https://github.com/junit-team/junit4/releases
 junit = "4.13.2"
 # https://developer.android.com/jetpack/androidx/releases/test
@@ -73,10 +73,10 @@ mockk = "1.13.2"
 leakcanary = "2.9.1"
 # https://github.com/ChuckerTeam/chucker/releases
 chucker = "3.5.2"
-# https://developer.android.com/studio/write/java8-support#library-desugaring
-desugar = "1.1.6"
+# https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
+desugar = "1.2.2"
 # https://github.com/google/ksp/releases
-kspPlugin = "1.7.20-1.0.6"
+kspPlugin = "1.7.20-1.0.7"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
