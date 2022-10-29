@@ -2,9 +2,9 @@ package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.DataSourceModule.Companion.AUTHORIZATION_HEADER_NAME
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
-import gq.kirmanak.mealient.datasource.v0.models.GetTokenResponseV0
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipesResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetTokenResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import retrofit2.http.*
 
@@ -16,7 +16,7 @@ interface MealieServiceV1 {
         @Url url: String,
         @Field("username") username: String,
         @Field("password") password: String,
-    ): GetTokenResponseV0
+    ): GetTokenResponseV1
 
     @POST
     suspend fun addRecipe(
