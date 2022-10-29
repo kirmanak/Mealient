@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.DataSourceModule.Companion.AUTHORIZATION_HEADER_NAME
-import gq.kirmanak.mealient.datasource.models.*
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
 import gq.kirmanak.mealient.datasource.v0.models.GetTokenResponseV0
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
