@@ -4,14 +4,14 @@ import androidx.paging.PagingSource
 import gq.kirmanak.mealient.database.recipe.entity.FullRecipeInfo
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
-import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 
 interface RecipeStorage {
-    suspend fun saveRecipes(recipes: List<GetRecipeSummaryResponse>)
+    suspend fun saveRecipes(recipes: List<GetRecipeSummaryResponseV1>)
 
     fun queryRecipes(): PagingSource<Int, RecipeSummaryEntity>
 
-    suspend fun refreshAll(recipes: List<GetRecipeSummaryResponse>)
+    suspend fun refreshAll(recipes: List<GetRecipeSummaryResponseV1>)
 
     suspend fun clearAllLocalData()
 

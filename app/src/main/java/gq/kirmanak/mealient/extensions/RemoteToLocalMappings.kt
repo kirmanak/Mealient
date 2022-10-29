@@ -6,6 +6,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.models.*
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 
 fun GetRecipeResponse.toRecipeEntity() = RecipeEntity(
@@ -31,7 +32,7 @@ fun GetRecipeInstructionResponse.toRecipeInstructionEntity(remoteId: String) =
         text = text
     )
 
-fun GetRecipeSummaryResponse.recipeEntity() = RecipeSummaryEntity(
+fun GetRecipeSummaryResponseV1.recipeEntity() = RecipeSummaryEntity(
     remoteId = remoteId,
     name = name,
     slug = slug,

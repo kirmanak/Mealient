@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.datasource.models
+package gq.kirmanak.mealient.datasource.v1.models
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -6,8 +6,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetRecipeSummaryResponse(
-    @SerialName("id") val remoteId: Int,
+data class GetRecipeSummaryResponseV1(
+    @SerialName("id") val remoteId: String,
     @SerialName("name") val name: String,
     @SerialName("slug") val slug: String,
     @SerialName("image") val image: String?,
@@ -19,6 +19,6 @@ data class GetRecipeSummaryResponse(
     @SerialName("dateUpdated") val dateUpdated: LocalDateTime
 ) {
     override fun toString(): String {
-        return "GetRecipeSummaryResponse(remoteId=$remoteId, name='$name')"
+        return "GetRecipeSummaryResponseV1(remoteId=$remoteId, name='$name')"
     }
 }

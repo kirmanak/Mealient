@@ -1,7 +1,8 @@
-package gq.kirmanak.mealient.datasource
+package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.DataSourceModule.Companion.AUTHORIZATION_HEADER_NAME
 import gq.kirmanak.mealient.datasource.models.*
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipesResponseV1
 import retrofit2.http.*
 
 interface MealieServiceV1 {
@@ -28,14 +29,6 @@ interface MealieServiceV1 {
 
     @GET
     suspend fun getRecipeSummary(
-        @Url url: String,
-        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
-        @Query("start") start: Int,
-        @Query("limit") limit: Int,
-    ): List<GetRecipeSummaryResponse>
-
-    @GET
-    suspend fun getRecipeSummaryV1(
         @Url url: String,
         @Header(AUTHORIZATION_HEADER_NAME) token: String?,
         @Query("page") page: Int,
