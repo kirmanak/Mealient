@@ -1,8 +1,3 @@
-import com.google.protobuf.gradle.builtins
-import com.google.protobuf.gradle.generateProtoTasks
-import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.protoc
-
 plugins {
     id("gq.kirmanak.mealient.library")
     id("kotlin-kapt")
