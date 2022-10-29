@@ -11,6 +11,7 @@ import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
+import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import gq.kirmanak.mealient.extensions.toFullRecipeInfo
 import gq.kirmanak.mealient.extensions.toRecipeSummaryInfo
 import javax.inject.Inject
@@ -29,8 +30,7 @@ class MealieDataSourceWrapper @Inject constructor(
     }
 
     override suspend fun requestRecipes(
-        start: Int,
-        limit: Int
+        start: Int, limit: Int
     ): List<RecipeSummaryInfo> = withAuthHeader { token ->
         val url = getUrl()
         when (getVersion()) {
@@ -57,14 +57,17 @@ class MealieDataSourceWrapper @Inject constructor(
 
     private suspend fun getVersion() = serverInfoRepo.getVersion()
 
-    private suspend inline fun <T> withAuthHeader(block: (String?) -> T): T =
-        runCatching { block(authRepo.getAuthHeader()) }.getOrElse {
+    private suspend inline fun <T> withAuthHeader(block: (String?) -> T): T {
+        val authHeader = authRepo.getAuthHeader()
+        return runCatchingExceptCancel { block(authHeader) }.getOrElse {
             if (it is NetworkError.Unauthorized) {
                 authRepo.invalidateAuthHeader()
                 // Trying again with new authentication header
-                block(authRepo.getAuthHeader())
+                val newHeader = authRepo.getAuthHeader()
+                if (newHeader == authHeader) throw it else block(newHeader)
             } else {
                 throw it
             }
         }
+    }
 }
