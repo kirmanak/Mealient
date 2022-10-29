@@ -9,7 +9,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.datasource.models.*
+import gq.kirmanak.mealient.datasource.v0.models.*
 import gq.kirmanak.mealient.datasource.v1.models.*
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 
@@ -34,7 +34,7 @@ fun RecipeInstructionInfo.toRecipeInstructionEntity(remoteId: String) = RecipeIn
     text = text
 )
 
-fun GetRecipeSummaryResponse.toRecipeSummaryInfo() = RecipeSummaryInfo(
+fun GetRecipeSummaryResponseV0.toRecipeSummaryInfo() = RecipeSummaryInfo(
     remoteId = remoteId.toString(),
     name = name,
     slug = slug,
@@ -74,23 +74,23 @@ fun RecipeSummaryInfo.recipeEntity() = RecipeSummaryEntity(
     imageId = imageId,
 )
 
-fun VersionResponse.toVersionInfo() = VersionInfo(version)
+fun VersionResponseV0.toVersionInfo() = VersionInfo(version)
 
 fun VersionResponseV1.toVersionInfo() = VersionInfo(version)
 
-fun AddRecipeDraft.toAddRecipeRequest() = AddRecipeRequest(
+fun AddRecipeDraft.toAddRecipeRequest() = AddRecipeRequestV0(
     name = recipeName,
     description = recipeDescription,
     recipeYield = recipeYield,
-    recipeIngredient = recipeIngredients.map { AddRecipeIngredient(note = it) },
-    recipeInstructions = recipeInstructions.map { AddRecipeInstruction(text = it) },
-    settings = AddRecipeSettings(
+    recipeIngredient = recipeIngredients.map { AddRecipeIngredientV0(note = it) },
+    recipeInstructions = recipeInstructions.map { AddRecipeInstructionV0(text = it) },
+    settings = AddRecipeSettingsV0(
         public = isRecipePublic,
         disableComments = areCommentsDisabled,
     )
 )
 
-fun AddRecipeRequest.toDraft(): AddRecipeDraft = AddRecipeDraft(
+fun AddRecipeRequestV0.toDraft(): AddRecipeDraft = AddRecipeDraft(
     recipeName = name,
     recipeDescription = description,
     recipeYield = recipeYield,
@@ -100,7 +100,7 @@ fun AddRecipeRequest.toDraft(): AddRecipeDraft = AddRecipeDraft(
     areCommentsDisabled = settings.disableComments,
 )
 
-fun GetRecipeResponse.toFullRecipeInfo() = FullRecipeInfo(
+fun GetRecipeResponseV0.toFullRecipeInfo() = FullRecipeInfo(
     remoteId = remoteId.toString(),
     name = name,
     slug = slug,
@@ -116,7 +116,7 @@ fun GetRecipeResponse.toFullRecipeInfo() = FullRecipeInfo(
     recipeInstructions = recipeInstructions.map { it.toRecipeInstructionInfo() }
 )
 
-fun GetRecipeIngredientResponse.toRecipeIngredientInfo() = RecipeIngredientInfo(
+fun GetRecipeIngredientResponseV0.toRecipeIngredientInfo() = RecipeIngredientInfo(
     title = title,
     note = note,
     unit = unit,
@@ -125,7 +125,7 @@ fun GetRecipeIngredientResponse.toRecipeIngredientInfo() = RecipeIngredientInfo(
     quantity = quantity
 )
 
-fun GetRecipeInstructionResponse.toRecipeInstructionInfo() = RecipeInstructionInfo(
+fun GetRecipeInstructionResponseV0.toRecipeInstructionInfo() = RecipeInstructionInfo(
     title = title,
     text = text
 )

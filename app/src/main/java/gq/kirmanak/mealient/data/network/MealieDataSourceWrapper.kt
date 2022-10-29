@@ -8,9 +8,9 @@ import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
-import gq.kirmanak.mealient.datasource.MealieDataSource
-import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
-import gq.kirmanak.mealient.datasource.models.NetworkError
+import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import gq.kirmanak.mealient.extensions.toFullRecipeInfo
@@ -23,19 +23,19 @@ import javax.inject.Singleton
 class MealieDataSourceWrapper @Inject constructor(
     private val baseURLStorage: BaseURLStorage,
     private val authRepo: AuthRepo,
-    private val source: MealieDataSource,
-    private val v1Source: MealieDataSourceV1,
+    private val V0source: MealieDataSourceV0,
+    private val V1Source: MealieDataSourceV1,
 ) : AddRecipeDataSource, RecipeDataSource, VersionDataSource {
 
-    override suspend fun addRecipe(recipe: AddRecipeRequest): String =
-        withAuthHeader { token -> source.addRecipe(getUrl(), token, recipe) }
+    override suspend fun addRecipe(recipe: AddRecipeRequestV0): String =
+        withAuthHeader { token -> V0source.addRecipe(getUrl(), token, recipe) }
 
     override suspend fun getVersionInfo(baseUrl: String): VersionInfo =
         runCatchingExceptCancel {
-            source.getVersionInfo(baseUrl).toVersionInfo()
+            V0source.getVersionInfo(baseUrl).toVersionInfo()
         }.getOrElse {
             if (it is NetworkError.NotMealie) {
-                v1Source.getVersionInfo(baseUrl).toVersionInfo()
+                V1Source.getVersionInfo(baseUrl).toVersionInfo()
             } else {
                 throw it
             }
@@ -45,9 +45,9 @@ class MealieDataSourceWrapper @Inject constructor(
         withAuthHeader { token ->
             val url = getUrl()
             if (isV1()) {
-                v1Source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
+                V1Source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
             } else {
-                source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
+                V0source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
             }
         }
 
@@ -55,9 +55,9 @@ class MealieDataSourceWrapper @Inject constructor(
         withAuthHeader { token ->
             val url = getUrl()
             if (isV1()) {
-                v1Source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
+                V1Source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
             } else {
-                source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
+                V0source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
             }
         }
 

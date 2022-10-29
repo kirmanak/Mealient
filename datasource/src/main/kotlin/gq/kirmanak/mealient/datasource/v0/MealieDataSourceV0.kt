@@ -1,16 +1,16 @@
-package gq.kirmanak.mealient.datasource
+package gq.kirmanak.mealient.datasource.v0
 
-import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
-import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
-import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
-import gq.kirmanak.mealient.datasource.models.VersionResponse
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeSummaryResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.VersionResponseV0
 
-interface MealieDataSource {
+interface MealieDataSourceV0 {
 
     suspend fun addRecipe(
         baseUrl: String,
         token: String?,
-        recipe: AddRecipeRequest,
+        recipe: AddRecipeRequestV0,
     ): String
 
     /**
@@ -24,18 +24,18 @@ interface MealieDataSource {
 
     suspend fun getVersionInfo(
         baseUrl: String,
-    ): VersionResponse
+    ): VersionResponseV0
 
     suspend fun requestRecipes(
         baseUrl: String,
         token: String?,
         start: Int,
         limit: Int,
-    ): List<GetRecipeSummaryResponse>
+    ): List<GetRecipeSummaryResponseV0>
 
     suspend fun requestRecipeInfo(
         baseUrl: String,
         token: String?,
         slug: String,
-    ): GetRecipeResponse
+    ): GetRecipeResponseV0
 }

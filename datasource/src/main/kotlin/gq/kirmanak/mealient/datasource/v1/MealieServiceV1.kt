@@ -2,6 +2,8 @@ package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.DataSourceModule.Companion.AUTHORIZATION_HEADER_NAME
 import gq.kirmanak.mealient.datasource.models.*
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
+import gq.kirmanak.mealient.datasource.v0.models.GetTokenResponseV0
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipesResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
@@ -15,13 +17,13 @@ interface MealieServiceV1 {
         @Url url: String,
         @Field("username") username: String,
         @Field("password") password: String,
-    ): GetTokenResponse
+    ): GetTokenResponseV0
 
     @POST
     suspend fun addRecipe(
         @Url url: String,
         @Header(AUTHORIZATION_HEADER_NAME) token: String?,
-        @Body addRecipeRequest: AddRecipeRequest,
+        @Body addRecipeRequestV0: AddRecipeRequestV0,
     ): String
 
     @GET

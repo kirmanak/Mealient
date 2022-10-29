@@ -1,10 +1,10 @@
 package gq.kirmanak.mealient.extensions
 
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.datasource.models.AddRecipeIngredient
-import gq.kirmanak.mealient.datasource.models.AddRecipeInstruction
-import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
-import gq.kirmanak.mealient.datasource.models.AddRecipeSettings
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeIngredientV0
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeInstructionV0
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeSettingsV0
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import org.junit.Test
 
@@ -22,19 +22,19 @@ class RemoteToLocalMappingsTest {
             areCommentsDisabled = true,
         )
 
-        val expected = AddRecipeRequest(
+        val expected = AddRecipeRequestV0(
             name = "Recipe name",
             description = "Recipe description",
             recipeYield = "Recipe yield",
             recipeIngredient = listOf(
-                AddRecipeIngredient(note = "Recipe ingredient 1"),
-                AddRecipeIngredient(note = "Recipe ingredient 2")
+                AddRecipeIngredientV0(note = "Recipe ingredient 1"),
+                AddRecipeIngredientV0(note = "Recipe ingredient 2")
             ),
             recipeInstructions = listOf(
-                AddRecipeInstruction(text = "Recipe instruction 1"),
-                AddRecipeInstruction(text = "Recipe instruction 2")
+                AddRecipeInstructionV0(text = "Recipe instruction 1"),
+                AddRecipeInstructionV0(text = "Recipe instruction 2")
             ),
-            settings = AddRecipeSettings(
+            settings = AddRecipeSettingsV0(
                 public = false,
                 disableComments = true,
             )
@@ -45,19 +45,19 @@ class RemoteToLocalMappingsTest {
 
     @Test
     fun `when toDraft then fills fields correctly`() {
-        val request = AddRecipeRequest(
+        val request = AddRecipeRequestV0(
             name = "Recipe name",
             description = "Recipe description",
             recipeYield = "Recipe yield",
             recipeIngredient = listOf(
-                AddRecipeIngredient(note = "Recipe ingredient 1"),
-                AddRecipeIngredient(note = "Recipe ingredient 2")
+                AddRecipeIngredientV0(note = "Recipe ingredient 1"),
+                AddRecipeIngredientV0(note = "Recipe ingredient 2")
             ),
             recipeInstructions = listOf(
-                AddRecipeInstruction(text = "Recipe instruction 1"),
-                AddRecipeInstruction(text = "Recipe instruction 2")
+                AddRecipeInstructionV0(text = "Recipe instruction 1"),
+                AddRecipeInstructionV0(text = "Recipe instruction 2")
             ),
-            settings = AddRecipeSettings(
+            settings = AddRecipeSettingsV0(
                 public = false,
                 disableComments = true,
             )

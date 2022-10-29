@@ -1,15 +1,15 @@
 package gq.kirmanak.mealient.test
 
 import gq.kirmanak.mealient.database.recipe.entity.*
-import gq.kirmanak.mealient.datasource.models.GetRecipeIngredientResponse
-import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionResponse
-import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
-import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeIngredientResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeInstructionResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeSummaryResponseV0
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 object RecipeImplTestData {
-    val RECIPE_SUMMARY_CAKE = GetRecipeSummaryResponse(
+    val RECIPE_SUMMARY_CAKE = GetRecipeSummaryResponseV0(
         remoteId = 1,
         name = "Cake",
         slug = "cake",
@@ -22,7 +22,7 @@ object RecipeImplTestData {
         dateUpdated = LocalDateTime.parse("2021-11-13T15:30:13"),
     )
 
-    val RECIPE_SUMMARY_PORRIDGE = GetRecipeSummaryResponse(
+    val RECIPE_SUMMARY_PORRIDGE = GetRecipeSummaryResponseV0(
         remoteId = 2,
         name = "Porridge",
         slug = "porridge",
@@ -59,7 +59,7 @@ object RecipeImplTestData {
         dateUpdated = LocalDateTime.parse("2021-10-13T17:35:23"),
     )
 
-    private val SUGAR_INGREDIENT = GetRecipeIngredientResponse(
+    private val SUGAR_INGREDIENT = GetRecipeIngredientResponseV0(
         title = "Sugar",
         note = "2 oz of white sugar",
         unit = "",
@@ -68,7 +68,7 @@ object RecipeImplTestData {
         quantity = 1
     )
 
-    val BREAD_INGREDIENT = GetRecipeIngredientResponse(
+    val BREAD_INGREDIENT = GetRecipeIngredientResponseV0(
         title = "Bread",
         note = "2 oz of white bread",
         unit = "",
@@ -77,7 +77,7 @@ object RecipeImplTestData {
         quantity = 2
     )
 
-    private val MILK_INGREDIENT = GetRecipeIngredientResponse(
+    private val MILK_INGREDIENT = GetRecipeIngredientResponseV0(
         title = "Milk",
         note = "2 oz of white milk",
         unit = "",
@@ -86,22 +86,22 @@ object RecipeImplTestData {
         quantity = 3
     )
 
-    val MIX_INSTRUCTION = GetRecipeInstructionResponse(
+    val MIX_INSTRUCTION = GetRecipeInstructionResponseV0(
         title = "Mix",
         text = "Mix the ingredients"
     )
 
-    private val BAKE_INSTRUCTION = GetRecipeInstructionResponse(
+    private val BAKE_INSTRUCTION = GetRecipeInstructionResponseV0(
         title = "Bake",
         text = "Bake the ingredients"
     )
 
-    private val BOIL_INSTRUCTION = GetRecipeInstructionResponse(
+    private val BOIL_INSTRUCTION = GetRecipeInstructionResponseV0(
         title = "Boil",
         text = "Boil the ingredients"
     )
 
-    val GET_CAKE_RESPONSE = GetRecipeResponse(
+    val GET_CAKE_RESPONSE = GetRecipeResponseV0(
         remoteId = 1,
         name = "Cake",
         slug = "cake",
@@ -117,7 +117,7 @@ object RecipeImplTestData {
         recipeInstructions = listOf(MIX_INSTRUCTION, BAKE_INSTRUCTION)
     )
 
-    val GET_PORRIDGE_RESPONSE = GetRecipeResponse(
+    val GET_PORRIDGE_RESPONSE = GetRecipeResponseV0(
         remoteId = 2,
         name = "Porridge",
         slug = "porridge",

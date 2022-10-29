@@ -1,6 +1,7 @@
-package gq.kirmanak.mealient.datasource
+package gq.kirmanak.mealient.datasource.v0
 
-import gq.kirmanak.mealient.datasource.models.*
+import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.v0.models.*
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
@@ -14,14 +15,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MealieDataSourceImpl @Inject constructor(
+class MealieDataSourceV0Impl @Inject constructor(
     private val logger: Logger,
-    private val mealieService: MealieService,
+    private val mealieServiceV0: MealieServiceV0,
     private val json: Json,
-) : MealieDataSource {
+) : MealieDataSourceV0 {
 
     override suspend fun addRecipe(
-        baseUrl: String, token: String?, recipe: AddRecipeRequest
+        baseUrl: String, token: String?, recipe: AddRecipeRequestV0
     ): String = makeCall(
         block = { addRecipe("$baseUrl/api/recipes/create", token, recipe) },
         logMethod = { "addRecipe" },
@@ -36,11 +37,11 @@ class MealieDataSourceImpl @Inject constructor(
         logParameters = { "baseUrl = $baseUrl, username = $username, password = $password" }
     ).map { it.accessToken }.getOrElse {
         val errorBody = (it as? HttpException)?.response()?.errorBody() ?: throw it
-        val errorDetail = errorBody.decode<ErrorDetail>()
-        throw if (errorDetail.detail == "Unauthorized") NetworkError.Unauthorized(it) else it
+        val errorDetailV0 = errorBody.decode<ErrorDetailV0>()
+        throw if (errorDetailV0.detail == "Unauthorized") NetworkError.Unauthorized(it) else it
     }
 
-    override suspend fun getVersionInfo(baseUrl: String): VersionResponse = makeCall(
+    override suspend fun getVersionInfo(baseUrl: String): VersionResponseV0 = makeCall(
         block = { getVersion("$baseUrl/api/debug/version") },
         logMethod = { "getVersionInfo" },
         logParameters = { "baseUrl = $baseUrl" },
@@ -56,7 +57,7 @@ class MealieDataSourceImpl @Inject constructor(
 
     override suspend fun requestRecipes(
         baseUrl: String, token: String?, start: Int, limit: Int
-    ): List<GetRecipeSummaryResponse> = makeCall(
+    ): List<GetRecipeSummaryResponseV0> = makeCall(
         block = { getRecipeSummary("$baseUrl/api/recipes/summary", token, start, limit) },
         logMethod = { "requestRecipes" },
         logParameters = { "baseUrl = $baseUrl, token = $token, start = $start, limit = $limit" }
@@ -67,19 +68,19 @@ class MealieDataSourceImpl @Inject constructor(
 
     override suspend fun requestRecipeInfo(
         baseUrl: String, token: String?, slug: String
-    ): GetRecipeResponse = makeCall(
+    ): GetRecipeResponseV0 = makeCall(
         block = { getRecipe("$baseUrl/api/recipes/$slug", token) },
         logMethod = { "requestRecipeInfo" },
         logParameters = { "baseUrl = $baseUrl, token = $token, slug = $slug" }
     ).getOrThrowUnauthorized()
 
     private suspend inline fun <T> makeCall(
-        crossinline block: suspend MealieService.() -> T,
+        crossinline block: suspend MealieServiceV0.() -> T,
         crossinline logMethod: () -> String,
         crossinline logParameters: () -> String,
     ): Result<T> {
         logger.v { "${logMethod()} called with: ${logParameters()}" }
-        return mealieService.runCatching { block() }
+        return mealieServiceV0.runCatching { block() }
             .onFailure { logger.e(it) { "${logMethod()} request failed with: ${logParameters()}" } }
             .onSuccess { logger.d { "${logMethod()} request succeeded with ${logParameters()}" } }
     }

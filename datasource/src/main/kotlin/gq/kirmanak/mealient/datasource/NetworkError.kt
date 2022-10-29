@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.datasource.models
+package gq.kirmanak.mealient.datasource
 
 sealed class NetworkError(cause: Throwable) : RuntimeException(cause) {
     class Unauthorized(cause: Throwable) : NetworkError(cause)

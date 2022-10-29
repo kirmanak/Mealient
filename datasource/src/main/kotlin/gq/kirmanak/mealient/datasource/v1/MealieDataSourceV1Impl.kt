@@ -1,7 +1,7 @@
 package gq.kirmanak.mealient.datasource.v1
 
-import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
-import gq.kirmanak.mealient.datasource.models.NetworkError
+import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
@@ -24,7 +24,7 @@ class MealieDataSourceV1Impl @Inject constructor(
     override suspend fun addRecipe(
         baseUrl: String,
         token: String?,
-        recipe: AddRecipeRequest
+        recipe: AddRecipeRequestV0
     ): String {
         TODO("Not yet implemented")
     }

@@ -1,9 +1,10 @@
 package gq.kirmanak.mealient.datasource
 
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.datasource.models.GetTokenResponse
-import gq.kirmanak.mealient.datasource.models.NetworkError
-import gq.kirmanak.mealient.datasource.models.VersionResponse
+import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0Impl
+import gq.kirmanak.mealient.datasource.v0.MealieServiceV0
+import gq.kirmanak.mealient.datasource.v0.models.GetTokenResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.VersionResponseV0
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.toJsonResponseBody
 import io.mockk.MockKAnnotations
@@ -21,25 +22,25 @@ import java.io.IOException
 import java.net.ConnectException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class MealieDataSourceImplTest {
+class MealieDataSourceV0ImplTest {
 
     @MockK
-    lateinit var service: MealieService
+    lateinit var service: MealieServiceV0
 
     @MockK(relaxUnitFun = true)
     lateinit var logger: Logger
 
-    lateinit var subject: MealieDataSourceImpl
+    lateinit var subject: MealieDataSourceV0Impl
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = MealieDataSourceImpl(logger, service, Json.Default)
+        subject = MealieDataSourceV0Impl(logger, service, Json)
     }
 
     @Test(expected = NetworkError.NotMealie::class)
     fun `when getVersionInfo and getVersion throws HttpException then NotMealie`() = runTest {
-        val error = HttpException(Response.error<VersionResponse>(404, "".toJsonResponseBody()))
+        val error = HttpException(Response.error<VersionResponseV0>(404, "".toJsonResponseBody()))
         coEvery { service.getVersion(any()) } throws error
         subject.getVersionInfo(TEST_BASE_URL)
     }
@@ -60,14 +61,14 @@ class MealieDataSourceImplTest {
 
     @Test
     fun `when getVersionInfo and getVersion returns result then result`() = runTest {
-        val versionResponse = VersionResponse(true, "v0.5.6", true)
+        val versionResponse = VersionResponseV0(true, "v0.5.6", true)
         coEvery { service.getVersion(any()) } returns versionResponse
         assertThat(subject.getVersionInfo(TEST_BASE_URL)).isSameInstanceAs(versionResponse)
     }
 
     @Test
     fun `when authentication is successful then token is correct`() = runTest {
-        coEvery { service.getToken(any(), any(), any()) } returns GetTokenResponse(TEST_TOKEN)
+        coEvery { service.getToken(any(), any(), any()) } returns GetTokenResponseV0(TEST_TOKEN)
         assertThat(callAuthenticate()).isEqualTo(TEST_TOKEN)
     }
 
@@ -76,7 +77,7 @@ class MealieDataSourceImplTest {
         val body = "{\"detail\":\"Unauthorized\"}".toJsonResponseBody()
         coEvery {
             service.getToken(any(), any(), any())
-        } throws HttpException(Response.error<GetTokenResponse>(401, body))
+        } throws HttpException(Response.error<GetTokenResponseV0>(401, body))
         callAuthenticate()
     }
 
@@ -85,7 +86,7 @@ class MealieDataSourceImplTest {
         val body = "{\"detail\":\"Something\"}".toJsonResponseBody()
         coEvery {
             service.getToken(any(), any(), any())
-        } throws HttpException(Response.error<GetTokenResponse>(401, body))
+        } throws HttpException(Response.error<GetTokenResponseV0>(401, body))
         callAuthenticate()
     }
 
@@ -94,7 +95,7 @@ class MealieDataSourceImplTest {
         val body = "".toJsonResponseBody()
         coEvery {
             service.getToken(any(), any(), any())
-        } throws HttpException(Response.error<GetTokenResponse>(401, body))
+        } throws HttpException(Response.error<GetTokenResponseV0>(401, body))
         callAuthenticate()
     }
 

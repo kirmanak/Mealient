@@ -1,6 +1,6 @@
 package gq.kirmanak.mealient.datasource.v1
 
-import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
@@ -10,7 +10,7 @@ interface MealieDataSourceV1 {
     suspend fun addRecipe(
         baseUrl: String,
         token: String?,
-        recipe: AddRecipeRequest,
+        recipe: AddRecipeRequestV0,
     ): String
 
     /**

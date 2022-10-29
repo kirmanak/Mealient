@@ -6,6 +6,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
+import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0Impl
+import gq.kirmanak.mealient.datasource.v0.MealieServiceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1Impl
 import gq.kirmanak.mealient.datasource.v1.MealieServiceV1
@@ -52,7 +55,7 @@ interface DataSourceModule {
 
         @Provides
         @Singleton
-        fun provideMealieService(retrofit: Retrofit): MealieService =
+        fun provideMealieService(retrofit: Retrofit): MealieServiceV0 =
             retrofit.create()
 
         @Provides
@@ -71,7 +74,7 @@ interface DataSourceModule {
 
     @Binds
     @Singleton
-    fun bindMealieDataSource(mealientDataSourceImpl: MealieDataSourceImpl): MealieDataSource
+    fun bindMealieDataSource(mealientDataSourceImpl: MealieDataSourceV0Impl): MealieDataSourceV0
 
     @Binds
     @Singleton

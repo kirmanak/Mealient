@@ -2,8 +2,8 @@ package gq.kirmanak.mealient.data.network
 
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
-import gq.kirmanak.mealient.datasource.MealieDataSource
-import gq.kirmanak.mealient.datasource.models.NetworkError
+import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.RecipeImplTestData.GET_CAKE_RESPONSE
@@ -18,7 +18,7 @@ import org.junit.Test
 import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class MealieDataSourceWrapperTest {
+class MealieDataSourceV0WrapperTest {
 
     @MockK
     lateinit var baseURLStorage: BaseURLStorage
@@ -27,14 +27,14 @@ class MealieDataSourceWrapperTest {
     lateinit var authRepo: AuthRepo
 
     @MockK
-    lateinit var mealieDataSource: MealieDataSource
+    lateinit var mealieDataSourceV0: MealieDataSourceV0
 
     lateinit var subject: MealieDataSourceWrapper
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = MealieDataSourceWrapper(baseURLStorage, authRepo, mealieDataSource)
+        subject = MealieDataSourceWrapper(baseURLStorage, authRepo, mealieDataSourceV0)
     }
 
     @Test
@@ -42,10 +42,10 @@ class MealieDataSourceWrapperTest {
         coEvery { baseURLStorage.requireBaseURL() } returns TEST_BASE_URL
         coEvery { authRepo.getAuthHeader() } returns null andThen TEST_AUTH_HEADER
         coEvery {
-            mealieDataSource.requestRecipeInfo(eq(TEST_BASE_URL), isNull(), eq("cake"))
+            mealieDataSourceV0.requestRecipeInfo(eq(TEST_BASE_URL), isNull(), eq("cake"))
         } throws NetworkError.Unauthorized(IOException())
         coEvery {
-            mealieDataSource.requestRecipeInfo(eq(TEST_BASE_URL), eq(TEST_AUTH_HEADER), eq("cake"))
+            mealieDataSourceV0.requestRecipeInfo(eq(TEST_BASE_URL), eq(TEST_AUTH_HEADER), eq("cake"))
         } returns GET_CAKE_RESPONSE
         subject.requestRecipeInfo("cake")
         coVerifyAll {

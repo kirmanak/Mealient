@@ -1,10 +1,10 @@
-package gq.kirmanak.mealient.datasource.models
+package gq.kirmanak.mealient.datasource.v0.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetRecipeIngredientResponse(
+data class GetRecipeIngredientResponseV0(
     @SerialName("title") val title: String = "",
     @SerialName("note") val note: String = "",
     @SerialName("unit") val unit: String = "",
