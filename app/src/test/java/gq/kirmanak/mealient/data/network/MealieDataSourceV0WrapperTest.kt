@@ -1,7 +1,7 @@
 package gq.kirmanak.mealient.data.network
 
 import gq.kirmanak.mealient.data.auth.AuthRepo
-import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
+import gq.kirmanak.mealient.data.baseurl.ServerInfoStorage
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
@@ -21,7 +21,7 @@ import java.io.IOException
 class MealieDataSourceV0WrapperTest {
 
     @MockK
-    lateinit var baseURLStorage: BaseURLStorage
+    lateinit var serverInfoStorage: ServerInfoStorage
 
     @MockK(relaxUnitFun = true)
     lateinit var authRepo: AuthRepo
@@ -34,12 +34,12 @@ class MealieDataSourceV0WrapperTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = MealieDataSourceWrapper(baseURLStorage, authRepo, mealieDataSourceV0)
+        subject = MealieDataSourceWrapper(serverInfoStorage, authRepo, mealieDataSourceV0)
     }
 
     @Test
     fun `when withAuthHeader fails with Unauthorized then invalidates auth`() = runTest {
-        coEvery { baseURLStorage.requireBaseURL() } returns TEST_BASE_URL
+        coEvery { serverInfoStorage.requireBaseURL() } returns TEST_BASE_URL
         coEvery { authRepo.getAuthHeader() } returns null andThen TEST_AUTH_HEADER
         coEvery {
             mealieDataSourceV0.requestRecipeInfo(eq(TEST_BASE_URL), isNull(), eq("cake"))

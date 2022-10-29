@@ -2,7 +2,7 @@ package gq.kirmanak.mealient.data.baseurl
 
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.data.baseurl.impl.BaseURLStorageImpl
+import gq.kirmanak.mealient.data.baseurl.impl.ServerInfoStorageImpl
 import gq.kirmanak.mealient.data.storage.PreferencesStorage
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -15,19 +15,19 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class BaseURLStorageImplTest {
+class ServerInfoStorageImplTest {
 
     @MockK(relaxUnitFun = true)
     lateinit var preferencesStorage: PreferencesStorage
 
-    lateinit var subject: BaseURLStorage
+    lateinit var subject: ServerInfoStorage
 
     private val baseUrlKey = stringPreferencesKey("baseUrlKey")
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = BaseURLStorageImpl(preferencesStorage)
+        subject = ServerInfoStorageImpl(preferencesStorage)
         every { preferencesStorage.baseUrlKey } returns baseUrlKey
     }
 

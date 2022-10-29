@@ -48,18 +48,13 @@ class MealieDataSourceV1Impl @Inject constructor(
     override suspend fun requestRecipes(
         baseUrl: String,
         token: String?,
-        start: Int,
-        limit: Int
-    ): List<GetRecipeSummaryResponseV1> {
-        // Imagine start is 30 and limit is 15. It means that we already have page 1 and 2, now we need page 3
-        val perPage = limit
-        val page = start / perPage + 1
-        return makeCall(
-            block = { getRecipeSummary("$baseUrl/api/recipes", token, page, perPage) },
-            logMethod = { "requestRecipesV1" },
-            logParameters = { "baseUrl = $baseUrl, token = $token, start = $start, limit = $limit" }
-        ).map { it.items }.getOrThrowUnauthorized()
-    }
+        page: Int,
+        perPage: Int
+    ): List<GetRecipeSummaryResponseV1> = makeCall(
+        block = { getRecipeSummary("$baseUrl/api/recipes", token, page, perPage) },
+        logMethod = { "requestRecipesV1" },
+        logParameters = { "baseUrl = $baseUrl, token = $token, page = $page, perPage = $perPage" }
+    ).map { it.items }.getOrThrowUnauthorized()
 
     override suspend fun requestRecipeInfo(
         baseUrl: String,

@@ -29,8 +29,8 @@ interface MealieDataSourceV1 {
     suspend fun requestRecipes(
         baseUrl: String,
         token: String?,
-        start: Int,
-        limit: Int,
+        page: Int,
+        perPage: Int,
     ): List<GetRecipeSummaryResponseV1>
 
     suspend fun requestRecipeInfo(

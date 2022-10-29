@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
-import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
+import gq.kirmanak.mealient.data.baseurl.ServerInfoStorage
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
@@ -27,7 +27,7 @@ class AuthRepoImplTest {
     lateinit var dataSource: AuthDataSource
 
     @MockK
-    lateinit var baseURLStorage: BaseURLStorage
+    lateinit var serverInfoStorage: ServerInfoStorage
 
     @MockK(relaxUnitFun = true)
     lateinit var storage: AuthStorage
@@ -40,7 +40,7 @@ class AuthRepoImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        subject = AuthRepoImpl(storage, dataSource, baseURLStorage, logger)
+        subject = AuthRepoImpl(storage, dataSource, serverInfoStorage, logger)
     }
 
     @Test
@@ -58,7 +58,7 @@ class AuthRepoImplTest {
                 eq(TEST_BASE_URL)
             )
         } returns TEST_TOKEN
-        coEvery { baseURLStorage.requireBaseURL() } returns TEST_BASE_URL
+        coEvery { serverInfoStorage.requireBaseURL() } returns TEST_BASE_URL
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD)
         coVerifyAll {
             storage.setAuthHeader(TEST_AUTH_HEADER)
@@ -71,7 +71,7 @@ class AuthRepoImplTest {
     @Test
     fun `when authenticate fails then does not change storage`() = runTest {
         coEvery { dataSource.authenticate(any(), any(), any()) } throws RuntimeException()
-        coEvery { baseURLStorage.requireBaseURL() } returns TEST_BASE_URL
+        coEvery { serverInfoStorage.requireBaseURL() } returns TEST_BASE_URL
         runCatching { subject.authenticate("invalid", "") }
         confirmVerified(storage)
     }
@@ -107,7 +107,7 @@ class AuthRepoImplTest {
     fun `when invalidate with credentials then calls authenticate`() = runTest {
         coEvery { storage.getEmail() } returns TEST_USERNAME
         coEvery { storage.getPassword() } returns TEST_PASSWORD
-        coEvery { baseURLStorage.requireBaseURL() } returns TEST_BASE_URL
+        coEvery { serverInfoStorage.requireBaseURL() } returns TEST_BASE_URL
         coEvery {
             dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD), eq(TEST_BASE_URL))
         } returns TEST_TOKEN
@@ -121,7 +121,7 @@ class AuthRepoImplTest {
     fun `when invalidate with credentials and auth fails then clears email`() = runTest {
         coEvery { storage.getEmail() } returns "invalid"
         coEvery { storage.getPassword() } returns ""
-        coEvery { baseURLStorage.requireBaseURL() } returns TEST_BASE_URL
+        coEvery { serverInfoStorage.requireBaseURL() } returns TEST_BASE_URL
         coEvery { dataSource.authenticate(any(), any(), any()) } throws RuntimeException()
         subject.invalidateAuthHeader()
         coVerify { storage.setEmail(null) }

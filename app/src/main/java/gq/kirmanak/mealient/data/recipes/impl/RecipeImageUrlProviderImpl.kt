@@ -1,6 +1,6 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
-import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
+import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.logging.Logger
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import javax.inject.Inject
@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class RecipeImageUrlProviderImpl @Inject constructor(
-    private val baseURLStorage: BaseURLStorage,
+    private val serverInfoRepo: ServerInfoRepo,
     private val logger: Logger,
 ) : RecipeImageUrlProvider {
 
@@ -16,7 +16,7 @@ class RecipeImageUrlProviderImpl @Inject constructor(
         logger.v { "generateImageUrl() called with: slug = $slug" }
         slug?.takeUnless { it.isBlank() } ?: return null
         val imagePath = IMAGE_PATH_FORMAT.format(slug)
-        val baseUrl = baseURLStorage.getBaseURL()?.takeUnless { it.isEmpty() }
+        val baseUrl = serverInfoRepo.getUrl()?.takeUnless { it.isEmpty() }
         val result = baseUrl?.toHttpUrlOrNull()
             ?.newBuilder()
             ?.addPathSegments(imagePath)

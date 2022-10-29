@@ -4,10 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
-import gq.kirmanak.mealient.data.baseurl.VersionDataSource
-import gq.kirmanak.mealient.data.baseurl.impl.BaseURLStorageImpl
-import gq.kirmanak.mealient.data.network.MealieDataSourceWrapper
+import gq.kirmanak.mealient.data.baseurl.*
+import gq.kirmanak.mealient.data.baseurl.impl.ServerInfoStorageImpl
 import javax.inject.Singleton
 
 @Module
@@ -16,9 +14,13 @@ interface BaseURLModule {
 
     @Binds
     @Singleton
-    fun bindVersionDataSource(mealieDataSourceWrapper: MealieDataSourceWrapper): VersionDataSource
+    fun bindVersionDataSource(versionDataSourceImpl: VersionDataSourceImpl): VersionDataSource
 
     @Binds
     @Singleton
-    fun bindBaseUrlStorage(baseURLStorageImpl: BaseURLStorageImpl): BaseURLStorage
+    fun bindBaseUrlStorage(baseURLStorageImpl: ServerInfoStorageImpl): ServerInfoStorage
+
+    @Binds
+    @Singleton
+    fun bindServerInfoRepo(serverInfoRepoImpl: ServerInfoRepoImpl): ServerInfoRepo
 }
