@@ -1,7 +1,7 @@
 package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
-import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 
@@ -37,5 +37,5 @@ interface MealieDataSourceV1 {
         baseUrl: String,
         token: String?,
         slug: String,
-    ): GetRecipeResponse
+    ): GetRecipeResponseV1
 }

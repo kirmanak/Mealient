@@ -1,8 +1,8 @@
 package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
-import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.NetworkError
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import gq.kirmanak.mealient.logging.Logger
@@ -65,9 +65,11 @@ class MealieDataSourceV1Impl @Inject constructor(
         baseUrl: String,
         token: String?,
         slug: String
-    ): GetRecipeResponse {
-        TODO("Not yet implemented")
-    }
+    ): GetRecipeResponseV1 = makeCall(
+        block = { getRecipe("$baseUrl/api/recipes/$slug", token) },
+        logMethod = { "requestRecipeInfo" },
+        logParameters = { "baseUrl = $baseUrl, token = $token, slug = $slug" }
+    ).getOrThrowUnauthorized()
 
     private suspend inline fun <T> makeCall(
         crossinline block: suspend MealieServiceV1.() -> T,
