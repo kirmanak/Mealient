@@ -8,7 +8,7 @@ import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.entity.*
 
 @Database(
-    version = 3,
+    version = 4,
     entities = [
         CategoryEntity::class,
         CategoryRecipeEntity::class,
@@ -22,6 +22,7 @@ import gq.kirmanak.mealient.database.recipe.entity.*
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
+        AutoMigration(from = 3, to = 4),
     ]
 )
 @TypeConverters(RoomTypeConverters::class)

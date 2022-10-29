@@ -6,13 +6,14 @@ import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.data.baseurl.VersionDataSource
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
+import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
 import gq.kirmanak.mealient.datasource.MealieDataSource
 import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.NetworkError
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.extensions.toRecipeSummaryInfo
 import gq.kirmanak.mealient.extensions.toVersionInfo
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,48 +22,36 @@ import javax.inject.Singleton
 class MealieDataSourceWrapper @Inject constructor(
     private val baseURLStorage: BaseURLStorage,
     private val authRepo: AuthRepo,
-    private val mealieDataSource: MealieDataSource,
-    private val mealieDataSourceV1: MealieDataSourceV1,
+    private val source: MealieDataSource,
+    private val v1Source: MealieDataSourceV1,
 ) : AddRecipeDataSource, RecipeDataSource, VersionDataSource {
 
     override suspend fun addRecipe(recipe: AddRecipeRequest): String =
-        withAuthHeader { token -> mealieDataSource.addRecipe(getUrl(), token, recipe) }
+        withAuthHeader { token -> source.addRecipe(getUrl(), token, recipe) }
 
     override suspend fun getVersionInfo(baseUrl: String): VersionInfo =
         runCatchingExceptCancel {
-            mealieDataSource.getVersionInfo(baseUrl).toVersionInfo()
+            source.getVersionInfo(baseUrl).toVersionInfo()
         }.getOrElse {
             if (it is NetworkError.NotMealie) {
-                mealieDataSourceV1.getVersionInfo(baseUrl).toVersionInfo()
+                v1Source.getVersionInfo(baseUrl).toVersionInfo()
             } else {
                 throw it
             }
         }
 
-    override suspend fun requestRecipes(start: Int, limit: Int): List<GetRecipeSummaryResponseV1> =
+    override suspend fun requestRecipes(start: Int, limit: Int): List<RecipeSummaryInfo> =
         withAuthHeader { token ->
+            val url = getUrl()
             if (isV1()) {
-                mealieDataSourceV1.requestRecipes(getUrl(), token, start, limit)
+                v1Source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
             } else {
-                mealieDataSource.requestRecipes(getUrl(), token, start, limit).map {
-                    GetRecipeSummaryResponseV1(
-                        remoteId = it.remoteId.toString(),
-                        name = it.name,
-                        slug = it.slug,
-                        image = it.image,
-                        description = it.description,
-                        recipeCategories = it.recipeCategories,
-                        tags = it.tags,
-                        rating = it.rating,
-                        dateAdded = it.dateAdded,
-                        dateUpdated = it.dateUpdated,
-                    )
-                }
+                source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
             }
         }
 
     override suspend fun requestRecipeInfo(slug: String): GetRecipeResponse =
-        withAuthHeader { token -> mealieDataSource.requestRecipeInfo(getUrl(), token, slug) }
+        withAuthHeader { token -> source.requestRecipeInfo(getUrl(), token, slug) }
 
     private suspend fun getUrl() = baseURLStorage.requireBaseURL()
 

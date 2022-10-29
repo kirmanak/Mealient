@@ -2,11 +2,11 @@ package gq.kirmanak.mealient.data.recipes.db
 
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
+import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
 import gq.kirmanak.mealient.database.AppDb
 import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.entity.*
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.extensions.recipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
@@ -23,7 +23,7 @@ class RecipeStorageImpl @Inject constructor(
     private val recipeDao: RecipeDao by lazy { db.recipeDao() }
 
     override suspend fun saveRecipes(
-        recipes: List<GetRecipeSummaryResponseV1>
+        recipes: List<RecipeSummaryInfo>
     ) = db.withTransaction {
         logger.v { "saveRecipes() called with $recipes" }
 
@@ -96,7 +96,7 @@ class RecipeStorageImpl @Inject constructor(
         return recipeDao.queryRecipesByPages()
     }
 
-    override suspend fun refreshAll(recipes: List<GetRecipeSummaryResponseV1>) {
+    override suspend fun refreshAll(recipes: List<RecipeSummaryInfo>) {
         logger.v { "refreshAll() called with: recipes = $recipes" }
         db.withTransaction {
             recipeDao.removeAllRecipes()

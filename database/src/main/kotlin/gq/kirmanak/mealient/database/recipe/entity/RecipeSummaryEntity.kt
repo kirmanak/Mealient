@@ -15,7 +15,8 @@ data class RecipeSummaryEntity(
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "rating") val rating: Int?,
     @ColumnInfo(name = "date_added") val dateAdded: LocalDate,
-    @ColumnInfo(name = "date_updated") val dateUpdated: LocalDateTime
+    @ColumnInfo(name = "date_updated") val dateUpdated: LocalDateTime,
+    @ColumnInfo(name = "image_id") val imageId: String?,
 ) {
     override fun toString(): String {
         return "RecipeSummaryEntity(remoteId=$remoteId, name='$name')"

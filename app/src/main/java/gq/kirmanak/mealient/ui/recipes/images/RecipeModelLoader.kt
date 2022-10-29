@@ -44,7 +44,7 @@ class RecipeModelLoader private constructor(
         options: Options?
     ): String? {
         logger.v { "getUrl() called with: model = $model, width = $width, height = $height, options = $options" }
-        return runBlocking { recipeImageUrlProvider.generateImageUrl(model?.remoteId) }
+        return runBlocking { recipeImageUrlProvider.generateImageUrl(model?.imageId) }
     }
 
     override fun getHeaders(

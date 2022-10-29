@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.extensions
 
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
+import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
@@ -33,7 +34,35 @@ fun GetRecipeInstructionResponse.toRecipeInstructionEntity(remoteId: String) =
         text = text
     )
 
-fun GetRecipeSummaryResponseV1.recipeEntity() = RecipeSummaryEntity(
+fun GetRecipeSummaryResponse.toRecipeSummaryInfo() = RecipeSummaryInfo(
+    remoteId = remoteId.toString(),
+    name = name,
+    slug = slug,
+    image = image,
+    description = description,
+    recipeCategories = recipeCategories,
+    tags = tags,
+    rating = rating,
+    dateAdded = dateAdded,
+    dateUpdated = dateUpdated,
+    imageId = slug,
+)
+
+fun GetRecipeSummaryResponseV1.toRecipeSummaryInfo() = RecipeSummaryInfo(
+    remoteId = remoteId,
+    name = name,
+    slug = slug,
+    image = image,
+    description = description,
+    recipeCategories = recipeCategories,
+    tags = tags,
+    rating = rating,
+    dateAdded = dateAdded,
+    dateUpdated = dateUpdated,
+    imageId = remoteId,
+)
+
+fun RecipeSummaryInfo.recipeEntity() = RecipeSummaryEntity(
     remoteId = remoteId,
     name = name,
     slug = slug,
@@ -42,6 +71,7 @@ fun GetRecipeSummaryResponseV1.recipeEntity() = RecipeSummaryEntity(
     rating = rating,
     dateAdded = dateAdded,
     dateUpdated = dateUpdated,
+    imageId = imageId,
 )
 
 fun VersionResponse.toVersionInfo() = VersionInfo(version)
