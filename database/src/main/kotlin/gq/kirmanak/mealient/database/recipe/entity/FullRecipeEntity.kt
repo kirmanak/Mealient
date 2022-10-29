@@ -3,7 +3,7 @@ package gq.kirmanak.mealient.database.recipe.entity
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class FullRecipeInfo(
+data class FullRecipeEntity(
     @Embedded val recipeEntity: RecipeEntity,
     @Relation(
         parentColumn = "remote_id",

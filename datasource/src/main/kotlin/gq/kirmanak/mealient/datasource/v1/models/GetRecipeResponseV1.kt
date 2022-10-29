@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.datasource.models
+package gq.kirmanak.mealient.datasource.v1.models
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -6,8 +6,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetRecipeResponse(
-    @SerialName("id") val remoteId: Int,
+data class GetRecipeResponseV1(
+    @SerialName("id") val remoteId: String,
     @SerialName("name") val name: String,
     @SerialName("slug") val slug: String,
     @SerialName("image") val image: String,
@@ -18,6 +18,6 @@ data class GetRecipeResponse(
     @SerialName("dateAdded") val dateAdded: LocalDate,
     @SerialName("dateUpdated") val dateUpdated: LocalDateTime,
     @SerialName("recipeYield") val recipeYield: String = "",
-    @SerialName("recipeIngredient") val recipeIngredients: List<GetRecipeIngredientResponse>,
-    @SerialName("recipeInstructions") val recipeInstructions: List<GetRecipeInstructionResponse>,
+    @SerialName("recipeIngredient") val recipeIngredients: List<GetRecipeIngredientResponseV1>,
+    @SerialName("recipeInstructions") val recipeInstructions: List<GetRecipeInstructionResponseV1>,
 )

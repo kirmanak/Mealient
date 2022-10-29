@@ -174,7 +174,7 @@ object RecipeImplTestData {
         quantity = 2
     )
 
-    val FULL_CAKE_INFO_ENTITY = FullRecipeInfo(
+    val FULL_CAKE_INFO_ENTITY = FullRecipeEntity(
         recipeEntity = CAKE_RECIPE_ENTITY,
         recipeSummaryEntity = CAKE_RECIPE_SUMMARY_ENTITY,
         recipeIngredients = listOf(
@@ -228,7 +228,7 @@ object RecipeImplTestData {
         text = "Boil the ingredients"
     )
 
-    val FULL_PORRIDGE_INFO_ENTITY = FullRecipeInfo(
+    val FULL_PORRIDGE_INFO_ENTITY = FullRecipeEntity(
         recipeEntity = PORRIDGE_RECIPE_ENTITY_FULL,
         recipeSummaryEntity = PORRIDGE_RECIPE_SUMMARY_ENTITY,
         recipeIngredients = listOf(

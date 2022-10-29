@@ -2,11 +2,11 @@ package gq.kirmanak.mealient.data.recipes.db
 
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
+import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
 import gq.kirmanak.mealient.database.AppDb
 import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.entity.*
-import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.extensions.recipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
@@ -113,7 +113,7 @@ class RecipeStorageImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveRecipeInfo(recipe: GetRecipeResponse) {
+    override suspend fun saveRecipeInfo(recipe: FullRecipeInfo) {
         logger.v { "saveRecipeInfo() called with: recipe = $recipe" }
         db.withTransaction {
             recipeDao.insertRecipe(recipe.toRecipeEntity())
@@ -132,7 +132,7 @@ class RecipeStorageImpl @Inject constructor(
         }
     }
 
-    override suspend fun queryRecipeInfo(recipeId: String): FullRecipeInfo {
+    override suspend fun queryRecipeInfo(recipeId: String): FullRecipeEntity {
         logger.v { "queryRecipeInfo() called with: recipeId = $recipeId" }
         val fullRecipeInfo = checkNotNull(recipeDao.queryFullRecipeInfo(recipeId)) {
             "Can't find recipe by id $recipeId in DB"

@@ -5,14 +5,15 @@ import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
 import gq.kirmanak.mealient.data.baseurl.VersionDataSource
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
+import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
 import gq.kirmanak.mealient.datasource.MealieDataSource
 import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
-import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.NetworkError
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.extensions.toFullRecipeInfo
 import gq.kirmanak.mealient.extensions.toRecipeSummaryInfo
 import gq.kirmanak.mealient.extensions.toVersionInfo
 import javax.inject.Inject
@@ -50,8 +51,15 @@ class MealieDataSourceWrapper @Inject constructor(
             }
         }
 
-    override suspend fun requestRecipeInfo(slug: String): GetRecipeResponse =
-        withAuthHeader { token -> source.requestRecipeInfo(getUrl(), token, slug) }
+    override suspend fun requestRecipeInfo(slug: String): FullRecipeInfo =
+        withAuthHeader { token ->
+            val url = getUrl()
+            if (isV1()) {
+                v1Source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
+            } else {
+                source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
+            }
+        }
 
     private suspend fun getUrl() = baseURLStorage.requireBaseURL()
 

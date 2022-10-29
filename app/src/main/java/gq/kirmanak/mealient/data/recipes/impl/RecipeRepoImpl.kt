@@ -7,7 +7,7 @@ import androidx.paging.PagingConfig
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
-import gq.kirmanak.mealient.database.recipe.entity.FullRecipeInfo
+import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
@@ -38,7 +38,7 @@ class RecipeRepoImpl @Inject constructor(
         storage.clearAllLocalData()
     }
 
-    override suspend fun loadRecipeInfo(recipeId: String, recipeSlug: String): FullRecipeInfo {
+    override suspend fun loadRecipeInfo(recipeId: String, recipeSlug: String): FullRecipeEntity {
         logger.v { "loadRecipeInfo() called with: recipeId = $recipeId, recipeSlug = $recipeSlug" }
 
         runCatchingExceptCancel {

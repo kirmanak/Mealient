@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.DataSourceModule.Companion.AUTHORIZATION_HEADER_NAME
 import gq.kirmanak.mealient.datasource.models.*
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipesResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import retrofit2.http.*
@@ -40,5 +41,5 @@ interface MealieServiceV1 {
     suspend fun getRecipe(
         @Url url: String,
         @Header(AUTHORIZATION_HEADER_NAME) token: String?,
-    ): GetRecipeResponse
+    ): GetRecipeResponseV1
 }
