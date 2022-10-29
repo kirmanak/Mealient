@@ -79,4 +79,8 @@ interface DataSourceModule {
     @Binds
     @Singleton
     fun bindMealieDataSourceV1(mealientDataSourceImpl: MealieDataSourceV1Impl): MealieDataSourceV1
+
+    @Binds
+    @Singleton
+    fun bindNetworkRequestWrapper(networkRequestWrapperImpl: NetworkRequestWrapperImpl): NetworkRequestWrapper
 }

@@ -1,12 +1,11 @@
 package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.NetworkError
-import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
+import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
-import gq.kirmanak.mealient.logging.Logger
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
@@ -17,8 +16,8 @@ import javax.inject.Singleton
 
 @Singleton
 class MealieDataSourceV1Impl @Inject constructor(
-    private val logger: Logger,
-    private val mealieService: MealieServiceV1,
+    private val networkRequestWrapper: NetworkRequestWrapper,
+    private val service: MealieServiceV1,
     private val json: Json,
 ) : MealieDataSourceV1 {
 
@@ -34,8 +33,10 @@ class MealieDataSourceV1Impl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getVersionInfo(baseUrl: String): VersionResponseV1 = makeCall(
-        block = { getVersion("$baseUrl/api/app/about") },
+    override suspend fun getVersionInfo(
+        baseUrl: String,
+    ): VersionResponseV1 = networkRequestWrapper.makeCall(
+        block = { service.getVersion("$baseUrl/api/app/about") },
         logMethod = { "getVersionInfo" },
         logParameters = { "baseUrl = $baseUrl" },
     ).getOrElse {
@@ -51,38 +52,21 @@ class MealieDataSourceV1Impl @Inject constructor(
         token: String?,
         page: Int,
         perPage: Int
-    ): List<GetRecipeSummaryResponseV1> = makeCall(
-        block = { getRecipeSummary("$baseUrl/api/recipes", token, page, perPage) },
+    ): List<GetRecipeSummaryResponseV1> = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.getRecipeSummary("$baseUrl/api/recipes", token, page, perPage) },
         logMethod = { "requestRecipesV1" },
         logParameters = { "baseUrl = $baseUrl, token = $token, page = $page, perPage = $perPage" }
-    ).map { it.items }.getOrThrowUnauthorized()
+    ).items
 
     override suspend fun requestRecipeInfo(
         baseUrl: String,
         token: String?,
         slug: String
-    ): GetRecipeResponseV1 = makeCall(
-        block = { getRecipe("$baseUrl/api/recipes/$slug", token) },
+    ): GetRecipeResponseV1 = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.getRecipe("$baseUrl/api/recipes/$slug", token) },
         logMethod = { "requestRecipeInfo" },
         logParameters = { "baseUrl = $baseUrl, token = $token, slug = $slug" }
-    ).getOrThrowUnauthorized()
+    )
 
-    private suspend inline fun <T> makeCall(
-        crossinline block: suspend MealieServiceV1.() -> T,
-        crossinline logMethod: () -> String,
-        crossinline logParameters: () -> String,
-    ): Result<T> {
-        logger.v { "${logMethod()} called with: ${logParameters()}" }
-        return runCatchingExceptCancel { mealieService.block() }
-            .onFailure { logger.e(it) { "${logMethod()} request failed with: ${logParameters()}" } }
-            .onSuccess { logger.d { "${logMethod()} request succeeded with ${logParameters()}" } }
-    }
 }
 
-private fun <T> Result<T>.getOrThrowUnauthorized(): T = getOrElse {
-    throw if (it is HttpException && it.code() in listOf(401, 403)) {
-        NetworkError.Unauthorized(it)
-    } else {
-        it
-    }
-}
