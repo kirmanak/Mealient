@@ -7,6 +7,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.models.*
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 
 fun GetRecipeResponse.toRecipeEntity() = RecipeEntity(
@@ -43,7 +44,9 @@ fun GetRecipeSummaryResponseV1.recipeEntity() = RecipeSummaryEntity(
     dateUpdated = dateUpdated,
 )
 
-fun VersionResponse.toVersionInfo() = VersionInfo(production, version, demoStatus)
+fun VersionResponse.toVersionInfo() = VersionInfo(version)
+
+fun VersionResponseV1.toVersionInfo() = VersionInfo(version)
 
 fun AddRecipeDraft.toAddRecipeRequest() = AddRecipeRequest(
     name = recipeName,

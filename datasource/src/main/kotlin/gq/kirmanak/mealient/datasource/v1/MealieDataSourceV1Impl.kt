@@ -3,8 +3,8 @@ package gq.kirmanak.mealient.datasource.v1
 import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.NetworkError
-import gq.kirmanak.mealient.datasource.models.VersionResponse
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -33,7 +33,7 @@ class MealieDataSourceV1Impl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getVersionInfo(baseUrl: String): VersionResponse = makeCall(
+    override suspend fun getVersionInfo(baseUrl: String): VersionResponseV1 = makeCall(
         block = { getVersion("$baseUrl/api/app/about") },
         logMethod = { "getVersionInfo" },
         logParameters = { "baseUrl = $baseUrl" },
