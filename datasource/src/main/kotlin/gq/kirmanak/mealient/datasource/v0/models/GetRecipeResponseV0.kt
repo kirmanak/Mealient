@@ -11,3 +11,13 @@ data class GetRecipeResponseV0(
     @SerialName("recipeIngredient") val recipeIngredients: List<GetRecipeIngredientResponseV0>,
     @SerialName("recipeInstructions") val recipeInstructions: List<GetRecipeInstructionResponseV0>,
 )
+
+@Serializable
+data class GetRecipeIngredientResponseV0(
+    @SerialName("note") val note: String = "",
+)
+
+@Serializable
+data class GetRecipeInstructionResponseV0(
+    @SerialName("text") val text: String,
+)

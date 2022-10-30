@@ -7,3 +7,8 @@ import kotlinx.serialization.Serializable
 data class GetRecipesResponseV1(
     @SerialName("items") val items: List<GetRecipeSummaryResponseV1>,
 )
+
+@Serializable
+data class GetRecipeInstructionResponseV1(
+    @SerialName("text") val text: String,
+)

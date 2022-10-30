@@ -5,7 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VersionResponseV0(
-    @SerialName("production") val production: Boolean,
     @SerialName("version") val version: String,
-    @SerialName("demoStatus") val demoStatus: Boolean,
 )

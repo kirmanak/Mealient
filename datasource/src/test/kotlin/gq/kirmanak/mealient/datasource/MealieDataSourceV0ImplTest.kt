@@ -62,7 +62,7 @@ class MealieDataSourceV0ImplTest {
 
     @Test
     fun `when getVersionInfo and getVersion returns result then result`() = runTest {
-        val versionResponse = VersionResponseV0(true, "v0.5.6", true)
+        val versionResponse = VersionResponseV0("v0.5.6")
         coEvery { service.getVersion(any()) } returns versionResponse
         assertThat(subject.getVersionInfo(TEST_BASE_URL)).isSameInstanceAs(versionResponse)
     }
