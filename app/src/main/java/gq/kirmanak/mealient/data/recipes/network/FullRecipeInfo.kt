@@ -7,7 +7,7 @@ data class FullRecipeInfo(
     val remoteId: String,
     val name: String,
     val slug: String,
-    val image: String,
+    val image: String?,
     val description: String,
     val recipeCategories: List<String>,
     val tags: List<String>,

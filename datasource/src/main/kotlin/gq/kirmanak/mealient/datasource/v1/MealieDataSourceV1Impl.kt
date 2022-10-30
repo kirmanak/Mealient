@@ -19,14 +19,25 @@ class MealieDataSourceV1Impl @Inject constructor(
     private val json: Json,
 ) : MealieDataSourceV1 {
 
-    override suspend fun addRecipe(
+    override suspend fun createRecipe(
         baseUrl: String,
         token: String?,
-        recipe: AddRecipeRequestV1
+        recipe: CreateRecipeRequestV1
     ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.addRecipe("$baseUrl/api/recipes/create", token, recipe) },
-        logMethod = { "addRecipe" },
+        block = { service.createRecipe("$baseUrl/api/recipes", token, recipe) },
+        logMethod = { "createRecipe" },
         logParameters = { "baseUrl = $baseUrl, token = $token, recipe = $recipe" }
+    )
+
+    override suspend fun updateRecipe(
+        baseUrl: String,
+        token: String?,
+        slug: String,
+        recipe: UpdateRecipeRequestV1
+    ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.updateRecipe("$baseUrl/api/recipes/$slug", token, recipe) },
+        logMethod = { "addRecipe" },
+        logParameters = { "baseUrl = $baseUrl, token = $token, slug = $slug, recipe = $recipe" }
     )
 
     override suspend fun authenticate(

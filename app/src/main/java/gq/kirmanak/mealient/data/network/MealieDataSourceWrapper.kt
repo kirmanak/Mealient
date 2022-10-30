@@ -12,10 +12,7 @@ import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
-import gq.kirmanak.mealient.extensions.toFullRecipeInfo
-import gq.kirmanak.mealient.extensions.toRecipeSummaryInfo
-import gq.kirmanak.mealient.extensions.toV0Request
-import gq.kirmanak.mealient.extensions.toV1Request
+import gq.kirmanak.mealient.extensions.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +29,10 @@ class MealieDataSourceWrapper @Inject constructor(
     ): String = makeCall { token, url, version ->
         when (version) {
             ServerVersion.V0 -> v0Source.addRecipe(url, token, recipe.toV0Request())
-            ServerVersion.V1 -> v1Source.addRecipe(url, token, recipe.toV1Request())
+            ServerVersion.V1 -> {
+                val slug = v1Source.createRecipe(url, token, recipe.toV1CreateRequest())
+                v1Source.updateRecipe(url, token, slug, recipe.toV1UpdateRequest(slug))
+            }
         }
     }
 

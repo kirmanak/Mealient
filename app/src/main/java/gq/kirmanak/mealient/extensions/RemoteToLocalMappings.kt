@@ -206,7 +206,12 @@ private fun AddRecipeInstructionInfo.toV0Instruction() = AddRecipeInstructionV0(
     text = text,
 )
 
-fun AddRecipeInfo.toV1Request() = AddRecipeRequestV1(
+
+fun AddRecipeInfo.toV1CreateRequest() = CreateRecipeRequestV1(
+    name = name,
+)
+
+fun AddRecipeInfo.toV1UpdateRequest(slug: String) = UpdateRecipeRequestV1(
     name = name,
     description = description,
     image = image,

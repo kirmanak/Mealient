@@ -15,10 +15,17 @@ interface MealieServiceV1 {
     ): GetTokenResponseV1
 
     @POST
-    suspend fun addRecipe(
+    suspend fun createRecipe(
         @Url url: String,
         @Header(AUTHORIZATION_HEADER_NAME) token: String?,
-        @Body addRecipeRequestV0: AddRecipeRequestV1,
+        @Body addRecipeRequest: CreateRecipeRequestV1,
+    ): String
+
+    @PUT
+    suspend fun updateRecipe(
+        @Url url: String,
+        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
+        @Body addRecipeRequest: UpdateRecipeRequestV1,
     ): String
 
     @GET

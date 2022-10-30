@@ -1,16 +1,20 @@
 package gq.kirmanak.mealient.datasource.v1
 
-import gq.kirmanak.mealient.datasource.v1.models.AddRecipeRequestV1
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.*
 
 interface MealieDataSourceV1 {
 
-    suspend fun addRecipe(
+    suspend fun createRecipe(
         baseUrl: String,
         token: String?,
-        recipe: AddRecipeRequestV1,
+        recipe: CreateRecipeRequestV1,
+    ): String
+
+    suspend fun updateRecipe(
+        baseUrl: String,
+        token: String?,
+        slug: String,
+        recipe: UpdateRecipeRequestV1,
     ): String
 
     /**

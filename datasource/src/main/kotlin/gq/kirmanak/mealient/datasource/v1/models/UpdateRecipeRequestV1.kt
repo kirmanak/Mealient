@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AddRecipeRequestV1(
+data class UpdateRecipeRequestV1(
     @SerialName("name") val name: String = "",
     @SerialName("description") val description: String = "",
     @SerialName("image") val image: String = "",
