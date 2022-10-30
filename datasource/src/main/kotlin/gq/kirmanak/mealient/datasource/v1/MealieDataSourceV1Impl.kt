@@ -3,11 +3,7 @@ package gq.kirmanak.mealient.datasource.v1
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
 import gq.kirmanak.mealient.datasource.decode
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
-import gq.kirmanak.mealient.datasource.v1.models.ErrorDetailV1
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.*
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
@@ -26,10 +22,12 @@ class MealieDataSourceV1Impl @Inject constructor(
     override suspend fun addRecipe(
         baseUrl: String,
         token: String?,
-        recipe: AddRecipeRequestV0
-    ): String {
-        TODO("Not yet implemented")
-    }
+        recipe: AddRecipeRequestV1
+    ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.addRecipe("$baseUrl/api/recipes/create", token, recipe) },
+        logMethod = { "addRecipe" },
+        logParameters = { "baseUrl = $baseUrl, token = $token, recipe = $recipe" }
+    )
 
     override suspend fun authenticate(
         baseUrl: String,

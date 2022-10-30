@@ -1,10 +1,10 @@
 package gq.kirmanak.mealient.extensions
 
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeIngredientV0
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeInstructionV0
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeSettingsV0
+import gq.kirmanak.mealient.data.add.AddRecipeInfo
+import gq.kirmanak.mealient.data.add.AddRecipeIngredientInfo
+import gq.kirmanak.mealient.data.add.AddRecipeInstructionInfo
+import gq.kirmanak.mealient.data.add.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import org.junit.Test
 
@@ -22,42 +22,42 @@ class RemoteToLocalMappingsTest {
             areCommentsDisabled = true,
         )
 
-        val expected = AddRecipeRequestV0(
+        val expected = AddRecipeInfo(
             name = "Recipe name",
             description = "Recipe description",
             recipeYield = "Recipe yield",
             recipeIngredient = listOf(
-                AddRecipeIngredientV0(note = "Recipe ingredient 1"),
-                AddRecipeIngredientV0(note = "Recipe ingredient 2")
+                AddRecipeIngredientInfo(note = "Recipe ingredient 1"),
+                AddRecipeIngredientInfo(note = "Recipe ingredient 2")
             ),
             recipeInstructions = listOf(
-                AddRecipeInstructionV0(text = "Recipe instruction 1"),
-                AddRecipeInstructionV0(text = "Recipe instruction 2")
+                AddRecipeInstructionInfo(text = "Recipe instruction 1"),
+                AddRecipeInstructionInfo(text = "Recipe instruction 2")
             ),
-            settings = AddRecipeSettingsV0(
+            settings = AddRecipeSettingsInfo(
                 public = false,
                 disableComments = true,
             )
         )
 
-        assertThat(input.toAddRecipeRequest()).isEqualTo(expected)
+        assertThat(input.toAddRecipeInfo()).isEqualTo(expected)
     }
 
     @Test
     fun `when toDraft then fills fields correctly`() {
-        val request = AddRecipeRequestV0(
+        val request = AddRecipeInfo(
             name = "Recipe name",
             description = "Recipe description",
             recipeYield = "Recipe yield",
             recipeIngredient = listOf(
-                AddRecipeIngredientV0(note = "Recipe ingredient 1"),
-                AddRecipeIngredientV0(note = "Recipe ingredient 2")
+                AddRecipeIngredientInfo(note = "Recipe ingredient 1"),
+                AddRecipeIngredientInfo(note = "Recipe ingredient 2")
             ),
             recipeInstructions = listOf(
-                AddRecipeInstructionV0(text = "Recipe instruction 1"),
-                AddRecipeInstructionV0(text = "Recipe instruction 2")
+                AddRecipeInstructionInfo(text = "Recipe instruction 1"),
+                AddRecipeInstructionInfo(text = "Recipe instruction 2")
             ),
-            settings = AddRecipeSettingsV0(
+            settings = AddRecipeSettingsInfo(
                 public = false,
                 disableComments = true,
             )

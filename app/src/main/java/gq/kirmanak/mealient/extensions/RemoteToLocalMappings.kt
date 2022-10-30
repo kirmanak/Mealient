@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.extensions
 
+import gq.kirmanak.mealient.data.add.*
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeIngredientInfo
@@ -78,19 +79,19 @@ fun VersionResponseV0.toVersionInfo() = VersionInfo(version)
 
 fun VersionResponseV1.toVersionInfo() = VersionInfo(version)
 
-fun AddRecipeDraft.toAddRecipeRequest() = AddRecipeRequestV0(
+fun AddRecipeDraft.toAddRecipeInfo() = AddRecipeInfo(
     name = recipeName,
     description = recipeDescription,
     recipeYield = recipeYield,
-    recipeIngredient = recipeIngredients.map { AddRecipeIngredientV0(note = it) },
-    recipeInstructions = recipeInstructions.map { AddRecipeInstructionV0(text = it) },
-    settings = AddRecipeSettingsV0(
+    recipeIngredient = recipeIngredients.map { AddRecipeIngredientInfo(note = it) },
+    recipeInstructions = recipeInstructions.map { AddRecipeInstructionInfo(text = it) },
+    settings = AddRecipeSettingsInfo(
         public = isRecipePublic,
         disableComments = areCommentsDisabled,
     )
 )
 
-fun AddRecipeRequestV0.toDraft(): AddRecipeDraft = AddRecipeDraft(
+fun AddRecipeInfo.toDraft(): AddRecipeDraft = AddRecipeDraft(
     recipeName = name,
     recipeDescription = description,
     recipeYield = recipeYield,
@@ -158,4 +159,94 @@ fun GetRecipeIngredientResponseV1.toRecipeIngredientInfo() = RecipeIngredientInf
 fun GetRecipeInstructionResponseV1.toRecipeInstructionInfo() = RecipeInstructionInfo(
     title = title,
     text = text
+)
+
+fun AddRecipeInfo.toV0Request() = AddRecipeRequestV0(
+    name = name,
+    description = description,
+    image = image,
+    recipeYield = recipeYield,
+    recipeIngredient = recipeIngredient.map { it.toV0Ingredient() },
+    recipeInstructions = recipeInstructions.map { it.toV0Instruction() },
+    slug = slug,
+    filePath = filePath,
+    tags = tags,
+    categories = categories,
+    notes = notes.map { it.toV0Note() },
+    extras = extras,
+    assets = assets,
+    settings = settings.toV0Settings(),
+)
+
+private fun AddRecipeSettingsInfo.toV0Settings() = AddRecipeSettingsV0(
+    disableAmount = disableAmount,
+    disableComments = disableComments,
+    landscapeView = landscapeView,
+    public = public,
+    showAssets = showAssets,
+    showNutrition = showNutrition,
+)
+
+private fun AddRecipeNoteInfo.toV0Note() = AddRecipeNoteV0(
+    title = title,
+    text = text,
+)
+
+private fun AddRecipeIngredientInfo.toV0Ingredient() = AddRecipeIngredientV0(
+    disableAmount = disableAmount,
+    food = food,
+    note = note,
+    quantity = quantity,
+    title = title,
+    unit = unit
+)
+
+private fun AddRecipeInstructionInfo.toV0Instruction() = AddRecipeInstructionV0(
+    title = title,
+    text = text,
+)
+
+fun AddRecipeInfo.toV1Request() = AddRecipeRequestV1(
+    name = name,
+    description = description,
+    image = image,
+    recipeYield = recipeYield,
+    recipeIngredient = recipeIngredient.map { it.toV1Ingredient() },
+    recipeInstructions = recipeInstructions.map { it.toV1Instruction() },
+    slug = slug,
+    filePath = filePath,
+    tags = tags,
+    categories = categories,
+    notes = notes.map { it.toV1Note() },
+    extras = extras,
+    assets = assets,
+    settings = settings.toV1Settings(),
+)
+
+private fun AddRecipeSettingsInfo.toV1Settings() = AddRecipeSettingsV1(
+    disableAmount = disableAmount,
+    disableComments = disableComments,
+    landscapeView = landscapeView,
+    public = public,
+    showAssets = showAssets,
+    showNutrition = showNutrition,
+)
+
+private fun AddRecipeNoteInfo.toV1Note() = AddRecipeNoteV1(
+    title = title,
+    text = text,
+)
+
+private fun AddRecipeIngredientInfo.toV1Ingredient() = AddRecipeIngredientV1(
+    disableAmount = disableAmount,
+    food = food,
+    note = note,
+    quantity = quantity,
+    title = title,
+    unit = unit
+)
+
+private fun AddRecipeInstructionInfo.toV1Instruction() = AddRecipeInstructionV1(
+    title = title,
+    text = text,
 )

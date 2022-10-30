@@ -12,12 +12,12 @@ import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
+import gq.kirmanak.mealient.data.add.AddRecipeInfo
+import gq.kirmanak.mealient.data.add.AddRecipeIngredientInfo
+import gq.kirmanak.mealient.data.add.AddRecipeInstructionInfo
+import gq.kirmanak.mealient.data.add.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.databinding.FragmentAddRecipeBinding
 import gq.kirmanak.mealient.databinding.ViewSingleInputBinding
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeIngredientV0
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeInstructionV0
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeSettingsV0
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.logging.Logger
@@ -122,14 +122,15 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
 
     private fun saveValues() = with(binding) {
         logger.v { "saveValues() called" }
-        val instructions = parseInputRows(instructionsFlow).map { AddRecipeInstructionV0(text = it) }
-        val ingredients = parseInputRows(ingredientsFlow).map { AddRecipeIngredientV0(note = it) }
-        val settings = AddRecipeSettingsV0(
+        val instructions =
+            parseInputRows(instructionsFlow).map { AddRecipeInstructionInfo(text = it) }
+        val ingredients = parseInputRows(ingredientsFlow).map { AddRecipeIngredientInfo(note = it) }
+        val settings = AddRecipeSettingsInfo(
             public = publicRecipe.isChecked,
             disableComments = disableComments.isChecked,
         )
         viewModel.preserve(
-            AddRecipeRequestV0(
+            AddRecipeInfo(
                 name = recipeNameInput.text.toString(),
                 description = recipeDescriptionInput.text.toString(),
                 recipeYield = recipeYieldInput.text.toString(),
@@ -148,7 +149,7 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
             .filterNot { it.isBlank() }
             .toList()
 
-    private fun onSavedInputLoaded(request: AddRecipeRequestV0) = with(binding) {
+    private fun onSavedInputLoaded(request: AddRecipeInfo) = with(binding) {
         logger.v { "onSavedInputLoaded() called with: request = $request" }
         recipeNameInput.setText(request.name)
         recipeDescriptionInput.setText(request.description)
