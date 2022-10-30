@@ -16,6 +16,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.v0.models.*
 import gq.kirmanak.mealient.datasource.v1.models.*
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
+import java.util.*
 
 fun FullRecipeInfo.toRecipeEntity() = RecipeEntity(
     remoteId = remoteId,
@@ -161,10 +162,12 @@ private fun AddRecipeSettingsInfo.toV1Settings() = AddRecipeSettingsV1(
 )
 
 private fun AddRecipeIngredientInfo.toV1Ingredient() = AddRecipeIngredientV1(
+    id = UUID.randomUUID().toString(),
     note = note,
 )
 
 private fun AddRecipeInstructionInfo.toV1Instruction() = AddRecipeInstructionV1(
+    id = UUID.randomUUID().toString(),
     text = text,
     ingredientReferences = emptyList(),
 )
