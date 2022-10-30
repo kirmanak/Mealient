@@ -5,13 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UpdateRecipeRequestV1(
-    @SerialName("name") val name: String = "",
     @SerialName("description") val description: String = "",
     @SerialName("image") val image: String = "",
     @SerialName("recipeYield") val recipeYield: String = "",
     @SerialName("recipeIngredient") val recipeIngredient: List<AddRecipeIngredientV1> = emptyList(),
     @SerialName("recipeInstructions") val recipeInstructions: List<AddRecipeInstructionV1> = emptyList(),
-    @SerialName("slug") val slug: String = "",
     @SerialName("filePath") val filePath: String = "",
     @SerialName("tags") val tags: List<String> = emptyList(),
     @SerialName("categories") val categories: List<String> = emptyList(),
@@ -35,6 +33,7 @@ data class AddRecipeIngredientV1(
 data class AddRecipeInstructionV1(
     @SerialName("title") val title: String = "",
     @SerialName("text") val text: String = "",
+    @SerialName("ingredientReferences") val ingredientReferences: List<String> = emptyList(),
 )
 
 @Serializable

@@ -31,7 +31,8 @@ class MealieDataSourceWrapper @Inject constructor(
             ServerVersion.V0 -> v0Source.addRecipe(url, token, recipe.toV0Request())
             ServerVersion.V1 -> {
                 val slug = v1Source.createRecipe(url, token, recipe.toV1CreateRequest())
-                v1Source.updateRecipe(url, token, slug, recipe.toV1UpdateRequest(slug))
+                v1Source.updateRecipe(url, token, slug, recipe.toV1UpdateRequest())
+                slug
             }
         }
     }

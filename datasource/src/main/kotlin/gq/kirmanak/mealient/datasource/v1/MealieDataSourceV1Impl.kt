@@ -34,7 +34,7 @@ class MealieDataSourceV1Impl @Inject constructor(
         token: String?,
         slug: String,
         recipe: UpdateRecipeRequestV1
-    ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
+    ): GetRecipeResponseV1 = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.updateRecipe("$baseUrl/api/recipes/$slug", token, recipe) },
         logMethod = { "updateRecipe" },
         logParameters = { "baseUrl = $baseUrl, token = $token, slug = $slug, recipe = $recipe" }

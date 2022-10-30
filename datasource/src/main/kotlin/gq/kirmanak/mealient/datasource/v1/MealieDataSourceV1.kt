@@ -15,7 +15,7 @@ interface MealieDataSourceV1 {
         token: String?,
         slug: String,
         recipe: UpdateRecipeRequestV1,
-    ): String
+    ): GetRecipeResponseV1
 
     /**
      * Tries to acquire authentication token using the provided credentials

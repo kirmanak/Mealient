@@ -21,12 +21,12 @@ interface MealieServiceV1 {
         @Body addRecipeRequest: CreateRecipeRequestV1,
     ): String
 
-    @PUT
+    @PATCH
     suspend fun updateRecipe(
         @Url url: String,
         @Header(AUTHORIZATION_HEADER_NAME) token: String?,
         @Body addRecipeRequest: UpdateRecipeRequestV1,
-    ): String
+    ): GetRecipeResponseV1
 
     @GET
     suspend fun getVersion(

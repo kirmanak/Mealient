@@ -211,14 +211,12 @@ fun AddRecipeInfo.toV1CreateRequest() = CreateRecipeRequestV1(
     name = name,
 )
 
-fun AddRecipeInfo.toV1UpdateRequest(slug: String) = UpdateRecipeRequestV1(
-    name = name,
+fun AddRecipeInfo.toV1UpdateRequest() = UpdateRecipeRequestV1(
     description = description,
     image = image,
     recipeYield = recipeYield,
     recipeIngredient = recipeIngredient.map { it.toV1Ingredient() },
     recipeInstructions = recipeInstructions.map { it.toV1Instruction() },
-    slug = slug,
     filePath = filePath,
     tags = tags,
     categories = categories,
@@ -254,4 +252,5 @@ private fun AddRecipeIngredientInfo.toV1Ingredient() = AddRecipeIngredientV1(
 private fun AddRecipeInstructionInfo.toV1Instruction() = AddRecipeInstructionV1(
     title = title,
     text = text,
+    ingredientReferences = emptyList(),
 )
