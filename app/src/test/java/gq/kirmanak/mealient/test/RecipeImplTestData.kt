@@ -1,5 +1,9 @@
 package gq.kirmanak.mealient.test
 
+import gq.kirmanak.mealient.data.add.AddRecipeInfo
+import gq.kirmanak.mealient.data.add.AddRecipeIngredientInfo
+import gq.kirmanak.mealient.data.add.AddRecipeInstructionInfo
+import gq.kirmanak.mealient.data.add.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeIngredientInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeInstructionInfo
@@ -173,5 +177,22 @@ object RecipeImplTestData {
             PORRIDGE_MIX_RECIPE_INSTRUCTION_ENTITY,
             PORRIDGE_BOIL_RECIPE_INSTRUCTION_ENTITY,
         )
+    )
+
+    val PORRIDGE_ADD_RECIPE_INFO = AddRecipeInfo(
+        name = "Porridge",
+        description = "Tasty breakfast",
+        recipeYield = "5 servings",
+        recipeIngredient = listOf(
+            AddRecipeIngredientInfo("Milk"),
+            AddRecipeIngredientInfo("Sugar"),
+            AddRecipeIngredientInfo("Salt"),
+            AddRecipeIngredientInfo("Porridge"),
+        ),
+        recipeInstructions = listOf(
+            AddRecipeInstructionInfo("Mix"),
+            AddRecipeInstructionInfo("Cook"),
+        ),
+        settings = AddRecipeSettingsInfo(disableComments = false, public = true),
     )
 }
