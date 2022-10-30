@@ -21,3 +21,34 @@ data class AddRecipeRequestV0(
     @SerialName("settings") val settings: AddRecipeSettingsV0 = AddRecipeSettingsV0(),
 )
 
+@Serializable
+data class AddRecipeIngredientV0(
+    @SerialName("disableAmount") val disableAmount: Boolean = true,
+    @SerialName("food") val food: String? = null,
+    @SerialName("note") val note: String = "",
+    @SerialName("quantity") val quantity: Int = 1,
+    @SerialName("title") val title: String? = null,
+    @SerialName("unit") val unit: String? = null,
+)
+
+@Serializable
+data class AddRecipeInstructionV0(
+    @SerialName("title") val title: String = "",
+    @SerialName("text") val text: String = "",
+)
+
+@Serializable
+data class AddRecipeNoteV0(
+    @SerialName("title") val title: String = "",
+    @SerialName("text") val text: String = "",
+)
+
+@Serializable
+data class AddRecipeSettingsV0(
+    @SerialName("disableAmount") val disableAmount: Boolean = true,
+    @SerialName("disableComments") val disableComments: Boolean = false,
+    @SerialName("landscapeView") val landscapeView: Boolean = true,
+    @SerialName("public") val public: Boolean = true,
+    @SerialName("showAssets") val showAssets: Boolean = true,
+    @SerialName("showNutrition") val showNutrition: Boolean = true,
+)
