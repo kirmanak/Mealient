@@ -47,24 +47,24 @@ class RecipeRepoImplTest {
     @Test
     fun `when loadRecipeInfo then loads recipe`() = runTest {
         coEvery { dataSource.requestRecipeInfo(eq("cake")) } returns GET_CAKE_RESPONSE
-        coEvery { storage.queryRecipeInfo(eq(1)) } returns FULL_CAKE_INFO_ENTITY
-        val actual = subject.loadRecipeInfo(1, "cake")
+        coEvery { storage.queryRecipeInfo(eq("1")) } returns FULL_CAKE_INFO_ENTITY
+        val actual = subject.loadRecipeInfo("1", "cake")
         assertThat(actual).isEqualTo(FULL_CAKE_INFO_ENTITY)
     }
 
     @Test
     fun `when loadRecipeInfo then saves to DB`() = runTest {
         coEvery { dataSource.requestRecipeInfo(eq("cake")) } returns GET_CAKE_RESPONSE
-        coEvery { storage.queryRecipeInfo(eq(1)) } returns FULL_CAKE_INFO_ENTITY
-        subject.loadRecipeInfo(1, "cake")
+        coEvery { storage.queryRecipeInfo(eq("1")) } returns FULL_CAKE_INFO_ENTITY
+        subject.loadRecipeInfo("1", "cake")
         coVerify { storage.saveRecipeInfo(eq(GET_CAKE_RESPONSE)) }
     }
 
     @Test
     fun `when loadRecipeInfo with error then loads from DB`() = runTest {
         coEvery { dataSource.requestRecipeInfo(eq("cake")) } throws RuntimeException()
-        coEvery { storage.queryRecipeInfo(eq(1)) } returns FULL_CAKE_INFO_ENTITY
-        val actual = subject.loadRecipeInfo(1, "cake")
+        coEvery { storage.queryRecipeInfo(eq("1")) } returns FULL_CAKE_INFO_ENTITY
+        val actual = subject.loadRecipeInfo("1", "cake")
         assertThat(actual).isEqualTo(FULL_CAKE_INFO_ENTITY)
     }
 }

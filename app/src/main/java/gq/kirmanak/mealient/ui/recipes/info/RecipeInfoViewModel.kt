@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class RecipeInfoViewModel @Inject constructor(
     private val _uiState = MutableLiveData(RecipeInfoUiState())
     val uiState: LiveData<RecipeInfoUiState> get() = _uiState
 
-    fun loadRecipeInfo(recipeId: Long, recipeSlug: String) {
+    fun loadRecipeInfo(recipeId: String, recipeSlug: String) {
         logger.v { "loadRecipeInfo() called with: recipeId = $recipeId, recipeSlug = $recipeSlug" }
         _uiState.value = RecipeInfoUiState()
         viewModelScope.launch {

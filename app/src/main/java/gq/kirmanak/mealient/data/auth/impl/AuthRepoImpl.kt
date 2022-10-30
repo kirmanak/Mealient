@@ -3,8 +3,7 @@ package gq.kirmanak.mealient.data.auth.impl
 import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
-import gq.kirmanak.mealient.data.baseurl.BaseURLStorage
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -15,7 +14,6 @@ import javax.inject.Singleton
 class AuthRepoImpl @Inject constructor(
     private val authStorage: AuthStorage,
     private val authDataSource: AuthDataSource,
-    private val baseURLStorage: BaseURLStorage,
     private val logger: Logger,
 ) : AuthRepo {
 
@@ -24,9 +22,9 @@ class AuthRepoImpl @Inject constructor(
 
     override suspend fun authenticate(email: String, password: String) {
         logger.v { "authenticate() called with: email = $email, password = $password" }
-        authDataSource.authenticate(email, password, baseURLStorage.requireBaseURL())
-            .let { AUTH_HEADER_FORMAT.format(it) }
-            .let { authStorage.setAuthHeader(it) }
+        val token = authDataSource.authenticate(email, password)
+        val header = AUTH_HEADER_FORMAT.format(token)
+        authStorage.setAuthHeader(header)
         authStorage.setEmail(email)
         authStorage.setPassword(password)
     }

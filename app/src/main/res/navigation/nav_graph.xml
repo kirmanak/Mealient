@@ -36,7 +36,7 @@
 			app:argType="string" />
 		<argument
 			android:name="recipe_id"
-			app:argType="long" />
+			app:argType="string" />
 	</dialog>
 	<fragment
 		android:id="@+id/disclaimerFragment"

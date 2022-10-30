@@ -1,13 +1,12 @@
 package gq.kirmanak.mealient.data.add
 
-import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
 import kotlinx.coroutines.flow.Flow
 
 interface AddRecipeRepo {
 
-    val addRecipeRequestFlow: Flow<AddRecipeRequest>
+    val addRecipeRequestFlow: Flow<AddRecipeInfo>
 
-    suspend fun preserve(recipe: AddRecipeRequest)
+    suspend fun preserve(recipe: AddRecipeInfo)
 
     suspend fun clear()
 

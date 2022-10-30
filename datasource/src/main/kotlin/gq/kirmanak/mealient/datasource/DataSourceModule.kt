@@ -6,6 +6,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
+import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0Impl
+import gq.kirmanak.mealient.datasource.v0.MealieServiceV0
+import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
+import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1Impl
+import gq.kirmanak.mealient.datasource.v1.MealieServiceV1
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -49,9 +55,13 @@ interface DataSourceModule {
 
         @Provides
         @Singleton
-        fun provideMealieService(retrofit: Retrofit): MealieService =
+        fun provideMealieService(retrofit: Retrofit): MealieServiceV0 =
             retrofit.create()
 
+        @Provides
+        @Singleton
+        fun provideMealieServiceV1(retrofit: Retrofit): MealieServiceV1 =
+            retrofit.create()
     }
 
     @Binds
@@ -64,5 +74,13 @@ interface DataSourceModule {
 
     @Binds
     @Singleton
-    fun bindMealieDataSource(mealientDataSourceImpl: MealieDataSourceImpl): MealieDataSource
+    fun bindMealieDataSource(mealientDataSourceImpl: MealieDataSourceV0Impl): MealieDataSourceV0
+
+    @Binds
+    @Singleton
+    fun bindMealieDataSourceV1(mealientDataSourceImpl: MealieDataSourceV1Impl): MealieDataSourceV1
+
+    @Binds
+    @Singleton
+    fun bindNetworkRequestWrapper(networkRequestWrapperImpl: NetworkRequestWrapperImpl): NetworkRequestWrapper
 }

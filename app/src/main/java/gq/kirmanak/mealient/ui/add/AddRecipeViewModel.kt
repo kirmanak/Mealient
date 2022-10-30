@@ -3,9 +3,9 @@ package gq.kirmanak.mealient.ui.add
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gq.kirmanak.mealient.data.add.AddRecipeInfo
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
-import gq.kirmanak.mealient.datasource.models.AddRecipeRequest
-import gq.kirmanak.mealient.extensions.runCatchingExceptCancel
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -23,8 +23,8 @@ class AddRecipeViewModel @Inject constructor(
     private val _addRecipeResultChannel = Channel<Boolean>(Channel.UNLIMITED)
     val addRecipeResult: Flow<Boolean> get() = _addRecipeResultChannel.receiveAsFlow()
 
-    private val _preservedAddRecipeRequestChannel = Channel<AddRecipeRequest>(Channel.UNLIMITED)
-    val preservedAddRecipeRequest: Flow<AddRecipeRequest>
+    private val _preservedAddRecipeRequestChannel = Channel<AddRecipeInfo>(Channel.UNLIMITED)
+    val preservedAddRecipeRequest: Flow<AddRecipeInfo>
         get() = _preservedAddRecipeRequestChannel.receiveAsFlow()
 
     fun loadPreservedRequest() {
@@ -47,7 +47,7 @@ class AddRecipeViewModel @Inject constructor(
         }
     }
 
-    fun preserve(request: AddRecipeRequest) {
+    fun preserve(request: AddRecipeInfo) {
         logger.v { "preserve() called with: request = $request" }
         viewModelScope.launch { addRecipeRepo.preserve(request) }
     }
