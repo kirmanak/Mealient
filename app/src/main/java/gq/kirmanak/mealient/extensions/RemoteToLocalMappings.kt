@@ -1,6 +1,9 @@
 package gq.kirmanak.mealient.extensions
 
-import gq.kirmanak.mealient.data.add.*
+import gq.kirmanak.mealient.data.add.AddRecipeInfo
+import gq.kirmanak.mealient.data.add.AddRecipeIngredientInfo
+import gq.kirmanak.mealient.data.add.AddRecipeInstructionInfo
+import gq.kirmanak.mealient.data.add.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeIngredientInfo
@@ -21,17 +24,11 @@ fun FullRecipeInfo.toRecipeEntity() = RecipeEntity(
 
 fun RecipeIngredientInfo.toRecipeIngredientEntity(remoteId: String) = RecipeIngredientEntity(
     recipeId = remoteId,
-    title = title,
     note = note,
-    unit = unit,
-    food = food,
-    disableAmount = disableAmount,
-    quantity = quantity
 )
 
 fun RecipeInstructionInfo.toRecipeInstructionEntity(remoteId: String) = RecipeInstructionEntity(
     recipeId = remoteId,
-    title = title,
     text = text
 )
 
@@ -104,105 +101,54 @@ fun AddRecipeInfo.toDraft(): AddRecipeDraft = AddRecipeDraft(
 fun GetRecipeResponseV0.toFullRecipeInfo() = FullRecipeInfo(
     remoteId = remoteId.toString(),
     name = name,
-    slug = slug,
-    image = image,
-    description = description,
-    recipeCategories = recipeCategories,
-    tags = tags,
-    rating = rating,
-    dateAdded = dateAdded,
-    dateUpdated = dateUpdated,
     recipeYield = recipeYield,
     recipeIngredients = recipeIngredients.map { it.toRecipeIngredientInfo() },
     recipeInstructions = recipeInstructions.map { it.toRecipeInstructionInfo() }
 )
 
 fun GetRecipeIngredientResponseV0.toRecipeIngredientInfo() = RecipeIngredientInfo(
-    title = title,
     note = note,
-    unit = unit,
-    food = food,
-    disableAmount = disableAmount,
-    quantity = quantity
 )
 
 fun GetRecipeInstructionResponseV0.toRecipeInstructionInfo() = RecipeInstructionInfo(
-    title = title,
     text = text
 )
 
 fun GetRecipeResponseV1.toFullRecipeInfo() = FullRecipeInfo(
     remoteId = remoteId,
     name = name,
-    slug = slug,
-    image = image,
-    description = description,
-    recipeCategories = recipeCategories,
-    tags = tags,
-    rating = rating,
-    dateAdded = dateAdded,
-    dateUpdated = dateUpdated,
     recipeYield = recipeYield,
     recipeIngredients = recipeIngredients.map { it.toRecipeIngredientInfo() },
     recipeInstructions = recipeInstructions.map { it.toRecipeInstructionInfo() }
 )
 
 fun GetRecipeIngredientResponseV1.toRecipeIngredientInfo() = RecipeIngredientInfo(
-    title = title,
     note = note,
-    unit = unit,
-    food = food,
-    disableAmount = disableAmount,
-    quantity = quantity
 )
 
 fun GetRecipeInstructionResponseV1.toRecipeInstructionInfo() = RecipeInstructionInfo(
-    title = title,
     text = text
 )
 
 fun AddRecipeInfo.toV0Request() = AddRecipeRequestV0(
     name = name,
     description = description,
-    image = image,
     recipeYield = recipeYield,
     recipeIngredient = recipeIngredient.map { it.toV0Ingredient() },
     recipeInstructions = recipeInstructions.map { it.toV0Instruction() },
-    slug = slug,
-    filePath = filePath,
-    tags = tags,
-    categories = categories,
-    notes = notes.map { it.toV0Note() },
-    extras = extras,
-    assets = assets,
     settings = settings.toV0Settings(),
 )
 
 private fun AddRecipeSettingsInfo.toV0Settings() = AddRecipeSettingsV0(
-    disableAmount = disableAmount,
     disableComments = disableComments,
-    landscapeView = landscapeView,
     public = public,
-    showAssets = showAssets,
-    showNutrition = showNutrition,
-)
-
-private fun AddRecipeNoteInfo.toV0Note() = AddRecipeNoteV0(
-    title = title,
-    text = text,
 )
 
 private fun AddRecipeIngredientInfo.toV0Ingredient() = AddRecipeIngredientV0(
-    disableAmount = disableAmount,
-    food = food,
     note = note,
-    quantity = quantity,
-    title = title,
-    unit = unit
 )
 
 private fun AddRecipeInstructionInfo.toV0Instruction() = AddRecipeInstructionV0(
-    title = title,
     text = text,
 )
 
@@ -213,44 +159,22 @@ fun AddRecipeInfo.toV1CreateRequest() = CreateRecipeRequestV1(
 
 fun AddRecipeInfo.toV1UpdateRequest() = UpdateRecipeRequestV1(
     description = description,
-    image = image,
     recipeYield = recipeYield,
     recipeIngredient = recipeIngredient.map { it.toV1Ingredient() },
     recipeInstructions = recipeInstructions.map { it.toV1Instruction() },
-    filePath = filePath,
-    tags = tags,
-    categories = categories,
-    notes = notes.map { it.toV1Note() },
-    extras = extras,
-    assets = assets,
     settings = settings.toV1Settings(),
 )
 
 private fun AddRecipeSettingsInfo.toV1Settings() = AddRecipeSettingsV1(
-    disableAmount = disableAmount,
     disableComments = disableComments,
-    landscapeView = landscapeView,
     public = public,
-    showAssets = showAssets,
-    showNutrition = showNutrition,
-)
-
-private fun AddRecipeNoteInfo.toV1Note() = AddRecipeNoteV1(
-    title = title,
-    text = text,
 )
 
 private fun AddRecipeIngredientInfo.toV1Ingredient() = AddRecipeIngredientV1(
-    disableAmount = disableAmount,
-    food = food,
     note = note,
-    quantity = quantity,
-    title = title,
-    unit = unit
 )
 
 private fun AddRecipeInstructionInfo.toV1Instruction() = AddRecipeInstructionV1(
-    title = title,
     text = text,
     ingredientReferences = emptyList(),
 )

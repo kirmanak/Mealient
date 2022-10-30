@@ -8,6 +8,5 @@ import androidx.room.PrimaryKey
 data class RecipeInstructionEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "local_id") val localId: Long = 0,
     @ColumnInfo(name = "recipe_id") val recipeId: String,
-    @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "text") val text: String,
 )
