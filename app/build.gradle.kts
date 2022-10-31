@@ -17,8 +17,8 @@ plugins {
 android {
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
-        versionCode = 14
-        versionName = "0.2.5"
+        versionCode = 15
+        versionName = "0.3.0"
     }
 
     signingConfigs {
