@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import com.google.android.material.shape.CornerFamily
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var logger: Logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         logger.v { "onCreate() called with: savedInstanceState = $savedInstanceState" }
         binding = MainActivityBinding.inflate(layoutInflater)

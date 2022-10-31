@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.navigation.uiKtx)
 
     implementation(libs.androidx.coreKtx)
+    implementation(libs.androidx.splashScreen)
 
     implementation(libs.androidx.appcompat)
 
