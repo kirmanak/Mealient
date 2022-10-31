@@ -10,9 +10,10 @@ import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
-import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION_V0
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
+import gq.kirmanak.mealient.test.FakeLogger
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,8 +35,7 @@ class AuthRepoImplTest {
     @MockK(relaxUnitFun = true)
     lateinit var storage: AuthStorage
 
-    @MockK(relaxUnitFun = true)
-    lateinit var logger: Logger
+    private val logger: Logger = FakeLogger()
 
     lateinit var subject: AuthRepo
 
@@ -53,7 +53,7 @@ class AuthRepoImplTest {
 
     @Test
     fun `when authenticate successfully then saves to storage`() = runTest {
-        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
         coEvery { dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD)) } returns TEST_TOKEN
         coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD)
@@ -104,7 +104,7 @@ class AuthRepoImplTest {
     fun `when invalidate with credentials then calls authenticate`() = runTest {
         coEvery { storage.getEmail() } returns TEST_USERNAME
         coEvery { storage.getPassword() } returns TEST_PASSWORD
-        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
         coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
         coEvery { dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD)) } returns TEST_TOKEN
         subject.invalidateAuthHeader()

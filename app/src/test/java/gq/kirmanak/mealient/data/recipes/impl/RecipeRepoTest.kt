@@ -7,8 +7,9 @@ import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.test.FakeLogger
+import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_FULL_RECIPE_INFO
 import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.GET_CAKE_RESPONSE
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,7 +20,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class RecipeRepoImplTest {
+class RecipeRepoTest {
 
     @MockK(relaxUnitFun = true)
     lateinit var storage: RecipeStorage
@@ -33,8 +34,7 @@ class RecipeRepoImplTest {
     @MockK
     lateinit var pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>
 
-    @MockK(relaxUnitFun = true)
-    lateinit var logger: Logger
+    private val logger: Logger = FakeLogger()
 
     lateinit var subject: RecipeRepo
 
@@ -45,26 +45,32 @@ class RecipeRepoImplTest {
     }
 
     @Test
-    fun `when loadRecipeInfo then loads recipe`() = runTest {
-        coEvery { dataSource.requestRecipeInfo(eq("cake")) } returns GET_CAKE_RESPONSE
+    fun `when loadRecipeInfo expect return value from data source`() = runTest {
+        coEvery { dataSource.requestRecipeInfo(eq("cake")) } returns CAKE_FULL_RECIPE_INFO
         coEvery { storage.queryRecipeInfo(eq("1")) } returns FULL_CAKE_INFO_ENTITY
         val actual = subject.loadRecipeInfo("1", "cake")
         assertThat(actual).isEqualTo(FULL_CAKE_INFO_ENTITY)
     }
 
     @Test
-    fun `when loadRecipeInfo then saves to DB`() = runTest {
-        coEvery { dataSource.requestRecipeInfo(eq("cake")) } returns GET_CAKE_RESPONSE
+    fun `when loadRecipeInfo expect call to storage`() = runTest {
+        coEvery { dataSource.requestRecipeInfo(eq("cake")) } returns CAKE_FULL_RECIPE_INFO
         coEvery { storage.queryRecipeInfo(eq("1")) } returns FULL_CAKE_INFO_ENTITY
         subject.loadRecipeInfo("1", "cake")
-        coVerify { storage.saveRecipeInfo(eq(GET_CAKE_RESPONSE)) }
+        coVerify { storage.saveRecipeInfo(eq(CAKE_FULL_RECIPE_INFO)) }
     }
 
     @Test
-    fun `when loadRecipeInfo with error then loads from DB`() = runTest {
+    fun `when data source fails expect loadRecipeInfo return value from storage`() = runTest {
         coEvery { dataSource.requestRecipeInfo(eq("cake")) } throws RuntimeException()
         coEvery { storage.queryRecipeInfo(eq("1")) } returns FULL_CAKE_INFO_ENTITY
         val actual = subject.loadRecipeInfo("1", "cake")
         assertThat(actual).isEqualTo(FULL_CAKE_INFO_ENTITY)
+    }
+
+    @Test
+    fun `when clearLocalData expect call to storage`() = runTest {
+        subject.clearLocalData()
+        coVerify { storage.clearAllLocalData() }
     }
 }

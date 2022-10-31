@@ -8,10 +8,10 @@ import gq.kirmanak.mealient.database.AppDb
 import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.extensions.recipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
 import gq.kirmanak.mealient.extensions.toRecipeInstructionEntity
+import gq.kirmanak.mealient.extensions.toRecipeSummaryEntity
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,7 +29,7 @@ class RecipeStorageImpl @Inject constructor(
         logger.v { "saveRecipes() called with $recipes" }
 
         for (recipe in recipes) {
-            val recipeSummaryEntity = recipe.recipeEntity()
+            val recipeSummaryEntity = recipe.toRecipeSummaryEntity()
             recipeDao.insertRecipe(recipeSummaryEntity)
         }
     }

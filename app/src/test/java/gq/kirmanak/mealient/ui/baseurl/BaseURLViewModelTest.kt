@@ -6,6 +6,7 @@ import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_VERSION
+import gq.kirmanak.mealient.test.FakeLogger
 import gq.kirmanak.mealient.test.RobolectricTest
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -26,8 +27,7 @@ class BaseURLViewModelTest : RobolectricTest() {
     @MockK
     lateinit var versionDataSource: VersionDataSource
 
-    @MockK(relaxUnitFun = true)
-    lateinit var logger: Logger
+    private val logger: Logger = FakeLogger()
 
     lateinit var subject: BaseURLViewModel
 
