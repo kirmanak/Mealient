@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.ui.disclaimer
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.test.FakeLogger
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,8 +19,7 @@ class DisclaimerViewModelTest {
     @MockK(relaxUnitFun = true)
     lateinit var storage: DisclaimerStorage
 
-    @MockK(relaxUnitFun = true)
-    lateinit var logger: Logger
+    private val logger: Logger = FakeLogger()
 
     lateinit var subject: DisclaimerViewModel
 

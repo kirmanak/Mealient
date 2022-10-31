@@ -53,7 +53,7 @@ fun GetRecipeSummaryResponseV1.toRecipeSummaryInfo() = RecipeSummaryInfo(
     imageId = remoteId,
 )
 
-fun RecipeSummaryInfo.recipeEntity() = RecipeSummaryEntity(
+fun RecipeSummaryInfo.toRecipeSummaryEntity() = RecipeSummaryEntity(
     remoteId = remoteId,
     name = name,
     slug = slug,

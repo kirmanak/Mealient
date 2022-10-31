@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.ui.add
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.test.FakeLogger
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_INFO
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -28,8 +29,7 @@ class AddRecipeViewModelTest {
     @MockK(relaxUnitFun = true)
     lateinit var addRecipeRepo: AddRecipeRepo
 
-    @MockK(relaxUnitFun = true)
-    lateinit var logger: Logger
+    private val logger: Logger = FakeLogger()
 
     lateinit var subject: AddRecipeViewModel
 

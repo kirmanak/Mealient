@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.data.recipes.impl
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.test.FakeLogger
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -19,8 +20,7 @@ class RecipeImageUrlProviderImplTest {
     @MockK
     lateinit var serverInfoRepo: ServerInfoRepo
 
-    @MockK(relaxUnitFun = true)
-    lateinit var logger: Logger
+    private val logger: Logger = FakeLogger()
 
     @Before
     fun setUp() {

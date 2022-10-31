@@ -13,6 +13,7 @@ import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.extensions.*
+import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,6 +23,7 @@ class MealieDataSourceWrapper @Inject constructor(
     private val authRepo: AuthRepo,
     private val v0Source: MealieDataSourceV0,
     private val v1Source: MealieDataSourceV1,
+    private val logger: Logger,
 ) : AddRecipeDataSource, RecipeDataSource {
 
     override suspend fun addRecipe(
@@ -68,9 +70,11 @@ class MealieDataSourceWrapper @Inject constructor(
         val version = serverInfoRepo.getVersion()
         return runCatchingExceptCancel { block(authHeader, url, version) }.getOrElse {
             if (it is NetworkError.Unauthorized) {
+                logger.e { "Unauthorized, trying to invalidate token" }
                 authRepo.invalidateAuthHeader()
                 // Trying again with new authentication header
                 val newHeader = authRepo.getAuthHeader()
+                logger.e { "New token ${if (newHeader == authHeader) "matches" else "doesn't match"} old token" }
                 if (newHeader == authHeader) throw it else block(newHeader, url, version)
             } else {
                 throw it

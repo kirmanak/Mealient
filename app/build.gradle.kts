@@ -42,7 +42,8 @@ android {
     buildTypes {
         getByName("debug") {
             ext["enableCrashlytics"] = false
-            isTestCoverageEnabled = true
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
         }
         getByName("release") {
             isMinifyEnabled = true
