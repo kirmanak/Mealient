@@ -9,7 +9,7 @@ import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private val title: String by lazy { getString(R.string.app_name) }
     private val uiState: MainActivityUiState get() = viewModel.uiState
     private val navController: NavController
-        get() = findNavController(binding.navHost.id)
+        get() = binding.navHost.getFragment<NavHostFragment>().navController
 
     @Inject
     lateinit var logger: Logger
