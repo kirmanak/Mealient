@@ -32,7 +32,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var logger: Logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        installSplashScreen().setKeepOnScreenCondition {
+            viewModel.startDestination.value == null
+        }
         super.onCreate(savedInstanceState)
         logger.v { "onCreate() called with: savedInstanceState = $savedInstanceState" }
         binding = MainActivityBinding.inflate(layoutInflater)
