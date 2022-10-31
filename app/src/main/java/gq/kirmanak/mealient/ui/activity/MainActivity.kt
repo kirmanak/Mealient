@@ -15,6 +15,7 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
+import gq.kirmanak.mealient.extensions.observeOnce
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun configureNavGraph() {
         val graph = navController.navInflater.inflate(R.navigation.nav_graph)
-        viewModel.startDestination.observe(this) {
+        viewModel.startDestination.observeOnce(this) {
             graph.setStartDestination(it)
             navController.setGraph(graph, intent.extras)
         }
