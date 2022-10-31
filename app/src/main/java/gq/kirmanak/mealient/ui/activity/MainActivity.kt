@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -24,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainActivityViewModel>()
     private val title: String by lazy { getString(R.string.app_name) }
     private val uiState: MainActivityUiState get() = viewModel.uiState
+    private val navController: NavController
+        get() = findNavController(binding.navHost.id)
 
     @Inject
     lateinit var logger: Logger
@@ -34,12 +37,25 @@ class MainActivity : AppCompatActivity() {
         logger.v { "onCreate() called with: savedInstanceState = $savedInstanceState" }
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        configureToolbar()
+        configureNavGraph()
+        viewModel.uiStateLive.observe(this, ::onUiStateChange)
+        binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
+    }
+
+    private fun configureNavGraph() {
+        val graph = navController.navInflater.inflate(R.navigation.nav_graph)
+        viewModel.startDestination.observe(this) {
+            graph.setStartDestination(it)
+            navController.setGraph(graph, intent.extras)
+        }
+    }
+
+    private fun configureToolbar() {
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar)
         binding.toolbar.setNavigationOnClickListener { binding.drawer.open() }
         setToolbarRoundCorner()
-        viewModel.uiStateLive.observe(this, ::onUiStateChange)
-        binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
     }
 
     private fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
@@ -104,7 +120,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateDeepLink(deepLink: String) {
         logger.v { "navigateDeepLink() called with: deepLink = $deepLink" }
-        findNavController(binding.navHost.id).navigate(deepLink.toUri())
+        navController.navigate(deepLink.toUri())
     }
 
     companion object {
