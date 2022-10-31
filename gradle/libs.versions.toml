@@ -150,7 +150,7 @@ okhttp3-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-i
 bumptech-glide-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 bumptech-glide-okhttp3 = { group = "com.github.bumptech.glide", name = "okhttp3-integration", version.ref = "glide" }
 bumptech-glide-recyclerview = { group = "com.github.bumptech.glide", name = "recyclerview-integration", version.ref = "glide" }
-bumptech-glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+bumptech-glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "glide" }
 
 kirich1409-viewBinding = { group = "com.github.kirich1409", name = "viewbindingpropertydelegate-noreflection", version.ref = "viewBindingDelegate" }
 
