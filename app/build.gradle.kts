@@ -10,6 +10,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    alias(libs.plugins.ksp)
     alias(libs.plugins.appsweep)
 }
 
@@ -101,7 +102,7 @@ dependencies {
         // Excludes the support library because it's already included by Glide.
         isTransitive = false
     }
-    kapt(libs.bumptech.glide.compiler)
+    ksp(libs.bumptech.glide.ksp)
 
     implementation(libs.kirich1409.viewBinding)
 
