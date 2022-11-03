@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-	android:drawable="@drawable/ic_splash_screen_bread_low">
+	android:drawable="@drawable/ic_splash_screen">
 
 	<target
-		android:name="yAnimationGroup"
-		android:animation="@animator/splash_screen_bread_low_y" />
+		android:name="breadLow"
+		android:animation="@animator/splash_screen_bread_low" />
+
+	<target
+		android:name="cheese"
+		android:animation="@animator/splash_screen_cheese" />
 
 </animated-vector>
