@@ -1,9 +1,10 @@
 <resources>
 
-	<style name="Theme.App.Starting" parent="Theme.SplashScreen">
-		<item name="windowSplashScreenBackground">@drawable/ic_splash_screen_background</item>
+	<style name="Base.Theme.App.Starting" parent="Theme.SplashScreen">
 		<item name="postSplashScreenTheme">@style/AppTheme</item>
 	</style>
+
+	<style name="Theme.App.Starting" parent="Base.Theme.App.Starting" />
 
 	<style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
 		<item name="colorPrimary">@color/md_theme_light_primary</item>
