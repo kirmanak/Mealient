@@ -2,7 +2,8 @@
 <resources>
 
 	<style name="Theme.App.Starting" parent="Base.Theme.App.Starting">
-		<item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_screen_animated</item>
+		<item name="android:windowSplashScreenAnimatedIcon">@drawable/avd_anim</item>
+		<item name="android:windowSplashScreenBackground">@android:color/white</item>
 	</style>
 
 </resources>
