@@ -47,8 +47,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureNavGraph() {
-        val graph = navController.navInflater.inflate(R.navigation.nav_graph)
         viewModel.startDestination.observeOnce(this) {
+            logger.d { "configureNavGraph: received destination" }
+            val graph = navController.navInflater.inflate(R.navigation.nav_graph)
             graph.setStartDestination(it)
             navController.setGraph(graph, intent.extras)
         }
