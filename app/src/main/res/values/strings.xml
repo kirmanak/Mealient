@@ -42,4 +42,5 @@
 	<string name="fragment_add_recipe_save_error">Something went wrong</string>
 	<string name="fragment_add_recipe_save_success">Saved recipe successfully</string>
 	<string name="fragment_add_recipe_clear_button">Clear</string>
+	<string name="fragment_base_url_url_input_helper_text">Example: demo.mealie.io</string>
 </resources>
