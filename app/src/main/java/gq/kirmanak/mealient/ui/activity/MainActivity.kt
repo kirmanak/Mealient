@@ -33,11 +33,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var logger: Logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen().setKeepOnScreenCondition {
-            viewModel.startDestination.value == null
-        }
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         logger.v { "onCreate() called with: savedInstanceState = $savedInstanceState" }
+        splashScreen.setKeepOnScreenCondition { viewModel.startDestination.value == null }
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         configureToolbar()
