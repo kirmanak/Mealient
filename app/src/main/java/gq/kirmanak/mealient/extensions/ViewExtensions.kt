@@ -1,17 +1,13 @@
 package gq.kirmanak.mealient.extensions
 
-import android.app.Activity
 import android.content.SharedPreferences
-import android.os.Build
-import android.view.View
-import android.view.WindowInsets
 import android.widget.EditText
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textfield.TextInputLayout
@@ -37,32 +33,6 @@ fun SwipeRefreshLayout.refreshRequestFlow(logger: Logger): Flow<Unit> = callback
         logger.v { "Removing refresh request listener" }
         setOnRefreshListener(null)
     }
-}
-
-fun Activity.setSystemUiVisibility(isVisible: Boolean, logger: Logger) {
-    logger.v { "setSystemUiVisibility() called with: isVisible = $isVisible" }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) setSystemUiVisibilityV30(isVisible, logger)
-    else setSystemUiVisibilityV1(isVisible, logger)
-}
-
-@Suppress("DEPRECATION")
-private fun Activity.setSystemUiVisibilityV1(isVisible: Boolean, logger: Logger) {
-    logger.v { "setSystemUiVisibilityV1() called with: isVisible = $isVisible" }
-    window.decorView.systemUiVisibility = if (isVisible) 0 else View.SYSTEM_UI_FLAG_FULLSCREEN
-}
-
-@RequiresApi(Build.VERSION_CODES.R)
-private fun Activity.setSystemUiVisibilityV30(isVisible: Boolean, logger: Logger) {
-    logger.v { "setSystemUiVisibilityV30() called with: isVisible = $isVisible" }
-    val systemBars = WindowInsets.Type.systemBars()
-    window.insetsController?.apply { if (isVisible) show(systemBars) else hide(systemBars) }
-        ?: logger.w { "setSystemUiVisibilityV30: insets controller is null" }
-}
-
-fun AppCompatActivity.setActionBarVisibility(isVisible: Boolean, logger: Logger) {
-    logger.v { "setActionBarVisibility() called with: isVisible = $isVisible" }
-    supportActionBar?.apply { if (isVisible) show() else hide() }
-        ?: logger.w { "setActionBarVisibility: action bar is null" }
 }
 
 fun TextView.textChangesFlow(logger: Logger): Flow<CharSequence?> = callbackFlow {
@@ -116,4 +86,13 @@ fun <T> SharedPreferences.prefsChangeFlow(
     sendValue()
     registerOnSharedPreferenceChangeListener(listener)
     awaitClose { unregisterOnSharedPreferenceChangeListener(listener) }
+}
+
+fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+    observe(lifecycleOwner, object : Observer<T> {
+        override fun onChanged(value: T) {
+            removeObserver(this)
+            observer.onChanged(value)
+        }
+    })
 }

@@ -6,13 +6,16 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
-import androidx.navigation.findNavController
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
+import gq.kirmanak.mealient.extensions.observeOnce
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 
@@ -23,21 +26,39 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainActivityViewModel>()
     private val title: String by lazy { getString(R.string.app_name) }
     private val uiState: MainActivityUiState get() = viewModel.uiState
+    private val navController: NavController
+        get() = binding.navHost.getFragment<NavHostFragment>().navController
 
     @Inject
     lateinit var logger: Logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         logger.v { "onCreate() called with: savedInstanceState = $savedInstanceState" }
+        splashScreen.setKeepOnScreenCondition { viewModel.startDestination.value == null }
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        configureToolbar()
+        configureNavGraph()
+        viewModel.uiStateLive.observe(this, ::onUiStateChange)
+        binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
+    }
+
+    private fun configureNavGraph() {
+        viewModel.startDestination.observeOnce(this) {
+            logger.d { "configureNavGraph: received destination" }
+            val graph = navController.navInflater.inflate(R.navigation.nav_graph)
+            graph.setStartDestination(it)
+            navController.setGraph(graph, intent.extras)
+        }
+    }
+
+    private fun configureToolbar() {
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar)
         binding.toolbar.setNavigationOnClickListener { binding.drawer.open() }
         setToolbarRoundCorner()
-        viewModel.uiStateLive.observe(this, ::onUiStateChange)
-        binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
     }
 
     private fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
@@ -102,7 +123,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateDeepLink(deepLink: String) {
         logger.v { "navigateDeepLink() called with: deepLink = $deepLink" }
-        findNavController(binding.navHost.id).navigate(deepLink.toUri())
+        navController.navigate(deepLink.toUri())
     }
 
     companion object {

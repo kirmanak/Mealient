@@ -31,6 +31,8 @@ appcompat = "1.5.1"
 contraintLayout = "2.1.4"
 # https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout
 swipeRefreshLayout = "1.1.0"
+# https://developer.android.com/jetpack/androidx/releases/core
+splashScreen = "1.0.0"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
 lifecycle = "2.5.1"
 # https://github.com/square/retrofit/tags
@@ -118,6 +120,7 @@ androidx-coreKtx = { group = "androidx.core", name = "core-ktx", version.ref = "
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "contraintLayout" }
 androidx-swipeRefreshLayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swipeRefreshLayout" }
+androidx-splashScreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
 
 androidx-paging-runtimeKtx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 androidx-paging-commonKtx = { group = "androidx.paging", name = "paging-common-ktx", version.ref = "paging" }
