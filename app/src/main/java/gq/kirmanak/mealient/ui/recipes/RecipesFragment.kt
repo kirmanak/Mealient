@@ -51,33 +51,45 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         logger.v { "navigateToRecipeInfo() called with: recipeSummaryEntity = $recipeSummaryEntity" }
         findNavController().navigate(
             RecipesFragmentDirections.actionRecipesFragmentToRecipeInfoFragment(
-                recipeSlug = recipeSummaryEntity.slug,
-                recipeId = recipeSummaryEntity.remoteId
+                recipeSlug = recipeSummaryEntity.slug, recipeId = recipeSummaryEntity.remoteId
             )
         )
     }
 
     private fun setupRecipeAdapter() {
         logger.v { "setupRecipeAdapter() called" }
+
         val recipesAdapter = recipePagingAdapterFactory.build(
-            recipeImageLoader = recipeImageLoader,
-            clickListener = ::navigateToRecipeInfo
+            recipeImageLoader = recipeImageLoader, clickListener = ::navigateToRecipeInfo
         )
+
         with(binding.recipes) {
             adapter = recipesAdapter
             addOnScrollListener(recipePreloaderFactory.create(recipesAdapter))
         }
+
         collectWhenViewResumed(viewModel.pagingData) {
             logger.v { "setupRecipeAdapter: received data update" }
             recipesAdapter.submitData(lifecycle, it)
         }
+
         collectWhenViewResumed(recipesAdapter.onPagesUpdatedFlow) {
             logger.v { "setupRecipeAdapter: pages updated" }
             binding.refresher.isRefreshing = false
         }
+
         collectWhenViewResumed(binding.refresher.refreshRequestFlow(logger)) {
             logger.v { "setupRecipeAdapter: received refresh request" }
             recipesAdapter.refresh()
+        }
+
+        viewModel.isAuthorized.observe(viewLifecycleOwner) { isAuthorized ->
+            logger.v { "setupRecipeAdapter: isAuthorized changed to $isAuthorized" }
+            if (isAuthorized != null) {
+                if (isAuthorized) recipesAdapter.refresh()
+                // else is ignored to avoid the removal of the non-public recipes
+                viewModel.onAuthorizationChangeHandled()
+            }
         }
     }
 
