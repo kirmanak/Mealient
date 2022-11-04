@@ -43,4 +43,6 @@
 	<string name="fragment_add_recipe_save_success">Saved recipe successfully</string>
 	<string name="fragment_add_recipe_clear_button">Clear</string>
 	<string name="fragment_base_url_url_input_helper_text">Example: demo.mealie.io</string>
+	<string name="fragment_authentication_email_input_helper_text">Example: changeme@email.com</string>
+	<string name="fragment_authentication_password_input_helper_text">Example: demo</string>
 </resources>
