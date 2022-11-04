@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "31935207760",
+    "project_id": "mealient-debug",
+    "storage_bucket": "mealient-debug.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31935207760:android:530fa33d3ce1d3728ab455",
+        "android_client_info": {
+          "package_name": "gq.kirmanak.mealient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31935207760-cb50pa0gepc1ge42bigrmhev2o6mv42p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWk5UIvCiYihBMCOYNbv71lB_DEbyXJn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31935207760-cb50pa0gepc1ge42bigrmhev2o6mv42p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
