@@ -2,21 +2,26 @@ package gq.kirmanak.mealient.ui.recipes
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
+import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
+import gq.kirmanak.mealient.extensions.launchIn
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -78,6 +83,8 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
             binding.refresher.isRefreshing = false
         }
 
+        observeLoadStateChanges(recipesAdapter)
+
         collectWhenViewResumed(binding.refresher.refreshRequestFlow(logger)) {
             logger.v { "setupRecipeAdapter: received refresh request" }
             recipesAdapter.refresh()
@@ -91,6 +98,52 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
                 viewModel.onAuthorizationChangeHandled()
             }
         }
+    }
+
+    private fun observeLoadStateChanges(recipesAdapter: RecipesPagingAdapter) {
+        recipesAdapter.loadStateFlow
+            .map { it.append }
+            .distinctUntilChanged()
+            .filter { it.endOfPaginationReached }
+            .onEach { onPaginationEnd() }
+            .launchIn(viewLifecycleOwner)
+
+        recipesAdapter.loadStateFlow
+            .map { it.refresh }
+            .distinctUntilChanged()
+            .filterIsInstance<LoadState.Error>()
+            .onEach { onLoadFailure(it.error) }
+            .launchIn(viewLifecycleOwner)
+    }
+
+    private fun onPaginationEnd() {
+        logger.v { "onPaginationEnd() called" }
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.fragment_recipes_last_page_loaded_toast),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun onLoadFailure(error: Throwable) {
+        logger.v(error) { "onLoadFailure() called" }
+
+        val reason = when (error) {
+            is NetworkError.Unauthorized -> R.string.fragment_recipes_load_failure_toast_unauthorized
+            is NetworkError.NoServerConnection -> R.string.fragment_recipes_load_failure_toast_no_connection
+            is NetworkError.NotMealie, is NetworkError.MalformedUrl -> R.string.fragment_recipes_load_failure_toast_unexpected_response
+            else -> null
+        }?.let { getString(it) }
+
+        val generalText = getString(R.string.fragment_recipes_load_failure_toast_general)
+
+        val text = if (reason == null) {
+            generalText
+        } else {
+            getString(R.string.fragment_recipes_load_failure_toast, generalText, reason)
+        }
+
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
