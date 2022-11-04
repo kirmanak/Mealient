@@ -1,10 +1,10 @@
 <resources>
 
-	<style name="Base.Theme.App.Starting" parent="Theme.SplashScreen">
+	<style name="Theme.App.Starting" parent="Theme.SplashScreen">
 		<item name="postSplashScreenTheme">@style/AppTheme</item>
+		<item name="windowSplashScreenBackground">@android:color/white</item>
+		<item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_screen</item>
 	</style>
-
-	<style name="Theme.App.Starting" parent="Base.Theme.App.Starting" />
 
 	<style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
 		<item name="colorPrimary">@color/md_theme_light_primary</item>
