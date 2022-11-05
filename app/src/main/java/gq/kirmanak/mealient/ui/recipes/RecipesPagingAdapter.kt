@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import dagger.hilt.android.scopes.FragmentScoped
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.ViewHolderRecipeBinding
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class RecipesPagingAdapter private constructor(
     private val logger: Logger,
@@ -18,19 +18,23 @@ class RecipesPagingAdapter private constructor(
     private val clickListener: (RecipeSummaryEntity) -> Unit
 ) : PagingDataAdapter<RecipeSummaryEntity, RecipeViewHolder>(RecipeDiffCallback) {
 
-    @Singleton
+    @FragmentScoped
     class Factory @Inject constructor(
         private val logger: Logger,
         private val recipeViewHolderFactory: RecipeViewHolder.Factory,
+        private val recipeImageLoader: RecipeImageLoader,
     ) {
 
-        fun build(
-            recipeImageLoader: RecipeImageLoader,
-            clickListener: (RecipeSummaryEntity) -> Unit,
-        ) = RecipesPagingAdapter(logger, recipeImageLoader, recipeViewHolderFactory, clickListener)
+        fun build(clickListener: (RecipeSummaryEntity) -> Unit) = RecipesPagingAdapter(
+            logger,
+            recipeImageLoader,
+            recipeViewHolderFactory,
+            clickListener
+        )
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
+        logger.d { "onBindViewHolder() called with: holder = $holder, position = $position" }
         val item = getItem(position)
         holder.bind(item)
     }

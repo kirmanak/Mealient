@@ -21,7 +21,6 @@ import gq.kirmanak.mealient.extensions.refreshRequestFlow
 import gq.kirmanak.mealient.extensions.showLongToast
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
-import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -35,9 +34,6 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     @Inject
     lateinit var logger: Logger
-
-    @Inject
-    lateinit var recipeImageLoader: RecipeImageLoader
 
     @Inject
     lateinit var recipePagingAdapterFactory: RecipesPagingAdapter.Factory
@@ -66,9 +62,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     private fun setupRecipeAdapter() {
         logger.v { "setupRecipeAdapter() called" }
 
-        val recipesAdapter = recipePagingAdapterFactory.build(
-            recipeImageLoader = recipeImageLoader, clickListener = ::navigateToRecipeInfo
-        )
+        val recipesAdapter = recipePagingAdapterFactory.build { navigateToRecipeInfo(it) }
 
         with(binding.recipes) {
             adapter = recipesAdapter
