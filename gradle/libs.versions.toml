@@ -35,6 +35,8 @@ swipeRefreshLayout = "1.1.0"
 splashScreen = "1.0.0"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
 lifecycle = "2.5.1"
+# https://developer.android.com/jetpack/androidx/releases/arch-core
+coreTesting = "2.1.0"
 # https://github.com/square/retrofit/tags
 retrofit = "2.9.0"
 # https://github.com/JakeWharton/retrofit2-kotlinx-serialization-converter/tags
@@ -121,6 +123,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "contraintLayout" }
 androidx-swipeRefreshLayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swipeRefreshLayout" }
 androidx-splashScreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
+androidx-coreTesting = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
 
 androidx-paging-runtimeKtx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 androidx-paging-commonKtx = { group = "androidx.paging", name = "paging-common-ktx", version.ref = "paging" }

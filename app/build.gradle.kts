@@ -122,6 +122,7 @@ dependencies {
     testImplementation(libs.robolectric)
 
     testImplementation(libs.androidx.test.junit)
+    testImplementation(libs.androidx.coreTesting)
 
     testImplementation(libs.google.truth)
 
