@@ -1,13 +1,17 @@
 package gq.kirmanak.mealient.logging
 
 import android.util.Log
+import gq.kirmanak.mealient.architecture.configuration.BuildConfiguration
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LogcatAppender @Inject constructor() : Appender {
+class LogcatAppender @Inject constructor(
+    private val buildConfiguration: BuildConfiguration,
+) : Appender {
 
-    private val isLoggable: Boolean by lazy { BuildConfig.DEBUG }
+    private val isLoggable: Boolean
+        get() = buildConfiguration.isDebug()
 
     override fun isLoggable(logLevel: LogLevel): Boolean = isLoggable
 

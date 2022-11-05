@@ -5,12 +5,10 @@ plugins {
 }
 
 android {
-    namespace = "gq.kirmanak.mealient.logging"
+    namespace = "gq.kirmanak.mealient.architecture"
 }
 
 dependencies {
-    implementation(project(":architecture"))
-
     implementation(libs.google.dagger.hiltAndroid)
     kapt(libs.google.dagger.hiltCompiler)
 }

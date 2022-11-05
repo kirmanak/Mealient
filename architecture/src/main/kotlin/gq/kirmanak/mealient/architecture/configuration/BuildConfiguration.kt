@@ -1,5 +1,6 @@
-package gq.kirmanak.mealient.data.configuration
+package gq.kirmanak.mealient.architecture.configuration
 
 interface BuildConfiguration {
+
     fun isDebug(): Boolean
 }

@@ -15,8 +15,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import gq.kirmanak.mealient.data.analytics.Analytics
 import gq.kirmanak.mealient.data.analytics.AnalyticsImpl
-import gq.kirmanak.mealient.data.configuration.BuildConfiguration
-import gq.kirmanak.mealient.data.configuration.BuildConfigurationImpl
 import gq.kirmanak.mealient.data.storage.PreferencesStorage
 import gq.kirmanak.mealient.data.storage.PreferencesStorageImpl
 import javax.inject.Singleton
@@ -45,10 +43,6 @@ interface AppModule {
     @Binds
     @Singleton
     fun bindPreferencesStorage(preferencesStorage: PreferencesStorageImpl): PreferencesStorage
-
-    @Binds
-    @Singleton
-    fun bindBuildConfiguration(buildConfigurationImpl: BuildConfigurationImpl): BuildConfiguration
 
     @Binds
     @Singleton
