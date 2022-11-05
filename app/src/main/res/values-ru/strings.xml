@@ -42,9 +42,9 @@
 	<string name="fragment_authentication_email_input_helper_text">Пример: changeme@email.com</string>
 	<string name="fragment_authentication_password_input_helper_text">Пример: demo</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Последняя страница</string>
-	<string name="fragment_recipes_load_failure_toast">%1$s %2$s</string>
-	<string name="fragment_recipes_load_failure_toast_general">Ошибка загрузки.</string>
-	<string name="fragment_recipes_load_failure_toast_unauthorized">Неавторизован</string>
-	<string name="fragment_recipes_load_failure_toast_unexpected_response">Неожиданный ответ</string>
-	<string name="fragment_recipes_load_failure_toast_no_connection">Нет соединения</string>
+	<string name="fragment_recipes_load_failure_toast">Ошибка загрузки: %1$s.</string>
+	<string name="fragment_recipes_load_failure_toast_unauthorized">неавторизован</string>
+	<string name="fragment_recipes_load_failure_toast_unexpected_response">неожиданный ответ</string>
+	<string name="fragment_recipes_load_failure_toast_no_connection">нет соединения</string>
+	<string name="fragment_recipes_load_failure_toast_no_reason">Ошибка загрузки.</string>
 </resources>

@@ -46,9 +46,9 @@
 	<string name="fragment_authentication_email_input_helper_text">Example: changeme@email.com</string>
 	<string name="fragment_authentication_password_input_helper_text">Example: demo</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Last page loaded</string>
-	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load failed! Unauthorized">%1$s %2$s</string>
-	<string name="fragment_recipes_load_failure_toast_general">Load failed.</string>
-	<string name="fragment_recipes_load_failure_toast_unauthorized">Unauthorized</string>
-	<string name="fragment_recipes_load_failure_toast_unexpected_response">Unexpected response</string>
-	<string name="fragment_recipes_load_failure_toast_no_connection">No connection</string>
+	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load error: unauthorized.">Load error: %1$s.</string>
+	<string name="fragment_recipes_load_failure_toast_no_reason">Load failed.</string>
+	<string name="fragment_recipes_load_failure_toast_unauthorized">unauthorized</string>
+	<string name="fragment_recipes_load_failure_toast_unexpected_response">unexpected response</string>
+	<string name="fragment_recipes_load_failure_toast_no_connection">no connection</string>
 </resources>

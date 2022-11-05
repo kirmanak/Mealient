@@ -2,12 +2,14 @@ package gq.kirmanak.mealient.ui.recipes
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
@@ -17,6 +19,7 @@ import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.extensions.launchIn
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
+import gq.kirmanak.mealient.extensions.showLongToast
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
@@ -83,7 +86,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
             binding.refresher.isRefreshing = false
         }
 
-        observeLoadStateChanges(recipesAdapter)
+        recipesAdapter.observeLoadStateChanges()
 
         collectWhenViewResumed(binding.refresher.refreshRequestFlow(logger)) {
             logger.v { "setupRecipeAdapter: received refresh request" }
@@ -100,50 +103,25 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         }
     }
 
-    private fun observeLoadStateChanges(recipesAdapter: RecipesPagingAdapter) {
-        recipesAdapter.loadStateFlow
-            .map { it.append }
-            .distinctUntilChanged()
-            .filter { it.endOfPaginationReached }
-            .onEach { onPaginationEnd() }
-            .launchIn(viewLifecycleOwner)
-
-        recipesAdapter.loadStateFlow
-            .map { it.refresh }
-            .distinctUntilChanged()
-            .filterIsInstance<LoadState.Error>()
-            .onEach { onLoadFailure(it.error) }
-            .launchIn(viewLifecycleOwner)
+    private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.observeLoadStateChanges() {
+        appendPaginationEnd().onEach { onPaginationEnd() }.launchIn(viewLifecycleOwner)
+        refreshErrors().onEach { onLoadFailure(it) }.launchIn(viewLifecycleOwner)
     }
 
     private fun onPaginationEnd() {
         logger.v { "onPaginationEnd() called" }
-        Toast.makeText(
-            requireContext(),
-            getString(R.string.fragment_recipes_last_page_loaded_toast),
-            Toast.LENGTH_SHORT
-        ).show()
+        showLongToast(R.string.fragment_recipes_last_page_loaded_toast)
     }
 
     private fun onLoadFailure(error: Throwable) {
-        logger.v(error) { "onLoadFailure() called" }
-
-        val reason = when (error) {
-            is NetworkError.Unauthorized -> R.string.fragment_recipes_load_failure_toast_unauthorized
-            is NetworkError.NoServerConnection -> R.string.fragment_recipes_load_failure_toast_no_connection
-            is NetworkError.NotMealie, is NetworkError.MalformedUrl -> R.string.fragment_recipes_load_failure_toast_unexpected_response
-            else -> null
-        }?.let { getString(it) }
-
-        val generalText = getString(R.string.fragment_recipes_load_failure_toast_general)
-
-        val text = if (reason == null) {
-            generalText
+        logger.w(error) { "onLoadFailure() called" }
+        val reason = error.toLoadErrorReasonText()?.let { getString(it) }
+        val toastText = if (reason == null) {
+            getString(R.string.fragment_recipes_load_failure_toast_no_reason)
         } else {
-            getString(R.string.fragment_recipes_load_failure_toast, generalText, reason)
+            getString(R.string.fragment_recipes_load_failure_toast, reason)
         }
-
-        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+        showLongToast(toastText)
     }
 
     override fun onDestroyView() {
@@ -152,4 +130,28 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         // Prevent RV leaking through mObservers list in adapter
         binding.recipes.adapter = null
     }
+}
+
+@StringRes
+private fun Throwable.toLoadErrorReasonText(): Int? = when (this) {
+    is NetworkError.Unauthorized -> R.string.fragment_recipes_load_failure_toast_unauthorized
+    is NetworkError.NoServerConnection -> R.string.fragment_recipes_load_failure_toast_no_connection
+    is NetworkError.NotMealie, is NetworkError.MalformedUrl -> R.string.fragment_recipes_load_failure_toast_unexpected_response
+    else -> null
+}
+
+private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.refreshErrors(): Flow<Throwable> {
+    return loadStateFlow
+        .map { it.refresh }
+        .distinctUntilChanged()
+        .filterIsInstance<LoadState.Error>()
+        .map { it.error }
+}
+
+private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.appendPaginationEnd(): Flow<Unit> {
+    return loadStateFlow
+        .map { it.append.endOfPaginationReached }
+        .distinctUntilChanged()
+        .filter { it }
+        .map { }
 }
