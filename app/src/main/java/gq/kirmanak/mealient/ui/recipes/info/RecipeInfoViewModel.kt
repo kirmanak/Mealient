@@ -1,39 +1,40 @@
 package gq.kirmanak.mealient.ui.recipes.info
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.liveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RecipeInfoViewModel @Inject constructor(
     private val recipeRepo: RecipeRepo,
     private val logger: Logger,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _uiState = MutableLiveData(RecipeInfoUiState())
-    val uiState: LiveData<RecipeInfoUiState> get() = _uiState
+    private val args = RecipeInfoFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
-    fun loadRecipeInfo(recipeId: String, recipeSlug: String) {
-        logger.v { "loadRecipeInfo() called with: recipeId = $recipeId, recipeSlug = $recipeSlug" }
-        _uiState.value = RecipeInfoUiState()
-        viewModelScope.launch {
-            runCatchingExceptCancel { recipeRepo.loadRecipeInfo(recipeId, recipeSlug) }
-                .onSuccess {
-                    logger.d { "loadRecipeInfo: received recipe info = $it" }
-                    _uiState.value = RecipeInfoUiState(
-                        areIngredientsVisible = it.recipeIngredients.isNotEmpty(),
-                        areInstructionsVisible = it.recipeInstructions.isNotEmpty(),
-                        recipeInfo = it,
-                    )
-                }
-                .onFailure { logger.e(it) { "loadRecipeInfo: can't load recipe info" } }
+    val uiState: LiveData<RecipeInfoUiState> = liveData {
+        logger.v { "Initializing UI state with args = $args" }
+        emit(RecipeInfoUiState())
+        runCatchingExceptCancel {
+            recipeRepo.loadRecipeInfo(args.recipeId, args.recipeSlug)
+        }.onSuccess {
+            logger.d { "loadRecipeInfo: received recipe info = $it" }
+            val newState = RecipeInfoUiState(
+                areIngredientsVisible = it.recipeIngredients.isNotEmpty(),
+                areInstructionsVisible = it.recipeInstructions.isNotEmpty(),
+                recipeInfo = it,
+            )
+            emit(newState)
+        }.onFailure {
+            logger.e(it) { "loadRecipeInfo: can't load recipe info" }
         }
     }
+
 }
