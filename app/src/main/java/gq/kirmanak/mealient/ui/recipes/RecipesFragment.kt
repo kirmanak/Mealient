@@ -17,7 +17,6 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
-import gq.kirmanak.mealient.extensions.launchIn
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
 import gq.kirmanak.mealient.extensions.showLongToast
 import gq.kirmanak.mealient.logging.Logger
@@ -104,8 +103,8 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     }
 
     private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.observeLoadStateChanges() {
-        appendPaginationEnd().onEach { onPaginationEnd() }.launchIn(viewLifecycleOwner)
-        refreshErrors().onEach { onLoadFailure(it) }.launchIn(viewLifecycleOwner)
+        collectWhenViewResumed(appendPaginationEnd()) { onPaginationEnd() }
+        collectWhenViewResumed(refreshErrors()) { onLoadFailure(it) }
     }
 
     private fun onPaginationEnd() {
