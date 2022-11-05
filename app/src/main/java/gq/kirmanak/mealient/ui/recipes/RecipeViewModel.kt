@@ -1,13 +1,13 @@
 package gq.kirmanak.mealient.ui.recipes
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.extensions.valueUpdatesOnly
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.launchIn
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
-    recipeRepo: RecipeRepo,
+    private val recipeRepo: RecipeRepo,
     authRepo: AuthRepo,
     private val logger: Logger,
 ) : ViewModel() {
@@ -36,5 +36,14 @@ class RecipeViewModel @Inject constructor(
     fun onAuthorizationChangeHandled() {
         logger.v { "onAuthorizationSuccessHandled() called" }
         _isAuthorized.postValue(null)
+    }
+
+    fun loadRecipeInfo(
+        summaryEntity: RecipeSummaryEntity
+    ): LiveData<Result<FullRecipeEntity>> = liveData {
+        val result = runCatchingExceptCancel {
+            recipeRepo.loadRecipeInfo(summaryEntity.remoteId, summaryEntity.slug)
+        }
+        emit(result)
     }
 }

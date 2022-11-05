@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 
@@ -21,20 +20,14 @@ class RecipeInfoViewModel @Inject constructor(
 
     val uiState: LiveData<RecipeInfoUiState> = liveData {
         logger.v { "Initializing UI state with args = $args" }
-        emit(RecipeInfoUiState())
-        runCatchingExceptCancel {
-            recipeRepo.loadRecipeInfo(args.recipeId, args.recipeSlug)
-        }.onSuccess {
-            logger.d { "loadRecipeInfo: received recipe info = $it" }
-            val newState = RecipeInfoUiState(
+        val state = recipeRepo.loadRecipeInfoFromDb(args.recipeId, args.recipeSlug)?.let {
+            RecipeInfoUiState(
                 areIngredientsVisible = it.recipeIngredients.isNotEmpty(),
                 areInstructionsVisible = it.recipeInstructions.isNotEmpty(),
                 recipeInfo = it,
             )
-            emit(newState)
-        }.onFailure {
-            logger.e(it) { "loadRecipeInfo: can't load recipe info" }
-        }
+        } ?: RecipeInfoUiState()
+        emit(state)
     }
 
 }

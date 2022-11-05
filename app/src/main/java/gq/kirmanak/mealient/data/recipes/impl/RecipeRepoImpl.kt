@@ -49,4 +49,14 @@ class RecipeRepoImpl @Inject constructor(
 
         return storage.queryRecipeInfo(recipeId)
     }
+
+    override suspend fun loadRecipeInfoFromDb(
+        recipeId: String,
+        recipeSlug: String
+    ): FullRecipeEntity? {
+        logger.v { "loadRecipeInfoFromDb() called with: recipeId = $recipeId, recipeSlug = $recipeSlug" }
+        return runCatchingExceptCancel { storage.queryRecipeInfo(recipeId) }
+            .onFailure { logger.e(it) { "loadRecipeInfoFromDb failed" } }
+            .getOrNull()
+    }
 }

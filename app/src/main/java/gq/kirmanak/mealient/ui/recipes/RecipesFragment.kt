@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.ui.recipes
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -16,10 +17,7 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
 import gq.kirmanak.mealient.datasource.NetworkError
-import gq.kirmanak.mealient.extensions.collectWhenViewResumed
-import gq.kirmanak.mealient.extensions.refreshRequestFlow
-import gq.kirmanak.mealient.extensions.showLongToast
-import gq.kirmanak.mealient.extensions.valueUpdatesOnly
+import gq.kirmanak.mealient.extensions.*
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
@@ -45,6 +43,8 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     @Inject
     lateinit var recipePreloaderFactory: RecipePreloaderFactory
 
+    private var ignoreRecipeClicks = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
@@ -63,10 +63,22 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         )
     }
 
+    private fun onRecipeClicked(recipe: RecipeSummaryEntity) {
+        logger.d { "onRecipeClicked() called with: recipe = $recipe" }
+        if (ignoreRecipeClicks) return
+        binding.progress.isVisible = true
+        ignoreRecipeClicks = true // TODO doesn't really work
+        viewModel.loadRecipeInfo(recipe).observeOnce(viewLifecycleOwner) { result ->
+            binding.progress.isVisible = false
+            if (result.isSuccess) navigateToRecipeInfo(recipe)
+            ignoreRecipeClicks = false
+        }
+    }
+
     private fun setupRecipeAdapter() {
         logger.v { "setupRecipeAdapter() called" }
 
-        val recipesAdapter = recipePagingAdapterFactory.build { navigateToRecipeInfo(it) }
+        val recipesAdapter = recipePagingAdapterFactory.build { onRecipeClicked(it) }
 
         with(binding.recipes) {
             adapter = recipesAdapter
@@ -135,17 +147,11 @@ private fun Throwable.toLoadErrorReasonText(): Int? = when (this) {
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.refreshErrors(): Flow<Throwable> {
-    return loadStateFlow
-        .map { it.refresh }
-        .valueUpdatesOnly()
-        .filterIsInstance<LoadState.Error>()
+    return loadStateFlow.map { it.refresh }.valueUpdatesOnly().filterIsInstance<LoadState.Error>()
         .map { it.error }
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.appendPaginationEnd(): Flow<Unit> {
-    return loadStateFlow
-        .map { it.append.endOfPaginationReached }
-        .valueUpdatesOnly()
-        .filter { it }
+    return loadStateFlow.map { it.append.endOfPaginationReached }.valueUpdatesOnly().filter { it }
         .map { }
 }
