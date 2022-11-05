@@ -23,6 +23,8 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintVertical_bias="0.1"
+		app:helperText="@string/fragment_authentication_email_input_helper_text"
+		app:helperTextEnabled="true"
 		app:layout_constraintVertical_chainStyle="packed">
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -33,20 +35,22 @@
 	</com.google.android.material.textfield.TextInputLayout>
 
 	<com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_input_layout"
-        style="@style/SmallMarginTextInputLayoutStyle"
-        android:hint="@string/fragment_authentication_input_hint_password"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:endIconMode="password_toggle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_input_layout">
+		android:id="@+id/password_input_layout"
+		style="@style/SmallMarginTextInputLayoutStyle"
+		android:hint="@string/fragment_authentication_input_hint_password"
+		app:layout_constraintBottom_toTopOf="@+id/button"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:endIconMode="password_toggle"
+		app:layout_constraintStart_toStartOf="parent"
+		app:helperText="@string/fragment_authentication_password_input_helper_text"
+		app:helperTextEnabled="true"
+		app:layout_constraintTop_toBottomOf="@+id/email_input_layout">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/password_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/password_input"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:inputType="textPassword" />
 	</com.google.android.material.textfield.TextInputLayout>
 
     <Button
