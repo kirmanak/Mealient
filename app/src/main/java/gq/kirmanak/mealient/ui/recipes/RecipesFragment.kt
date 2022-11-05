@@ -79,7 +79,14 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
             binding.refresher.isRefreshing = false
         }
 
-        recipesAdapter.observeLoadStateChanges()
+        collectWhenViewResumed(recipesAdapter.appendPaginationEnd()) {
+            logger.v { "onPaginationEnd() called" }
+            showLongToast(R.string.fragment_recipes_last_page_loaded_toast)
+        }
+
+        collectWhenViewResumed(recipesAdapter.refreshErrors()) {
+            onLoadFailure(it)
+        }
 
         collectWhenViewResumed(binding.refresher.refreshRequestFlow(logger)) {
             logger.v { "setupRecipeAdapter: received refresh request" }
@@ -94,16 +101,6 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
                 viewModel.onAuthorizationChangeHandled()
             }
         }
-    }
-
-    private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.observeLoadStateChanges() {
-        collectWhenViewResumed(appendPaginationEnd()) { onPaginationEnd() }
-        collectWhenViewResumed(refreshErrors()) { onLoadFailure(it) }
-    }
-
-    private fun onPaginationEnd() {
-        logger.v { "onPaginationEnd() called" }
-        showLongToast(R.string.fragment_recipes_last_page_loaded_toast)
     }
 
     private fun onLoadFailure(error: Throwable) {
