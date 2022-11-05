@@ -19,10 +19,14 @@ import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
 import gq.kirmanak.mealient.extensions.showLongToast
+import gq.kirmanak.mealient.extensions.valueUpdatesOnly
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -133,7 +137,7 @@ private fun Throwable.toLoadErrorReasonText(): Int? = when (this) {
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.refreshErrors(): Flow<Throwable> {
     return loadStateFlow
         .map { it.refresh }
-        .distinctUntilChanged()
+        .valueUpdatesOnly()
         .filterIsInstance<LoadState.Error>()
         .map { it.error }
 }
@@ -141,7 +145,7 @@ private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.ref
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.appendPaginationEnd(): Flow<Unit> {
     return loadStateFlow
         .map { it.append.endOfPaginationReached }
-        .distinctUntilChanged()
+        .valueUpdatesOnly()
         .filter { it }
         .map { }
 }

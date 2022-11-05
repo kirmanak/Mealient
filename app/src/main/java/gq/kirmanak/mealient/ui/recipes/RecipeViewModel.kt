@@ -8,9 +8,10 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.extensions.valueUpdatesOnly
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.runningReduce
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,12 +27,9 @@ class RecipeViewModel @Inject constructor(
     val isAuthorized: LiveData<Boolean?> = _isAuthorized
 
     init {
-        authRepo.isAuthorizedFlow.runningReduce { wasAuthorized, isAuthorized ->
-            logger.v { "Authorization state changed from $wasAuthorized to $isAuthorized" }
-            if (wasAuthorized != isAuthorized) {
-                _isAuthorized.postValue(isAuthorized)
-            }
-            isAuthorized
+        authRepo.isAuthorizedFlow.valueUpdatesOnly().onEach {
+            logger.v { "Authorization state changed to $it" }
+            _isAuthorized.postValue(it)
         }.launchIn(viewModelScope)
     }
 
