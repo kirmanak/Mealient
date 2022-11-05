@@ -65,6 +65,7 @@ android {
 
 dependencies {
 
+    implementation(project(":architecture"))
     implementation(project(":database"))
     implementation(project(":datastore"))
     implementation(project(":datasource"))

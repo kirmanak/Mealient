@@ -20,6 +20,7 @@ dependencyResolutionManagement {
 rootProject.name = "Mealient"
 
 include(":app")
+include(":architecture")
 include(":database")
 include(":datastore")
 include(":logging")

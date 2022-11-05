@@ -1,29 +1,25 @@
 package gq.kirmanak.mealient.logging
 
-import android.os.Build
 import android.util.Log
+import gq.kirmanak.mealient.architecture.configuration.BuildConfiguration
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LogcatAppender @Inject constructor() : Appender {
+class LogcatAppender @Inject constructor(
+    private val buildConfiguration: BuildConfiguration,
+) : Appender {
 
-    private val isLoggable: Boolean by lazy { BuildConfig.DEBUG }
+    private val isLoggable: Boolean
+        get() = buildConfiguration.isDebug()
 
     override fun isLoggable(logLevel: LogLevel): Boolean = isLoggable
 
     override fun isLoggable(logLevel: LogLevel, tag: String): Boolean = isLoggable
 
     override fun log(logLevel: LogLevel, tag: String, message: String) {
-        // Tag length limit was removed in API 26.
-        val logTag = if (tag.length <= MAX_TAG_LENGTH || Build.VERSION.SDK_INT >= 26) {
-            tag
-        } else {
-            tag.substring(0, MAX_TAG_LENGTH)
-        }
-
         if (message.length < MAX_LOG_LENGTH) {
-            Log.println(logLevel.priority, logTag, message)
+            Log.println(logLevel.priority, tag, message)
             return
         }
 
@@ -36,7 +32,7 @@ class LogcatAppender @Inject constructor() : Appender {
             do {
                 val end = newline.coerceAtMost(i + MAX_LOG_LENGTH)
                 val part = message.substring(i, end)
-                Log.println(logLevel.priority, logTag, part)
+                Log.println(logLevel.priority, tag, part)
                 i = end
             } while (i < newline)
             i++
@@ -45,7 +41,6 @@ class LogcatAppender @Inject constructor() : Appender {
 
     companion object {
         private const val MAX_LOG_LENGTH = 4000
-        private const val MAX_TAG_LENGTH = 23
     }
 }
 
