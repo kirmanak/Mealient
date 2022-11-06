@@ -38,25 +38,19 @@ class RecipeRepoImpl @Inject constructor(
         storage.clearAllLocalData()
     }
 
-    override suspend fun loadRecipeInfo(recipeId: String, recipeSlug: String): FullRecipeEntity {
-        logger.v { "loadRecipeInfo() called with: recipeId = $recipeId, recipeSlug = $recipeSlug" }
-
-        runCatchingExceptCancel {
+    override suspend fun refreshRecipeInfo(recipeSlug: String): Result<Unit> {
+        logger.v { "refreshRecipeInfo() called with: recipeSlug = $recipeSlug" }
+        return runCatchingExceptCancel {
             storage.saveRecipeInfo(dataSource.requestRecipeInfo(recipeSlug))
         }.onFailure {
             logger.e(it) { "loadRecipeInfo: can't update full recipe info" }
         }
-
-        return storage.queryRecipeInfo(recipeId)
     }
 
-    override suspend fun loadRecipeInfoFromDb(
-        recipeId: String,
-        recipeSlug: String
-    ): FullRecipeEntity? {
-        logger.v { "loadRecipeInfoFromDb() called with: recipeId = $recipeId, recipeSlug = $recipeSlug" }
-        return runCatchingExceptCancel { storage.queryRecipeInfo(recipeId) }
-            .onFailure { logger.e(it) { "loadRecipeInfoFromDb failed" } }
-            .getOrNull()
+    override suspend fun loadRecipeInfo(recipeId: String): FullRecipeEntity? {
+        logger.v { "loadRecipeInfo() called with: recipeId = $recipeId" }
+        val recipeInfo = storage.queryRecipeInfo(recipeId)
+        logger.v { "loadRecipeInfo() returned: $recipeInfo" }
+        return recipeInfo
     }
 }

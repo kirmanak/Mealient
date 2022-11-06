@@ -5,9 +5,6 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
-import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.extensions.valueUpdatesOnly
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.launchIn
@@ -38,12 +35,12 @@ class RecipeViewModel @Inject constructor(
         _isAuthorized.postValue(null)
     }
 
-    fun loadRecipeInfo(
-        summaryEntity: RecipeSummaryEntity
-    ): LiveData<Result<FullRecipeEntity>> = liveData {
-        val result = runCatchingExceptCancel {
-            recipeRepo.loadRecipeInfo(summaryEntity.remoteId, summaryEntity.slug)
+    fun refreshRecipeInfo(recipeSlug: String): LiveData<Result<Unit>> {
+        logger.v { "refreshRecipeInfo called with: recipeSlug = $recipeSlug" }
+        return liveData {
+            val result = recipeRepo.refreshRecipeInfo(recipeSlug)
+            logger.v { "refreshRecipeInfo: emitting $result" }
+            emit(result)
         }
-        emit(result)
     }
 }

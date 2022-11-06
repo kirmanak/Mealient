@@ -54,23 +54,20 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         setupRecipeAdapter()
     }
 
-    private fun navigateToRecipeInfo(recipeSummaryEntity: RecipeSummaryEntity) {
-        logger.v { "navigateToRecipeInfo() called with: recipeSummaryEntity = $recipeSummaryEntity" }
-        findNavController().navigate(
-            RecipesFragmentDirections.actionRecipesFragmentToRecipeInfoFragment(
-                recipeSlug = recipeSummaryEntity.slug, recipeId = recipeSummaryEntity.remoteId
-            )
-        )
+    private fun navigateToRecipeInfo(id: String) {
+        logger.v { "navigateToRecipeInfo() called with: id = $id" }
+        val directions = RecipesFragmentDirections.actionRecipesFragmentToRecipeInfoFragment(id)
+        findNavController().navigate(directions)
     }
 
     private fun onRecipeClicked(recipe: RecipeSummaryEntity) {
-        logger.d { "onRecipeClicked() called with: recipe = $recipe" }
+        logger.v { "onRecipeClicked() called with: recipe = $recipe" }
         if (ignoreRecipeClicks) return
         binding.progress.isVisible = true
         ignoreRecipeClicks = true // TODO doesn't really work
-        viewModel.loadRecipeInfo(recipe).observeOnce(viewLifecycleOwner) { result ->
+        viewModel.refreshRecipeInfo(recipe.slug).observeOnce(viewLifecycleOwner) { result ->
             binding.progress.isVisible = false
-            if (result.isSuccess) navigateToRecipeInfo(recipe)
+            if (result.isSuccess) navigateToRecipeInfo(recipe.remoteId)
             ignoreRecipeClicks = false
         }
     }

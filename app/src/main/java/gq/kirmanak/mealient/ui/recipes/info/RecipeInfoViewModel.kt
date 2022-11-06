@@ -20,7 +20,7 @@ class RecipeInfoViewModel @Inject constructor(
 
     val uiState: LiveData<RecipeInfoUiState> = liveData {
         logger.v { "Initializing UI state with args = $args" }
-        val state = recipeRepo.loadRecipeInfoFromDb(args.recipeId, args.recipeSlug)?.let {
+        val state = recipeRepo.loadRecipeInfo(args.recipeId)?.let {
             RecipeInfoUiState(
                 areIngredientsVisible = it.recipeIngredients.isNotEmpty(),
                 areInstructionsVisible = it.recipeInstructions.isNotEmpty(),
