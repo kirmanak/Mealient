@@ -17,7 +17,10 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
 import gq.kirmanak.mealient.datasource.NetworkError
-import gq.kirmanak.mealient.extensions.*
+import gq.kirmanak.mealient.extensions.collectWhenViewResumed
+import gq.kirmanak.mealient.extensions.refreshRequestFlow
+import gq.kirmanak.mealient.extensions.showLongToast
+import gq.kirmanak.mealient.extensions.valueUpdatesOnly
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
@@ -43,8 +46,6 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     @Inject
     lateinit var recipePreloaderFactory: RecipePreloaderFactory
 
-    private var ignoreRecipeClicks = false
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
@@ -62,14 +63,20 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private fun onRecipeClicked(recipe: RecipeSummaryEntity) {
         logger.v { "onRecipeClicked() called with: recipe = $recipe" }
-        if (ignoreRecipeClicks) return
         binding.progress.isVisible = true
-        ignoreRecipeClicks = true // TODO doesn't really work
-        viewModel.refreshRecipeInfo(recipe.slug).observeOnce(viewLifecycleOwner) { result ->
+        viewModel.refreshRecipeInfo(recipe.slug).observe(viewLifecycleOwner) { result ->
             binding.progress.isVisible = false
-            if (result.isSuccess) navigateToRecipeInfo(recipe.remoteId)
-            ignoreRecipeClicks = false
+            if (result.isSuccess && !isNavigatingSomewhere()) {
+                navigateToRecipeInfo(recipe.remoteId)
+            }
         }
+    }
+
+    private fun isNavigatingSomewhere(): Boolean {
+        logger.v { "isNavigatingSomewhere() called" }
+        val label = findNavController().currentDestination?.label
+        logger.d { "isNavigatingSomewhere: current destination is $label" }
+        return label != "fragment_recipes"
     }
 
     private fun setupRecipeAdapter() {
