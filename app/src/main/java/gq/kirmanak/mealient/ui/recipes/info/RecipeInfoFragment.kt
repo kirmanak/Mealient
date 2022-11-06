@@ -62,15 +62,13 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
 
     private fun onUiStateChange(uiState: RecipeInfoUiState) = with(binding) {
         logger.v { "onUiStateChange() called" }
-        ingredientsHolder.isVisible = uiState.areIngredientsVisible
-        instructionsGroup.isVisible = uiState.areInstructionsVisible
-        uiState.recipeInfo?.let {
-            recipeImageLoader.loadRecipeImage(image, it.recipeSummaryEntity)
-            title.text = it.recipeSummaryEntity.name
-            description.text = it.recipeSummaryEntity.description
-            ingredientsAdapter.submitList(it.recipeIngredients)
-            instructionsAdapter.submitList(it.recipeInstructions)
-        }
+        ingredientsHolder.isVisible = uiState.showIngredients
+        instructionsGroup.isVisible = uiState.showInstructions
+        recipeImageLoader.loadRecipeImage(image, uiState.summaryEntity)
+        title.text = uiState.title
+        description.text = uiState.description
+        ingredientsAdapter.submitList(uiState.recipeIngredients)
+        instructionsAdapter.submitList(uiState.recipeInstructions)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =

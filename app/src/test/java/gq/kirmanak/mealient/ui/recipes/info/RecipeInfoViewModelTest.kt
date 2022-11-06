@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asFlow
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.FakeLogger
 import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
@@ -54,11 +55,19 @@ class RecipeInfoViewModelTest {
 
     @Test
     fun `when recipe is found then UI state has data`() = runTest {
-        coEvery { recipeRepo.loadRecipeInfo(eq(RECIPE_ID)) } returns FULL_CAKE_INFO_ENTITY
+        val emptyNoteIngredient = RecipeIngredientEntity(recipeId = "42", note = "")
+        val returnedEntity = FULL_CAKE_INFO_ENTITY.copy(
+            recipeIngredients = FULL_CAKE_INFO_ENTITY.recipeIngredients + emptyNoteIngredient
+        )
+        coEvery { recipeRepo.loadRecipeInfo(eq(RECIPE_ID)) } returns returnedEntity
         val expected = RecipeInfoUiState(
-            areIngredientsVisible = true,
-            areInstructionsVisible = true,
-            recipeInfo = FULL_CAKE_INFO_ENTITY
+            showIngredients = true,
+            showInstructions = true,
+            summaryEntity = FULL_CAKE_INFO_ENTITY.recipeSummaryEntity,
+            recipeIngredients = FULL_CAKE_INFO_ENTITY.recipeIngredients,
+            recipeInstructions = FULL_CAKE_INFO_ENTITY.recipeInstructions,
+            title = FULL_CAKE_INFO_ENTITY.recipeSummaryEntity.name,
+            description = FULL_CAKE_INFO_ENTITY.recipeSummaryEntity.description,
         )
         val actual = createSubject().uiState.asFlow().first()
         assertThat(actual).isEqualTo(expected)

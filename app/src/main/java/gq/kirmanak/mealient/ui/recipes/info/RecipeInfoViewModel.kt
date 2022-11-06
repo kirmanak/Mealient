@@ -20,11 +20,15 @@ class RecipeInfoViewModel @Inject constructor(
 
     val uiState: LiveData<RecipeInfoUiState> = liveData {
         logger.v { "Initializing UI state with args = $args" }
-        val state = recipeRepo.loadRecipeInfo(args.recipeId)?.let {
+        val state = recipeRepo.loadRecipeInfo(args.recipeId)?.let { entity ->
             RecipeInfoUiState(
-                areIngredientsVisible = it.recipeIngredients.isNotEmpty(),
-                areInstructionsVisible = it.recipeInstructions.isNotEmpty(),
-                recipeInfo = it,
+                showIngredients = entity.recipeIngredients.isNotEmpty(),
+                showInstructions = entity.recipeInstructions.isNotEmpty(),
+                summaryEntity = entity.recipeSummaryEntity,
+                recipeIngredients = entity.recipeIngredients.filter { it.note.isNotBlank() },
+                recipeInstructions = entity.recipeInstructions.filter { it.text.isNotBlank() },
+                title = entity.recipeSummaryEntity.name,
+                description = entity.recipeSummaryEntity.description,
             )
         } ?: RecipeInfoUiState()
         emit(state)
