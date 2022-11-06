@@ -46,26 +46,16 @@ class RecipeRepoTest {
 
     @Test
     fun `when loadRecipeInfo expect return value from data source`() = runTest {
-        coEvery { dataSource.requestRecipeInfo(eq("cake")) } returns CAKE_FULL_RECIPE_INFO
         coEvery { storage.queryRecipeInfo(eq("1")) } returns FULL_CAKE_INFO_ENTITY
-        val actual = subject.loadRecipeInfo("1", "cake")
+        val actual = subject.loadRecipeInfo("1")
         assertThat(actual).isEqualTo(FULL_CAKE_INFO_ENTITY)
     }
 
     @Test
-    fun `when loadRecipeInfo expect call to storage`() = runTest {
+    fun `when refreshRecipeInfo expect call to storage`() = runTest {
         coEvery { dataSource.requestRecipeInfo(eq("cake")) } returns CAKE_FULL_RECIPE_INFO
-        coEvery { storage.queryRecipeInfo(eq("1")) } returns FULL_CAKE_INFO_ENTITY
-        subject.loadRecipeInfo("1", "cake")
+        subject.refreshRecipeInfo("cake")
         coVerify { storage.saveRecipeInfo(eq(CAKE_FULL_RECIPE_INFO)) }
-    }
-
-    @Test
-    fun `when data source fails expect loadRecipeInfo return value from storage`() = runTest {
-        coEvery { dataSource.requestRecipeInfo(eq("cake")) } throws RuntimeException()
-        coEvery { storage.queryRecipeInfo(eq("1")) } returns FULL_CAKE_INFO_ENTITY
-        val actual = subject.loadRecipeInfo("1", "cake")
-        assertThat(actual).isEqualTo(FULL_CAKE_INFO_ENTITY)
     }
 
     @Test
