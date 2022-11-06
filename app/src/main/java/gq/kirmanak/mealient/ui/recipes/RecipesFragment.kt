@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.ui.recipes
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -54,19 +55,34 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         setupRecipeAdapter()
     }
 
-    private fun navigateToRecipeInfo(recipeSummaryEntity: RecipeSummaryEntity) {
-        logger.v { "navigateToRecipeInfo() called with: recipeSummaryEntity = $recipeSummaryEntity" }
-        findNavController().navigate(
-            RecipesFragmentDirections.actionRecipesFragmentToRecipeInfoFragment(
-                recipeSlug = recipeSummaryEntity.slug, recipeId = recipeSummaryEntity.remoteId
-            )
-        )
+    private fun navigateToRecipeInfo(id: String) {
+        logger.v { "navigateToRecipeInfo() called with: id = $id" }
+        val directions = RecipesFragmentDirections.actionRecipesFragmentToRecipeInfoFragment(id)
+        findNavController().navigate(directions)
+    }
+
+    private fun onRecipeClicked(recipe: RecipeSummaryEntity) {
+        logger.v { "onRecipeClicked() called with: recipe = $recipe" }
+        binding.progress.isVisible = true
+        viewModel.refreshRecipeInfo(recipe.slug).observe(viewLifecycleOwner) { result ->
+            binding.progress.isVisible = false
+            if (result.isSuccess && !isNavigatingSomewhere()) {
+                navigateToRecipeInfo(recipe.remoteId)
+            }
+        }
+    }
+
+    private fun isNavigatingSomewhere(): Boolean {
+        logger.v { "isNavigatingSomewhere() called" }
+        val label = findNavController().currentDestination?.label
+        logger.d { "isNavigatingSomewhere: current destination is $label" }
+        return label != "fragment_recipes"
     }
 
     private fun setupRecipeAdapter() {
         logger.v { "setupRecipeAdapter() called" }
 
-        val recipesAdapter = recipePagingAdapterFactory.build { navigateToRecipeInfo(it) }
+        val recipesAdapter = recipePagingAdapterFactory.build { onRecipeClicked(it) }
 
         with(binding.recipes) {
             adapter = recipesAdapter
@@ -135,17 +151,11 @@ private fun Throwable.toLoadErrorReasonText(): Int? = when (this) {
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.refreshErrors(): Flow<Throwable> {
-    return loadStateFlow
-        .map { it.refresh }
-        .valueUpdatesOnly()
-        .filterIsInstance<LoadState.Error>()
+    return loadStateFlow.map { it.refresh }.valueUpdatesOnly().filterIsInstance<LoadState.Error>()
         .map { it.error }
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.appendPaginationEnd(): Flow<Unit> {
-    return loadStateFlow
-        .map { it.append.endOfPaginationReached }
-        .valueUpdatesOnly()
-        .filter { it }
+    return loadStateFlow.map { it.append.endOfPaginationReached }.valueUpdatesOnly().filter { it }
         .map { }
 }

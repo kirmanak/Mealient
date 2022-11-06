@@ -1,6 +1,6 @@
 package gq.kirmanak.mealient.architecture.configuration
 
-import androidx.viewbinding.BuildConfig
+import gq.kirmanak.mealient.architecture.BuildConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 

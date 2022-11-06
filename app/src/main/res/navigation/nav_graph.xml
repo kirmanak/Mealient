@@ -32,9 +32,6 @@
 		android:label="RecipeInfoFragment"
 		tools:layout="@layout/fragment_recipe_info">
 		<argument
-			android:name="recipe_slug"
-			app:argType="string" />
-		<argument
 			android:name="recipe_id"
 			app:argType="string" />
 	</dialog>

@@ -1,9 +1,6 @@
 package gq.kirmanak.mealient.ui.recipes
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
@@ -16,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
-    recipeRepo: RecipeRepo,
+    private val recipeRepo: RecipeRepo,
     authRepo: AuthRepo,
     private val logger: Logger,
 ) : ViewModel() {
@@ -36,5 +33,14 @@ class RecipeViewModel @Inject constructor(
     fun onAuthorizationChangeHandled() {
         logger.v { "onAuthorizationSuccessHandled() called" }
         _isAuthorized.postValue(null)
+    }
+
+    fun refreshRecipeInfo(recipeSlug: String): LiveData<Result<Unit>> {
+        logger.v { "refreshRecipeInfo called with: recipeSlug = $recipeSlug" }
+        return liveData {
+            val result = recipeRepo.refreshRecipeInfo(recipeSlug)
+            logger.v { "refreshRecipeInfo: emitting $result" }
+            emit(result)
+        }
     }
 }
