@@ -5,14 +5,16 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
+import gq.kirmanak.mealient.NavGraphDirections
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
 import gq.kirmanak.mealient.extensions.observeOnce
@@ -20,9 +22,9 @@ import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
-    private lateinit var binding: MainActivityBinding
+    private val binding: MainActivityBinding by viewBinding(MainActivityBinding::bind, R.id.drawer)
     private val viewModel by viewModels<MainActivityViewModel>()
     private val title: String by lazy { getString(R.string.app_name) }
     private val uiState: MainActivityUiState get() = viewModel.uiState
@@ -37,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         logger.v { "onCreate() called with: savedInstanceState = $savedInstanceState" }
         splashScreen.setKeepOnScreenCondition { viewModel.startDestination.value == null }
-        binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         configureToolbar()
         configureNavGraph()
@@ -64,12 +65,13 @@ class MainActivity : AppCompatActivity() {
     private fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         logger.v { "onNavigationItemSelected() called with: menuItem = $menuItem" }
         menuItem.isChecked = true
-        val deepLink = when (menuItem.itemId) {
-            R.id.add_recipe -> ADD_RECIPE_DEEP_LINK
-            R.id.recipes_list -> RECIPES_LIST_DEEP_LINK
+        val directions = when (menuItem.itemId) {
+            R.id.add_recipe -> NavGraphDirections.actionGlobalAddRecipeFragment()
+            R.id.recipes_list -> NavGraphDirections.actionGlobalRecipesFragment()
+            R.id.change_url -> NavGraphDirections.actionGlobalBaseURLFragment()
             else -> throw IllegalArgumentException("Unknown menu item id: ${menuItem.itemId}")
         }
-        navigateDeepLink(deepLink)
+        navigateTo(directions)
         binding.drawer.close()
         return true
     }
@@ -109,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         logger.v { "onOptionsItemSelected() called with: item = $item" }
         val result = when (item.itemId) {
             R.id.login -> {
-                navigateDeepLink(AUTH_DEEP_LINK)
+                navigateTo(NavGraphDirections.actionGlobalAuthenticationFragment())
                 true
             }
             R.id.logout -> {
@@ -121,14 +123,8 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    private fun navigateDeepLink(deepLink: String) {
-        logger.v { "navigateDeepLink() called with: deepLink = $deepLink" }
-        navController.navigate(deepLink.toUri())
-    }
-
-    companion object {
-        private const val AUTH_DEEP_LINK = "mealient://authenticate"
-        private const val ADD_RECIPE_DEEP_LINK = "mealient://recipe/add"
-        private const val RECIPES_LIST_DEEP_LINK = "mealient://recipe/list"
+    private fun navigateTo(directions: NavDirections) {
+        logger.v { "navigateTo() called with: directions = $directions" }
+        navController.navigate(directions)
     }
 }
