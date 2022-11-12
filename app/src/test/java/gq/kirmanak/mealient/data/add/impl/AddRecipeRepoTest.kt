@@ -4,8 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.add.AddRecipeDataSource
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeStorage
-import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.test.FakeLogger
+import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_INFO
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_DRAFT
 import io.mockk.*
@@ -17,7 +16,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AddRecipeRepoTest {
+class AddRecipeRepoTest : BaseUnitTest() {
 
     @MockK(relaxUnitFun = true)
     lateinit var dataSource: AddRecipeDataSource
@@ -25,13 +24,11 @@ class AddRecipeRepoTest {
     @MockK(relaxUnitFun = true)
     lateinit var storage: AddRecipeStorage
 
-    private val logger: Logger = FakeLogger()
-
     private lateinit var subject: AddRecipeRepo
 
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         subject = AddRecipeRepoImpl(dataSource, storage, logger)
     }
 

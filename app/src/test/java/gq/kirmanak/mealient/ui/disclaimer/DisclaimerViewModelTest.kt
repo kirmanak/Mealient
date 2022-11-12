@@ -2,9 +2,7 @@ package gq.kirmanak.mealient.ui.disclaimer
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
-import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.test.FakeLogger
-import io.mockk.MockKAnnotations
+import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.take
@@ -15,17 +13,16 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DisclaimerViewModelTest {
+class DisclaimerViewModelTest : BaseUnitTest() {
+
     @MockK(relaxUnitFun = true)
     lateinit var storage: DisclaimerStorage
-
-    private val logger: Logger = FakeLogger()
 
     lateinit var subject: DisclaimerViewModel
 
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         subject = DisclaimerViewModel(storage, logger)
     }
 
