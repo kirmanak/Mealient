@@ -5,9 +5,8 @@ import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0Impl
 import gq.kirmanak.mealient.datasource.v0.MealieServiceV0
 import gq.kirmanak.mealient.datasource.v0.models.GetTokenResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.VersionResponseV0
-import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.toJsonResponseBody
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,19 +21,16 @@ import java.io.IOException
 import java.net.ConnectException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class MealieDataSourceV0ImplTest {
+class MealieDataSourceV0ImplTest : BaseUnitTest() {
 
     @MockK
     lateinit var service: MealieServiceV0
 
-    @MockK(relaxUnitFun = true)
-    lateinit var logger: Logger
-
     lateinit var subject: MealieDataSourceV0Impl
 
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         val networkRequestWrapper: NetworkRequestWrapper = NetworkRequestWrapperImpl(logger)
         subject = MealieDataSourceV0Impl(networkRequestWrapper, service, Json)
     }
