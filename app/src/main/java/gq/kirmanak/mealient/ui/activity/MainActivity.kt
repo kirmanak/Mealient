@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         val directions = when (menuItem.itemId) {
             R.id.add_recipe -> NavGraphDirections.actionGlobalAddRecipeFragment()
             R.id.recipes_list -> NavGraphDirections.actionGlobalRecipesFragment()
+            R.id.change_url -> NavGraphDirections.actionGlobalBaseURLFragment()
             else -> throw IllegalArgumentException("Unknown menu item id: ${menuItem.itemId}")
         }
         navigateTo(directions)

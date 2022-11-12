@@ -72,4 +72,8 @@
 	<action
 		android:id="@+id/action_global_addRecipeFragment"
 		app:destination="@id/addRecipeFragment" />
+
+	<action
+		android:id="@+id/action_global_baseURLFragment"
+		app:destination="@id/baseURLFragment" />
 </navigation>
