@@ -6,6 +6,11 @@ plugins {
 
 android {
     namespace = "gq.kirmanak.mealient.test"
+    lint {
+        abortOnError = false
+        quiet = true
+        checkReleaseBuilds = false
+    }
 }
 
 dependencies {

@@ -14,7 +14,7 @@ android {
 
 dependencies {
     implementation(project(":logging"))
-    implementation(project(":testing"))
+    testImplementation(project(":testing"))
 
     implementation(libs.google.dagger.hiltAndroid)
     kapt(libs.google.dagger.hiltCompiler)
