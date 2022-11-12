@@ -9,11 +9,8 @@
 		android:id="@+id/authenticationFragment"
 		android:name="gq.kirmanak.mealient.ui.auth.AuthenticationFragment"
 		android:label="AuthenticationFragment"
-		tools:layout="@layout/fragment_authentication">
-		<deepLink
-			android:id="@+id/deepLink"
-			app:uri="mealient://authenticate" />
-	</fragment>
+		tools:layout="@layout/fragment_authentication" />
+
 	<fragment
 		android:id="@+id/recipesFragment"
 		android:name="gq.kirmanak.mealient.ui.recipes.RecipesFragment"
@@ -22,10 +19,8 @@
 		<action
 			android:id="@+id/action_recipesFragment_to_recipeInfoFragment"
 			app:destination="@id/recipeInfoFragment" />
-		<deepLink
-			android:id="@+id/deepLink"
-			app:uri="mealient://recipe/list" />
 	</fragment>
+
 	<dialog
 		android:id="@+id/recipeInfoFragment"
 		android:name="gq.kirmanak.mealient.ui.recipes.info.RecipeInfoFragment"
@@ -35,6 +30,7 @@
 			android:name="recipe_id"
 			app:argType="string" />
 	</dialog>
+
 	<fragment
 		android:id="@+id/disclaimerFragment"
 		android:name="gq.kirmanak.mealient.ui.disclaimer.DisclaimerFragment"
@@ -46,6 +42,7 @@
 			app:popUpTo="@id/nav_graph"
 			app:popUpToInclusive="true" />
 	</fragment>
+
 	<fragment
 		android:id="@+id/baseURLFragment"
 		android:name="gq.kirmanak.mealient.ui.baseurl.BaseURLFragment"
@@ -57,13 +54,22 @@
 			app:popUpTo="@id/nav_graph"
 			app:popUpToInclusive="true" />
 	</fragment>
+
 	<fragment
 		android:id="@+id/addRecipeFragment"
 		android:name="gq.kirmanak.mealient.ui.add.AddRecipeFragment"
 		android:label="fragment_add_recipe"
-		tools:layout="@layout/fragment_add_recipe">
-		<deepLink
-			android:id="@+id/deepLink"
-			app:uri="mealient://recipe/add" />
-	</fragment>
+		tools:layout="@layout/fragment_add_recipe" />
+
+	<action
+		android:id="@+id/action_global_authenticationFragment"
+		app:destination="@id/authenticationFragment" />
+
+	<action
+		android:id="@+id/action_global_recipesFragment"
+		app:destination="@id/recipesFragment" />
+
+	<action
+		android:id="@+id/action_global_addRecipeFragment"
+		app:destination="@id/addRecipeFragment" />
 </navigation>
