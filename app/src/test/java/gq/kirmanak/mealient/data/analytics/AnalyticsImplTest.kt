@@ -2,15 +2,13 @@ package gq.kirmanak.mealient.data.analytics
 
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.test.FakeLogger
-import io.mockk.MockKAnnotations
+import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 
-class AnalyticsImplTest {
+class AnalyticsImplTest : BaseUnitTest() {
 
     @MockK(relaxUnitFun = true)
     lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -20,11 +18,9 @@ class AnalyticsImplTest {
 
     lateinit var subject: Analytics
 
-    private val logger: Logger = FakeLogger()
-
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         subject = AnalyticsImpl(firebaseAnalytics, firebaseCrashlytics, logger)
     }
 

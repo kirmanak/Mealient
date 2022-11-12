@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.extensions
 
 import com.google.common.truth.Truth.assertThat
+import gq.kirmanak.mealient.test.BaseUnitTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
@@ -8,7 +9,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class FlowExtensionsKtTest {
+class FlowExtensionsKtTest : BaseUnitTest() {
 
     @Test
     fun `when flow has an update then valueUpdatesOnly sends updated value`() = runTest {

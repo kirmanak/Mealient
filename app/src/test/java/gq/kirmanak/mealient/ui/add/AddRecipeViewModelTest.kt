@@ -2,47 +2,32 @@ package gq.kirmanak.mealient.ui.add
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
-import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.test.FakeLogger
+import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_INFO
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import kotlinx.coroutines.withTimeoutOrNull
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AddRecipeViewModelTest {
+class AddRecipeViewModelTest : BaseUnitTest() {
 
     @MockK(relaxUnitFun = true)
     lateinit var addRecipeRepo: AddRecipeRepo
 
-    private val logger: Logger = FakeLogger()
-
     lateinit var subject: AddRecipeViewModel
 
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
-        Dispatchers.setMain(UnconfinedTestDispatcher())
+    override fun setUp() {
+        super.setUp()
         subject = AddRecipeViewModel(addRecipeRepo, logger)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test

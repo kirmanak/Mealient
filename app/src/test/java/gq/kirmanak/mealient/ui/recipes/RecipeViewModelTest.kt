@@ -1,54 +1,28 @@
 package gq.kirmanak.mealient.ui.recipes
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asFlow
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.test.FakeLogger
-import io.mockk.MockKAnnotations
+import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class RecipeViewModelTest {
+class RecipeViewModelTest : BaseUnitTest() {
 
     @MockK
     lateinit var authRepo: AuthRepo
 
     @MockK(relaxed = true)
     lateinit var recipeRepo: RecipeRepo
-
-    private val logger: Logger = FakeLogger()
-
-    @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
-
-    @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
-        Dispatchers.setMain(UnconfinedTestDispatcher())
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
 
     @Test
     fun `when authRepo isAuthorized changes to true expect isAuthorized update`() {

@@ -2,9 +2,7 @@ package gq.kirmanak.mealient.data.recipes.impl
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
-import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.test.FakeLogger
-import io.mockk.MockKAnnotations
+import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,18 +11,16 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class RecipeImageUrlProviderImplTest {
+class RecipeImageUrlProviderImplTest : BaseUnitTest() {
 
     lateinit var subject: RecipeImageUrlProvider
 
     @MockK
     lateinit var serverInfoRepo: ServerInfoRepo
 
-    private val logger: Logger = FakeLogger()
-
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         subject = RecipeImageUrlProviderImpl(serverInfoRepo, logger)
         prepareBaseURL("https://google.com/")
     }

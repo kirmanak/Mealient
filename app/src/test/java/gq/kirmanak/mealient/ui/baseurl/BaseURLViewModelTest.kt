@@ -1,32 +1,26 @@
 package gq.kirmanak.mealient.ui.baseurl
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.baseurl.VersionDataSource
 import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_VERSION
-import gq.kirmanak.mealient.test.FakeLogger
+import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.ui.OperationUiState
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
-import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class BaseURLViewModelTest {
+class BaseURLViewModelTest : BaseUnitTest() {
 
     @MockK(relaxUnitFun = true)
     lateinit var serverInfoRepo: ServerInfoRepo
@@ -40,17 +34,11 @@ class BaseURLViewModelTest {
     @MockK
     lateinit var versionDataSource: VersionDataSource
 
-    @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
-
-    private val logger: Logger = FakeLogger()
-
     lateinit var subject: BaseURLViewModel
 
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
-        Dispatchers.setMain(UnconfinedTestDispatcher())
+    override fun setUp() {
+        super.setUp()
         subject = BaseURLViewModel(
             serverInfoRepo = serverInfoRepo,
             authRepo = authRepo,
@@ -58,11 +46,6 @@ class BaseURLViewModelTest {
             versionDataSource = versionDataSource,
             logger = logger,
         )
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test

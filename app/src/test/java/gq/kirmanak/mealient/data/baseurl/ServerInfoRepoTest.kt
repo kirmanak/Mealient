@@ -2,12 +2,10 @@ package gq.kirmanak.mealient.data.baseurl
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.datasource.NetworkError
-import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_VERSION
-import gq.kirmanak.mealient.test.FakeLogger
+import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.VERSION_INFO_V0
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
@@ -17,9 +15,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ServerInfoRepoTest {
-
-    private val logger: Logger = FakeLogger()
+class ServerInfoRepoTest : BaseUnitTest() {
 
     private lateinit var subject: ServerInfoRepo
 
@@ -30,8 +26,8 @@ class ServerInfoRepoTest {
     lateinit var dataSource: VersionDataSource
 
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         subject = ServerInfoRepoImpl(storage, dataSource, logger)
     }
 

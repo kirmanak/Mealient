@@ -6,7 +6,7 @@ import gq.kirmanak.mealient.data.baseurl.impl.ServerInfoStorageImpl
 import gq.kirmanak.mealient.data.storage.PreferencesStorage
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_VERSION
-import io.mockk.MockKAnnotations
+import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -17,7 +17,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ServerInfoStorageTest {
+class ServerInfoStorageTest : BaseUnitTest() {
 
     @MockK(relaxUnitFun = true)
     lateinit var preferencesStorage: PreferencesStorage
@@ -28,8 +28,8 @@ class ServerInfoStorageTest {
     private val serverVersionKey = stringPreferencesKey("serverVersionKey")
 
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         subject = ServerInfoStorageImpl(preferencesStorage)
         every { preferencesStorage.baseUrlKey } returns baseUrlKey
         every { preferencesStorage.serverVersionKey } returns serverVersionKey

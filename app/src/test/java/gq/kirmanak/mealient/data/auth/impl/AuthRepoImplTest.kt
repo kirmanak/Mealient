@@ -6,14 +6,13 @@ import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
-import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION_V0
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
-import gq.kirmanak.mealient.test.FakeLogger
+import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,7 +23,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AuthRepoImplTest {
+class AuthRepoImplTest : BaseUnitTest() {
 
     @MockK
     lateinit var dataSource: AuthDataSource
@@ -35,13 +34,11 @@ class AuthRepoImplTest {
     @MockK(relaxUnitFun = true)
     lateinit var storage: AuthStorage
 
-    private val logger: Logger = FakeLogger()
-
     lateinit var subject: AuthRepo
 
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         subject = AuthRepoImpl(storage, dataSource, logger)
     }
 

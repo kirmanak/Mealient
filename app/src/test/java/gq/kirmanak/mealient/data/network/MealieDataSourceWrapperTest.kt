@@ -6,12 +6,11 @@ import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
-import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION_V0
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION_V1
-import gq.kirmanak.mealient.test.FakeLogger
+import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_INFO
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_REQUEST_V0
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_CREATE_RECIPE_REQUEST_V1
@@ -32,7 +31,7 @@ import org.junit.Test
 import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class MealieDataSourceWrapperTest {
+class MealieDataSourceWrapperTest : BaseUnitTest() {
 
     @MockK
     lateinit var serverInfoRepo: ServerInfoRepo
@@ -48,11 +47,9 @@ class MealieDataSourceWrapperTest {
 
     lateinit var subject: MealieDataSourceWrapper
 
-    private val logger: Logger = FakeLogger()
-
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         subject = MealieDataSourceWrapper(serverInfoRepo, authRepo, v0Source, v1Source, logger)
     }
 

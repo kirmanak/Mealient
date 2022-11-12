@@ -7,10 +7,8 @@ import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.NetworkError.Unauthorized
-import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.test.FakeLogger
+import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARIES
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
@@ -22,7 +20,8 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 @OptIn(ExperimentalPagingApi::class)
-class RecipesRemoteMediatorTest {
+class RecipesRemoteMediatorTest : BaseUnitTest() {
+
     private val pagingConfig = PagingConfig(
         pageSize = 2,
         prefetchDistance = 5,
@@ -40,11 +39,9 @@ class RecipesRemoteMediatorTest {
     @MockK(relaxUnitFun = true)
     lateinit var pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>
 
-    private val logger: Logger = FakeLogger()
-
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
+    override fun setUp() {
+        super.setUp()
         subject = RecipesRemoteMediator(storage, dataSource, pagingSourceFactory, logger)
     }
 

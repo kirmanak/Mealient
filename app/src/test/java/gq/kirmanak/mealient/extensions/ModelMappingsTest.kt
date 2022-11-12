@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.extensions
 
 import com.google.common.truth.Truth.assertThat
+import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_FULL_RECIPE_INFO
 import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_RECIPE_ENTITY
 import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY
@@ -32,7 +33,7 @@ import gq.kirmanak.mealient.test.RecipeImplTestData.VERSION_RESPONSE_V0
 import gq.kirmanak.mealient.test.RecipeImplTestData.VERSION_RESPONSE_V1
 import org.junit.Test
 
-class ModelMappingsTest {
+class ModelMappingsTest : BaseUnitTest() {
 
     @Test
     fun `when toAddRecipeRequest then fills fields correctly`() {
