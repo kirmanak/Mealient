@@ -6,7 +6,6 @@ import gq.kirmanak.mealient.datasource.v0.MealieServiceV0
 import gq.kirmanak.mealient.datasource.v0.models.GetTokenResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.VersionResponseV0
 import gq.kirmanak.mealient.test.BaseUnitTest
-import gq.kirmanak.mealient.test.toJsonResponseBody
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
