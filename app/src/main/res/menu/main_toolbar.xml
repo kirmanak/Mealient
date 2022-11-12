@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/login"
-        android:contentDescription="@string/menu_main_toolbar_content_description_login"
-        android:title="@string/menu_main_toolbar_login"
-        app:showAsAction="ifRoom" />
+	<item
+		android:id="@+id/login"
+		android:contentDescription="@string/menu_main_toolbar_content_description_login"
+		android:title="@string/menu_main_toolbar_login"
+		app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/logout"
-        android:contentDescription="@string/menu_main_toolbar_content_description_logout"
-        android:title="@string/menu_main_toolbar_logout"
-        app:showAsAction="never" />
+	<item
+		android:id="@+id/logout"
+		android:contentDescription="@string/menu_main_toolbar_content_description_logout"
+		android:title="@string/menu_main_toolbar_logout"
+		app:showAsAction="never" />
+
+	<item
+		android:id="@+id/search_recipe_action"
+		android:icon="@android:drawable/ic_menu_search"
+		android:title="@string/searchable_recipe_main_hint"
+		app:actionViewClass="androidx.appcompat.widget.SearchView"
+		app:showAsAction="ifRoom" />
 
 </menu>

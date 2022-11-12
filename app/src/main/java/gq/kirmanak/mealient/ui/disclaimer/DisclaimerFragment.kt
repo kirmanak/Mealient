@@ -57,7 +57,12 @@ class DisclaimerFragment : Fragment(R.layout.fragment_disclaimer) {
         }
         viewModel.startCountDown()
         activityViewModel.updateUiState {
-            it.copy(loginButtonVisible = false, titleVisible = true, navigationVisible = false)
+            it.copy(
+                loginButtonVisible = false,
+                titleVisible = true,
+                navigationVisible = false,
+                searchVisible = false
+            )
         }
     }
 }

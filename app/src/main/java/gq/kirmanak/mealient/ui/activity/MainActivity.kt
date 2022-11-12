@@ -1,10 +1,14 @@
 package gq.kirmanak.mealient.ui.activity
 
+import android.app.SearchManager
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.getSystemService
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -44,6 +48,15 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         configureNavGraph()
         viewModel.uiStateLive.observe(this, ::onUiStateChange)
         binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (Intent.ACTION_SEARCH == intent?.action) {
+            intent.getStringExtra(SearchManager.QUERY)?.also { query ->
+                viewModel.onSearchQuery(query)
+            }
+        }
     }
 
     private fun configureNavGraph() {
@@ -104,6 +117,15 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         menuInflater.inflate(R.menu.main_toolbar, menu)
         menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
         menu.findItem(R.id.login).isVisible = uiState.canShowLogin
+        val searchItem = menu.findItem(R.id.search_recipe_action)
+        searchItem.isVisible = uiState.searchVisible
+        val searchManager: SearchManager? = getSystemService()
+        val searchView = searchItem.actionView as? SearchView
+        if (searchManager != null && searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        } else {
+            logger.e { "onCreateOptionsMenu: either search manager or search view is null" }
+        }
         return true
     }
 

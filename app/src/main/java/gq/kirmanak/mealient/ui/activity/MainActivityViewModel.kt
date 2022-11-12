@@ -52,4 +52,8 @@ class MainActivityViewModel @Inject constructor(
         logger.v { "logout() called" }
         viewModelScope.launch { authRepo.logout() }
     }
+
+    fun onSearchQuery(query: String) {
+        logger.v { "onSearchQuery() called with: query = $query" }
+    }
 }

@@ -50,7 +50,12 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         super.onViewCreated(view, savedInstanceState)
         logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
         activityViewModel.updateUiState {
-            it.copy(loginButtonVisible = true, titleVisible = false, navigationVisible = true)
+            it.copy(
+                loginButtonVisible = true,
+                titleVisible = false,
+                navigationVisible = true,
+                searchVisible = true,
+            )
         }
         setupRecipeAdapter()
     }
