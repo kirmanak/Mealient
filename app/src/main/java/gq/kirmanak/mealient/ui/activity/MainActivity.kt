@@ -10,6 +10,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,9 +21,9 @@ import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
-    private lateinit var binding: MainActivityBinding
+    private val binding: MainActivityBinding by viewBinding(MainActivityBinding::bind, R.id.drawer)
     private val viewModel by viewModels<MainActivityViewModel>()
     private val title: String by lazy { getString(R.string.app_name) }
     private val uiState: MainActivityUiState get() = viewModel.uiState
@@ -37,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         logger.v { "onCreate() called with: savedInstanceState = $savedInstanceState" }
         splashScreen.setKeepOnScreenCondition { viewModel.startDestination.value == null }
-        binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         configureToolbar()
         configureNavGraph()
