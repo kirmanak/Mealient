@@ -15,4 +15,6 @@ interface RecipeRepo {
     suspend fun loadRecipeInfo(recipeId: String): FullRecipeEntity?
 
     fun updateNameQuery(name: String?)
+
+    suspend fun refreshRecipes()
 }

@@ -1,6 +1,9 @@
 package gq.kirmanak.mealient.ui.recipes
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
@@ -12,7 +15,7 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class RecipeViewModel @Inject constructor(
+class RecipesListViewModel @Inject constructor(
     private val recipeRepo: RecipeRepo,
     authRepo: AuthRepo,
     private val logger: Logger,
@@ -20,19 +23,11 @@ class RecipeViewModel @Inject constructor(
 
     val pagingData = recipeRepo.createPager().flow.cachedIn(viewModelScope)
 
-    private val _isAuthorized = MutableLiveData<Boolean?>(null)
-    val isAuthorized: LiveData<Boolean?> = _isAuthorized
-
     init {
-        authRepo.isAuthorizedFlow.valueUpdatesOnly().onEach {
-            logger.v { "Authorization state changed to $it" }
-            _isAuthorized.postValue(it)
+        authRepo.isAuthorizedFlow.valueUpdatesOnly().onEach { hasAuthorized ->
+            logger.v { "Authorization state changed to $hasAuthorized" }
+            if (hasAuthorized) recipeRepo.refreshRecipes()
         }.launchIn(viewModelScope)
-    }
-
-    fun onAuthorizationChangeHandled() {
-        logger.v { "onAuthorizationSuccessHandled() called" }
-        _isAuthorized.postValue(null)
     }
 
     fun refreshRecipeInfo(recipeSlug: String): LiveData<Result<Unit>> {

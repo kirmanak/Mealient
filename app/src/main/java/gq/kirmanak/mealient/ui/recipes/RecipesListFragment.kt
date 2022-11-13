@@ -15,7 +15,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
+import gq.kirmanak.mealient.databinding.FragmentRecipesListBinding
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
@@ -23,6 +23,7 @@ import gq.kirmanak.mealient.extensions.showLongToast
 import gq.kirmanak.mealient.extensions.valueUpdatesOnly
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
+import gq.kirmanak.mealient.ui.recipes.RecipesListFragmentDirections.Companion.actionRecipesFragmentToRecipeInfoFragment
 import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
@@ -31,10 +32,10 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RecipesFragment : Fragment(R.layout.fragment_recipes) {
+class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
 
-    private val binding by viewBinding(FragmentRecipesBinding::bind)
-    private val viewModel by viewModels<RecipeViewModel>()
+    private val binding by viewBinding(FragmentRecipesListBinding::bind)
+    private val viewModel by viewModels<RecipesListViewModel>()
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
 
     @Inject
@@ -62,7 +63,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private fun navigateToRecipeInfo(id: String) {
         logger.v { "navigateToRecipeInfo() called with: id = $id" }
-        val directions = RecipesFragmentDirections.actionRecipesFragmentToRecipeInfoFragment(id)
+        val directions = actionRecipesFragmentToRecipeInfoFragment(id)
         findNavController().navigate(directions)
     }
 
@@ -109,6 +110,11 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
             showLongToast(R.string.fragment_recipes_last_page_loaded_toast)
         }
 
+        collectWhenViewResumed(recipesAdapter.sourceIsRefreshing()) { disableSwipeRefresh ->
+            logger.v { "setupRecipeAdapter: changing refresher enabled state to ${!disableSwipeRefresh}" }
+            binding.refresher.isEnabled = !disableSwipeRefresh
+        }
+
         collectWhenViewResumed(recipesAdapter.refreshErrors()) {
             onLoadFailure(it)
         }
@@ -116,15 +122,6 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         collectWhenViewResumed(binding.refresher.refreshRequestFlow(logger)) {
             logger.v { "setupRecipeAdapter: received refresh request" }
             recipesAdapter.refresh()
-        }
-
-        viewModel.isAuthorized.observe(viewLifecycleOwner) { isAuthorized ->
-            logger.v { "setupRecipeAdapter: isAuthorized changed to $isAuthorized" }
-            if (isAuthorized != null) {
-                if (isAuthorized) recipesAdapter.refresh()
-                // else is ignored to avoid the removal of the non-public recipes
-                viewModel.onAuthorizationChangeHandled()
-            }
         }
     }
 
@@ -156,11 +153,21 @@ private fun Throwable.toLoadErrorReasonText(): Int? = when (this) {
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.refreshErrors(): Flow<Throwable> {
-    return loadStateFlow.map { it.refresh }.valueUpdatesOnly().filterIsInstance<LoadState.Error>()
+    return loadStateFlow
+        .map { it.refresh }
+        .valueUpdatesOnly()
+        .filterIsInstance<LoadState.Error>()
         .map { it.error }
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.appendPaginationEnd(): Flow<Unit> {
-    return loadStateFlow.map { it.append.endOfPaginationReached }.valueUpdatesOnly().filter { it }
+    return loadStateFlow
+        .map { it.append.endOfPaginationReached }
+        .valueUpdatesOnly()
+        .filter { it }
         .map { }
+}
+
+private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.sourceIsRefreshing(): Flow<Boolean> {
+    return loadStateFlow.map { it.source.refresh !is LoadState.NotLoading }.valueUpdatesOnly()
 }

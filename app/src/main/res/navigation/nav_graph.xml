@@ -12,10 +12,10 @@
 		tools:layout="@layout/fragment_authentication" />
 
 	<fragment
-		android:id="@+id/recipesFragment"
-		android:name="gq.kirmanak.mealient.ui.recipes.RecipesFragment"
+		android:id="@+id/recipesListFragment"
+		android:name="gq.kirmanak.mealient.ui.recipes.RecipesListFragment"
 		android:label="fragment_recipes"
-		tools:layout="@layout/fragment_recipes">
+		tools:layout="@layout/fragment_recipes_list">
 		<action
 			android:id="@+id/action_recipesFragment_to_recipeInfoFragment"
 			app:destination="@id/recipeInfoFragment" />
@@ -49,8 +49,8 @@
 		android:label="fragment_base_url"
 		tools:layout="@layout/fragment_base_url">
 		<action
-			android:id="@+id/action_baseURLFragment_to_recipesFragment"
-			app:destination="@id/recipesFragment"
+			android:id="@+id/action_baseURLFragment_to_recipesListFragment"
+			app:destination="@id/recipesListFragment"
 			app:popUpTo="@id/nav_graph"
 			app:popUpToInclusive="true" />
 	</fragment>
@@ -66,8 +66,8 @@
 		app:destination="@id/authenticationFragment" />
 
 	<action
-		android:id="@+id/action_global_recipesFragment"
-		app:destination="@id/recipesFragment" />
+		android:id="@+id/action_global_recipesListFragment"
+		app:destination="@id/recipesListFragment" />
 
 	<action
 		android:id="@+id/action_global_addRecipeFragment"

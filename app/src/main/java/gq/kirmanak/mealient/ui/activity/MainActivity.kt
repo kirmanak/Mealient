@@ -16,7 +16,10 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
-import gq.kirmanak.mealient.NavGraphDirections
+import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAddRecipeFragment
+import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAuthenticationFragment
+import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalBaseURLFragment
+import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalRecipesListFragment
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
 import gq.kirmanak.mealient.extensions.observeOnce
@@ -69,9 +72,9 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         logger.v { "onNavigationItemSelected() called with: menuItem = $menuItem" }
         menuItem.isChecked = true
         val directions = when (menuItem.itemId) {
-            R.id.add_recipe -> NavGraphDirections.actionGlobalAddRecipeFragment()
-            R.id.recipes_list -> NavGraphDirections.actionGlobalRecipesFragment()
-            R.id.change_url -> NavGraphDirections.actionGlobalBaseURLFragment()
+            R.id.add_recipe -> actionGlobalAddRecipeFragment()
+            R.id.recipes_list -> actionGlobalRecipesListFragment()
+            R.id.change_url -> actionGlobalBaseURLFragment()
             else -> throw IllegalArgumentException("Unknown menu item id: ${menuItem.itemId}")
         }
         navigateTo(directions)
@@ -142,7 +145,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         logger.v { "onOptionsItemSelected() called with: item = $item" }
         val result = when (item.itemId) {
             R.id.login -> {
-                navigateTo(NavGraphDirections.actionGlobalAuthenticationFragment())
+                navigateTo(actionGlobalAuthenticationFragment())
                 true
             }
             R.id.logout -> {
