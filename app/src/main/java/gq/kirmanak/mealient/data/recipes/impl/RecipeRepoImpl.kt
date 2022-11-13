@@ -56,8 +56,8 @@ class RecipeRepoImpl @Inject constructor(
         return recipeInfo
     }
 
-    override fun setSearchName(name: String?) {
-        logger.v { "setSearchName() called with: name = $name" }
+    override fun updateNameQuery(name: String?) {
+        logger.v { "updateNameQuery() called with: name = $name" }
         pagingSourceFactory.setQuery(name)
         invalidatingPagingSourceFactory.invalidate()
     }

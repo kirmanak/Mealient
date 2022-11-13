@@ -52,14 +52,21 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        if (Intent.ACTION_SEARCH == intent?.action) {
-            intent.getStringExtra(SearchManager.QUERY)?.also { query ->
-                viewModel.onSearchQuery(query)
-            }
+        logger.v { "onNewIntent() called with: intent = $intent" }
+        when (intent?.action) {
+            Intent.ACTION_SEARCH -> onNewSearch(intent)
+            else -> logger.w { "Unexpected intent!" }
         }
     }
 
+    private fun onNewSearch(intent: Intent) {
+        logger.v { "onNewSearch() called with: intent = $intent" }
+        val query = intent.getStringExtra(SearchManager.QUERY)
+        viewModel.onSearchQuery(query)
+    }
+
     private fun configureNavGraph() {
+        logger.v { "configureNavGraph() called" }
         viewModel.startDestination.observeOnce(this) {
             logger.d { "configureNavGraph: received destination" }
             val graph = navController.navInflater.inflate(R.navigation.nav_graph)

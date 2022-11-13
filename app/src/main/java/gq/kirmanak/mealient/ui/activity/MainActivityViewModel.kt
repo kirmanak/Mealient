@@ -55,8 +55,8 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch { authRepo.logout() }
     }
 
-    fun onSearchQuery(query: String) {
+    fun onSearchQuery(query: String?) {
         logger.v { "onSearchQuery() called with: query = $query" }
-        recipeRepo.setSearchName(query)
+        recipeRepo.updateNameQuery(query)
     }
 }
