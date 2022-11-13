@@ -17,7 +17,7 @@
 	<item
 		android:id="@+id/search_recipe_action"
 		android:icon="@android:drawable/ic_menu_search"
-		android:title="@string/searchable_recipe_main_hint"
+		android:title="@string/search_recipes_hint"
 		app:actionViewClass="androidx.appcompat.widget.SearchView"
 		app:showAsAction="ifRoom" />
 
