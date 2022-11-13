@@ -123,15 +123,6 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
             logger.v { "setupRecipeAdapter: received refresh request" }
             recipesAdapter.refresh()
         }
-
-        viewModel.isAuthorized.observe(viewLifecycleOwner) { isAuthorized ->
-            logger.v { "setupRecipeAdapter: isAuthorized changed to $isAuthorized" }
-            if (isAuthorized != null) {
-                if (isAuthorized) recipesAdapter.refresh()
-                // else is ignored to avoid the removal of the non-public recipes
-                viewModel.onAuthorizationChangeHandled()
-            }
-        }
     }
 
     private fun onLoadFailure(error: Throwable) {

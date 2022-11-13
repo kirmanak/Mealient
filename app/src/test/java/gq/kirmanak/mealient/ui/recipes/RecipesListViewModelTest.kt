@@ -25,29 +25,24 @@ class RecipesListViewModelTest : BaseUnitTest() {
     lateinit var recipeRepo: RecipeRepo
 
     @Test
-    fun `when authRepo isAuthorized changes to true expect isAuthorized update`() {
+    fun `when authRepo isAuthorized changes to true expect that recipes are refreshed`() {
         every { authRepo.isAuthorizedFlow } returns flowOf(false, true)
-        assertThat(createSubject().isAuthorized.value).isTrue()
+        createSubject()
+        coVerify { recipeRepo.refreshRecipes() }
     }
 
     @Test
-    fun `when authRepo isAuthorized changes to false expect isAuthorized update`() {
+    fun `when authRepo isAuthorized changes to false expect that recipes are not refreshed`() {
         every { authRepo.isAuthorizedFlow } returns flowOf(true, false)
-        assertThat(createSubject().isAuthorized.value).isFalse()
+        createSubject()
+        coVerify(inverse = true) { recipeRepo.refreshRecipes() }
     }
 
     @Test
-    fun `when authRepo isAuthorized doesn't change expect isAuthorized null`() {
+    fun `when authRepo isAuthorized doesn't change expect that recipes are not refreshed`() {
         every { authRepo.isAuthorizedFlow } returns flowOf(true)
-        assertThat(createSubject().isAuthorized.value).isNull()
-    }
-
-    @Test
-    fun `when isAuthorization change is handled expect isAuthorized null`() {
-        every { authRepo.isAuthorizedFlow } returns flowOf(true, false)
-        val subject = createSubject()
-        subject.onAuthorizationChangeHandled()
-        assertThat(subject.isAuthorized.value).isNull()
+        createSubject()
+        coVerify(inverse = true) { recipeRepo.refreshRecipes() }
     }
 
     @Test

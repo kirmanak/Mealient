@@ -25,7 +25,11 @@ class RecipeRepoImpl @Inject constructor(
 
     override fun createPager(): Pager<Int, RecipeSummaryEntity> {
         logger.v { "createPager() called" }
-        val pagingConfig = PagingConfig(pageSize = LOAD_PAGE_SIZE, enablePlaceholders = true)
+        val pagingConfig = PagingConfig(
+            pageSize = LOAD_PAGE_SIZE,
+            enablePlaceholders = true,
+            initialLoadSize = INITIAL_LOAD_PAGE_SIZE,
+        )
         return Pager(
             config = pagingConfig,
             remoteMediator = mediator,
@@ -59,7 +63,17 @@ class RecipeRepoImpl @Inject constructor(
         pagingSourceFactory.setQuery(name)
     }
 
+    override suspend fun refreshRecipes() {
+        logger.v { "refreshRecipes() called" }
+        runCatchingExceptCancel {
+            storage.refreshAll(dataSource.requestRecipes(0, INITIAL_LOAD_PAGE_SIZE))
+        }.onFailure {
+            logger.e(it) { "Can't refresh recipes" }
+        }
+    }
+
     companion object {
         private const val LOAD_PAGE_SIZE = 50
+        private const val INITIAL_LOAD_PAGE_SIZE = LOAD_PAGE_SIZE * 3
     }
 }
