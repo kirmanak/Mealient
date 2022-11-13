@@ -35,9 +35,11 @@ class RecipeStorageImpl @Inject constructor(
     }
 
 
-    override fun queryRecipes(): PagingSource<Int, RecipeSummaryEntity> {
-        logger.v { "queryRecipes() called" }
-        return recipeDao.queryRecipesByPages()
+    override fun queryRecipes(query: String?): PagingSource<Int, RecipeSummaryEntity> {
+        logger.v { "queryRecipes() called with: query = $query" }
+        return if (query == null) recipeDao.queryRecipesByPages()
+        else recipeDao.queryRecipesByPages(query)
+
     }
 
     override suspend fun refreshAll(recipes: List<RecipeSummaryInfo>) {

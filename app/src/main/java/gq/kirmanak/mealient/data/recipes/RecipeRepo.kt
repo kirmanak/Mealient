@@ -12,4 +12,6 @@ interface RecipeRepo {
     suspend fun refreshRecipeInfo(recipeSlug: String): Result<Unit>
 
     suspend fun loadRecipeInfo(recipeId: String): FullRecipeEntity?
+
+    fun setSearchName(name: String?)
 }

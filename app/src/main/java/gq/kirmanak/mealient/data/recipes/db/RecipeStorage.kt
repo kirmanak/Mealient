@@ -9,7 +9,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 interface RecipeStorage {
     suspend fun saveRecipes(recipes: List<RecipeSummaryInfo>)
 
-    fun queryRecipes(): PagingSource<Int, RecipeSummaryEntity>
+    fun queryRecipes(query: String?): PagingSource<Int, RecipeSummaryEntity>
 
     suspend fun refreshAll(recipes: List<RecipeSummaryInfo>)
 

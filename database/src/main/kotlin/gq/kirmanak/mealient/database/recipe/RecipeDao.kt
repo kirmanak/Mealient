@@ -9,6 +9,9 @@ interface RecipeDao {
     @Query("SELECT * FROM recipe_summaries ORDER BY date_added DESC")
     fun queryRecipesByPages(): PagingSource<Int, RecipeSummaryEntity>
 
+    @Query("SELECT * FROM recipe_summaries JOIN recipe_summaries_fts ON recipe_summaries_fts.remote_id == recipe_summaries.remote_id WHERE recipe_summaries_fts.name MATCH :query ORDER BY date_added DESC")
+    fun queryRecipesByPages(query: String): PagingSource<Int, RecipeSummaryEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecipe(recipeSummaryEntity: RecipeSummaryEntity)
 

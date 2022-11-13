@@ -6,12 +6,13 @@ import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.entity.*
 
 @Database(
-    version = 6,
+    version = 7,
     entities = [
         RecipeSummaryEntity::class,
         RecipeEntity::class,
         RecipeIngredientEntity::class,
-        RecipeInstructionEntity::class
+        RecipeInstructionEntity::class,
+        RecipeSummaryFtsEntity::class,
     ],
     exportSchema = true,
     autoMigrations = [
@@ -19,6 +20,7 @@ import gq.kirmanak.mealient.database.recipe.entity.*
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5, spec = AppDb.From4To5Migration::class),
         AutoMigration(from = 5, to = 6, spec = AppDb.From5To6Migration::class),
+        AutoMigration(from = 6, to = 7),
     ]
 )
 @TypeConverters(RoomTypeConverters::class)

@@ -13,9 +13,7 @@ import gq.kirmanak.mealient.data.network.MealieDataSourceWrapper
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorageImpl
-import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
-import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProviderImpl
-import gq.kirmanak.mealient.data.recipes.impl.RecipeRepoImpl
+import gq.kirmanak.mealient.data.recipes.impl.*
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.ui.recipes.images.RecipeModelLoaderFactory
@@ -46,13 +44,17 @@ interface RecipeModule {
     @Singleton
     fun bindModelLoaderFactory(recipeModelLoaderFactory: RecipeModelLoaderFactory): ModelLoaderFactory<RecipeSummaryEntity, InputStream>
 
+    @Binds
+    @Singleton
+    fun bindRecipePagingSourceFactory(recipePagingSourceFactoryImpl: RecipePagingSourceFactoryImpl): RecipePagingSourceFactory
+
     companion object {
 
         @Provides
         @Singleton
         fun provideRecipePagingSourceFactory(
-            recipeStorage: RecipeStorage
-        ) = InvalidatingPagingSourceFactory { recipeStorage.queryRecipes() }
+            factory: RecipePagingSourceFactory,
+        ) = InvalidatingPagingSourceFactory(factory)
 
         @Provides
         @Singleton
