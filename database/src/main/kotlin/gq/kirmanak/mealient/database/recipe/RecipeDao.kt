@@ -13,7 +13,7 @@ interface RecipeDao {
     fun queryRecipesByPages(query: String): PagingSource<Int, RecipeSummaryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRecipe(recipeSummaryEntity: RecipeSummaryEntity)
+    suspend fun insertRecipes(recipeSummaryEntity: Iterable<RecipeSummaryEntity>)
 
     @Query("DELETE FROM recipe_summaries")
     suspend fun removeAllRecipes()

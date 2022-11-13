@@ -23,23 +23,17 @@ class RecipeStorageImpl @Inject constructor(
 ) : RecipeStorage {
     private val recipeDao: RecipeDao by lazy { db.recipeDao() }
 
-    override suspend fun saveRecipes(
-        recipes: List<RecipeSummaryInfo>
-    ) = db.withTransaction {
+    override suspend fun saveRecipes(recipes: List<RecipeSummaryInfo>) {
         logger.v { "saveRecipes() called with $recipes" }
-
-        for (recipe in recipes) {
-            val recipeSummaryEntity = recipe.toRecipeSummaryEntity()
-            recipeDao.insertRecipe(recipeSummaryEntity)
-        }
+        val entities = recipes.map { it.toRecipeSummaryEntity() }
+        logger.v { "saveRecipes: entities = $entities" }
+        db.withTransaction { recipeDao.insertRecipes(entities) }
     }
-
 
     override fun queryRecipes(query: String?): PagingSource<Int, RecipeSummaryEntity> {
         logger.v { "queryRecipes() called with: query = $query" }
         return if (query == null) recipeDao.queryRecipesByPages()
         else recipeDao.queryRecipesByPages(query)
-
     }
 
     override suspend fun refreshAll(recipes: List<RecipeSummaryInfo>) {
