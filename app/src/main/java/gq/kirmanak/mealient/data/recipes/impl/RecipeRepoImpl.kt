@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.InvalidatingPagingSourceFactory
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
@@ -19,17 +18,18 @@ import javax.inject.Singleton
 class RecipeRepoImpl @Inject constructor(
     private val mediator: RecipesRemoteMediator,
     private val storage: RecipeStorage,
-    private val pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>,
+    private val pagingSourceFactory: RecipePagingSourceFactory,
     private val dataSource: RecipeDataSource,
     private val logger: Logger,
 ) : RecipeRepo {
+
     override fun createPager(): Pager<Int, RecipeSummaryEntity> {
         logger.v { "createPager() called" }
         val pagingConfig = PagingConfig(pageSize = 5, enablePlaceholders = true)
         return Pager(
             config = pagingConfig,
             remoteMediator = mediator,
-            pagingSourceFactory = pagingSourceFactory
+            pagingSourceFactory = pagingSourceFactory,
         )
     }
 
@@ -52,5 +52,10 @@ class RecipeRepoImpl @Inject constructor(
         val recipeInfo = storage.queryRecipeInfo(recipeId)
         logger.v { "loadRecipeInfo() returned: $recipeInfo" }
         return recipeInfo
+    }
+
+    override fun updateNameQuery(name: String?) {
+        logger.v { "updateNameQuery() called with: name = $name" }
+        pagingSourceFactory.setQuery(name)
     }
 }

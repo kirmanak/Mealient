@@ -1,6 +1,5 @@
 package gq.kirmanak.mealient.extensions
 
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -18,10 +17,7 @@ fun <T> Fragment.collectWhenViewResumed(flow: Flow<T>, collector: FlowCollector<
     }
 }
 
-fun Fragment.showLongToast(@StringRes text: Int) = showLongToast(getString(text))
+fun Fragment.showLongToast(@StringRes text: Int) = context?.showLongToast(text) != null
 
-fun Fragment.showLongToast(text: String) = showToast(text, Toast.LENGTH_LONG)
+fun Fragment.showLongToast(text: String) = context?.showLongToast(text) != null
 
-private fun Fragment.showToast(text: String, length: Int): Boolean {
-    return context?.let { Toast.makeText(it, text, length).show() } != null
-}

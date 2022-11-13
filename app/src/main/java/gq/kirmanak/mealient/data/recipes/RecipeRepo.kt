@@ -5,6 +5,7 @@ import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 
 interface RecipeRepo {
+
     fun createPager(): Pager<Int, RecipeSummaryEntity>
 
     suspend fun clearLocalData()
@@ -12,4 +13,6 @@ interface RecipeRepo {
     suspend fun refreshRecipeInfo(recipeSlug: String): Result<Unit>
 
     suspend fun loadRecipeInfo(recipeId: String): FullRecipeEntity?
+
+    fun updateNameQuery(name: String?)
 }

@@ -32,7 +32,12 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
         binding.button.setOnClickListener { onLoginClicked() }
         activityViewModel.updateUiState {
-            it.copy(loginButtonVisible = false, titleVisible = true, navigationVisible = false)
+            it.copy(
+                loginButtonVisible = false,
+                titleVisible = true,
+                navigationVisible = false,
+                searchVisible = false
+            )
         }
         viewModel.uiState.observe(viewLifecycleOwner, ::onUiStateChange)
     }

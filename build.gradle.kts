@@ -33,4 +33,5 @@ sonarqube {
 
 rootCoverage {
     generateXml = true
+    includeNoLocationClasses = true
 }

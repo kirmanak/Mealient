@@ -35,4 +35,9 @@
 		<item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
 		<item name="android:overScrollMode">never</item>
 	</style>
+
+	<style name="ThemeOverlay.Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+		<item name="android:editTextColor">?colorOnPrimary</item>
+		<item name="android:textColorHint">?colorOnPrimary</item>
+	</style>
 </resources>

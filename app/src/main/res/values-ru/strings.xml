@@ -48,4 +48,5 @@
 	<string name="fragment_recipes_load_failure_toast_no_connection">нет соединения</string>
 	<string name="fragment_recipes_load_failure_toast_no_reason">Ошибка загрузки.</string>
 	<string name="menu_bottom_navigation_change_url">Сменить URL</string>
+	<string name="search_recipes_hint">Найти рецепты</string>
 </resources>

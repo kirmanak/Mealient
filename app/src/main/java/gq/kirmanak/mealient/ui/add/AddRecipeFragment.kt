@@ -38,7 +38,12 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
         super.onViewCreated(view, savedInstanceState)
         logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
         activityViewModel.updateUiState {
-            it.copy(loginButtonVisible = true, titleVisible = false, navigationVisible = true)
+            it.copy(
+                loginButtonVisible = true,
+                titleVisible = false,
+                navigationVisible = true,
+                searchVisible = false,
+            )
         }
         viewModel.loadPreservedRequest()
         setupViews()

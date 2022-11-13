@@ -1,8 +1,10 @@
 package gq.kirmanak.mealient.extensions
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.LifecycleOwner
@@ -95,4 +97,13 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
             observer.onChanged(value)
         }
     })
+}
+
+
+fun Context.showLongToast(text: String) = showToast(text, Toast.LENGTH_LONG)
+
+fun Context.showLongToast(@StringRes text: Int) = showLongToast(getString(text))
+
+private fun Context.showToast(text: String, length: Int) {
+    Toast.makeText(this, text, length).show()
 }

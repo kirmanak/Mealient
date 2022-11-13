@@ -9,8 +9,11 @@ interface RecipeDao {
     @Query("SELECT * FROM recipe_summaries ORDER BY date_added DESC")
     fun queryRecipesByPages(): PagingSource<Int, RecipeSummaryEntity>
 
+    @Query("SELECT * FROM recipe_summaries WHERE recipe_summaries.name LIKE '%' || :query || '%' ORDER BY date_added DESC")
+    fun queryRecipesByPages(query: String): PagingSource<Int, RecipeSummaryEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRecipe(recipeSummaryEntity: RecipeSummaryEntity)
+    suspend fun insertRecipes(recipeSummaryEntity: Iterable<RecipeSummaryEntity>)
 
     @Query("DELETE FROM recipe_summaries")
     suspend fun removeAllRecipes()

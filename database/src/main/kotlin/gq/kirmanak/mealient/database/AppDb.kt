@@ -11,7 +11,7 @@ import gq.kirmanak.mealient.database.recipe.entity.*
         RecipeSummaryEntity::class,
         RecipeEntity::class,
         RecipeIngredientEntity::class,
-        RecipeInstructionEntity::class
+        RecipeInstructionEntity::class,
     ],
     exportSchema = true,
     autoMigrations = [

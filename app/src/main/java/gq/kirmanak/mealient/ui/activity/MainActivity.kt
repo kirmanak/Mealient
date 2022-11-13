@@ -5,6 +5,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
     }
 
     private fun configureNavGraph() {
+        logger.v { "configureNavGraph() called" }
         viewModel.startDestination.observeOnce(this) {
             logger.d { "configureNavGraph: received destination" }
             val graph = navController.navInflater.inflate(R.navigation.nav_graph)
@@ -104,7 +107,35 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         menuInflater.inflate(R.menu.main_toolbar, menu)
         menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
         menu.findItem(R.id.login).isVisible = uiState.canShowLogin
+        val searchItem = menu.findItem(R.id.search_recipe_action)
+        searchItem.isVisible = uiState.searchVisible
+        setupSearchItem(searchItem)
         return true
+    }
+
+    private fun setupSearchItem(searchItem: MenuItem) {
+        logger.v { "setupSearchItem() called with: searchItem = $searchItem" }
+        val searchView = searchItem.actionView as? SearchView
+        if (searchView == null) {
+            logger.e { "setupSearchItem: search item's actionView is null or not SearchView" }
+            return
+        }
+        searchView.queryHint = getString(R.string.search_recipes_hint)
+        searchView.setOnCloseListener {
+            logger.v { "onClose() called" }
+            viewModel.onSearchQuery(null)
+            false
+        }
+
+        searchView.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = true
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                logger.v { "onQueryTextChange() called with: newText = $newText" }
+                viewModel.onSearchQuery(newText?.trim()?.takeUnless { it.isEmpty() })
+                return true
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

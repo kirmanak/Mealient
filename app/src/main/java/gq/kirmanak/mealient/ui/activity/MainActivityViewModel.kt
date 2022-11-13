@@ -6,6 +6,7 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
+import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -18,6 +19,7 @@ class MainActivityViewModel @Inject constructor(
     private val logger: Logger,
     private val disclaimerStorage: DisclaimerStorage,
     private val serverInfoRepo: ServerInfoRepo,
+    private val recipeRepo: RecipeRepo,
 ) : ViewModel() {
 
     private val _uiState = MutableLiveData(MainActivityUiState())
@@ -51,5 +53,10 @@ class MainActivityViewModel @Inject constructor(
     fun logout() {
         logger.v { "logout() called" }
         viewModelScope.launch { authRepo.logout() }
+    }
+
+    fun onSearchQuery(query: String?) {
+        logger.v { "onSearchQuery() called with: query = $query" }
+        recipeRepo.updateNameQuery(query)
     }
 }

@@ -52,4 +52,5 @@
 	<string name="fragment_recipes_load_failure_toast_unexpected_response">unexpected response</string>
 	<string name="fragment_recipes_load_failure_toast_no_connection">no connection</string>
 	<string name="menu_bottom_navigation_change_url">Change URL</string>
+	<string name="search_recipes_hint">Search recipes</string>
 </resources>

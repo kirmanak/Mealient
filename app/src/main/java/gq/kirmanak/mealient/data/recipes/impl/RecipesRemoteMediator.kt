@@ -17,7 +17,7 @@ import javax.inject.Singleton
 class RecipesRemoteMediator @Inject constructor(
     private val storage: RecipeStorage,
     private val network: RecipeDataSource,
-    private val pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>,
+    private val pagingSourceFactory: RecipePagingSourceFactory,
     private val logger: Logger,
 ) : RemoteMediator<Int, RecipeSummaryEntity>() {
 
