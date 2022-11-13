@@ -31,7 +31,7 @@ class RecipeRepoImpl @Inject constructor(
         return Pager(
             config = pagingConfig,
             remoteMediator = mediator,
-            pagingSourceFactory = pagingSourceFactory
+            pagingSourceFactory = invalidatingPagingSourceFactory,
         )
     }
 
