@@ -16,7 +16,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class RecipeViewModelTest : BaseUnitTest() {
+class RecipesListViewModelTest : BaseUnitTest() {
 
     @MockK
     lateinit var authRepo: AuthRepo
@@ -78,5 +78,5 @@ class RecipeViewModelTest : BaseUnitTest() {
         assertThat(actual).isEqualTo(result)
     }
 
-    private fun createSubject() = RecipeViewModel(recipeRepo, authRepo, logger)
+    private fun createSubject() = RecipesListViewModel(recipeRepo, authRepo, logger)
 }

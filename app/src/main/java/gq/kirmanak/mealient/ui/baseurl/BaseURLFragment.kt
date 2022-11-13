@@ -15,6 +15,7 @@ import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.OperationUiState
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
+import gq.kirmanak.mealient.ui.baseurl.BaseURLFragmentDirections.Companion.actionBaseURLFragmentToRecipesListFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -56,7 +57,7 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
     private fun onUiStateChange(uiState: OperationUiState<Unit>) = with(binding) {
         logger.v { "onUiStateChange() called with: uiState = $uiState" }
         if (uiState.isSuccess) {
-            findNavController().navigate(BaseURLFragmentDirections.actionBaseURLFragmentToRecipesFragment())
+            findNavController().navigate(actionBaseURLFragmentToRecipesListFragment())
             return
         }
         urlInputLayout.error = when (val exception = uiState.exceptionOrNull) {

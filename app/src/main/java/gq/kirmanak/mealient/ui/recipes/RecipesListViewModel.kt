@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class RecipeViewModel @Inject constructor(
+class RecipesListViewModel @Inject constructor(
     private val recipeRepo: RecipeRepo,
     authRepo: AuthRepo,
     private val logger: Logger,

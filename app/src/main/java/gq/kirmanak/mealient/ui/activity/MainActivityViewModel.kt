@@ -41,7 +41,7 @@ class MainActivityViewModel @Inject constructor(
             _startDestination.value = when {
                 !disclaimerStorage.isDisclaimerAccepted() -> R.id.disclaimerFragment
                 serverInfoRepo.getUrl() == null -> R.id.baseURLFragment
-                else -> R.id.recipesFragment
+                else -> R.id.recipesListFragment
             }
         }
     }

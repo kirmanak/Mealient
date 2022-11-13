@@ -12,6 +12,7 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.FragmentDisclaimerBinding
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
+import gq.kirmanak.mealient.ui.disclaimer.DisclaimerFragmentDirections.Companion.actionDisclaimerFragmentToBaseURLFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,7 +38,7 @@ class DisclaimerFragment : Fragment(R.layout.fragment_disclaimer) {
 
     private fun navigateNext() {
         logger.v { "navigateNext() called" }
-        findNavController().navigate(DisclaimerFragmentDirections.actionDisclaimerFragmentToBaseURLFragment())
+        findNavController().navigate(actionDisclaimerFragmentToBaseURLFragment())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -15,7 +15,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.databinding.FragmentRecipesBinding
+import gq.kirmanak.mealient.databinding.FragmentRecipesListBinding
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.extensions.refreshRequestFlow
@@ -23,6 +23,7 @@ import gq.kirmanak.mealient.extensions.showLongToast
 import gq.kirmanak.mealient.extensions.valueUpdatesOnly
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
+import gq.kirmanak.mealient.ui.recipes.RecipesListFragmentDirections.Companion.actionRecipesFragmentToRecipeInfoFragment
 import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
@@ -31,10 +32,10 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RecipesFragment : Fragment(R.layout.fragment_recipes) {
+class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
 
-    private val binding by viewBinding(FragmentRecipesBinding::bind)
-    private val viewModel by viewModels<RecipeViewModel>()
+    private val binding by viewBinding(FragmentRecipesListBinding::bind)
+    private val viewModel by viewModels<RecipesListViewModel>()
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
 
     @Inject
@@ -62,7 +63,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private fun navigateToRecipeInfo(id: String) {
         logger.v { "navigateToRecipeInfo() called with: id = $id" }
-        val directions = RecipesFragmentDirections.actionRecipesFragmentToRecipeInfoFragment(id)
+        val directions = actionRecipesFragmentToRecipeInfoFragment(id)
         findNavController().navigate(directions)
     }
 
