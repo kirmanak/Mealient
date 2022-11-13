@@ -1,6 +1,5 @@
 package gq.kirmanak.mealient.di
 
-import androidx.paging.InvalidatingPagingSourceFactory
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.request.RequestOptions
 import dagger.Binds
@@ -49,12 +48,6 @@ interface RecipeModule {
     fun bindRecipePagingSourceFactory(recipePagingSourceFactoryImpl: RecipePagingSourceFactoryImpl): RecipePagingSourceFactory
 
     companion object {
-
-        @Provides
-        @Singleton
-        fun provideRecipePagingSourceFactory(
-            factory: RecipePagingSourceFactory,
-        ) = InvalidatingPagingSourceFactory(factory)
 
         @Provides
         @Singleton

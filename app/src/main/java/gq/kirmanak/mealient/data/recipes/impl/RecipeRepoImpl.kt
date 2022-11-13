@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.InvalidatingPagingSourceFactory
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
@@ -20,7 +19,6 @@ class RecipeRepoImpl @Inject constructor(
     private val mediator: RecipesRemoteMediator,
     private val storage: RecipeStorage,
     private val pagingSourceFactory: RecipePagingSourceFactory,
-    private val invalidatingPagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>,
     private val dataSource: RecipeDataSource,
     private val logger: Logger,
 ) : RecipeRepo {
@@ -31,7 +29,7 @@ class RecipeRepoImpl @Inject constructor(
         return Pager(
             config = pagingConfig,
             remoteMediator = mediator,
-            pagingSourceFactory = invalidatingPagingSourceFactory,
+            pagingSourceFactory = pagingSourceFactory,
         )
     }
 
@@ -59,6 +57,5 @@ class RecipeRepoImpl @Inject constructor(
     override fun updateNameQuery(name: String?) {
         logger.v { "updateNameQuery() called with: name = $name" }
         pagingSourceFactory.setQuery(name)
-        invalidatingPagingSourceFactory.invalidate()
     }
 }
