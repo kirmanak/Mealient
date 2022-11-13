@@ -110,6 +110,11 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
             showLongToast(R.string.fragment_recipes_last_page_loaded_toast)
         }
 
+        collectWhenViewResumed(recipesAdapter.sourceIsRefreshing()) { disableSwipeRefresh ->
+            logger.v { "setupRecipeAdapter: changing refresher enabled state to ${!disableSwipeRefresh}" }
+            binding.refresher.isEnabled = !disableSwipeRefresh
+        }
+
         collectWhenViewResumed(recipesAdapter.refreshErrors()) {
             onLoadFailure(it)
         }
@@ -157,11 +162,21 @@ private fun Throwable.toLoadErrorReasonText(): Int? = when (this) {
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.refreshErrors(): Flow<Throwable> {
-    return loadStateFlow.map { it.refresh }.valueUpdatesOnly().filterIsInstance<LoadState.Error>()
+    return loadStateFlow
+        .map { it.refresh }
+        .valueUpdatesOnly()
+        .filterIsInstance<LoadState.Error>()
         .map { it.error }
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.appendPaginationEnd(): Flow<Unit> {
-    return loadStateFlow.map { it.append.endOfPaginationReached }.valueUpdatesOnly().filter { it }
+    return loadStateFlow
+        .map { it.append.endOfPaginationReached }
+        .valueUpdatesOnly()
+        .filter { it }
         .map { }
+}
+
+private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.sourceIsRefreshing(): Flow<Boolean> {
+    return loadStateFlow.map { it.source.refresh !is LoadState.NotLoading }.valueUpdatesOnly()
 }
