@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         logger.v { "setupSearchItem() called with: searchItem = $searchItem" }
         val searchView = searchItem.actionView as? SearchView
         if (searchView == null) {
-            logger.e { "onCreateOptionsMenu: search item's actionView is null or not SearchView" }
+            logger.e { "setupSearchItem: search item's actionView is null or not SearchView" }
             return
         }
         searchView.queryHint = getString(R.string.search_recipes_hint)
