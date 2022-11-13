@@ -37,7 +37,7 @@ class RecipesRemoteMediatorTest : BaseUnitTest() {
     lateinit var dataSource: RecipeDataSource
 
     @MockK(relaxUnitFun = true)
-    lateinit var pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>
+    lateinit var pagingSourceFactory: RecipePagingSourceFactory
 
     @Before
     override fun setUp() {

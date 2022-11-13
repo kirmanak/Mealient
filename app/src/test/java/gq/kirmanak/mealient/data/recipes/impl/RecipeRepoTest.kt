@@ -1,17 +1,16 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
-import androidx.paging.InvalidatingPagingSourceFactory
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
-import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_FULL_RECIPE_INFO
 import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -29,8 +28,8 @@ class RecipeRepoTest : BaseUnitTest() {
     @MockK
     lateinit var remoteMediator: RecipesRemoteMediator
 
-    @MockK
-    lateinit var pagingSourceFactory: InvalidatingPagingSourceFactory<Int, RecipeSummaryEntity>
+    @MockK(relaxUnitFun = true)
+    lateinit var pagingSourceFactory: RecipePagingSourceFactory
 
     lateinit var subject: RecipeRepo
 
@@ -58,5 +57,11 @@ class RecipeRepoTest : BaseUnitTest() {
     fun `when clearLocalData expect call to storage`() = runTest {
         subject.clearLocalData()
         coVerify { storage.clearAllLocalData() }
+    }
+
+    @Test
+    fun `when updateNameQuery expect sets query in paging source factory`() {
+        subject.updateNameQuery("query")
+        verify { pagingSourceFactory.setQuery("query") }
     }
 }
