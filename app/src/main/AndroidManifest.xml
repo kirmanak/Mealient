@@ -19,21 +19,12 @@
 		tools:ignore="UnusedAttribute">
 		<activity
 			android:name=".ui.activity.MainActivity"
-			android:launchMode="singleTop"
 			android:exported="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
-
-			<intent-filter>
-				<action android:name="android.intent.action.SEARCH" />
-			</intent-filter>
-
-			<meta-data
-				android:name="android.app.searchable"
-				android:resource="@xml/searchable_recipe_main" />
 		</activity>
 	</application>
 

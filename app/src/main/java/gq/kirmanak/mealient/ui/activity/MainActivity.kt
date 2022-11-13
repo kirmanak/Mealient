@@ -1,14 +1,12 @@
 package gq.kirmanak.mealient.ui.activity
 
-import android.app.SearchManager
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.getSystemService
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -48,21 +46,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         configureNavGraph()
         viewModel.uiStateLive.observe(this, ::onUiStateChange)
         binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        logger.v { "onNewIntent() called with: intent = $intent" }
-        when (intent?.action) {
-            Intent.ACTION_SEARCH -> onNewSearch(intent)
-            else -> logger.w { "Unexpected intent!" }
-        }
-    }
-
-    private fun onNewSearch(intent: Intent) {
-        logger.v { "onNewSearch() called with: intent = $intent" }
-        val query = intent.getStringExtra(SearchManager.QUERY)
-        viewModel.onSearchQuery(query)
     }
 
     private fun configureNavGraph() {
@@ -126,14 +109,33 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         menu.findItem(R.id.login).isVisible = uiState.canShowLogin
         val searchItem = menu.findItem(R.id.search_recipe_action)
         searchItem.isVisible = uiState.searchVisible
-        val searchManager: SearchManager? = getSystemService()
-        val searchView = searchItem.actionView as? SearchView
-        if (searchManager != null && searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        } else {
-            logger.e { "onCreateOptionsMenu: either search manager or search view is null" }
-        }
+        setupSearchItem(searchItem)
         return true
+    }
+
+    private fun setupSearchItem(searchItem: MenuItem) {
+        logger.v { "setupSearchItem() called with: searchItem = $searchItem" }
+        val searchView = searchItem.actionView as? SearchView
+        if (searchView == null) {
+            logger.e { "onCreateOptionsMenu: search item's actionView is null or not SearchView" }
+            return
+        }
+        searchView.queryHint = getString(R.string.searchable_recipe_main_hint)
+        searchView.setOnCloseListener {
+            logger.v { "onClose() called" }
+            viewModel.onSearchQuery(null)
+            false
+        }
+
+        searchView.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = true
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                logger.v { "onQueryTextChange() called with: newText = $newText" }
+                viewModel.onSearchQuery(newText?.trim()?.takeUnless { it.isEmpty() })
+                return true
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
