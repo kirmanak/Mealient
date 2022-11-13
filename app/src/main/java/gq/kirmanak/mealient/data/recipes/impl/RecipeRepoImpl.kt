@@ -25,7 +25,7 @@ class RecipeRepoImpl @Inject constructor(
 
     override fun createPager(): Pager<Int, RecipeSummaryEntity> {
         logger.v { "createPager() called" }
-        val pagingConfig = PagingConfig(pageSize = 5, enablePlaceholders = true)
+        val pagingConfig = PagingConfig(pageSize = LOAD_PAGE_SIZE, enablePlaceholders = true)
         return Pager(
             config = pagingConfig,
             remoteMediator = mediator,
@@ -57,5 +57,9 @@ class RecipeRepoImpl @Inject constructor(
     override fun updateNameQuery(name: String?) {
         logger.v { "updateNameQuery() called with: name = $name" }
         pagingSourceFactory.setQuery(name)
+    }
+
+    companion object {
+        private const val LOAD_PAGE_SIZE = 50
     }
 }
