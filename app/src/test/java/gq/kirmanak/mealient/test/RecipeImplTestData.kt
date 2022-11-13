@@ -69,6 +69,9 @@ object RecipeImplTestData {
         imageId = "porridge",
     )
 
+    val TEST_RECIPE_SUMMARY_ENTITIES =
+        listOf(CAKE_RECIPE_SUMMARY_ENTITY, PORRIDGE_RECIPE_SUMMARY_ENTITY)
+
     val SUGAR_INGREDIENT = RecipeIngredientInfo(
         note = "2 oz of white sugar",
     )
