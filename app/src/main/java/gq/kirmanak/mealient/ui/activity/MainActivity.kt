@@ -123,7 +123,13 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             logger.e { "setupSearchItem: search item's actionView is null or not SearchView" }
             return
         }
+
         searchView.queryHint = getString(R.string.search_recipes_hint)
+        searchView.isSubmitButtonEnabled = false
+
+        searchView.setQuery(viewModel.lastSearchQuery, false)
+        searchView.isIconified = viewModel.lastSearchQuery.isNullOrBlank()
+
         searchView.setOnCloseListener {
             logger.v { "onClose() called" }
             viewModel.onSearchQuery(null)
