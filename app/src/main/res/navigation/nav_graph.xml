@@ -63,7 +63,8 @@
 
 	<action
 		android:id="@+id/action_global_authenticationFragment"
-		app:destination="@id/authenticationFragment" />
+		app:destination="@id/authenticationFragment"
+		app:popUpTo="@id/recipesListFragment" />
 
 	<action
 		android:id="@+id/action_global_recipesListFragment"
@@ -71,9 +72,11 @@
 
 	<action
 		android:id="@+id/action_global_addRecipeFragment"
-		app:destination="@id/addRecipeFragment" />
+		app:destination="@id/addRecipeFragment"
+		app:popUpTo="@id/recipesListFragment" />
 
 	<action
 		android:id="@+id/action_global_baseURLFragment"
-		app:destination="@id/baseURLFragment" />
+		app:destination="@id/baseURLFragment"
+		app:popUpTo="@id/recipesListFragment" />
 </navigation>
