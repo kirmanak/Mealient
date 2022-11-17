@@ -32,6 +32,9 @@ class MainActivityViewModel @Inject constructor(
     private val _startDestination = MutableLiveData<Int>()
     val startDestination: LiveData<Int> = _startDestination
 
+    var lastSearchQuery: String? = null
+        private set
+
     init {
         authRepo.isAuthorizedFlow
             .onEach { isAuthorized -> updateUiState { it.copy(isAuthorized = isAuthorized) } }
@@ -57,6 +60,9 @@ class MainActivityViewModel @Inject constructor(
 
     fun onSearchQuery(query: String?) {
         logger.v { "onSearchQuery() called with: query = $query" }
-        recipeRepo.updateNameQuery(query)
+        if (lastSearchQuery != query) {
+            lastSearchQuery = query
+            recipeRepo.updateNameQuery(query)
+        }
     }
 }

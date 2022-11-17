@@ -127,9 +127,8 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
 
     private fun saveValues() = with(binding) {
         logger.v { "saveValues() called" }
-        val instructions =
-            parseInputRows(instructionsFlow).map { AddRecipeInstructionInfo(text = it) }
-        val ingredients = parseInputRows(ingredientsFlow).map { AddRecipeIngredientInfo(note = it) }
+        val instructions = parseInputRows(instructionsFlow).map { AddRecipeInstructionInfo(it) }
+        val ingredients = parseInputRows(ingredientsFlow).map { AddRecipeIngredientInfo(it) }
         val settings = AddRecipeSettingsInfo(
             public = publicRecipe.isChecked,
             disableComments = disableComments.isChecked,
@@ -156,17 +155,18 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
 
     private fun onSavedInputLoaded(request: AddRecipeInfo) = with(binding) {
         logger.v { "onSavedInputLoaded() called with: request = $request" }
-        recipeNameInput.setText(request.name)
-        recipeDescriptionInput.setText(request.description)
-        recipeYieldInput.setText(request.recipeYield)
-        publicRecipe.isChecked = request.settings.public
-        disableComments.isChecked = request.settings.disableComments
 
         request.recipeIngredient.map { it.note }
             .showIn(ingredientsFlow, R.string.fragment_add_recipe_ingredient_hint)
 
         request.recipeInstructions.map { it.text }
             .showIn(instructionsFlow, R.string.fragment_add_recipe_instruction_hint)
+
+        recipeNameInput.setText(request.name)
+        recipeDescriptionInput.setText(request.description)
+        recipeYieldInput.setText(request.recipeYield)
+        publicRecipe.isChecked = request.settings.public
+        disableComments.isChecked = request.settings.disableComments
     }
 
     private fun Iterable<String>.showIn(flow: Flow, @StringRes hintId: Int) {

@@ -2,10 +2,13 @@ package gq.kirmanak.mealient.extensions
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.content.getSystemService
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -106,4 +109,9 @@ fun Context.showLongToast(@StringRes text: Int) = showLongToast(getString(text))
 
 private fun Context.showToast(text: String, length: Int) {
     Toast.makeText(this, text, length).show()
+}
+
+fun View.hideKeyboard() {
+    val imm = context.getSystemService<InputMethodManager>()
+    imm?.hideSoftInputFromWindow(windowToken, 0)
 }
