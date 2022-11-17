@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.ui.recipes
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
@@ -17,10 +18,7 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesListBinding
 import gq.kirmanak.mealient.datasource.NetworkError
-import gq.kirmanak.mealient.extensions.collectWhenViewResumed
-import gq.kirmanak.mealient.extensions.refreshRequestFlow
-import gq.kirmanak.mealient.extensions.showLongToast
-import gq.kirmanak.mealient.extensions.valueUpdatesOnly
+import gq.kirmanak.mealient.extensions.*
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import gq.kirmanak.mealient.ui.recipes.RecipesListFragmentDirections.Companion.actionRecipesFragmentToRecipeInfoFragment
@@ -59,6 +57,15 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
             )
         }
         setupRecipeAdapter()
+        hideKeyboardOnScroll()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun hideKeyboardOnScroll() {
+        binding.recipes.setOnTouchListener { view, _ ->
+            view?.hideKeyboard()
+            false
+        }
     }
 
     private fun navigateToRecipeInfo(id: String) {
