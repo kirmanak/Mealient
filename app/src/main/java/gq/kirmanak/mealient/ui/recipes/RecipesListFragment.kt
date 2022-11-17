@@ -77,11 +77,9 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
     private fun onRecipeClicked(recipe: RecipeSummaryEntity) {
         logger.v { "onRecipeClicked() called with: recipe = $recipe" }
         binding.progress.isVisible = true
-        viewModel.refreshRecipeInfo(recipe.slug).observe(viewLifecycleOwner) { result ->
+        viewModel.refreshRecipeInfo(recipe.slug).observe(viewLifecycleOwner) {
             binding.progress.isVisible = false
-            if (result.isSuccess && !isNavigatingSomewhere()) {
-                navigateToRecipeInfo(recipe.remoteId)
-            }
+            if (!isNavigatingSomewhere()) navigateToRecipeInfo(recipe.remoteId)
         }
     }
 
