@@ -20,6 +20,7 @@
 
 			<com.google.android.material.appbar.MaterialToolbar
 				android:id="@+id/toolbar"
+				style="@style/Widget.Material3.Toolbar.Surface"
 				android:layout_width="match_parent"
 				android:layout_height="?actionBarSize"
 				app:layout_scrollFlags="scroll|snap|enterAlways"
