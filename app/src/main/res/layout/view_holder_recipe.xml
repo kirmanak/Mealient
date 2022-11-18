@@ -2,13 +2,14 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
+	style="?attr/materialCardViewFilledStyle"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:shapeAppearance="@style/ShapeAppearance.AllCornersRounded"
 	android:layout_marginVertical="7dp"
 	android:layout_marginStart="16dp"
 	android:layout_marginEnd="19dp"
-	app:cardElevation="8dp">
+	app:cardBackgroundColor="@color/white"
+	app:shapeAppearance="@style/ShapeAppearance.AllCornersRounded">
 
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
@@ -34,7 +35,6 @@
 			android:layout_width="300dp"
 			android:layout_height="@dimen/height_view_holder_recipe_image"
 			android:layout_marginStart="15dp"
-			app:shapeAppearance="@style/ShapeAppearance.AllCornersRounded"
 			android:layout_marginTop="20dp"
 			android:layout_marginEnd="13dp"
 			android:contentDescription="@string/content_description_view_holder_recipe_image"
@@ -44,6 +44,7 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintVertical_chainStyle="packed"
+			app:shapeAppearance="@style/ShapeAppearance.AllCornersRounded"
 			tools:srcCompat="@drawable/placeholder_recipe" />
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

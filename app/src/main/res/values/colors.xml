@@ -55,4 +55,7 @@
     <color name="md_theme_dark_inversePrimary">#7743B5</color>
     <color name="md_theme_dark_shadow">#000000</color>
     <color name="md_theme_dark_primaryInverse">#7743B5</color>
+
+    <color name="lightGray">#F1F1F1</color>
+    <color name="white">#FFFFFF</color>
 </resources>
