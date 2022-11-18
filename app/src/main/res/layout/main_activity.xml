@@ -20,12 +20,11 @@
 
 			<com.google.android.material.appbar.MaterialToolbar
 				android:id="@+id/toolbar"
-				style="@style/Widget.MaterialComponents.Toolbar.Primary"
 				android:layout_width="match_parent"
 				android:layout_height="?actionBarSize"
 				app:layout_scrollFlags="scroll|snap|enterAlways"
 				app:menu="@menu/main_toolbar"
-				app:navigationIcon="@drawable/ic_toolbar" />
+				app:navigationIcon="@drawable/ic_menu" />
 		</com.google.android.material.appbar.AppBarLayout>
 
 		<androidx.fragment.app.FragmentContainerView
