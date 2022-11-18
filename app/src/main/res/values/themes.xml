@@ -6,8 +6,10 @@
 		<item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_screen</item>
 	</style>
 
-	<style name="AppTheme" parent="Theme.Material3.DynamicColors.DayNight">
+	<style name="AppTheme" parent="Theme.Material3.DynamicColors.Light">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
+		<item name="android:statusBarColor">@android:color/transparent</item>
+		<item name="android:windowLightStatusBar">true</item>
 	</style>
 </resources>
