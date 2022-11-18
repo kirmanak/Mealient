@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.ui.activity
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -29,8 +28,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
     private val binding: MainActivityBinding by viewBinding(MainActivityBinding::bind, R.id.drawer)
     private val viewModel by viewModels<MainActivityViewModel>()
-    private val title: String by lazy { getString(R.string.app_name) }
-    private val uiState: MainActivityUiState get() = viewModel.uiState
     private val navController: NavController
         get() = binding.navHost.getFragment<NavHostFragment>().navController
 
@@ -47,6 +44,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         configureNavGraph()
         viewModel.uiStateLive.observe(this, ::onUiStateChange)
         binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
+        supportActionBar?.hide()
     }
 
     private fun configureNavGraph() {
@@ -60,8 +58,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
     }
 
     private fun configureToolbar() {
-        setSupportActionBar(binding.toolbar)
-        binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar)
         binding.toolbar.setNavigationOnClickListener { binding.drawer.open() }
     }
 
@@ -87,21 +83,15 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
     private fun onUiStateChange(uiState: MainActivityUiState) {
         logger.v { "onUiStateChange() called with: uiState = $uiState" }
-        supportActionBar?.title = if (uiState.titleVisible) title else null
-        binding.navigationView.isVisible = uiState.navigationVisible
-        val menu = binding.navigationView.menu
-        menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
-        menu.findItem(R.id.login).isVisible = uiState.canShowLogin
-        invalidateOptionsMenu()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        logger.v { "onCreateOptionsMenu() called with: menu = $menu" }
-        menuInflater.inflate(R.menu.main_toolbar, menu)
-        val searchItem = menu.findItem(R.id.search_recipe_action)
-        searchItem.isVisible = uiState.searchVisible
-        setupSearchItem(searchItem)
-        return true
+        with(binding.navigationView) {
+            isVisible = uiState.navigationVisible
+            menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
+            menu.findItem(R.id.login).isVisible = uiState.canShowLogin
+        }
+        binding.toolbar.menu.findItem(R.id.search_recipe_action).apply {
+            isVisible = uiState.searchVisible
+            setupSearchItem(this)
+        }
     }
 
     private fun setupSearchItem(searchItem: MenuItem) {

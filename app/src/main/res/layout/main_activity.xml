@@ -10,8 +10,7 @@
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:fitsSystemWindows="true">
+		android:layout_height="match_parent">
 
 		<com.google.android.material.appbar.AppBarLayout
 			android:id="@+id/toolbar_holder"
@@ -24,7 +23,9 @@
 				style="@style/Widget.MaterialComponents.Toolbar.Primary"
 				android:layout_width="match_parent"
 				android:layout_height="?actionBarSize"
-				app:layout_scrollFlags="scroll|snap|enterAlways" />
+				app:layout_scrollFlags="scroll|snap|enterAlways"
+				app:menu="@menu/main_toolbar"
+				app:navigationIcon="@drawable/ic_toolbar" />
 		</com.google.android.material.appbar.AppBarLayout>
 
 		<androidx.fragment.app.FragmentContainerView

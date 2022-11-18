@@ -34,12 +34,7 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
         binding.button.setOnClickListener(::onProceedClick)
         viewModel.uiState.observe(viewLifecycleOwner, ::onUiStateChange)
         activityViewModel.updateUiState {
-            it.copy(
-                loginButtonVisible = false,
-                titleVisible = true,
-                navigationVisible = false,
-                searchVisible = false
-            )
+            it.copy(loginButtonVisible = false, navigationVisible = false, searchVisible = false)
         }
     }
 
