@@ -5,8 +5,8 @@
 	<string name="fragment_authentication_input_hint_url">Server URL</string>
 	<string name="fragment_authentication_button_login">Login</string>
 	<string name="content_description_view_holder_recipe_image">Picture of the cooked meal</string>
-	<string name="menu_main_toolbar_content_description_logout" translatable="false">@string/menu_main_toolbar_logout</string>
-	<string name="menu_main_toolbar_logout">Logout</string>
+	<string name="menu_main_toolbar_content_description_logout" translatable="false">@string/menu_navigation_drawer_logout</string>
+	<string name="menu_navigation_drawer_logout">Logout</string>
 	<string name="view_holder_recipe_text_placeholder">Loading…</string>
 	<string name="content_description_fragment_recipe_info_image" translatable="false">@string/content_description_view_holder_recipe_image</string>
 	<string name="fragment_recipe_info_ingredients_header">Ingredients</string>
@@ -18,8 +18,8 @@
 	<string name="fragment_base_url_malformed_url">Check URL format: %s</string>
 	<string name="fragment_base_url_save">Proceed</string>
 	<string name="fragment_base_url_unknown_error" translatable="false">@string/fragment_authentication_unknown_error</string>
-	<string name="menu_main_toolbar_content_description_login" translatable="false">@string/menu_main_toolbar_login</string>
-	<string name="menu_main_toolbar_login">Login</string>
+	<string name="menu_main_toolbar_content_description_login" translatable="false">@string/menu_navigation_drawer_login</string>
+	<string name="menu_navigation_drawer_login">Login</string>
 	<string name="fragment_disclaimer_button_okay">Okay</string>
 	<string name="view_holder_recipe_instructions_step">Step: %d</string>
 	<string name="fragment_authentication_email_input_empty">E-mail can\'t be empty</string>
@@ -28,8 +28,8 @@
 	<string name="fragment_authentication_unknown_error">Something went wrong, please try again.</string>
 	<string name="fragment_add_recipe_recipe_name">Recipe name</string>
 	<string name="fragment_add_recipe_recipe_description">Description</string>
-	<string name="menu_bottom_navigation_add_recipe">Add recipe</string>
-	<string name="menu_bottom_navigation_recipes_list">Recipes</string>
+	<string name="menu_navigation_drawer_add_recipe">Add recipe</string>
+	<string name="menu_navigation_drawer_recipes_list">Recipes</string>
 	<string name="fragment_add_recipe_recipe_yield">Recipe yield</string>
 	<string name="fragment_add_recipe_save_button">Save recipe</string>
 	<string name="fragment_add_recipe_new_instruction">New step</string>
@@ -51,6 +51,6 @@
 	<string name="fragment_recipes_load_failure_toast_unauthorized">unauthorized</string>
 	<string name="fragment_recipes_load_failure_toast_unexpected_response">unexpected response</string>
 	<string name="fragment_recipes_load_failure_toast_no_connection">no connection</string>
-	<string name="menu_bottom_navigation_change_url">Change URL</string>
+	<string name="menu_navigation_drawer_change_url">Change URL</string>
 	<string name="search_recipes_hint">Search recipes</string>
 </resources>

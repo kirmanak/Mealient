@@ -75,6 +75,12 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             R.id.add_recipe -> actionGlobalAddRecipeFragment()
             R.id.recipes_list -> actionGlobalRecipesListFragment()
             R.id.change_url -> actionGlobalBaseURLFragment()
+            R.id.login -> actionGlobalAuthenticationFragment()
+            R.id.logout -> {
+                viewModel.logout()
+                binding.drawer.close()
+                return true
+            }
             else -> throw IllegalArgumentException("Unknown menu item id: ${menuItem.itemId}")
         }
         navigateTo(directions)
@@ -86,6 +92,9 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         logger.v { "onUiStateChange() called with: uiState = $uiState" }
         supportActionBar?.title = if (uiState.titleVisible) title else null
         binding.navigationView.isVisible = uiState.navigationVisible
+        val menu = binding.navigationView.menu
+        menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
+        menu.findItem(R.id.login).isVisible = uiState.canShowLogin
         invalidateOptionsMenu()
     }
 
@@ -108,8 +117,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         logger.v { "onCreateOptionsMenu() called with: menu = $menu" }
         menuInflater.inflate(R.menu.main_toolbar, menu)
-        menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
-        menu.findItem(R.id.login).isVisible = uiState.canShowLogin
         val searchItem = menu.findItem(R.id.search_recipe_action)
         searchItem.isVisible = uiState.searchVisible
         setupSearchItem(searchItem)

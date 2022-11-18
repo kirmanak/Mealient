@@ -5,7 +5,7 @@
 	<string name="fragment_authentication_input_hint_url">URL сервера</string>
 	<string name="fragment_authentication_button_login">Войти</string>
 	<string name="content_description_view_holder_recipe_image">Изображение готового блюда</string>
-	<string name="menu_main_toolbar_logout">Выйти</string>
+	<string name="menu_navigation_drawer_logout">Выйти</string>
 	<string name="view_holder_recipe_text_placeholder">Загрузка</string>
 	<string name="fragment_recipe_info_ingredients_header">Ингредиенты</string>
 	<string name="fragment_recipe_info_instructions_header">Инструкции</string>
@@ -21,11 +21,11 @@
 	<string name="fragment_authentication_unknown_error">Что-то пошло не так, попробуйте еще раз.</string>
 	<string name="fragment_base_url_malformed_url">Проверьте формат URL: %s</string>
 	<string name="fragment_base_url_save">Продолжить</string>
-	<string name="menu_main_toolbar_login">Войти</string>
+	<string name="menu_navigation_drawer_login">Войти</string>
 	<string name="fragment_add_recipe_recipe_name">Название рецепта</string>
 	<string name="fragment_add_recipe_recipe_description">Описание</string>
-	<string name="menu_bottom_navigation_recipes_list">Рецепты</string>
-	<string name="menu_bottom_navigation_add_recipe">Добавить рецепт</string>
+	<string name="menu_navigation_drawer_recipes_list">Рецепты</string>
+	<string name="menu_navigation_drawer_add_recipe">Добавить рецепт</string>
 	<string name="fragment_add_recipe_recipe_yield">Количество порций</string>
 	<string name="fragment_add_recipe_save_button">Сохранить рецепт</string>
 	<string name="fragment_add_recipe_new_instruction">Добавить шаг</string>
@@ -47,6 +47,6 @@
 	<string name="fragment_recipes_load_failure_toast_unexpected_response">неожиданный ответ</string>
 	<string name="fragment_recipes_load_failure_toast_no_connection">нет соединения</string>
 	<string name="fragment_recipes_load_failure_toast_no_reason">Ошибка загрузки.</string>
-	<string name="menu_bottom_navigation_change_url">Сменить URL</string>
+	<string name="menu_navigation_drawer_change_url">Сменить URL</string>
 	<string name="search_recipes_hint">Найти рецепты</string>
 </resources>
