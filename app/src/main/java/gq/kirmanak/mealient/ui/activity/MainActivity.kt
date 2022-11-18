@@ -44,7 +44,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         configureNavGraph()
         viewModel.uiStateLive.observe(this, ::onUiStateChange)
         binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
-        supportActionBar?.hide()
     }
 
     private fun configureNavGraph() {
