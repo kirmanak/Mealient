@@ -13,8 +13,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.shape.CornerFamily
-import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAddRecipeFragment
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAuthenticationFragment
@@ -65,7 +63,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar)
         binding.toolbar.setNavigationOnClickListener { binding.drawer.open() }
-        setToolbarRoundCorner()
     }
 
     private fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
@@ -96,22 +93,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
         menu.findItem(R.id.login).isVisible = uiState.canShowLogin
         invalidateOptionsMenu()
-    }
-
-    private fun setToolbarRoundCorner() {
-        logger.v { "setToolbarRoundCorner() called" }
-        val drawables = listOf(
-            binding.toolbarHolder.background as? MaterialShapeDrawable,
-            binding.toolbar.background as? MaterialShapeDrawable,
-        )
-        logger.d { "setToolbarRoundCorner: drawables = $drawables" }
-        val radius = resources.getDimension(R.dimen.main_activity_toolbar_corner_radius)
-        for (drawable in drawables) {
-            drawable?.apply {
-                shapeAppearanceModel = shapeAppearanceModel.toBuilder()
-                    .setBottomLeftCorner(CornerFamily.ROUNDED, radius).build()
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
