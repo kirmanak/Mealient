@@ -53,4 +53,5 @@
 	<string name="fragment_recipes_load_failure_toast_no_connection">no connection</string>
 	<string name="menu_navigation_drawer_change_url">Change URL</string>
 	<string name="search_recipes_hint">Search recipes</string>
+	<string name="menu_navigation_drawer_header" translatable="false">@string/app_name</string>
 </resources>
