@@ -13,22 +13,6 @@
 		<item name="android:layout_margin">@dimen/margin_small</item>
 	</style>
 
-	<style name="ShapeAppearance.AllCornersRounded" parent="ShapeAppearance.Material3.LargeComponent">
-		<item name="cornerSize">@dimen/rounded_corner_size_default</item>
-	</style>
-
-	<!-- This is a workaround to support always round corners of the bottom sheet
-	See more at https://github.com/material-components/material-components-android/pull/437#issuecomment-852461685 -->
-	<style name="NoShapeBottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-		<item name="bottomSheetStyle">@style/NoShapeBottomSheet</item>
-	</style>
-
-	<style name="NoShapeBottomSheet" parent="Widget.Material3.BottomSheet.Modal">
-		<item name="shapeAppearance">@null</item>
-		<item name="shapeAppearanceOverlay">@null</item>
-		<item name="android:background">@drawable/recipe_info_background</item>
-	</style>
-
 	<style name="IndeterminateProgress">
 		<item name="android:layout_width">0dp</item>
 		<item name="android:layout_height">wrap_content</item>

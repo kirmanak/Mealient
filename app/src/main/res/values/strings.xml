@@ -5,7 +5,6 @@
 	<string name="fragment_authentication_input_hint_url">Server URL</string>
 	<string name="fragment_authentication_button_login">Login</string>
 	<string name="content_description_view_holder_recipe_image">Picture of the cooked meal</string>
-	<string name="menu_main_toolbar_content_description_logout" translatable="false">@string/menu_navigation_drawer_logout</string>
 	<string name="menu_navigation_drawer_logout">Logout</string>
 	<string name="view_holder_recipe_text_placeholder">Loading…</string>
 	<string name="content_description_fragment_recipe_info_image" translatable="false">@string/content_description_view_holder_recipe_image</string>
@@ -18,7 +17,6 @@
 	<string name="fragment_base_url_malformed_url">Check URL format: %s</string>
 	<string name="fragment_base_url_save">Proceed</string>
 	<string name="fragment_base_url_unknown_error" translatable="false">@string/fragment_authentication_unknown_error</string>
-	<string name="menu_main_toolbar_content_description_login" translatable="false">@string/menu_navigation_drawer_login</string>
 	<string name="menu_navigation_drawer_login">Login</string>
 	<string name="fragment_disclaimer_button_okay">Okay</string>
 	<string name="view_holder_recipe_instructions_step">Step: %d</string>

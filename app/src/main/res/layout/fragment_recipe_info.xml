@@ -33,15 +33,14 @@
 
 		<com.google.android.material.imageview.ShapeableImageView
 			android:id="@+id/image"
-			android:scaleType="centerCrop"
 			android:layout_width="0dp"
-			app:shapeAppearance="@style/ShapeAppearance.AllCornersRounded"
 			android:layout_height="@dimen/fragment_recipe_info_image_height"
 			android:contentDescription="@string/content_description_fragment_recipe_info_image"
+			android:scaleType="centerCrop"
+			app:layout_constraintBottom_toTopOf="@+id/title"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toTopOf="@+id/title"
 			tools:srcCompat="@drawable/placeholder_recipe" />
 
 		<TextView
@@ -60,8 +59,8 @@
 		<TextView
 			android:id="@+id/description"
 			android:layout_width="0dp"
-			android:layout_marginHorizontal="8dp"
 			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="8dp"
 			android:layout_marginTop="6dp"
 			android:textAppearance="?textAppearanceBody2"
 			app:layout_constraintBottom_toTopOf="@+id/ingredients_holder"
@@ -72,13 +71,12 @@
 
 		<com.google.android.material.card.MaterialCardView
 			android:id="@+id/ingredients_holder"
+			style="?materialCardViewOutlinedStyle"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginHorizontal="8dp"
 			android:layout_marginTop="11dp"
 			android:layout_marginBottom="20dp"
-			app:shapeAppearance="@style/ShapeAppearance.AllCornersRounded"
-			app:cardElevation="10dp"
 			app:layout_constraintBottom_toTopOf="@+id/instructions_header"
 			app:layout_constraintEnd_toStartOf="@+id/end_guide"
 			app:layout_constraintStart_toEndOf="@+id/start_guide"
@@ -133,11 +131,11 @@
 			android:id="@+id/instructions_list"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/end_guide"
-			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-			app:layout_constraintTop_toBottomOf="@+id/instructions_header"
 			app:layout_constraintStart_toEndOf="@+id/start_guide"
+			app:layout_constraintTop_toBottomOf="@+id/instructions_header"
 			tools:itemCount="2"
 			tools:listitem="@layout/view_holder_instruction" />
 	</androidx.constraintlayout.widget.ConstraintLayout>
