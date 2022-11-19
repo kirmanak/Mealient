@@ -2,6 +2,9 @@ package gq.kirmanak.mealient.extensions
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -114,4 +117,11 @@ private fun Context.showToast(text: String, length: Int) {
 fun View.hideKeyboard() {
     val imm = context.getSystemService<InputMethodManager>()
     imm?.hideSoftInputFromWindow(windowToken, 0)
+}
+
+fun Context.isDarkThemeOn(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        resources.configuration.isNightModeActive
+    else
+        resources.configuration.uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
 }

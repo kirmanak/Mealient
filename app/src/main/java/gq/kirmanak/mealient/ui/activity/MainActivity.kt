@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
@@ -19,6 +20,7 @@ import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalBaseURLFrag
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalRecipesListFragment
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
+import gq.kirmanak.mealient.extensions.isDarkThemeOn
 import gq.kirmanak.mealient.extensions.observeOnce
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
@@ -40,24 +42,28 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         logger.v { "onCreate() called with: savedInstanceState = $savedInstanceState" }
         splashScreen.setKeepOnScreenCondition { viewModel.startDestination.value == null }
         setContentView(binding.root)
-        configureToolbar()
+        setupUi()
         configureNavGraph()
-        viewModel.uiStateLive.observe(this, ::onUiStateChange)
-        binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
     }
 
     private fun configureNavGraph() {
         logger.v { "configureNavGraph() called" }
         viewModel.startDestination.observeOnce(this) {
             logger.d { "configureNavGraph: received destination" }
-            val graph = navController.navInflater.inflate(R.navigation.nav_graph)
+            val controller = navController
+            val graph = controller.navInflater.inflate(R.navigation.nav_graph)
             graph.setStartDestination(it)
-            navController.setGraph(graph, intent.extras)
+            controller.setGraph(graph, intent.extras)
         }
     }
 
-    private fun configureToolbar() {
+    private fun setupUi() {
         binding.toolbar.setNavigationOnClickListener { binding.drawer.open() }
+        binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
+        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
+        insetsController.isAppearanceLightNavigationBars = !isDarkThemeOn()
+        insetsController.isAppearanceLightStatusBars = !isDarkThemeOn()
+        viewModel.uiStateLive.observe(this, ::onUiStateChange)
     }
 
     private fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
