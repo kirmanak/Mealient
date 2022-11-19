@@ -3,6 +3,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/drawer"
+	style="?drawerLayoutStyle"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	tools:context=".ui.activity.MainActivity"
@@ -20,7 +21,7 @@
 
 			<com.google.android.material.appbar.MaterialToolbar
 				android:id="@+id/toolbar"
-				style="@style/Widget.Material3.Toolbar.Surface"
+				style="?toolbarSurfaceStyle"
 				android:layout_width="match_parent"
 				android:layout_height="?actionBarSize"
 				app:layout_scrollFlags="scroll|snap|enterAlways"

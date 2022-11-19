@@ -8,7 +8,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.isVisible
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
@@ -91,10 +91,19 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
     private fun onUiStateChange(uiState: MainActivityUiState) {
         logger.v { "onUiStateChange() called with: uiState = $uiState" }
         with(binding.navigationView) {
-            isVisible = uiState.navigationVisible
             menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
             menu.findItem(R.id.login).isVisible = uiState.canShowLogin
         }
+
+        if (uiState.navigationVisible) {
+            binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            binding.toolbar.setNavigationIcon(R.drawable.ic_menu)
+        } else {
+            binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            binding.toolbar.navigationIcon = null
+        }
+
+
         binding.toolbar.menu.findItem(R.id.search_recipe_action).apply {
             isVisible = uiState.searchVisible
             setupSearchItem(this)
