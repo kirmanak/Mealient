@@ -53,6 +53,9 @@
 			app:destination="@id/recipesListFragment"
 			app:popUpTo="@id/nav_graph"
 			app:popUpToInclusive="true" />
+		<argument
+			android:name="isOnboarding"
+			app:argType="boolean" />
 	</fragment>
 
 	<fragment

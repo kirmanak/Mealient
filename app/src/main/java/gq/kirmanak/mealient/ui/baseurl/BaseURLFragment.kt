@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
@@ -24,6 +25,7 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
     private val binding by viewBinding(FragmentBaseUrlBinding::bind)
     private val viewModel by viewModels<BaseURLViewModel>()
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
+    private val args by navArgs<BaseURLFragmentArgs>()
 
     @Inject
     lateinit var logger: Logger
@@ -34,7 +36,7 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
         binding.button.setOnClickListener(::onProceedClick)
         viewModel.uiState.observe(viewLifecycleOwner, ::onUiStateChange)
         activityViewModel.updateUiState {
-            it.copy(loginButtonVisible = false, navigationVisible = false, searchVisible = false)
+            it.copy(navigationVisible = !args.isOnboarding, searchVisible = false)
         }
     }
 

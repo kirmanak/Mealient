@@ -38,7 +38,7 @@ class DisclaimerFragment : Fragment(R.layout.fragment_disclaimer) {
 
     private fun navigateNext() {
         logger.v { "navigateNext() called" }
-        findNavController().navigate(actionDisclaimerFragmentToBaseURLFragment())
+        findNavController().navigate(actionDisclaimerFragmentToBaseURLFragment(true))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class DisclaimerFragment : Fragment(R.layout.fragment_disclaimer) {
         }
         viewModel.startCountDown()
         activityViewModel.updateUiState {
-            it.copy(loginButtonVisible = false, navigationVisible = false, searchVisible = false)
+            it.copy(navigationVisible = false, searchVisible = false)
         }
     }
 }

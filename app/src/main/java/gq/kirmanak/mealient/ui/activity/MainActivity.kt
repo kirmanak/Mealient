@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         val directions = when (menuItem.itemId) {
             R.id.add_recipe -> actionGlobalAddRecipeFragment()
             R.id.recipes_list -> actionGlobalRecipesListFragment()
-            R.id.change_url -> actionGlobalBaseURLFragment()
+            R.id.change_url -> actionGlobalBaseURLFragment(false)
             R.id.login -> actionGlobalAuthenticationFragment()
             R.id.logout -> {
                 viewModel.logout()
