@@ -60,9 +60,11 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
     private fun setupUi() {
         binding.toolbar.setNavigationOnClickListener { binding.drawer.open() }
         binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
-        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
-        insetsController.isAppearanceLightNavigationBars = !isDarkThemeOn()
-        insetsController.isAppearanceLightStatusBars = !isDarkThemeOn()
+        with(WindowInsetsControllerCompat(window, window.decorView)) {
+            val isAppearanceLightBars = !isDarkThemeOn()
+            isAppearanceLightNavigationBars = isAppearanceLightBars
+            isAppearanceLightStatusBars = isAppearanceLightBars
+        }
         viewModel.uiStateLive.observe(this, ::onUiStateChange)
     }
 
