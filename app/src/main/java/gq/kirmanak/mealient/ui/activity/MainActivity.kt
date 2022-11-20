@@ -125,9 +125,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
         searchView.queryHint = getString(R.string.search_recipes_hint)
         searchView.isSubmitButtonEnabled = false
-
-        searchView.setQuery(viewModel.lastSearchQuery, false)
-        searchView.isIconified = viewModel.lastSearchQuery.isNullOrBlank()
+        searchView.setIconifiedByDefault(false)
 
         searchView.setOnCloseListener {
             logger.v { "onClose() called" }
