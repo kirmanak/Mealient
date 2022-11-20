@@ -70,7 +70,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
     private fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         logger.v { "onNavigationItemSelected() called with: menuItem = $menuItem" }
-        menuItem.isChecked = true
         val directions = when (menuItem.itemId) {
             R.id.add_recipe -> actionGlobalAddRecipeFragment()
             R.id.recipes_list -> actionGlobalRecipesListFragment()
@@ -84,7 +83,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             else -> throw IllegalArgumentException("Unknown menu item id: ${menuItem.itemId}")
         }
         navigateTo(directions)
-        binding.drawer.close()
         return true
     }
 
@@ -141,24 +139,10 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        logger.v { "onOptionsItemSelected() called with: item = $item" }
-        val result = when (item.itemId) {
-            R.id.login -> {
-                navigateTo(actionGlobalAuthenticationFragment())
-                true
-            }
-            R.id.logout -> {
-                viewModel.logout()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-        return result
-    }
-
     private fun navigateTo(directions: NavDirections) {
         logger.v { "navigateTo() called with: directions = $directions" }
+        binding.toolbarHolder.setExpanded(true)
+        binding.drawer.close()
         navController.navigate(directions)
     }
 }
