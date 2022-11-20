@@ -49,7 +49,11 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
         super.onViewCreated(view, savedInstanceState)
         logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
         activityViewModel.updateUiState {
-            it.copy(navigationVisible = true, searchVisible = true)
+            it.copy(
+                navigationVisible = true,
+                searchVisible = true,
+                checkedMenuItemId = R.id.recipes_list
+            )
         }
         setupRecipeAdapter()
         hideKeyboardOnScroll()

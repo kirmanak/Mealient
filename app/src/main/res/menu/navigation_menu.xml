@@ -2,21 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
 		android:id="@+id/recipes_list"
+		android:checkable="true"
 		android:icon="@drawable/ic_list"
 		android:title="@string/menu_navigation_drawer_recipes_list" />
 
 	<item
 		android:id="@+id/add_recipe"
+		android:checkable="true"
 		android:icon="@drawable/ic_add"
 		android:title="@string/menu_navigation_drawer_add_recipe" />
 
 	<item
 		android:id="@+id/change_url"
+		android:checkable="true"
 		android:icon="@drawable/ic_change"
 		android:title="@string/menu_navigation_drawer_change_url" />
 
 	<item
 		android:id="@+id/login"
+		android:checkable="true"
 		android:icon="@drawable/ic_login"
 		android:title="@string/menu_navigation_drawer_login" />
 

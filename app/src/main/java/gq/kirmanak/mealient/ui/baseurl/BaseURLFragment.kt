@@ -36,7 +36,11 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
         binding.button.setOnClickListener(::onProceedClick)
         viewModel.uiState.observe(viewLifecycleOwner, ::onUiStateChange)
         activityViewModel.updateUiState {
-            it.copy(navigationVisible = !args.isOnboarding, searchVisible = false)
+            it.copy(
+                navigationVisible = !args.isOnboarding,
+                searchVisible = false,
+                checkedMenuItemId = R.id.change_url,
+            )
         }
     }
 

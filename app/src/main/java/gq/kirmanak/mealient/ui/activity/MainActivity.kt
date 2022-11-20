@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.iterator
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
@@ -65,11 +66,16 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             isAppearanceLightNavigationBars = isAppearanceLightBars
             isAppearanceLightStatusBars = isAppearanceLightBars
         }
+        setupSearchItem(binding.toolbar.menu.findItem(R.id.search_recipe_action))
         viewModel.uiStateLive.observe(this, ::onUiStateChange)
     }
 
     private fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         logger.v { "onNavigationItemSelected() called with: menuItem = $menuItem" }
+        if (menuItem.isChecked) {
+            logger.d { "Not navigating because it is the current destination" }
+            return true
+        }
         val directions = when (menuItem.itemId) {
             R.id.add_recipe -> actionGlobalAddRecipeFragment()
             R.id.recipes_list -> actionGlobalRecipesListFragment()
@@ -77,20 +83,24 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             R.id.login -> actionGlobalAuthenticationFragment()
             R.id.logout -> {
                 viewModel.logout()
-                binding.drawer.close()
                 return true
             }
             else -> throw IllegalArgumentException("Unknown menu item id: ${menuItem.itemId}")
         }
+        menuItem.isChecked = true
         navigateTo(directions)
         return true
     }
 
     private fun onUiStateChange(uiState: MainActivityUiState) {
         logger.v { "onUiStateChange() called with: uiState = $uiState" }
-        with(binding.navigationView) {
-            menu.findItem(R.id.logout).isVisible = uiState.canShowLogout
-            menu.findItem(R.id.login).isVisible = uiState.canShowLogin
+        for (menuItem in binding.navigationView.menu.iterator()) {
+            val itemId = menuItem.itemId
+            when (itemId) {
+                R.id.logout -> menuItem.isVisible = uiState.canShowLogout
+                R.id.login -> menuItem.isVisible = uiState.canShowLogin
+            }
+            menuItem.isChecked = itemId == uiState.checkedMenuItemId
         }
 
         if (uiState.navigationVisible) {
@@ -101,11 +111,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             binding.toolbar.navigationIcon = null
         }
 
-
-        binding.toolbar.menu.findItem(R.id.search_recipe_action).apply {
-            isVisible = uiState.searchVisible
-            setupSearchItem(this)
-        }
+        binding.toolbar.menu.findItem(R.id.search_recipe_action).isVisible = uiState.searchVisible
     }
 
     private fun setupSearchItem(searchItem: MenuItem) {
