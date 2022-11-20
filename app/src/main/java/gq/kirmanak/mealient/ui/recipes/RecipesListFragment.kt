@@ -84,9 +84,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
 
     private fun isNavigatingSomewhere(): Boolean {
         logger.v { "isNavigatingSomewhere() called" }
-        val label = findNavController().currentDestination?.label
-        logger.d { "isNavigatingSomewhere: current destination is $label" }
-        return label != "fragment_recipes"
+        return findNavController().currentDestination?.id != R.id.recipesListFragment
     }
 
     private fun setupRecipeAdapter() {
