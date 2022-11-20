@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient
 
 import android.app.Application
+import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import gq.kirmanak.mealient.architecture.configuration.BuildConfiguration
 import gq.kirmanak.mealient.data.analytics.Analytics
@@ -23,5 +24,6 @@ class App : Application() {
         super.onCreate()
         logger.v { "onCreate() called" }
         analytics.setIsEnabled(!buildConfiguration.isDebug())
+        DynamicColors.applyToActivitiesIfAvailable(this)
     }
 }

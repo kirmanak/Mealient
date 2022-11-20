@@ -32,12 +32,7 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
         binding.button.setOnClickListener { onLoginClicked() }
         activityViewModel.updateUiState {
-            it.copy(
-                loginButtonVisible = false,
-                titleVisible = true,
-                navigationVisible = false,
-                searchVisible = false
-            )
+            it.copy(navigationVisible = true, searchVisible = false, checkedMenuItemId = R.id.login)
         }
         viewModel.uiState.observe(viewLifecycleOwner, ::onUiStateChange)
     }
@@ -66,7 +61,7 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
     private fun onUiStateChange(uiState: OperationUiState<Unit>) = with(binding) {
         logger.v { "onUiStateChange() called with: authUiState = $uiState" }
         if (uiState.isSuccess) {
-            findNavController().popBackStack()
+            findNavController().navigateUp()
             return
         }
 

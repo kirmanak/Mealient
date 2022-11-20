@@ -1,6 +1,5 @@
 package gq.kirmanak.mealient.ui.recipes.info
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +7,8 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.FragmentRecipeInfoBinding
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
@@ -70,9 +67,6 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
         ingredientsAdapter.submitList(uiState.recipeIngredients)
         instructionsAdapter.submitList(uiState.recipeInstructions)
     }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        BottomSheetDialog(requireContext(), R.style.NoShapeBottomSheetDialog)
 
     override fun onDestroyView() {
         super.onDestroyView()

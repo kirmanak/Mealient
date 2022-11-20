@@ -50,10 +50,9 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
         logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
         activityViewModel.updateUiState {
             it.copy(
-                loginButtonVisible = true,
-                titleVisible = false,
                 navigationVisible = true,
                 searchVisible = true,
+                checkedMenuItemId = R.id.recipes_list
             )
         }
         setupRecipeAdapter()
@@ -62,8 +61,8 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun hideKeyboardOnScroll() {
-        binding.recipes.setOnTouchListener { view, _ ->
-            view?.hideKeyboard()
+        binding.recipes.setOnTouchListener { _, _ ->
+            activityViewModel.clearSearchViewFocus()
             false
         }
     }
@@ -85,9 +84,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
 
     private fun isNavigatingSomewhere(): Boolean {
         logger.v { "isNavigatingSomewhere() called" }
-        val label = findNavController().currentDestination?.label
-        logger.d { "isNavigatingSomewhere: current destination is $label" }
-        return label != "fragment_recipes"
+        return findNavController().currentDestination?.id != R.id.recipesListFragment
     }
 
     private fun setupRecipeAdapter() {
@@ -158,18 +155,12 @@ private fun Throwable.toLoadErrorReasonText(): Int? = when (this) {
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.refreshErrors(): Flow<Throwable> {
-    return loadStateFlow
-        .map { it.refresh }
-        .valueUpdatesOnly()
-        .filterIsInstance<LoadState.Error>()
+    return loadStateFlow.map { it.refresh }.valueUpdatesOnly().filterIsInstance<LoadState.Error>()
         .map { it.error }
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.appendPaginationEnd(): Flow<Unit> {
-    return loadStateFlow
-        .map { it.append.endOfPaginationReached }
-        .valueUpdatesOnly()
-        .filter { it }
+    return loadStateFlow.map { it.append.endOfPaginationReached }.valueUpdatesOnly().filter { it }
         .map { }
 }
 

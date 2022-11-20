@@ -3,6 +3,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/drawer"
+	style="?drawerLayoutStyle"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	tools:context=".ui.activity.MainActivity"
@@ -10,21 +11,20 @@
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:fitsSystemWindows="true">
+		android:layout_height="match_parent">
 
 		<com.google.android.material.appbar.AppBarLayout
 			android:id="@+id/toolbar_holder"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="@dimen/margin_medium"
+			android:background="@drawable/bg_toolbar"
 			app:liftOnScroll="true">
 
-			<com.google.android.material.appbar.MaterialToolbar
+			<gq.kirmanak.mealient.ui.activity.ToolbarView
 				android:id="@+id/toolbar"
-				style="@style/Widget.MaterialComponents.Toolbar.Primary"
-				android:theme="@style/ThemeOverlay.Toolbar"
 				android:layout_width="match_parent"
-				android:layout_height="?actionBarSize"
+				android:layout_height="wrap_content"
 				app:layout_scrollFlags="scroll|snap|enterAlways" />
 		</com.google.android.material.appbar.AppBarLayout>
 
@@ -33,6 +33,7 @@
 			android:name="androidx.navigation.fragment.NavHostFragment"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
+			android:layout_marginTop="@dimen/margin_small"
 			app:defaultNavHost="true"
 			app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -42,5 +43,6 @@
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:layout_gravity="start"
+		app:headerLayout="@layout/view_navigation_drawer_header"
 		app:menu="@menu/navigation_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>
