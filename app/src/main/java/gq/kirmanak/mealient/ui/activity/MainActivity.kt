@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         logger.v { "onNavigationItemSelected() called with: menuItem = $menuItem" }
         if (menuItem.isChecked) {
             logger.d { "Not navigating because it is the current destination" }
+            binding.drawer.close()
             return true
         }
         val directions = when (menuItem.itemId) {
