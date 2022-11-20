@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         )
 
         binding.toolbar.isSearchVisible = uiState.searchVisible
+        if (!uiState.searchVisible) binding.toolbar.clearSearchFocus()
 
         if (uiState.searchVisible) {
             binding.toolbarHolder.setBackgroundResource(R.drawable.bg_toolbar)
