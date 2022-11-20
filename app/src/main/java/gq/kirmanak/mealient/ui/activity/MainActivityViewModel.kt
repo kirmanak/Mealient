@@ -8,6 +8,7 @@ import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.ui.baseurl.BaseURLFragmentArgs
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
@@ -32,8 +33,8 @@ class MainActivityViewModel @Inject constructor(
         get() = checkNotNull(_uiState.value) { "UiState must not be null" }
         private set(value) = _uiState.postValue(value)
 
-    private val _startDestination = MutableLiveData<Int>()
-    val startDestination: LiveData<Int> = _startDestination
+    private val _startDestination = MutableLiveData<StartDestinationInfo>()
+    val startDestination: LiveData<StartDestinationInfo> = _startDestination
 
     private val _clearSearchViewFocusChannel = Channel<Unit>()
     val clearSearchViewFocus: Flow<Unit> = _clearSearchViewFocusChannel.receiveAsFlow()
@@ -45,9 +46,15 @@ class MainActivityViewModel @Inject constructor(
 
         viewModelScope.launch {
             _startDestination.value = when {
-                !disclaimerStorage.isDisclaimerAccepted() -> R.id.disclaimerFragment
-                serverInfoRepo.getUrl() == null -> R.id.baseURLFragment
-                else -> R.id.recipesListFragment
+                !disclaimerStorage.isDisclaimerAccepted() -> {
+                    StartDestinationInfo(R.id.disclaimerFragment)
+                }
+                serverInfoRepo.getUrl() == null -> {
+                    StartDestinationInfo(R.id.baseURLFragment, BaseURLFragmentArgs(true).toBundle())
+                }
+                else -> {
+                    StartDestinationInfo(R.id.recipesListFragment)
+                }
             }
         }
     }

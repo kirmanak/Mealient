@@ -53,8 +53,8 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             logger.d { "configureNavGraph: received destination" }
             val controller = navController
             val graph = controller.navInflater.inflate(R.navigation.nav_graph)
-            graph.setStartDestination(it)
-            controller.setGraph(graph, intent.extras)
+            graph.setStartDestination(it.startDestinationId)
+            controller.setGraph(graph, it.startDestinationArgs)
         }
     }
 

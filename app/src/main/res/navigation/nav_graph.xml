@@ -54,6 +54,7 @@
 			app:popUpTo="@id/nav_graph" />
 		<argument
 			android:name="isOnboarding"
+			android:defaultValue="true"
 			app:argType="boolean" />
 	</fragment>
 
