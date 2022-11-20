@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<dimen name="margin_small">8dp</dimen>
-	<dimen name="height_view_holder_recipe_image">182dp</dimen>
-	<dimen name="fragment_recipe_info_image_height">@dimen/height_view_holder_recipe_image</dimen>
 </resources>

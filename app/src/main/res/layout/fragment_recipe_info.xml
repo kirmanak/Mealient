@@ -34,13 +34,15 @@
 		<com.google.android.material.imageview.ShapeableImageView
 			android:id="@+id/image"
 			android:layout_width="0dp"
-			android:layout_height="@dimen/fragment_recipe_info_image_height"
+			android:layout_height="0dp"
 			android:contentDescription="@string/content_description_fragment_recipe_info_image"
 			android:scaleType="centerCrop"
 			app:layout_constraintBottom_toTopOf="@+id/title"
+			app:layout_constraintDimensionRatio="2:1"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
+			app:shapeAppearance="?shapeAppearanceCornerMedium"
 			tools:srcCompat="@drawable/placeholder_recipe" />
 
 		<TextView

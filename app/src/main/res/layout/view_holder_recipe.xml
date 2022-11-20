@@ -30,18 +30,20 @@
 
 		<com.google.android.material.imageview.ShapeableImageView
 			android:id="@+id/image"
-			android:layout_width="300dp"
-			android:layout_height="@dimen/height_view_holder_recipe_image"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
 			android:layout_marginStart="15dp"
 			android:layout_marginTop="20dp"
 			android:layout_marginEnd="13dp"
 			android:contentDescription="@string/content_description_view_holder_recipe_image"
 			android:scaleType="centerCrop"
 			app:layout_constraintBottom_toTopOf="@+id/name"
+			app:layout_constraintDimensionRatio="2:1"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintVertical_chainStyle="packed"
+			app:shapeAppearance="?shapeAppearanceCornerMedium"
 			tools:srcCompat="@drawable/placeholder_recipe" />
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
