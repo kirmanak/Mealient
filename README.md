@@ -9,18 +9,18 @@ repository.
 ## What is this?
 
 An unofficial Android client for [Mealie](https://hay-kot.github.io/mealie/). It enables you to
-easily access your recipes using via Android phone. The main goal is to have everything stored
-locally to access it without Internet connection which is impossible with web site version.
+easily access your recipes using an Android device. The main advantage over website is that
+recipe data is stored locally and can be accessed without the Internet connection.
 
 ## Status
 
-Current version is a very early alpha which supports a tiny portion of the Mealie capabilites. There
-is a lot of work ahead, do not expect much. Having said that, you can list your recipes and read the
-instructions/ingredients for each of them.
+Current version is a very early alpha which supports a small subset of the Mealie capabilities.
+It supports both API of older Mealie 0.5.6 and newer 1.0.0. Displays the list of recipes,
+information about each of the recipes. Moreover, you can create a recipe from the app!
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/24299495/143483169-58bfa02b-d692-4d20-ad82-7e206de0c26c.png" width="274" height="489" /> <img src="https://user-images.githubusercontent.com/24299495/143483174-3c05f3e2-957d-4558-83e5-8fa53c07b66e.png" width="274" height="489" /> <img src="https://user-images.githubusercontent.com/24299495/143483181-20fc5bd9-2d47-4228-a85b-4dc571c49340.png" width="274" height="489" />
+<img src="https://user-images.githubusercontent.com/24299495/202909772-fc03e0ca-6ccb-4579-8ac1-30ead4cb9586.png" width="274" height="489" /> <img src="https://user-images.githubusercontent.com/24299495/202909799-cfa73ebf-cdc6-4e79-84cc-a430d204654b.png" width="274" height="489" /> <img src="https://user-images.githubusercontent.com/24299495/202909840-da163637-57d9-431d-be63-fc38066a8055.png" width="274" height="489" /> <img src="https://user-images.githubusercontent.com/24299495/202909845-d857259f-90f9-4988-beff-038cd784215d.png" width="274" height="489" />
 
 ## How to install
 
@@ -28,6 +28,4 @@ Download the latest apk from the releases page.
 
 ## Contribution
 
-Any contribution is greatly appreciated. Including translations, new issues, feature requests and
-typo corrections. I won't specify any rules until I have to ask the same thing multiple times. Just
-use the common sense.
+Any contribution is greatly appreciated: translations, bug reports, feature requests and any PR.
