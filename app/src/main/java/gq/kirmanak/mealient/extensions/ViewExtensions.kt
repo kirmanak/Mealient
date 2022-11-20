@@ -13,10 +13,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.getSystemService
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textfield.TextInputLayout
 import gq.kirmanak.mealient.logging.Logger
@@ -24,10 +21,7 @@ import kotlinx.coroutines.channels.ChannelResult
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.onClosed
 import kotlinx.coroutines.channels.onFailure
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 fun SwipeRefreshLayout.refreshRequestFlow(logger: Logger): Flow<Unit> = callbackFlow {
@@ -124,4 +118,12 @@ fun Context.isDarkThemeOn(): Boolean {
         resources.configuration.isNightModeActive
     else
         resources.configuration.uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
+}
+
+fun <T> LifecycleOwner.collectWhenResumed(flow: Flow<T>, collector: FlowCollector<T>) {
+    lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            flow.collect(collector)
+        }
+    }
 }

@@ -8,8 +8,11 @@ import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.logging.Logger
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,6 +34,9 @@ class MainActivityViewModel @Inject constructor(
 
     private val _startDestination = MutableLiveData<Int>()
     val startDestination: LiveData<Int> = _startDestination
+
+    private val _clearSearchViewFocusChannel = Channel<Unit>()
+    val clearSearchViewFocus: Flow<Unit> = _clearSearchViewFocusChannel.receiveAsFlow()
 
     init {
         authRepo.isAuthorizedFlow
@@ -58,5 +64,10 @@ class MainActivityViewModel @Inject constructor(
     fun onSearchQuery(query: String?) {
         logger.v { "onSearchQuery() called with: query = $query" }
         recipeRepo.updateNameQuery(query)
+    }
+
+    fun clearSearchViewFocus() {
+        logger.v { "clearSearchViewFocus() called" }
+        _clearSearchViewFocusChannel.trySend(Unit)
     }
 }

@@ -61,8 +61,8 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun hideKeyboardOnScroll() {
-        binding.recipes.setOnTouchListener { view, _ ->
-            view?.hideKeyboard()
+        binding.recipes.setOnTouchListener { _, _ ->
+            activityViewModel.clearSearchViewFocus()
             false
         }
     }
@@ -155,18 +155,12 @@ private fun Throwable.toLoadErrorReasonText(): Int? = when (this) {
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.refreshErrors(): Flow<Throwable> {
-    return loadStateFlow
-        .map { it.refresh }
-        .valueUpdatesOnly()
-        .filterIsInstance<LoadState.Error>()
+    return loadStateFlow.map { it.refresh }.valueUpdatesOnly().filterIsInstance<LoadState.Error>()
         .map { it.error }
 }
 
 private fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.appendPaginationEnd(): Flow<Unit> {
-    return loadStateFlow
-        .map { it.append.endOfPaginationReached }
-        .valueUpdatesOnly()
-        .filter { it }
+    return loadStateFlow.map { it.append.endOfPaginationReached }.valueUpdatesOnly().filter { it }
         .map { }
 }
 

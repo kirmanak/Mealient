@@ -20,6 +20,7 @@ import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalBaseURLFrag
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalRecipesListFragment
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
+import gq.kirmanak.mealient.extensions.collectWhenResumed
 import gq.kirmanak.mealient.extensions.isDarkThemeOn
 import gq.kirmanak.mealient.extensions.observeOnce
 import gq.kirmanak.mealient.logging.Logger
@@ -69,6 +70,10 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             isAppearanceLightStatusBars = isAppearanceLightBars
         }
         viewModel.uiStateLive.observe(this, ::onUiStateChange)
+        collectWhenResumed(viewModel.clearSearchViewFocus) {
+            logger.d { "clearSearchViewFocus(): received event" }
+            binding.toolbar.clearSearchFocus()
+        }
     }
 
     private fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
