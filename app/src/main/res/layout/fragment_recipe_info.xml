@@ -73,7 +73,7 @@
 
 		<com.google.android.material.card.MaterialCardView
 			android:id="@+id/ingredients_holder"
-			style="?materialCardViewElevatedStyle"
+			style="?materialCardViewFilledStyle"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginHorizontal="@dimen/margin_small"
@@ -93,8 +93,8 @@
 					android:id="@+id/ingredients_header"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginHorizontal="17dp"
-					android:layout_marginTop="16dp"
+					android:layout_marginHorizontal="@dimen/margin_medium"
+					android:layout_marginTop="@dimen/margin_medium"
 					android:text="@string/fragment_recipe_info_ingredients_header"
 					android:textAppearance="?textAppearanceHeadline6" />
 
@@ -102,7 +102,7 @@
 					android:id="@+id/ingredients_list"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginHorizontal="10dp"
+					android:layout_marginHorizontal="@dimen/margin_small"
 					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 					tools:itemCount="3"
 					tools:listitem="@layout/view_holder_ingredient" />

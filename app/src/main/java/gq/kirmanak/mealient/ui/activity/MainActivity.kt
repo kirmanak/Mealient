@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -60,13 +59,15 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
     private fun setupUi() {
         binding.toolbar.setNavigationOnClickListener { binding.drawer.open() }
+        binding.toolbar.onSearchQueryChanged { query ->
+            viewModel.onSearchQuery(query.trim().takeUnless { it.isEmpty() })
+        }
         binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
         with(WindowInsetsControllerCompat(window, window.decorView)) {
             val isAppearanceLightBars = !isDarkThemeOn()
             isAppearanceLightNavigationBars = isAppearanceLightBars
             isAppearanceLightStatusBars = isAppearanceLightBars
         }
-        setupSearchItem(binding.toolbar.menu.findItem(R.id.search_recipe_action))
         viewModel.uiStateLive.observe(this, ::onUiStateChange)
     }
 
@@ -104,44 +105,22 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             menuItem.isChecked = itemId == uiState.checkedMenuItemId
         }
 
-        if (uiState.navigationVisible) {
-            binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-            binding.toolbar.setNavigationIcon(R.drawable.ic_menu)
-        } else {
-            binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-            binding.toolbar.navigationIcon = null
-        }
-
-        binding.toolbar.menu.findItem(R.id.search_recipe_action).isVisible = uiState.searchVisible
-    }
-
-    private fun setupSearchItem(searchItem: MenuItem) {
-        logger.v { "setupSearchItem() called with: searchItem = $searchItem" }
-        val searchView = searchItem.actionView as? SearchView
-        if (searchView == null) {
-            logger.e { "setupSearchItem: search item's actionView is null or not SearchView" }
-            return
-        }
-
-        searchView.queryHint = getString(R.string.search_recipes_hint)
-        searchView.isSubmitButtonEnabled = false
-        searchView.setIconifiedByDefault(false)
-
-        searchView.setOnCloseListener {
-            logger.v { "onClose() called" }
-            viewModel.onSearchQuery(null)
-            false
-        }
-
-        searchView.setOnQueryTextListener(object : OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean = true
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                logger.v { "onQueryTextChange() called with: newText = $newText" }
-                viewModel.onSearchQuery(newText?.trim()?.takeUnless { it.isEmpty() })
-                return true
+        binding.toolbar.isVisible = uiState.navigationVisible
+        binding.root.setDrawerLockMode(
+            if (uiState.navigationVisible) {
+                DrawerLayout.LOCK_MODE_UNLOCKED
+            } else {
+                DrawerLayout.LOCK_MODE_LOCKED_CLOSED
             }
-        })
+        )
+
+        binding.toolbar.isSearchVisible = uiState.searchVisible
+
+        if (uiState.searchVisible) {
+            binding.toolbarHolder.setBackgroundResource(R.drawable.bg_toolbar)
+        } else {
+            binding.toolbarHolder.background = null
+        }
     }
 
     private fun navigateTo(directions: NavDirections) {

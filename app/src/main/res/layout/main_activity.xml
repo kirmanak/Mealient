@@ -17,16 +17,15 @@
 			android:id="@+id/toolbar_holder"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="@dimen/margin_medium"
+			android:background="@drawable/bg_toolbar"
 			app:liftOnScroll="true">
 
-			<com.google.android.material.appbar.MaterialToolbar
+			<gq.kirmanak.mealient.ui.activity.ToolbarView
 				android:id="@+id/toolbar"
-				style="?toolbarSurfaceStyle"
 				android:layout_width="match_parent"
-				android:layout_height="?actionBarSize"
-				app:layout_scrollFlags="scroll|snap|enterAlways"
-				app:menu="@menu/main_toolbar"
-				app:navigationIcon="@drawable/ic_menu" />
+				android:layout_height="wrap_content"
+				app:layout_scrollFlags="scroll|snap|enterAlways" />
 		</com.google.android.material.appbar.AppBarLayout>
 
 		<androidx.fragment.app.FragmentContainerView
@@ -34,6 +33,7 @@
 			android:name="androidx.navigation.fragment.NavHostFragment"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
+			android:layout_marginTop="@dimen/margin_small"
 			app:defaultNavHost="true"
 			app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
