@@ -20,7 +20,7 @@ information about each of the recipes. Moreover, you can create a recipe from th
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/24299495/202909772-fc03e0ca-6ccb-4579-8ac1-30ead4cb9586.png" width="274" height="489" /> <img src="https://user-images.githubusercontent.com/24299495/202909799-cfa73ebf-cdc6-4e79-84cc-a430d204654b.png" width="274" height="489" /> <img src="https://user-images.githubusercontent.com/24299495/202909840-da163637-57d9-431d-be63-fc38066a8055.png" width="274" height="489" /> <img src="https://user-images.githubusercontent.com/24299495/202909845-d857259f-90f9-4988-beff-038cd784215d.png" width="274" height="489" />
+<img src="https://user-images.githubusercontent.com/24299495/202909772-fc03e0ca-6ccb-4579-8ac1-30ead4cb9586.png" width="236" height="500" /> <img src="https://user-images.githubusercontent.com/24299495/202909799-cfa73ebf-cdc6-4e79-84cc-a430d204654b.png" width="236" height="500" /> <img src="https://user-images.githubusercontent.com/24299495/202909840-da163637-57d9-431d-be63-fc38066a8055.png" width="236" height="500" /> <img src="https://user-images.githubusercontent.com/24299495/202909845-d857259f-90f9-4988-beff-038cd784215d.png" width="236" height="500" />
 
 ## How to install
 
