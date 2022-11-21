@@ -7,9 +7,11 @@ import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import gq.kirmanak.mealient.databinding.ViewToolbarBinding
 import gq.kirmanak.mealient.extensions.hideKeyboard
+import gq.kirmanak.mealient.extensions.textChangesFlow
+import gq.kirmanak.mealient.logging.Logger
+import kotlinx.coroutines.flow.Flow
 
 class ToolbarView @JvmOverloads constructor(
     context: Context,
@@ -36,8 +38,8 @@ class ToolbarView @JvmOverloads constructor(
         binding.navigationIcon.setOnClickListener(listener)
     }
 
-    fun onSearchQueryChanged(block: (String) -> Unit) {
-        binding.searchEdit.doAfterTextChanged { block(it.toString()) }
+    fun searchQueriesFlow(logger: Logger): Flow<CharSequence?> {
+        return binding.searchEdit.textChangesFlow(logger)
     }
 
     fun clearSearchFocus() {

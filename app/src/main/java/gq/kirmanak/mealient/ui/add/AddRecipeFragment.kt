@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.constraintlayout.helper.widget.Flow
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -20,6 +19,7 @@ import gq.kirmanak.mealient.databinding.FragmentAddRecipeBinding
 import gq.kirmanak.mealient.databinding.ViewSingleInputBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
+import gq.kirmanak.mealient.extensions.textChangesFlow
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import javax.inject.Inject
@@ -96,7 +96,9 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
             recipeNameInput,
             recipeDescriptionInput,
             recipeYieldInput
-        ).forEach { it.doAfterTextChanged { saveValues() } }
+        ).forEach {
+            collectWhenViewResumed(it.textChangesFlow(logger)) { saveValues() }
+        }
 
         listOf(
             publicRecipe,
@@ -114,7 +116,7 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
         root.setHint(hintId)
         val input = inputBinding.input
         input.setText(text)
-        input.doAfterTextChanged { saveValues() }
+        collectWhenViewResumed(input.textChangesFlow(logger)) { saveValues() }
         root.id = View.generateViewId()
         fragmentRoot.addView(root)
         flow.addView(root)

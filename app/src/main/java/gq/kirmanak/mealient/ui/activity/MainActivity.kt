@@ -63,8 +63,8 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             binding.toolbar.clearSearchFocus()
             binding.drawer.open()
         }
-        binding.toolbar.onSearchQueryChanged { query ->
-            viewModel.onSearchQuery(query.trim().takeUnless { it.isEmpty() })
+        collectWhenResumed(binding.toolbar.searchQueriesFlow(logger)) { query ->
+            viewModel.onSearchQuery(query?.toString()?.trim()?.takeUnless { it.isEmpty() })
         }
         binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
         with(WindowInsetsControllerCompat(window, window.decorView)) {
