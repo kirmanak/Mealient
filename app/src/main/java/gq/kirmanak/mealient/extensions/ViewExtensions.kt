@@ -13,7 +13,13 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.getSystemService
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textfield.TextInputLayout
 import gq.kirmanak.mealient.logging.Logger
@@ -21,7 +27,9 @@ import kotlinx.coroutines.channels.ChannelResult
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.onClosed
 import kotlinx.coroutines.channels.onFailure
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
 fun SwipeRefreshLayout.refreshRequestFlow(logger: Logger): Flow<Unit> = callbackFlow {
@@ -37,16 +45,16 @@ fun SwipeRefreshLayout.refreshRequestFlow(logger: Logger): Flow<Unit> = callback
     }
 }
 
-fun TextView.textChangesFlow(logger: Logger): Flow<CharSequence?> = callbackFlow {
-    logger.v { "textChangesFlow() called" }
+fun TextView.textChangesLiveData(logger: Logger): LiveData<CharSequence?> = callbackFlow {
+    logger.v { "textChangesLiveData() called" }
     val textWatcher = doAfterTextChanged {
         trySend(it).logErrors("textChangesFlow", logger)
     }
     awaitClose {
-        logger.d { "textChangesFlow: flow is closing" }
+        logger.d { "textChangesLiveData: flow is closing" }
         removeTextChangedListener(textWatcher)
     }
-}
+}.asLiveData() // Use asLiveData() to make sure close() is called with a delay to avoid IndexOutOfBoundsException
 
 fun <T> ChannelResult<T>.logErrors(methodName: String, logger: Logger): ChannelResult<T> {
     onFailure { logger.e(it) { "$methodName: can't send event" } }
@@ -66,17 +74,17 @@ fun EditText.checkIfInputIsEmpty(
     logger.d { "Input text is \"$text\"" }
     return text.ifEmpty {
         inputLayout.error = resources.getString(stringId)
-        lifecycleOwner.lifecycleScope.launch {
-            waitUntilNotEmpty(logger)
-            inputLayout.error = null
-        }
+        val textChangesLiveData = textChangesLiveData(logger)
+        textChangesLiveData.observe(lifecycleOwner, object : Observer<CharSequence?> {
+            override fun onChanged(value: CharSequence?) {
+                if (value.isNullOrBlank().not()) {
+                    inputLayout.error = null
+                    textChangesLiveData.removeObserver(this)
+                }
+            }
+        })
         null
     }
-}
-
-suspend fun EditText.waitUntilNotEmpty(logger: Logger) {
-    textChangesFlow(logger).filterNotNull().first { it.isNotEmpty() }
-    logger.v { "waitUntilNotEmpty() returned" }
 }
 
 fun <T> SharedPreferences.prefsChangeFlow(
@@ -114,10 +122,8 @@ fun View.hideKeyboard() {
 }
 
 fun Context.isDarkThemeOn(): Boolean {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        resources.configuration.isNightModeActive
-    else
-        resources.configuration.uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) resources.configuration.isNightModeActive
+    else resources.configuration.uiMode and UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
 }
 
 fun <T> LifecycleOwner.collectWhenResumed(flow: Flow<T>, collector: FlowCollector<T>) {
