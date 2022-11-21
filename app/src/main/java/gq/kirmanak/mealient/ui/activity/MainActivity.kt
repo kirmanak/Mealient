@@ -125,15 +125,14 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         binding.toolbar.isSearchVisible = uiState.searchVisible
 
         if (uiState.searchVisible) {
-            binding.toolbarHolder.setBackgroundResource(R.drawable.bg_toolbar)
+            binding.toolbar.setBackgroundResource(R.drawable.bg_toolbar)
         } else {
-            binding.toolbarHolder.background = null
+            binding.toolbar.background = null
         }
     }
 
     private fun navigateTo(directions: NavDirections) {
         logger.v { "navigateTo() called with: directions = $directions" }
-        binding.toolbarHolder.setExpanded(true)
         binding.drawer.close()
         navController.navigate(directions)
     }
