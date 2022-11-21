@@ -105,6 +105,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
         collectWhenViewResumed(recipesAdapter.onPagesUpdatedFlow) {
             logger.v { "setupRecipeAdapter: pages updated" }
             binding.refresher.isRefreshing = false
+            binding.emptyListText.isVisible = recipesAdapter.itemCount == 0
         }
 
         collectWhenViewResumed(recipesAdapter.appendPaginationEnd()) {
