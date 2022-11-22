@@ -8,8 +8,6 @@ plugins {
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
     alias(libs.plugins.ksp)
     alias(libs.plugins.appsweep)
 }
@@ -41,7 +39,6 @@ android {
 
     buildTypes {
         getByName("debug") {
-            ext["enableCrashlytics"] = false
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
         }
@@ -111,10 +108,6 @@ dependencies {
     implementation(libs.kirich1409.viewBinding)
 
     implementation(libs.androidx.datastore.preferences)
-
-    implementation(platform(libs.google.firebase.bom))
-    implementation(libs.google.firebase.analyticsKtx)
-    implementation(libs.google.firebase.crashlyticsKtx)
 
     testImplementation(libs.junit)
 
