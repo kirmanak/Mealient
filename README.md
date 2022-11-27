@@ -1,3 +1,5 @@
+<a href='https://play.google.com/store/apps/details?id=gq.kirmanak.mealient&utm_source=github&utm_campaign=readme&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="200" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+
 # Mealient
 
 ## DISCLAIMER
@@ -24,7 +26,7 @@ information about each of the recipes. Moreover, you can create a recipe from th
 
 ## How to install
 
-Download the latest apk from the releases page.
+Click on "Get it on Google Play" badge above or download the latest apk from the releases page.
 
 ## Contribution
 
