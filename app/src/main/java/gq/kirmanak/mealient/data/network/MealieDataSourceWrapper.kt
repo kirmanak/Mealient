@@ -8,11 +8,18 @@ import gq.kirmanak.mealient.data.baseurl.ServerVersion
 import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
+import gq.kirmanak.mealient.data.share.ParseRecipeDataSource
+import gq.kirmanak.mealient.data.share.ParseRecipeURLInfo
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
-import gq.kirmanak.mealient.extensions.*
+import gq.kirmanak.mealient.extensions.toFullRecipeInfo
+import gq.kirmanak.mealient.extensions.toRecipeSummaryInfo
+import gq.kirmanak.mealient.extensions.toV0Request
+import gq.kirmanak.mealient.extensions.toV1CreateRequest
+import gq.kirmanak.mealient.extensions.toV1Request
+import gq.kirmanak.mealient.extensions.toV1UpdateRequest
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,7 +31,7 @@ class MealieDataSourceWrapper @Inject constructor(
     private val v0Source: MealieDataSourceV0,
     private val v1Source: MealieDataSourceV1,
     private val logger: Logger,
-) : AddRecipeDataSource, RecipeDataSource {
+) : AddRecipeDataSource, RecipeDataSource, ParseRecipeDataSource {
 
     override suspend fun addRecipe(
         recipe: AddRecipeInfo,
@@ -61,6 +68,19 @@ class MealieDataSourceWrapper @Inject constructor(
         when (version) {
             ServerVersion.V0 -> v0Source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
             ServerVersion.V1 -> v1Source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
+        }
+    }
+
+    override suspend fun parseRecipeFromURL(
+        parseRecipeURLInfo: ParseRecipeURLInfo,
+    ): String = makeCall { token, url, version ->
+        when (version) {
+            ServerVersion.V0 -> {
+                v0Source.parseRecipeFromURL(url, token, parseRecipeURLInfo.toV0Request())
+            }
+            ServerVersion.V1 -> {
+                v1Source.parseRecipeFromURL(url, token, parseRecipeURLInfo.toV1Request())
+            }
         }
     }
 

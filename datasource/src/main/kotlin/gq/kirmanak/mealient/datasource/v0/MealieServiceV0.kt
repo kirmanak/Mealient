@@ -39,4 +39,11 @@ interface MealieServiceV0 {
         @Url url: String,
         @Header(AUTHORIZATION_HEADER_NAME) token: String?,
     ): GetRecipeResponseV0
+
+    @POST
+    suspend fun createRecipeFromURL(
+        @Url url: String,
+        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
+        @Body request: ParseRecipeURLRequestV0,
+    ): String
 }

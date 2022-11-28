@@ -9,12 +9,32 @@ import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeIngredientInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeInstructionInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
+import gq.kirmanak.mealient.data.share.ParseRecipeURLInfo
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.datasource.v0.models.*
-import gq.kirmanak.mealient.datasource.v1.models.*
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeIngredientV0
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeInstructionV0
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeSettingsV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeIngredientResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeInstructionResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeSummaryResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.ParseRecipeURLRequestV0
+import gq.kirmanak.mealient.datasource.v0.models.VersionResponseV0
+import gq.kirmanak.mealient.datasource.v1.models.AddRecipeIngredientV1
+import gq.kirmanak.mealient.datasource.v1.models.AddRecipeInstructionV1
+import gq.kirmanak.mealient.datasource.v1.models.AddRecipeSettingsV1
+import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeInstructionResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import java.util.*
 
@@ -170,4 +190,13 @@ private fun AddRecipeInstructionInfo.toV1Instruction() = AddRecipeInstructionV1(
     id = UUID.randomUUID().toString(),
     text = text,
     ingredientReferences = emptyList(),
+)
+
+fun ParseRecipeURLInfo.toV1Request() = ParseRecipeURLRequestV1(
+    url = url,
+    includeTags = includeTags,
+)
+
+fun ParseRecipeURLInfo.toV0Request() = ParseRecipeURLRequestV0(
+    url = url,
 )

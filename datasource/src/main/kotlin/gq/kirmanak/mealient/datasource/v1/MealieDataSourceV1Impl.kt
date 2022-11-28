@@ -3,7 +3,13 @@ package gq.kirmanak.mealient.datasource.v1
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
 import gq.kirmanak.mealient.datasource.decode
-import gq.kirmanak.mealient.datasource.v1.models.*
+import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.ErrorDetailV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
@@ -87,6 +93,17 @@ class MealieDataSourceV1Impl @Inject constructor(
         block = { service.getRecipe("$baseUrl/api/recipes/$slug", token) },
         logMethod = { "requestRecipeInfo" },
         logParameters = { "baseUrl = $baseUrl, token = $token, slug = $slug" }
+    )
+
+    override suspend fun parseRecipeFromURL(
+        baseUrl: String,
+        token: String?,
+        request: ParseRecipeURLRequestV1
+    ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.createRecipeFromURL("$baseUrl/api/recipes/create-url", token, request) },
+        logMethod = { "parseRecipeFromURL" },
+        logParameters = { "baseUrl = $baseUrl, token = $token, request = $request" }
+
     )
 
 }
