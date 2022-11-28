@@ -52,7 +52,7 @@ class ShareRecipeRepoImplTest : BaseUnitTest() {
     fun `when url has suffix expect saveRecipeByURL removes it`() = runTest {
         subject.saveRecipeByURL("https://www.allrecipes.com/recipe/215447/dads-leftover-turkey-pot-pie/ is my favorite recipe")
         val expected = ParseRecipeURLInfo(
-            url = "https://www.allrecipes.com/recipe/215447/dads-leftover-turkey-pot-pie/",
+            url = "https://www.allrecipes.com/recipe/215447/dads-leftover-turkey-pot-pie",
             includeTags = true
         )
         coVerify { parseRecipeDataSource.parseRecipeFromURL(eq(expected)) }
@@ -62,7 +62,7 @@ class ShareRecipeRepoImplTest : BaseUnitTest() {
     fun `when url has prefix and suffix expect saveRecipeByURL removes them`() = runTest {
         subject.saveRecipeByURL("Actually, https://www.allrecipes.com/recipe/215447/dads-leftover-turkey-pot-pie/ is my favorite recipe")
         val expected = ParseRecipeURLInfo(
-            url = "https://www.allrecipes.com/recipe/215447/dads-leftover-turkey-pot-pie/",
+            url = "https://www.allrecipes.com/recipe/215447/dads-leftover-turkey-pot-pie",
             includeTags = true
         )
         coVerify { parseRecipeDataSource.parseRecipeFromURL(eq(expected)) }
