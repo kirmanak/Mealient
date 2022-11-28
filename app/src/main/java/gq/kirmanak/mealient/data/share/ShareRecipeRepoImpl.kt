@@ -12,7 +12,17 @@ class ShareRecipeRepoImpl @Inject constructor(
 
     override suspend fun saveRecipeByURL(url: CharSequence): String {
         logger.v { "saveRecipeByURL() called with: url = $url" }
-        val request = ParseRecipeURLInfo(url = url.toString(), includeTags = true)
+
+        val urlStart = url.indexOf("http")
+        if (urlStart == -1) throw IllegalArgumentException("URL doesn't start with http")
+
+        val startsWithUrl = url.subSequence(urlStart, url.length)
+        val urlEnd = startsWithUrl.indexOfFirst { it.isWhitespace() }
+            .takeUnless { it == -1 }
+            ?: startsWithUrl.length
+
+        val urlString = startsWithUrl.substring(0, urlEnd)
+        val request = ParseRecipeURLInfo(url = urlString, includeTags = true)
         return parseRecipeDataSource.parseRecipeFromURL(request)
     }
 }
