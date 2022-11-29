@@ -30,6 +30,7 @@
 		android:layout_height="wrap_content"
 		android:text="@string/fragment_recipes_list_no_recipes"
 		android:textAppearance="?textAppearanceDisplaySmall"
+		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
