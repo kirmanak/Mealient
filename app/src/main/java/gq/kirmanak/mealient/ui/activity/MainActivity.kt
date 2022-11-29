@@ -3,16 +3,13 @@ package gq.kirmanak.mealient.ui.activity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
-import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAddRecipeFragment
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAuthenticationFragment
@@ -21,28 +18,24 @@ import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalRecipesList
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
 import gq.kirmanak.mealient.extensions.collectWhenResumed
-import gq.kirmanak.mealient.extensions.isDarkThemeOn
 import gq.kirmanak.mealient.extensions.observeOnce
-import gq.kirmanak.mealient.logging.Logger
-import javax.inject.Inject
+import gq.kirmanak.mealient.ui.BaseActivity
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(R.layout.main_activity) {
+class MainActivity : BaseActivity<MainActivityBinding>(
+    binder = MainActivityBinding::bind,
+    containerId = R.id.drawer,
+    layoutRes = R.layout.main_activity,
+) {
 
-    private val binding: MainActivityBinding by viewBinding(MainActivityBinding::bind, R.id.drawer)
     private val viewModel by viewModels<MainActivityViewModel>()
     private val navController: NavController
         get() = binding.navHost.getFragment<NavHostFragment>().navController
 
-    @Inject
-    lateinit var logger: Logger
-
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-        logger.v { "onCreate() called with: savedInstanceState = $savedInstanceState" }
         splashScreen.setKeepOnScreenCondition { viewModel.startDestination.value == null }
-        setContentView(binding.root)
         setupUi()
         configureNavGraph()
     }
@@ -67,11 +60,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
             viewModel.onSearchQuery(query.trim().takeUnless { it.isEmpty() })
         }
         binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
-        with(WindowInsetsControllerCompat(window, window.decorView)) {
-            val isAppearanceLightBars = !isDarkThemeOn()
-            isAppearanceLightNavigationBars = isAppearanceLightBars
-            isAppearanceLightStatusBars = isAppearanceLightBars
-        }
         viewModel.uiStateLive.observe(this, ::onUiStateChange)
         collectWhenResumed(viewModel.clearSearchViewFocus) {
             logger.d { "clearSearchViewFocus(): received event" }

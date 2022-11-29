@@ -75,6 +75,8 @@ chucker = "3.5.2"
 desugar = "1.2.2"
 # https://github.com/google/ksp/releases
 kspPlugin = "1.7.20-1.0.7"
+# https://developer.android.com/jetpack/androidx/releases/sharetarget
+shareTarget = "1.2.0"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -111,6 +113,7 @@ androidx-constraintLayout = { group = "androidx.constraintlayout", name = "const
 androidx-swipeRefreshLayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swipeRefreshLayout" }
 androidx-splashScreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
 androidx-coreTesting = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
+androidx-shareTarget = { group = "androidx.sharetarget", name = "sharetarget", version.ref = "shareTarget" }
 
 androidx-paging-runtimeKtx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 androidx-paging-commonKtx = { group = "androidx.paging", name = "paging-common-ktx", version.ref = "paging" }

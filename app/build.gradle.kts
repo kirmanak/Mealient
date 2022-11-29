@@ -87,6 +87,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedataKtx)
     implementation(libs.androidx.lifecycle.viewmodelKtx)
 
+    implementation(libs.androidx.shareTarget)
+
     implementation(libs.google.dagger.hiltAndroid)
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)

@@ -51,4 +51,7 @@
 	<string name="search_recipes_hint">Найти рецепты</string>
 	<string name="view_toolbar_navigation_icon_content_description">Открыть меню навигации</string>
 	<string name="fragment_recipes_list_no_recipes">Нет рецептов</string>
+	<string name="activity_share_recipe_success_toast">Рецепт успешно сохранен.</string>
+	<string name="activity_share_recipe_failure_toast">Что-то пошло не так.</string>
+	<string name="content_description_activity_share_recipe_progress">Индикатор прогресса</string>
 </resources>

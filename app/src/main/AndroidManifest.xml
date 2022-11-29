@@ -19,13 +19,26 @@
 		tools:ignore="UnusedAttribute">
 		<activity
 			android:name=".ui.activity.MainActivity"
-			android:windowSoftInputMode="adjustPan"
-			android:exported="true">
+			android:exported="true"
+			android:windowSoftInputMode="adjustPan">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+		</activity>
+		<activity
+			android:name=".ui.share.ShareRecipeActivity"
+			android:exported="true"
+			android:theme="@style/AppTheme">
+			<intent-filter>
+				<action android:name="android.intent.action.SEND" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="text/plain" />
+			</intent-filter>
+			<meta-data
+				android:name="android.service.chooser.chooser_target_service"
+				android:value="androidx.sharetarget.ChooserTargetServiceCompat" />
 		</activity>
 	</application>
 

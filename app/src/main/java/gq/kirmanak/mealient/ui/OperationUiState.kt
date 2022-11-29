@@ -15,6 +15,9 @@ sealed class OperationUiState<T> {
     val isProgress: Boolean
         get() = this is Progress
 
+    val isFailure: Boolean
+        get() = this is Failure
+
     fun updateButtonState(button: Button) {
         button.isEnabled = !isProgress
         button.isClickable = !isProgress
@@ -24,9 +27,29 @@ sealed class OperationUiState<T> {
         progressBar.isVisible = isProgress
     }
 
-    class Initial<T> : OperationUiState<T>()
+    class Initial<T> : OperationUiState<T>() {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+            return true
+        }
 
-    class Progress<T> : OperationUiState<T>()
+        override fun hashCode(): Int {
+            return javaClass.hashCode()
+        }
+    }
+
+    class Progress<T> : OperationUiState<T>() {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+            return true
+        }
+
+        override fun hashCode(): Int {
+            return javaClass.hashCode()
+        }
+    }
 
     data class Failure<T>(val exception: Throwable) : OperationUiState<T>()
 
