@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.share.ShareRecipeRepo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.ui.OperationUiState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,21 +18,17 @@ class ShareRecipeViewModel @Inject constructor(
     private val logger: Logger,
 ) : ViewModel() {
 
-    private val _saveOperationResult = MutableLiveData<Result<String>>()
-    val saveOperationResult: LiveData<Result<String>> get() = _saveOperationResult
+    private val _saveResult = MutableLiveData<OperationUiState<String>>(OperationUiState.Initial())
+    val saveResult: LiveData<OperationUiState<String>> get() = _saveResult
 
     fun saveRecipeByURL(url: CharSequence) {
         logger.v { "saveRecipeByURL() called with: url = $url" }
+        _saveResult.postValue(OperationUiState.Progress())
         viewModelScope.launch {
-            runCatchingExceptCancel {
-                shareRecipeRepo.saveRecipeByURL(url)
-            }.onSuccess {
-                logger.d { "Successfully saved recipe by URL" }
-                _saveOperationResult.postValue(Result.success(it))
-            }.onFailure {
-                logger.e(it) { "Can't save recipe by URL" }
-                _saveOperationResult.postValue(Result.failure(it))
-            }
+            val result = runCatchingExceptCancel { shareRecipeRepo.saveRecipeByURL(url) }
+                .onSuccess { logger.d { "Successfully saved recipe by URL" } }
+                .onFailure { logger.e(it) { "Can't save recipe by URL" } }
+            _saveResult.postValue(OperationUiState.fromResult(result))
         }
     }
 }

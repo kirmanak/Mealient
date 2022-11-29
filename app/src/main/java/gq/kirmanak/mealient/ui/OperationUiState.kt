@@ -15,6 +15,9 @@ sealed class OperationUiState<T> {
     val isProgress: Boolean
         get() = this is Progress
 
+    val isFailure: Boolean
+        get() = this is Failure
+
     fun updateButtonState(button: Button) {
         button.isEnabled = !isProgress
         button.isClickable = !isProgress
