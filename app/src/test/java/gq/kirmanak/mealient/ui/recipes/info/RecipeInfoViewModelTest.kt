@@ -3,7 +3,6 @@ package gq.kirmanak.mealient.ui.recipes.info
 import androidx.lifecycle.asFlow
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
 import io.mockk.coEvery
@@ -28,15 +27,8 @@ class RecipeInfoViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when recipe is found then UI state has data`() = runTest {
-        val emptyNoteIngredient = RecipeIngredientEntity(
-            recipeId = "42",
-            note = "",
-            food = null,
-            unit = null,
-            quantity = 1.0,
-        )
         val returnedEntity = FULL_CAKE_INFO_ENTITY.copy(
-            recipeIngredients = FULL_CAKE_INFO_ENTITY.recipeIngredients + emptyNoteIngredient
+            recipeIngredients = FULL_CAKE_INFO_ENTITY.recipeIngredients
         )
         coEvery { recipeRepo.loadRecipeInfo(eq(RECIPE_ID)) } returns returnedEntity
         val expected = RecipeInfoUiState(
