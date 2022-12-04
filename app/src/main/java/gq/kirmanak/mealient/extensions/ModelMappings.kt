@@ -52,6 +52,7 @@ fun RecipeIngredientInfo.toRecipeIngredientEntity(remoteId: String) = RecipeIngr
     unit = unit,
     food = food,
     quantity = quantity,
+    title = title,
 )
 
 fun RecipeInstructionInfo.toRecipeInstructionEntity(remoteId: String) = RecipeInstructionEntity(
@@ -129,6 +130,7 @@ fun GetRecipeIngredientResponseV0.toRecipeIngredientInfo() = RecipeIngredientInf
     unit = null,
     food = null,
     quantity = 1.0,
+    title = null,
 )
 
 fun GetRecipeInstructionResponseV0.toRecipeInstructionInfo() = RecipeInstructionInfo(
@@ -153,6 +155,7 @@ fun GetRecipeIngredientResponseV1.toRecipeIngredientInfo() = RecipeIngredientInf
     unit = unit?.name,
     food = food?.name,
     quantity = quantity,
+    title = title,
 )
 
 fun GetRecipeInstructionResponseV1.toRecipeInstructionInfo() = RecipeInstructionInfo(

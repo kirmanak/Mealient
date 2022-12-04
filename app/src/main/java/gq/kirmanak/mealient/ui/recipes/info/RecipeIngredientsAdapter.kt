@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.ui.recipes.info
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -54,6 +55,8 @@ class RecipeIngredientsAdapter private constructor(
 
         fun bind(item: RecipeIngredientEntity) {
             logger.v { "bind() called with: item = $item" }
+            binding.sectionGroup.isGone = item.title.isNullOrBlank()
+            binding.title.text = item.title.orEmpty()
             binding.checkBox.text = if (disableAmounts) {
                 item.note
             } else {
