@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.ViewHolderRecipeBinding
+import gq.kirmanak.mealient.extensions.resources
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import javax.inject.Inject
@@ -30,7 +31,7 @@ class RecipeViewHolder private constructor(
     }
 
     private val loadingPlaceholder by lazy {
-        binding.root.resources.getString(R.string.view_holder_recipe_text_placeholder)
+        binding.resources.getString(R.string.view_holder_recipe_text_placeholder)
     }
 
     fun bind(item: RecipeSummaryEntity?) {

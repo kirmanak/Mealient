@@ -12,4 +12,5 @@ data class RecipeInfoUiState(
     val recipeInstructions: List<RecipeInstructionEntity> = emptyList(),
     val title: String? = null,
     val description: String? = null,
+    val disableAmounts: Boolean = true,
 )

@@ -28,7 +28,13 @@ class RecipeInfoViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when recipe is found then UI state has data`() = runTest {
-        val emptyNoteIngredient = RecipeIngredientEntity(recipeId = "42", note = "")
+        val emptyNoteIngredient = RecipeIngredientEntity(
+            recipeId = "42",
+            note = "",
+            food = null,
+            unit = null,
+            quantity = 1.0,
+        )
         val returnedEntity = FULL_CAKE_INFO_ENTITY.copy(
             recipeIngredients = FULL_CAKE_INFO_ENTITY.recipeIngredients + emptyNoteIngredient
         )

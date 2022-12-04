@@ -8,10 +8,33 @@ import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeIngredientInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeInstructionInfo
+import gq.kirmanak.mealient.data.recipes.network.RecipeSettingsInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
-import gq.kirmanak.mealient.database.recipe.entity.*
-import gq.kirmanak.mealient.datasource.v0.models.*
-import gq.kirmanak.mealient.datasource.v1.models.*
+import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeIngredientV0
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeInstructionV0
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
+import gq.kirmanak.mealient.datasource.v0.models.AddRecipeSettingsV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeIngredientResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeInstructionResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetRecipeSummaryResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.VersionResponseV0
+import gq.kirmanak.mealient.datasource.v1.models.AddRecipeIngredientV1
+import gq.kirmanak.mealient.datasource.v1.models.AddRecipeInstructionV1
+import gq.kirmanak.mealient.datasource.v1.models.AddRecipeSettingsV1
+import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeInstructionResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSettingsResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -74,14 +97,23 @@ object RecipeImplTestData {
 
     val SUGAR_INGREDIENT = RecipeIngredientInfo(
         note = "2 oz of white sugar",
+        quantity = 1.0,
+        unit = null,
+        food = null,
     )
 
     val BREAD_INGREDIENT = RecipeIngredientInfo(
         note = "2 oz of white bread",
+        quantity = 1.0,
+        unit = null,
+        food = null,
     )
 
     private val MILK_INGREDIENT = RecipeIngredientInfo(
         note = "2 oz of white milk",
+        quantity = 1.0,
+        unit = null,
+        food = null,
     )
 
     val MIX_INSTRUCTION = RecipeInstructionInfo(
@@ -101,7 +133,8 @@ object RecipeImplTestData {
         name = "Cake",
         recipeYield = "4 servings",
         recipeIngredients = listOf(SUGAR_INGREDIENT, BREAD_INGREDIENT),
-        recipeInstructions = listOf(MIX_INSTRUCTION, BAKE_INSTRUCTION)
+        recipeInstructions = listOf(MIX_INSTRUCTION, BAKE_INSTRUCTION),
+        settings = RecipeSettingsInfo(disableAmounts = true)
     )
 
     val PORRIDGE_FULL_RECIPE_INFO = FullRecipeInfo(
@@ -109,7 +142,8 @@ object RecipeImplTestData {
         name = "Porridge",
         recipeYield = "3 servings",
         recipeIngredients = listOf(SUGAR_INGREDIENT, MILK_INGREDIENT),
-        recipeInstructions = listOf(MIX_INSTRUCTION, BOIL_INSTRUCTION)
+        recipeInstructions = listOf(MIX_INSTRUCTION, BOIL_INSTRUCTION),
+        settings = RecipeSettingsInfo(disableAmounts = true)
     )
 
     val MIX_CAKE_RECIPE_INSTRUCTION_ENTITY = RecipeInstructionEntity(
@@ -124,17 +158,24 @@ object RecipeImplTestData {
 
     val CAKE_RECIPE_ENTITY = RecipeEntity(
         remoteId = "1",
-        recipeYield = "4 servings"
+        recipeYield = "4 servings",
+        disableAmounts = true,
     )
 
     val CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
         recipeId = "1",
         note = "2 oz of white sugar",
+        quantity = 1.0,
+        unit = null,
+        food = null,
     )
 
     val CAKE_BREAD_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
         recipeId = "1",
         note = "2 oz of white bread",
+        quantity = 1.0,
+        unit = null,
+        food = null,
     )
 
     val FULL_CAKE_INFO_ENTITY = FullRecipeEntity(
@@ -152,17 +193,24 @@ object RecipeImplTestData {
 
     private val PORRIDGE_RECIPE_ENTITY_FULL = RecipeEntity(
         remoteId = "2",
-        recipeYield = "3 servings"
+        recipeYield = "3 servings",
+        disableAmounts = true,
     )
 
     private val PORRIDGE_MILK_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
         recipeId = "2",
         note = "2 oz of white milk",
+        quantity = 1.0,
+        unit = null,
+        food = null,
     )
 
     private val PORRIDGE_SUGAR_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
         recipeId = "2",
         note = "2 oz of white sugar",
+        quantity = 1.0,
+        unit = null,
+        food = null,
     )
 
     private val PORRIDGE_MIX_RECIPE_INSTRUCTION_ENTITY = RecipeInstructionEntity(
@@ -253,11 +301,26 @@ object RecipeImplTestData {
 
     val SUGAR_RECIPE_INGREDIENT_RESPONSE_V0 = GetRecipeIngredientResponseV0("2 oz of white sugar")
 
-    val MILK_RECIPE_INGREDIENT_RESPONSE_V1 = GetRecipeIngredientResponseV1("2 oz of white milk")
+    val MILK_RECIPE_INGREDIENT_RESPONSE_V1 = GetRecipeIngredientResponseV1(
+        note = "2 oz of white milk",
+        quantity = 1.0,
+        unit = null,
+        food = null,
+    )
 
-    val SUGAR_RECIPE_INGREDIENT_RESPONSE_V1 = GetRecipeIngredientResponseV1("2 oz of white sugar")
+    val SUGAR_RECIPE_INGREDIENT_RESPONSE_V1 = GetRecipeIngredientResponseV1(
+        note = "2 oz of white sugar",
+        quantity = 1.0,
+        unit = null,
+        food = null,
+    )
 
-    val MILK_RECIPE_INGREDIENT_INFO = RecipeIngredientInfo("2 oz of white milk")
+    val MILK_RECIPE_INGREDIENT_INFO = RecipeIngredientInfo(
+        note = "2 oz of white milk",
+        quantity = 1.0,
+        unit = null,
+        food = null,
+    )
 
     val MIX_RECIPE_INSTRUCTION_RESPONSE_V0 = GetRecipeInstructionResponseV0("Mix the ingredients")
 
@@ -295,6 +358,7 @@ object RecipeImplTestData {
             MIX_RECIPE_INSTRUCTION_RESPONSE_V1,
             BOIL_RECIPE_INSTRUCTION_RESPONSE_V1
         ),
+        settings = GetRecipeSettingsResponseV1(disableAmount = true),
     )
 
     val MIX_ADD_RECIPE_INSTRUCTION_REQUEST_V0 = AddRecipeInstructionV0("Mix the ingredients")
