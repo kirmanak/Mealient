@@ -97,8 +97,8 @@ class RecipeIngredientsAdapter private constructor(
 private fun Double.formatUsingMediantMethod(d: Int = 10, mixed: Boolean = true): String {
     val triple = mediantMethod(d, mixed)
     return when {
-        triple.first == 0 -> "${triple.second}/${triple.third}"
         triple.second == 0 -> "${triple.first}"
+        triple.first == 0 -> "${triple.second}/${triple.third}"
         else -> "${triple.first} ${triple.second}/${triple.third}"
     }
 }
