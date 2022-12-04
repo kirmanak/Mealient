@@ -61,6 +61,7 @@ class RecipeIngredientsAdapter private constructor(
                 item.quantity?.let { builder.append("${it.formatUsingMediantMethod()} ") }
                 item.unit?.let { builder.append("$it ") }
                 item.food?.let { builder.append("$it ") }
+                builder.append(item.note)
                 builder.toString().trim()
             }
         }
