@@ -8,6 +8,7 @@ import gq.kirmanak.mealient.data.baseurl.VersionInfo
 import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeIngredientInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeInstructionInfo
+import gq.kirmanak.mealient.data.recipes.network.RecipeSettingsInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
 import gq.kirmanak.mealient.data.share.ParseRecipeURLInfo
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
@@ -31,6 +32,7 @@ import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeInstructionResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSettingsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
@@ -40,12 +42,16 @@ import java.util.*
 
 fun FullRecipeInfo.toRecipeEntity() = RecipeEntity(
     remoteId = remoteId,
-    recipeYield = recipeYield
+    recipeYield = recipeYield,
+    disableAmounts = settings.disableAmounts,
 )
 
 fun RecipeIngredientInfo.toRecipeIngredientEntity(remoteId: String) = RecipeIngredientEntity(
     recipeId = remoteId,
     note = note,
+    unit = unit,
+    food = food,
+    quantity = quantity,
 )
 
 fun RecipeInstructionInfo.toRecipeInstructionEntity(remoteId: String) = RecipeInstructionEntity(
@@ -114,11 +120,15 @@ fun GetRecipeResponseV0.toFullRecipeInfo() = FullRecipeInfo(
     name = name,
     recipeYield = recipeYield,
     recipeIngredients = recipeIngredients.map { it.toRecipeIngredientInfo() },
-    recipeInstructions = recipeInstructions.map { it.toRecipeInstructionInfo() }
+    recipeInstructions = recipeInstructions.map { it.toRecipeInstructionInfo() },
+    settings = RecipeSettingsInfo(disableAmounts = true)
 )
 
 fun GetRecipeIngredientResponseV0.toRecipeIngredientInfo() = RecipeIngredientInfo(
     note = note,
+    unit = null,
+    food = null,
+    quantity = 1.0,
 )
 
 fun GetRecipeInstructionResponseV0.toRecipeInstructionInfo() = RecipeInstructionInfo(
@@ -130,11 +140,19 @@ fun GetRecipeResponseV1.toFullRecipeInfo() = FullRecipeInfo(
     name = name,
     recipeYield = recipeYield,
     recipeIngredients = recipeIngredients.map { it.toRecipeIngredientInfo() },
-    recipeInstructions = recipeInstructions.map { it.toRecipeInstructionInfo() }
+    recipeInstructions = recipeInstructions.map { it.toRecipeInstructionInfo() },
+    settings = settings.toRecipeSettingsInfo(),
+)
+
+private fun GetRecipeSettingsResponseV1.toRecipeSettingsInfo() = RecipeSettingsInfo(
+    disableAmounts = disableAmount,
 )
 
 fun GetRecipeIngredientResponseV1.toRecipeIngredientInfo() = RecipeIngredientInfo(
     note = note,
+    unit = unit?.name,
+    food = food?.name,
+    quantity = quantity,
 )
 
 fun GetRecipeInstructionResponseV1.toRecipeInstructionInfo() = RecipeInstructionInfo(

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Resources
 import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -21,6 +22,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.textfield.TextInputLayout
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.channels.ChannelResult
@@ -133,3 +135,6 @@ fun <T> LifecycleOwner.collectWhenResumed(flow: Flow<T>, collector: FlowCollecto
         }
     }
 }
+
+val <T : ViewBinding> T.resources: Resources
+    get() = root.resources

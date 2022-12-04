@@ -25,10 +25,11 @@ class RecipeInfoViewModel @Inject constructor(
                 showIngredients = entity.recipeIngredients.isNotEmpty(),
                 showInstructions = entity.recipeInstructions.isNotEmpty(),
                 summaryEntity = entity.recipeSummaryEntity,
-                recipeIngredients = entity.recipeIngredients.filter { it.note.isNotBlank() },
-                recipeInstructions = entity.recipeInstructions.filter { it.text.isNotBlank() },
+                recipeIngredients = entity.recipeIngredients,
+                recipeInstructions = entity.recipeInstructions,
                 title = entity.recipeSummaryEntity.name,
                 description = entity.recipeSummaryEntity.description,
+                disableAmounts = entity.recipeEntity.disableAmounts,
             )
         } ?: RecipeInfoUiState()
         emit(state)

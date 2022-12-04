@@ -19,7 +19,7 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
 
     private val binding by viewBinding(FragmentRecipeInfoBinding::bind)
     private val viewModel by viewModels<RecipeInfoViewModel>()
-    private val ingredientsAdapter by lazy { recipeIngredientsAdapterFactory.build() }
+    private lateinit var ingredientsAdapter: RecipeIngredientsAdapter
     private val instructionsAdapter by lazy { recipeInstructionsAdapterFactory.build() }
 
     @Inject
@@ -48,7 +48,6 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
         logger.v { "onViewCreated() called" }
 
         with(binding) {
-            ingredientsList.adapter = ingredientsAdapter
             instructionsList.adapter = instructionsAdapter
         }
 
@@ -59,6 +58,10 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
 
     private fun onUiStateChange(uiState: RecipeInfoUiState) = with(binding) {
         logger.v { "onUiStateChange() called" }
+        if (::ingredientsAdapter.isInitialized.not()) {
+            ingredientsAdapter = recipeIngredientsAdapterFactory.build(uiState.disableAmounts)
+            ingredientsList.adapter = ingredientsAdapter
+        }
         ingredientsHolder.isVisible = uiState.showIngredients
         instructionsGroup.isVisible = uiState.showInstructions
         recipeImageLoader.loadRecipeImage(image, uiState.summaryEntity)
