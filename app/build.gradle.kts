@@ -17,6 +17,7 @@ android {
         applicationId = "gq.kirmanak.mealient"
         versionCode = 25
         versionName = "0.3.10"
+        testInstrumentationRunner = "gq.kirmanak.mealient.MealientTestRunner"
     }
 
     signingConfigs {
@@ -89,6 +90,8 @@ dependencies {
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
+    kaptAndroidTest(libs.google.dagger.hiltAndroidCompiler)
+    androidTestImplementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.androidx.paging.runtimeKtx)
     testImplementation(libs.androidx.paging.commonKtx)
@@ -122,4 +125,11 @@ dependencies {
     testImplementation(libs.io.mockk)
 
     debugImplementation(libs.squareup.leakcanary)
+
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.kaspersky.kaspresso)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.runner)
 }
