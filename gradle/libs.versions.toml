@@ -81,6 +81,8 @@ shareTarget = "1.2.0"
 kaspresso = "1.4.2"
 # https://developer.android.com/jetpack/androidx/releases/test
 androidXTest = "1.5.0"
+# https://developer.android.com/jetpack/androidx/releases/test
+androidXTestOrchestrator = "1.4.2"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -140,6 +142,7 @@ androidx-security-crypto = { group = "androidx.security", name = "security-crypt
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidXTest" }
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidXTest" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidXTest" }
+androidx-test-orchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidXTestOrchestrator" }
 
 jakewharton-retrofitSerialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerialization" }
 

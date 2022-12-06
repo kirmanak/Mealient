@@ -18,6 +18,7 @@ android {
         versionCode = 25
         versionName = "0.3.10"
         testInstrumentationRunner = "gq.kirmanak.mealient.MealientTestRunner"
+        testInstrumentationRunnerArguments += mapOf("clearPackageData" to "true")
     }
 
     signingConfigs {
@@ -54,6 +55,10 @@ android {
 
     packagingOptions {
         resources.excludes += "DebugProbesKt.bin"
+    }
+
+    testOptions {
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
 }
 
@@ -132,4 +137,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestUtil(libs.androidx.test.orchestrator)
 }
