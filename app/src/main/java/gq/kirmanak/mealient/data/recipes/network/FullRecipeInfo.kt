@@ -18,6 +18,7 @@ data class RecipeIngredientInfo(
     val quantity: Double?,
     val unit: String?,
     val food: String?,
+    val title: String?,
 )
 
 data class RecipeInstructionInfo(

@@ -12,6 +12,7 @@ data class RecipeIngredientEntity(
     @ColumnInfo(name = "food") val food: String?,
     @ColumnInfo(name = "unit") val unit: String?,
     @ColumnInfo(name = "quantity") val quantity: Double?,
+    @ColumnInfo(name = "title") val title: String?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -24,6 +25,7 @@ data class RecipeIngredientEntity(
         if (food != other.food) return false
         if (unit != other.unit) return false
         if (quantity != other.quantity) return false
+        if (title != other.title) return false
 
         return true
     }
@@ -33,7 +35,8 @@ data class RecipeIngredientEntity(
         result = 31 * result + note.hashCode()
         result = 31 * result + (food?.hashCode() ?: 0)
         result = 31 * result + (unit?.hashCode() ?: 0)
-        result = 31 * result + quantity.hashCode()
+        result = 31 * result + (quantity?.hashCode() ?: 0)
+        result = 31 * result + (title?.hashCode() ?: 0)
         return result
     }
 }

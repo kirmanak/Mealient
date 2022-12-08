@@ -37,7 +37,7 @@
 			android:layout_height="0dp"
 			android:contentDescription="@string/content_description_fragment_recipe_info_image"
 			android:scaleType="centerCrop"
-			app:layout_constraintBottom_toTopOf="@+id/title"
+			app:layout_constraintBottom_toTopOf="@id/title"
 			app:layout_constraintDimensionRatio="2:1"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -52,10 +52,10 @@
 			android:layout_marginHorizontal="@dimen/margin_small"
 			android:layout_marginTop="7dp"
 			android:textAppearance="?textAppearanceHeadline6"
-			app:layout_constraintBottom_toTopOf="@+id/description"
-			app:layout_constraintEnd_toStartOf="@+id/end_guide"
-			app:layout_constraintStart_toEndOf="@+id/start_guide"
-			app:layout_constraintTop_toBottomOf="@+id/image"
+			app:layout_constraintBottom_toTopOf="@id/description"
+			app:layout_constraintEnd_toStartOf="@id/end_guide"
+			app:layout_constraintStart_toEndOf="@id/start_guide"
+			app:layout_constraintTop_toBottomOf="@id/image"
 			tools:text="Best-Ever Beef Stew" />
 
 		<TextView
@@ -65,11 +65,25 @@
 			android:layout_marginHorizontal="@dimen/margin_small"
 			android:layout_marginTop="6dp"
 			android:textAppearance="?textAppearanceBody2"
-			app:layout_constraintBottom_toTopOf="@+id/ingredients_holder"
-			app:layout_constraintEnd_toStartOf="@+id/end_guide"
-			app:layout_constraintStart_toEndOf="@+id/start_guide"
-			app:layout_constraintTop_toBottomOf="@+id/title"
+			app:layout_constraintBottom_toTopOf="@id/ingredients_header"
+			app:layout_constraintEnd_toStartOf="@id/end_guide"
+			app:layout_constraintStart_toEndOf="@id/start_guide"
+			app:layout_constraintTop_toBottomOf="@id/title"
 			tools:text="Stay warm all winter with this classic Beef Stew made with red wine and beef stock from Delish.com." />
+
+		<TextView
+			android:id="@+id/ingredients_header"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="35dp"
+			android:layout_marginTop="@dimen/margin_medium"
+			android:layout_marginEnd="@dimen/margin_small"
+			android:text="@string/fragment_recipe_info_ingredients_header"
+			android:textAppearance="?textAppearanceHeadline6"
+			app:layout_constraintBottom_toTopOf="@id/ingredients_holder"
+			app:layout_constraintEnd_toStartOf="@id/end_guide"
+			app:layout_constraintStart_toEndOf="@id/start_guide"
+			app:layout_constraintTop_toBottomOf="@id/description" />
 
 		<com.google.android.material.card.MaterialCardView
 			android:id="@+id/ingredients_holder"
@@ -79,34 +93,19 @@
 			android:layout_marginHorizontal="@dimen/margin_small"
 			android:layout_marginTop="11dp"
 			android:layout_marginBottom="20dp"
-			app:layout_constraintBottom_toTopOf="@+id/instructions_header"
-			app:layout_constraintEnd_toStartOf="@+id/end_guide"
-			app:layout_constraintStart_toEndOf="@+id/start_guide"
-			app:layout_constraintTop_toBottomOf="@+id/description">
+			app:layout_constraintBottom_toTopOf="@id/instructions_header"
+			app:layout_constraintEnd_toStartOf="@id/end_guide"
+			app:layout_constraintStart_toEndOf="@id/start_guide"
+			app:layout_constraintTop_toBottomOf="@id/ingredients_header">
 
-			<LinearLayout
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/ingredients_list"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:orientation="vertical">
-
-				<TextView
-					android:id="@+id/ingredients_header"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginHorizontal="@dimen/margin_medium"
-					android:layout_marginTop="@dimen/margin_medium"
-					android:text="@string/fragment_recipe_info_ingredients_header"
-					android:textAppearance="?textAppearanceHeadline6" />
-
-				<androidx.recyclerview.widget.RecyclerView
-					android:id="@+id/ingredients_list"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginHorizontal="@dimen/margin_small"
-					app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-					tools:itemCount="3"
-					tools:listitem="@layout/view_holder_ingredient" />
-			</LinearLayout>
+				android:layout_marginHorizontal="@dimen/margin_small"
+				app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+				tools:itemCount="3"
+				tools:listitem="@layout/view_holder_ingredient" />
 		</com.google.android.material.card.MaterialCardView>
 
 		<androidx.constraintlayout.widget.Group
@@ -124,10 +123,10 @@
 			android:layout_marginEnd="@dimen/margin_small"
 			android:text="@string/fragment_recipe_info_instructions_header"
 			android:textAppearance="?textAppearanceHeadline6"
-			app:layout_constraintBottom_toTopOf="@+id/instructions_list"
-			app:layout_constraintEnd_toStartOf="@+id/end_guide"
-			app:layout_constraintStart_toEndOf="@+id/start_guide"
-			app:layout_constraintTop_toBottomOf="@+id/ingredients_holder" />
+			app:layout_constraintBottom_toTopOf="@id/instructions_list"
+			app:layout_constraintEnd_toStartOf="@id/end_guide"
+			app:layout_constraintStart_toEndOf="@id/start_guide"
+			app:layout_constraintTop_toBottomOf="@id/ingredients_holder" />
 
 		<androidx.recyclerview.widget.RecyclerView
 			android:id="@+id/instructions_list"
@@ -135,9 +134,9 @@
 			android:layout_height="wrap_content"
 			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toStartOf="@+id/end_guide"
-			app:layout_constraintStart_toEndOf="@+id/start_guide"
-			app:layout_constraintTop_toBottomOf="@+id/instructions_header"
+			app:layout_constraintEnd_toStartOf="@id/end_guide"
+			app:layout_constraintStart_toEndOf="@id/start_guide"
+			app:layout_constraintTop_toBottomOf="@id/instructions_header"
 			tools:itemCount="2"
 			tools:listitem="@layout/view_holder_instruction" />
 	</androidx.constraintlayout.widget.ConstraintLayout>

@@ -100,6 +100,7 @@ object RecipeImplTestData {
         quantity = 1.0,
         unit = null,
         food = null,
+        title = null,
     )
 
     val BREAD_INGREDIENT = RecipeIngredientInfo(
@@ -107,6 +108,7 @@ object RecipeImplTestData {
         quantity = 1.0,
         unit = null,
         food = null,
+        title = null,
     )
 
     private val MILK_INGREDIENT = RecipeIngredientInfo(
@@ -114,6 +116,7 @@ object RecipeImplTestData {
         quantity = 1.0,
         unit = null,
         food = null,
+        title = null,
     )
 
     val MIX_INSTRUCTION = RecipeInstructionInfo(
@@ -168,6 +171,7 @@ object RecipeImplTestData {
         quantity = 1.0,
         unit = null,
         food = null,
+        title = null,
     )
 
     val CAKE_BREAD_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
@@ -176,6 +180,7 @@ object RecipeImplTestData {
         quantity = 1.0,
         unit = null,
         food = null,
+        title = null,
     )
 
     val FULL_CAKE_INFO_ENTITY = FullRecipeEntity(
@@ -203,6 +208,7 @@ object RecipeImplTestData {
         quantity = 1.0,
         unit = null,
         food = null,
+        title = null,
     )
 
     private val PORRIDGE_SUGAR_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
@@ -211,6 +217,7 @@ object RecipeImplTestData {
         quantity = 1.0,
         unit = null,
         food = null,
+        title = null,
     )
 
     private val PORRIDGE_MIX_RECIPE_INSTRUCTION_ENTITY = RecipeInstructionEntity(
@@ -306,6 +313,7 @@ object RecipeImplTestData {
         quantity = 1.0,
         unit = null,
         food = null,
+        title = null,
     )
 
     val SUGAR_RECIPE_INGREDIENT_RESPONSE_V1 = GetRecipeIngredientResponseV1(
@@ -313,6 +321,7 @@ object RecipeImplTestData {
         quantity = 1.0,
         unit = null,
         food = null,
+        title = null,
     )
 
     val MILK_RECIPE_INGREDIENT_INFO = RecipeIngredientInfo(
@@ -320,6 +329,7 @@ object RecipeImplTestData {
         quantity = 1.0,
         unit = null,
         food = null,
+        title = null,
     )
 
     val MIX_RECIPE_INSTRUCTION_RESPONSE_V0 = GetRecipeInstructionResponseV0("Mix the ingredients")
