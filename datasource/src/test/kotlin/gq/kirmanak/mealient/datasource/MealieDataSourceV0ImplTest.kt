@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.datasource
 
 import com.google.common.truth.Truth.assertThat
+import gq.kirmanak.mealient.datasource.impl.NetworkRequestWrapperImpl
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0Impl
 import gq.kirmanak.mealient.datasource.v0.MealieServiceV0
 import gq.kirmanak.mealient.datasource.v0.models.GetTokenResponseV0

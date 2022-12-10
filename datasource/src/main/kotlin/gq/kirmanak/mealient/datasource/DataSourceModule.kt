@@ -6,6 +6,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import gq.kirmanak.mealient.datasource.impl.CacheBuilderImpl
+import gq.kirmanak.mealient.datasource.impl.NetworkRequestWrapperImpl
+import gq.kirmanak.mealient.datasource.impl.OkHttpBuilderImpl
+import gq.kirmanak.mealient.datasource.impl.RetrofitBuilder
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0Impl
 import gq.kirmanak.mealient.datasource.v0.MealieServiceV0

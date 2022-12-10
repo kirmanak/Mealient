@@ -1,5 +1,8 @@
-package gq.kirmanak.mealient.datasource
+package gq.kirmanak.mealient.datasource.impl
 
+import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import retrofit2.HttpException
 import javax.inject.Inject

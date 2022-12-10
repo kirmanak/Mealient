@@ -1,8 +1,9 @@
-package gq.kirmanak.mealient.datasource
+package gq.kirmanak.mealient.datasource.impl
 
 import android.content.Context
 import android.os.StatFs
 import dagger.hilt.android.qualifiers.ApplicationContext
+import gq.kirmanak.mealient.datasource.CacheBuilder
 import gq.kirmanak.mealient.logging.Logger
 import okhttp3.Cache
 import java.io.File

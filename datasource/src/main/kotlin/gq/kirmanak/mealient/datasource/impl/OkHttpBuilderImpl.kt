@@ -1,5 +1,7 @@
-package gq.kirmanak.mealient.datasource
+package gq.kirmanak.mealient.datasource.impl
 
+import gq.kirmanak.mealient.datasource.CacheBuilder
+import gq.kirmanak.mealient.datasource.OkHttpBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import javax.inject.Inject
