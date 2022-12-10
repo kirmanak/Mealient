@@ -2,7 +2,6 @@ package gq.kirmanak.mealient.data.network
 
 import gq.kirmanak.mealient.data.add.AddRecipeDataSource
 import gq.kirmanak.mealient.data.add.AddRecipeInfo
-import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.baseurl.ServerVersion
 import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
@@ -10,8 +9,6 @@ import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
 import gq.kirmanak.mealient.data.share.ParseRecipeDataSource
 import gq.kirmanak.mealient.data.share.ParseRecipeURLInfo
-import gq.kirmanak.mealient.datasource.NetworkError
-import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.extensions.toFullRecipeInfo
@@ -20,17 +17,14 @@ import gq.kirmanak.mealient.extensions.toV0Request
 import gq.kirmanak.mealient.extensions.toV1CreateRequest
 import gq.kirmanak.mealient.extensions.toV1Request
 import gq.kirmanak.mealient.extensions.toV1UpdateRequest
-import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class MealieDataSourceWrapper @Inject constructor(
     private val serverInfoRepo: ServerInfoRepo,
-    private val authRepo: AuthRepo,
     private val v0Source: MealieDataSourceV0,
     private val v1Source: MealieDataSourceV1,
-    private val logger: Logger,
 ) : AddRecipeDataSource, RecipeDataSource, ParseRecipeDataSource {
 
     override suspend fun addRecipe(
@@ -85,20 +79,8 @@ class MealieDataSourceWrapper @Inject constructor(
     }
 
     private suspend inline fun <T> makeCall(block: (String, ServerVersion) -> T): T {
-        val authHeader = authRepo.getAuthHeader()
         val url = serverInfoRepo.requireUrl()
         val version = serverInfoRepo.getVersion()
-        return runCatchingExceptCancel { block(url, version) }.getOrElse {
-            if (it is NetworkError.Unauthorized) {
-                logger.e { "Unauthorized, trying to invalidate token" }
-                authRepo.invalidateAuthHeader()
-                // Trying again with new authentication header
-                val newHeader = authRepo.getAuthHeader()
-                logger.e { "New token ${if (newHeader == authHeader) "matches" else "doesn't match"} old token" }
-                if (newHeader == authHeader) throw it else block(url, version)
-            } else {
-                throw it
-            }
-        }
+        return block(url, version)
     }
 }

@@ -3,7 +3,6 @@ package gq.kirmanak.mealient.data.network
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
-import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
@@ -15,7 +14,6 @@ import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_INFO
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_REQUEST_V0
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_CREATE_RECIPE_REQUEST_V1
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_FULL_RECIPE_INFO
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_RESPONSE_V0
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_RESPONSE_V1
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_RESPONSE_V0
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_RESPONSE_V1
@@ -50,26 +48,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     @Before
     override fun setUp() {
         super.setUp()
-        subject = MealieDataSourceWrapper(serverInfoRepo, authRepo, v0Source, v1Source, logger)
-    }
-
-    @Test
-    fun `when makeCall fails with Unauthorized expect it to invalidate token`() = runTest {
-        val slug = "porridge"
-        coEvery {
-            v0Source.requestRecipeInfo(any(), any())
-        } throws NetworkError.Unauthorized(IOException()) andThen PORRIDGE_RECIPE_RESPONSE_V0
-        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
-        coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
-        coEvery { authRepo.getAuthHeader() } returns null andThen TEST_AUTH_HEADER
-
-        subject.requestRecipeInfo(slug)
-
-        coVerifySequence {
-            authRepo.getAuthHeader()
-            authRepo.invalidateAuthHeader()
-            authRepo.getAuthHeader()
-        }
+        subject = MealieDataSourceWrapper(serverInfoRepo, v0Source, v1Source)
     }
 
     @Test
