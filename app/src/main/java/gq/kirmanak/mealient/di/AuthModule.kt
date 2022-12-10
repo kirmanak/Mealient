@@ -14,6 +14,7 @@ import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.auth.impl.AuthDataSourceImpl
 import gq.kirmanak.mealient.data.auth.impl.AuthRepoImpl
 import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl
+import gq.kirmanak.mealient.datasource.AuthenticationProvider
 import javax.inject.Singleton
 
 @Module
@@ -36,6 +37,10 @@ interface AuthModule {
     @Binds
     @Singleton
     fun bindAuthRepo(authRepo: AuthRepoImpl): AuthRepo
+
+    @Binds
+    @Singleton
+    fun bindAuthProvider(authRepo: AuthRepoImpl): AuthenticationProvider
 
     @Binds
     @Singleton

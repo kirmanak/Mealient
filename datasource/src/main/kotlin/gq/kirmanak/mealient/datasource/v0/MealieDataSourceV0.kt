@@ -10,7 +10,6 @@ interface MealieDataSourceV0 {
 
     suspend fun addRecipe(
         baseUrl: String,
-        token: String?,
         recipe: AddRecipeRequestV0,
     ): String
 
@@ -29,20 +28,17 @@ interface MealieDataSourceV0 {
 
     suspend fun requestRecipes(
         baseUrl: String,
-        token: String?,
         start: Int,
         limit: Int,
     ): List<GetRecipeSummaryResponseV0>
 
     suspend fun requestRecipeInfo(
         baseUrl: String,
-        token: String?,
         slug: String,
     ): GetRecipeResponseV0
 
     suspend fun parseRecipeFromURL(
         baseUrl: String,
-        token: String?,
         request: ParseRecipeURLRequestV0,
     ): String
 }

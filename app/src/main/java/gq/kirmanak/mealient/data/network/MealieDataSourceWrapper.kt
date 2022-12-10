@@ -35,12 +35,12 @@ class MealieDataSourceWrapper @Inject constructor(
 
     override suspend fun addRecipe(
         recipe: AddRecipeInfo,
-    ): String = makeCall { token, url, version ->
+    ): String = makeCall { url, version ->
         when (version) {
-            ServerVersion.V0 -> v0Source.addRecipe(url, token, recipe.toV0Request())
+            ServerVersion.V0 -> v0Source.addRecipe(url, recipe.toV0Request())
             ServerVersion.V1 -> {
-                val slug = v1Source.createRecipe(url, token, recipe.toV1CreateRequest())
-                v1Source.updateRecipe(url, token, slug, recipe.toV1UpdateRequest())
+                val slug = v1Source.createRecipe(url, recipe.toV1CreateRequest())
+                v1Source.updateRecipe(url, slug, recipe.toV1UpdateRequest())
                 slug
             }
         }
@@ -49,53 +49,53 @@ class MealieDataSourceWrapper @Inject constructor(
     override suspend fun requestRecipes(
         start: Int,
         limit: Int,
-    ): List<RecipeSummaryInfo> = makeCall { token, url, version ->
+    ): List<RecipeSummaryInfo> = makeCall { url, version ->
         when (version) {
             ServerVersion.V0 -> {
-                v0Source.requestRecipes(url, token, start, limit).map { it.toRecipeSummaryInfo() }
+                v0Source.requestRecipes(url, start, limit).map { it.toRecipeSummaryInfo() }
             }
             ServerVersion.V1 -> {
                 // Imagine start is 30 and limit is 15. It means that we already have page 1 and 2, now we need page 3
                 val page = start / limit + 1
-                v1Source.requestRecipes(url, token, page, limit).map { it.toRecipeSummaryInfo() }
+                v1Source.requestRecipes(url, page, limit).map { it.toRecipeSummaryInfo() }
             }
         }
     }
 
     override suspend fun requestRecipeInfo(
         slug: String,
-    ): FullRecipeInfo = makeCall { token, url, version ->
+    ): FullRecipeInfo = makeCall { url, version ->
         when (version) {
-            ServerVersion.V0 -> v0Source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
-            ServerVersion.V1 -> v1Source.requestRecipeInfo(url, token, slug).toFullRecipeInfo()
+            ServerVersion.V0 -> v0Source.requestRecipeInfo(url, slug).toFullRecipeInfo()
+            ServerVersion.V1 -> v1Source.requestRecipeInfo(url, slug).toFullRecipeInfo()
         }
     }
 
     override suspend fun parseRecipeFromURL(
         parseRecipeURLInfo: ParseRecipeURLInfo,
-    ): String = makeCall { token, url, version ->
+    ): String = makeCall { url, version ->
         when (version) {
             ServerVersion.V0 -> {
-                v0Source.parseRecipeFromURL(url, token, parseRecipeURLInfo.toV0Request())
+                v0Source.parseRecipeFromURL(url, parseRecipeURLInfo.toV0Request())
             }
             ServerVersion.V1 -> {
-                v1Source.parseRecipeFromURL(url, token, parseRecipeURLInfo.toV1Request())
+                v1Source.parseRecipeFromURL(url, parseRecipeURLInfo.toV1Request())
             }
         }
     }
 
-    private suspend inline fun <T> makeCall(block: (String?, String, ServerVersion) -> T): T {
+    private suspend inline fun <T> makeCall(block: (String, ServerVersion) -> T): T {
         val authHeader = authRepo.getAuthHeader()
         val url = serverInfoRepo.requireUrl()
         val version = serverInfoRepo.getVersion()
-        return runCatchingExceptCancel { block(authHeader, url, version) }.getOrElse {
+        return runCatchingExceptCancel { block(url, version) }.getOrElse {
             if (it is NetworkError.Unauthorized) {
                 logger.e { "Unauthorized, trying to invalidate token" }
                 authRepo.invalidateAuthHeader()
                 // Trying again with new authentication header
                 val newHeader = authRepo.getAuthHeader()
                 logger.e { "New token ${if (newHeader == authHeader) "matches" else "doesn't match"} old token" }
-                if (newHeader == authHeader) throw it else block(newHeader, url, version)
+                if (newHeader == authHeader) throw it else block(url, version)
             } else {
                 throw it
             }

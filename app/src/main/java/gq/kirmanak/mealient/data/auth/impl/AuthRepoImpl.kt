@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.data.auth.impl
 import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
+import gq.kirmanak.mealient.datasource.AuthenticationProvider
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +16,7 @@ class AuthRepoImpl @Inject constructor(
     private val authStorage: AuthStorage,
     private val authDataSource: AuthDataSource,
     private val logger: Logger,
-) : AuthRepo {
+) : AuthRepo, AuthenticationProvider {
 
     override val isAuthorizedFlow: Flow<Boolean>
         get() = authStorage.authHeaderFlow.map { it != null }

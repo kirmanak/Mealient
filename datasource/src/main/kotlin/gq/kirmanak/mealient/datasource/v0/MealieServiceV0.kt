@@ -1,6 +1,5 @@
 package gq.kirmanak.mealient.datasource.v0
 
-import gq.kirmanak.mealient.datasource.DataSourceModule.Companion.AUTHORIZATION_HEADER_NAME
 import gq.kirmanak.mealient.datasource.v0.models.*
 import retrofit2.http.*
 
@@ -17,7 +16,6 @@ interface MealieServiceV0 {
     @POST
     suspend fun addRecipe(
         @Url url: String,
-        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
         @Body addRecipeRequestV0: AddRecipeRequestV0,
     ): String
 
@@ -29,7 +27,6 @@ interface MealieServiceV0 {
     @GET
     suspend fun getRecipeSummary(
         @Url url: String,
-        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
         @Query("start") start: Int,
         @Query("limit") limit: Int,
     ): List<GetRecipeSummaryResponseV0>
@@ -37,13 +34,11 @@ interface MealieServiceV0 {
     @GET
     suspend fun getRecipe(
         @Url url: String,
-        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
     ): GetRecipeResponseV0
 
     @POST
     suspend fun createRecipeFromURL(
         @Url url: String,
-        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
         @Body request: ParseRecipeURLRequestV0,
     ): String
 }
