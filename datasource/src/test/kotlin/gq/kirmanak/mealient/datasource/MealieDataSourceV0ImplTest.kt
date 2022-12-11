@@ -38,34 +38,34 @@ class MealieDataSourceV0ImplTest : BaseUnitTest() {
     @Test(expected = NetworkError.NotMealie::class)
     fun `when getVersionInfo and getVersion throws HttpException then NotMealie`() = runTest {
         val error = HttpException(Response.error<VersionResponseV0>(404, "".toJsonResponseBody()))
-        coEvery { service.getVersion(any()) } throws error
-        subject.getVersionInfo(TEST_BASE_URL)
+        coEvery { service.getVersion() } throws error
+        subject.getVersionInfo()
     }
 
     @Test(expected = NetworkError.NotMealie::class)
     fun `when getVersionInfo and getVersion throws SerializationException then NotMealie`() =
         runTest {
-            coEvery { service.getVersion(any()) } throws SerializationException()
-            subject.getVersionInfo(TEST_BASE_URL)
+            coEvery { service.getVersion() } throws SerializationException()
+            subject.getVersionInfo()
         }
 
     @Test(expected = NetworkError.NoServerConnection::class)
     fun `when getVersionInfo and getVersion throws IOException then NoServerConnection`() =
         runTest {
-            coEvery { service.getVersion(any()) } throws ConnectException()
-            subject.getVersionInfo(TEST_BASE_URL)
+            coEvery { service.getVersion() } throws ConnectException()
+            subject.getVersionInfo()
         }
 
     @Test
     fun `when getVersionInfo and getVersion returns result then result`() = runTest {
         val versionResponse = VersionResponseV0("v0.5.6")
-        coEvery { service.getVersion(any()) } returns versionResponse
-        assertThat(subject.getVersionInfo(TEST_BASE_URL)).isSameInstanceAs(versionResponse)
+        coEvery { service.getVersion() } returns versionResponse
+        assertThat(subject.getVersionInfo()).isSameInstanceAs(versionResponse)
     }
 
     @Test
     fun `when authentication is successful then token is correct`() = runTest {
-        coEvery { service.getToken(any(), any(), any()) } returns GetTokenResponseV0(TEST_TOKEN)
+        coEvery { service.getToken(any(), any()) } returns GetTokenResponseV0(TEST_TOKEN)
         assertThat(callAuthenticate()).isEqualTo(TEST_TOKEN)
     }
 
@@ -73,7 +73,7 @@ class MealieDataSourceV0ImplTest : BaseUnitTest() {
     fun `when authenticate receives 401 and Unauthorized then throws Unauthorized`() = runTest {
         val body = "{\"detail\":\"Unauthorized\"}".toJsonResponseBody()
         coEvery {
-            service.getToken(any(), any(), any())
+            service.getToken(any(), any())
         } throws HttpException(Response.error<GetTokenResponseV0>(401, body))
         callAuthenticate()
     }
@@ -82,7 +82,7 @@ class MealieDataSourceV0ImplTest : BaseUnitTest() {
     fun `when authenticate receives 401 but not Unauthorized then throws NotMealie`() = runTest {
         val body = "{\"detail\":\"Something\"}".toJsonResponseBody()
         coEvery {
-            service.getToken(any(), any(), any())
+            service.getToken(any(), any())
         } throws HttpException(Response.error<GetTokenResponseV0>(401, body))
         callAuthenticate()
     }
@@ -91,22 +91,21 @@ class MealieDataSourceV0ImplTest : BaseUnitTest() {
     fun `when authenticate receives 404 and empty body then throws NotMealie`() = runTest {
         val body = "".toJsonResponseBody()
         coEvery {
-            service.getToken(any(), any(), any())
+            service.getToken(any(), any())
         } throws HttpException(Response.error<GetTokenResponseV0>(401, body))
         callAuthenticate()
     }
 
     @Test(expected = IOException::class)
     fun `when authenticate and getToken throws then throws NoServerConnection`() = runTest {
-        coEvery { service.getToken(any(), any(), any()) } throws IOException("Server not found")
+        coEvery { service.getToken(any(), any()) } throws IOException("Server not found")
         callAuthenticate()
     }
 
     private suspend fun callAuthenticate(): String =
-        subject.authenticate(TEST_USERNAME, TEST_PASSWORD, TEST_BASE_URL)
+        subject.authenticate(TEST_PASSWORD, TEST_BASE_URL)
 
     companion object {
-        const val TEST_USERNAME = "TEST_USERNAME"
         const val TEST_PASSWORD = "TEST_PASSWORD"
         const val TEST_BASE_URL = "https://example.com/"
         const val TEST_TOKEN = "TEST_TOKEN"

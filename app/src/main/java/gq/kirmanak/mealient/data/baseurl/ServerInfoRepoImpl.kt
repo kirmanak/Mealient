@@ -1,6 +1,8 @@
 package gq.kirmanak.mealient.data.baseurl
 
 import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.ServerUrlProvider
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,7 +12,7 @@ class ServerInfoRepoImpl @Inject constructor(
     private val serverInfoStorage: ServerInfoStorage,
     private val versionDataSource: VersionDataSource,
     private val logger: Logger,
-) : ServerInfoRepo {
+) : ServerInfoRepo, ServerUrlProvider {
 
     override suspend fun getUrl(): String? {
         val result = serverInfoStorage.getBaseURL()
@@ -18,17 +20,11 @@ class ServerInfoRepoImpl @Inject constructor(
         return result
     }
 
-    override suspend fun requireUrl(): String {
-        val result = checkNotNull(getUrl()) { "Server URL was null when it was required" }
-        logger.v { "requireUrl() returned: $result" }
-        return result
-    }
-
     override suspend fun getVersion(): ServerVersion {
         var version = serverInfoStorage.getServerVersion()
         val serverVersion = if (version == null) {
             logger.d { "getVersion: version is null, requesting" }
-            version = versionDataSource.getVersionInfo(requireUrl()).version
+            version = versionDataSource.getVersionInfo().version
             val result = determineServerVersion(version)
             serverInfoStorage.storeServerVersion(version)
             result
@@ -45,8 +41,16 @@ class ServerInfoRepoImpl @Inject constructor(
         else -> throw NetworkError.NotMealie(IllegalStateException("Server version is unknown: $version"))
     }
 
-    override suspend fun storeBaseURL(baseURL: String, version: String) {
-        logger.v { "storeBaseURL() called with: baseURL = $baseURL, version = $version" }
-        serverInfoStorage.storeBaseURL(baseURL, version)
+    override suspend fun tryBaseURL(baseURL: String): Result<Unit> {
+        val oldVersion = serverInfoStorage.getServerVersion()
+        val oldBaseUrl = serverInfoStorage.getBaseURL()
+
+        return runCatchingExceptCancel {
+            serverInfoStorage.storeBaseURL(baseURL)
+            val version = versionDataSource.getVersionInfo().version
+            serverInfoStorage.storeServerVersion(version)
+        }.onFailure {
+            serverInfoStorage.storeBaseURL(oldBaseUrl, oldVersion)
+        }
     }
 }

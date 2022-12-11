@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.datasource.impl
 
 import androidx.annotation.VisibleForTesting
 import gq.kirmanak.mealient.datasource.AuthenticationProvider
+import gq.kirmanak.mealient.datasource.LocalInterceptor
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -14,13 +15,13 @@ import javax.inject.Singleton
 class AuthInterceptor @Inject constructor(
     private val logger: Logger,
     private val authenticationProviderProvider: Provider<AuthenticationProvider>,
-) : Interceptor {
+) : LocalInterceptor {
 
     private val authenticationProvider: AuthenticationProvider
         get() = authenticationProviderProvider.get()
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        logger.v { "intercept() was called" }
+        logger.v { "intercept() was called with: request = ${chain.request()}" }
         val header = getAuthHeader()
         val request = chain.request().let {
             if (header == null) it else it.newBuilder().header(HEADER_NAME, header).build()

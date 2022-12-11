@@ -9,7 +9,6 @@ import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_API_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_API_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
-import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION_V0
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
@@ -54,7 +53,6 @@ class AuthRepoImplTest : BaseUnitTest() {
     fun `when authenticate successfully then saves to storage`() = runTest {
         coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
         coEvery { dataSource.authenticate(any(), any()) } returns TEST_TOKEN
-        coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
         coEvery { dataSource.createApiToken(any()) } returns TEST_API_TOKEN
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD)
         coVerify {
@@ -69,7 +67,6 @@ class AuthRepoImplTest : BaseUnitTest() {
     @Test
     fun `when authenticate fails then does not change storage`() = runTest {
         coEvery { dataSource.authenticate(any(), any()) } throws RuntimeException()
-        coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
         runCatchingExceptCancel { subject.authenticate("invalid", "") }
         confirmVerified(storage)
     }

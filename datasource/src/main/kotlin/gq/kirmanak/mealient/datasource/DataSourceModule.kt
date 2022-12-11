@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import gq.kirmanak.mealient.datasource.impl.AuthInterceptor
+import gq.kirmanak.mealient.datasource.impl.BaseUrlInterceptor
 import gq.kirmanak.mealient.datasource.impl.CacheBuilderImpl
 import gq.kirmanak.mealient.datasource.impl.NetworkRequestWrapperImpl
 import gq.kirmanak.mealient.datasource.impl.OkHttpBuilderImpl
@@ -20,7 +21,6 @@ import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1Impl
 import gq.kirmanak.mealient.datasource.v1.MealieServiceV1
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Converter
@@ -55,8 +55,11 @@ interface DataSourceModule {
 
         @Provides
         @Singleton
-        fun provideRetrofit(retrofitBuilder: RetrofitBuilder): Retrofit =
-            retrofitBuilder.buildRetrofit("https://beta.mealie.io/")
+        fun provideRetrofit(retrofitBuilder: RetrofitBuilder): Retrofit {
+            // Fake base URL which will be replaced later by BaseUrlInterceptor
+            // Solution was suggested here https://github.com/square/retrofit/issues/2161#issuecomment-274204152
+            return retrofitBuilder.buildRetrofit("http://localhost/")
+        }
 
         @Provides
         @Singleton
@@ -92,5 +95,10 @@ interface DataSourceModule {
     @Binds
     @Singleton
     @IntoSet
-    fun bindAuthInterceptor(authInterceptor: AuthInterceptor): Interceptor
+    fun bindAuthInterceptor(authInterceptor: AuthInterceptor): LocalInterceptor
+
+    @Binds
+    @Singleton
+    @IntoSet
+    fun bindBaseUrlInterceptor(baseUrlInterceptor: BaseUrlInterceptor): LocalInterceptor
 }

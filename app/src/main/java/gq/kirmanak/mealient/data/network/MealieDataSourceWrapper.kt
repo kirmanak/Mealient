@@ -29,13 +29,11 @@ class MealieDataSourceWrapper @Inject constructor(
 
     private suspend fun getVersion(): ServerVersion = serverInfoRepo.getVersion()
 
-    private suspend fun getUrl(): String = serverInfoRepo.requireUrl()
-
     override suspend fun addRecipe(recipe: AddRecipeInfo): String = when (getVersion()) {
-        ServerVersion.V0 -> v0Source.addRecipe(getUrl(), recipe.toV0Request())
+        ServerVersion.V0 -> v0Source.addRecipe(recipe.toV0Request())
         ServerVersion.V1 -> {
-            val slug = v1Source.createRecipe(getUrl(), recipe.toV1CreateRequest())
-            v1Source.updateRecipe(getUrl(), slug, recipe.toV1UpdateRequest())
+            val slug = v1Source.createRecipe(recipe.toV1CreateRequest())
+            v1Source.updateRecipe(slug, recipe.toV1UpdateRequest())
             slug
         }
     }
@@ -45,25 +43,25 @@ class MealieDataSourceWrapper @Inject constructor(
         limit: Int,
     ): List<RecipeSummaryInfo> = when (getVersion()) {
         ServerVersion.V0 -> {
-            v0Source.requestRecipes(getUrl(), start, limit).map { it.toRecipeSummaryInfo() }
+            v0Source.requestRecipes(start, limit).map { it.toRecipeSummaryInfo() }
         }
         ServerVersion.V1 -> {
             // Imagine start is 30 and limit is 15. It means that we already have page 1 and 2, now we need page 3
             val page = start / limit + 1
-            v1Source.requestRecipes(getUrl(), page, limit).map { it.toRecipeSummaryInfo() }
+            v1Source.requestRecipes(page, limit).map { it.toRecipeSummaryInfo() }
         }
     }
 
     override suspend fun requestRecipeInfo(slug: String): FullRecipeInfo = when (getVersion()) {
-        ServerVersion.V0 -> v0Source.requestRecipeInfo(getUrl(), slug).toFullRecipeInfo()
-        ServerVersion.V1 -> v1Source.requestRecipeInfo(getUrl(), slug).toFullRecipeInfo()
+        ServerVersion.V0 -> v0Source.requestRecipeInfo(slug).toFullRecipeInfo()
+        ServerVersion.V1 -> v1Source.requestRecipeInfo(slug).toFullRecipeInfo()
     }
 
     override suspend fun parseRecipeFromURL(
         parseRecipeURLInfo: ParseRecipeURLInfo,
     ): String = when (getVersion()) {
-        ServerVersion.V0 -> v0Source.parseRecipeFromURL(getUrl(), parseRecipeURLInfo.toV0Request())
-        ServerVersion.V1 -> v1Source.parseRecipeFromURL(getUrl(), parseRecipeURLInfo.toV1Request())
+        ServerVersion.V0 -> v0Source.parseRecipeFromURL(parseRecipeURLInfo.toV0Request())
+        ServerVersion.V1 -> v1Source.parseRecipeFromURL(parseRecipeURLInfo.toV1Request())
     }
 
 }

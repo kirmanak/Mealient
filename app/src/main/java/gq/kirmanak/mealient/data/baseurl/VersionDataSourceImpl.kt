@@ -16,13 +16,13 @@ class VersionDataSourceImpl @Inject constructor(
     private val v1Source: MealieDataSourceV1,
 ) : VersionDataSource {
 
-    override suspend fun getVersionInfo(baseUrl: String): VersionInfo {
+    override suspend fun getVersionInfo(): VersionInfo {
         val responses = coroutineScope {
             val v0Deferred = async {
-                runCatchingExceptCancel { v0Source.getVersionInfo(baseUrl).toVersionInfo() }
+                runCatchingExceptCancel { v0Source.getVersionInfo().toVersionInfo() }
             }
             val v1Deferred = async {
-                runCatchingExceptCancel { v1Source.getVersionInfo(baseUrl).toVersionInfo() }
+                runCatchingExceptCancel { v1Source.getVersionInfo().toVersionInfo() }
             }
             listOf(v0Deferred, v1Deferred).awaitAll()
         }
