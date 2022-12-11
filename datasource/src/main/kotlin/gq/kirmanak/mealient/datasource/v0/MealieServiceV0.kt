@@ -6,45 +6,38 @@ import retrofit2.http.*
 interface MealieServiceV0 {
 
     @FormUrlEncoded
-    @POST
+    @POST("/api/auth/token")
     suspend fun getToken(
-        @Url url: String,
         @Field("username") username: String,
         @Field("password") password: String,
     ): GetTokenResponseV0
 
-    @POST
+    @POST("/api/recipes/create")
     suspend fun addRecipe(
-        @Url url: String,
         @Body addRecipeRequestV0: AddRecipeRequestV0,
     ): String
 
-    @GET
-    suspend fun getVersion(
-        @Url url: String,
-    ): VersionResponseV0
+    @GET("/api/debug/version")
+    suspend fun getVersion(): VersionResponseV0
 
-    @GET
+    @GET("/api/recipes/summary")
     suspend fun getRecipeSummary(
-        @Url url: String,
         @Query("start") start: Int,
         @Query("limit") limit: Int,
     ): List<GetRecipeSummaryResponseV0>
 
-    @GET
+    @GET("/api/recipes/{slug}")
     suspend fun getRecipe(
-        @Url url: String,
+        @Path("slug") slug: String,
     ): GetRecipeResponseV0
 
-    @POST
+    @POST("/api/recipes/create-url")
     suspend fun createRecipeFromURL(
-        @Url url: String,
         @Body request: ParseRecipeURLRequestV0,
     ): String
 
-    @POST
+    @POST("/api/users/api-tokens")
     suspend fun createApiToken(
-        @Url url: String,
         @Body request: CreateApiTokenRequestV0,
     ): String
 }

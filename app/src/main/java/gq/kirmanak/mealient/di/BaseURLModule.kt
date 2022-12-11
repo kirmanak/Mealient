@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import gq.kirmanak.mealient.data.baseurl.*
 import gq.kirmanak.mealient.data.baseurl.impl.ServerInfoStorageImpl
+import gq.kirmanak.mealient.datasource.ServerUrlProvider
 import javax.inject.Singleton
 
 @Module
@@ -23,4 +24,8 @@ interface BaseURLModule {
     @Binds
     @Singleton
     fun bindServerInfoRepo(serverInfoRepoImpl: ServerInfoRepoImpl): ServerInfoRepo
+
+    @Binds
+    @Singleton
+    fun bindServerUrlProvider(serverInfoRepoImpl: ServerInfoRepoImpl): ServerUrlProvider
 }

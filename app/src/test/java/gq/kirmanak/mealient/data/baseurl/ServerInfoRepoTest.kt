@@ -13,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ServerInfoRepoTest : BaseUnitTest() {
@@ -44,12 +45,6 @@ class ServerInfoRepoTest : BaseUnitTest() {
         assertThat(subject.getUrl()).isEqualTo(expected)
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun `when storage returns null url expect requireUrl to throw`() = runTest {
-        coEvery { storage.getBaseURL() } returns null
-        subject.requireUrl()
-    }
-
     @Test
     fun `when getUrl expect storage is accessed`() = runTest {
         coEvery { storage.getBaseURL() } returns null
@@ -58,32 +53,45 @@ class ServerInfoRepoTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when requireUrl expect storage is accessed`() = runTest {
-        coEvery { storage.getBaseURL() } returns TEST_BASE_URL
-        subject.requireUrl()
-        coVerify { storage.getBaseURL() }
+    fun `when tryBaseURL succeeds expect call to storage`() = runTest {
+        coEvery { storage.getServerVersion() } returns null
+        coEvery { storage.getBaseURL() } returns null
+        coEvery { dataSource.getVersionInfo() } returns VersionInfo(TEST_VERSION)
+        subject.tryBaseURL(TEST_BASE_URL)
+        coVerify {
+            storage.storeBaseURL(eq(TEST_BASE_URL))
+            dataSource.getVersionInfo()
+            storage.storeServerVersion(TEST_VERSION)
+        }
     }
 
     @Test
-    fun `when storeBaseUrl expect call to storage`() = runTest {
-        subject.storeBaseURL(TEST_BASE_URL, TEST_VERSION)
-        coVerify { storage.storeBaseURL(TEST_BASE_URL, TEST_VERSION) }
+    fun `when tryBaseURL fails expect call to storage`() = runTest {
+        coEvery { storage.getServerVersion() } returns "serverVersion"
+        coEvery { storage.getBaseURL() } returns "baseUrl"
+        coEvery { dataSource.getVersionInfo() } throws IOException()
+        subject.tryBaseURL(TEST_BASE_URL)
+        coVerify {
+            storage.storeBaseURL(eq(TEST_BASE_URL))
+            dataSource.getVersionInfo()
+            storage.storeBaseURL(eq("baseUrl"), eq("serverVersion"))
+        }
     }
 
     @Test
     fun `when storage is empty expect getVersion to call data source`() = runTest {
         coEvery { storage.getServerVersion() } returns null
         coEvery { storage.getBaseURL() } returns TEST_BASE_URL
-        coEvery { dataSource.getVersionInfo(eq(TEST_BASE_URL)) } returns VERSION_INFO_V0
+        coEvery { dataSource.getVersionInfo() } returns VERSION_INFO_V0
         subject.getVersion()
-        coVerify { dataSource.getVersionInfo(eq(TEST_BASE_URL)) }
+        coVerify { dataSource.getVersionInfo() }
     }
 
     @Test
     fun `when storage is empty and data source has value expect getVersion to save it`() = runTest {
         coEvery { storage.getServerVersion() } returns null
         coEvery { storage.getBaseURL() } returns TEST_BASE_URL
-        coEvery { dataSource.getVersionInfo(eq(TEST_BASE_URL)) } returns VersionInfo(TEST_VERSION)
+        coEvery { dataSource.getVersionInfo() } returns VersionInfo(TEST_VERSION)
         subject.getVersion()
         coVerify { storage.storeServerVersion(TEST_VERSION) }
     }
@@ -92,7 +100,7 @@ class ServerInfoRepoTest : BaseUnitTest() {
     fun `when data source has invalid value expect getVersion to throw`() = runTest {
         coEvery { storage.getServerVersion() } returns null
         coEvery { storage.getBaseURL() } returns TEST_BASE_URL
-        coEvery { dataSource.getVersionInfo(eq(TEST_BASE_URL)) } returns VersionInfo("v2.0.0")
+        coEvery { dataSource.getVersionInfo() } returns VersionInfo("v2.0.0")
         subject.getVersion()
     }
 
@@ -100,7 +108,7 @@ class ServerInfoRepoTest : BaseUnitTest() {
     fun `when data source has invalid value expect getVersion not to save`() = runTest {
         coEvery { storage.getServerVersion() } returns null
         coEvery { storage.getBaseURL() } returns TEST_BASE_URL
-        coEvery { dataSource.getVersionInfo(eq(TEST_BASE_URL)) } returns VersionInfo("v2.0.0")
+        coEvery { dataSource.getVersionInfo() } returns VersionInfo("v2.0.0")
         subject.runCatching { getVersion() }
         coVerify(inverse = true) { storage.storeServerVersion(any()) }
     }
@@ -116,7 +124,7 @@ class ServerInfoRepoTest : BaseUnitTest() {
     fun `when storage has value expect getVersion to not call data source`() = runTest {
         coEvery { storage.getServerVersion() } returns TEST_VERSION
         subject.getVersion()
-        coVerify(inverse = true) { dataSource.getVersionInfo(any()) }
+        coVerify(inverse = true) { dataSource.getVersionInfo() }
     }
 
     @Test
@@ -135,7 +143,7 @@ class ServerInfoRepoTest : BaseUnitTest() {
     fun `when data source has valid v0 value expect getVersion to return it`() = runTest {
         coEvery { storage.getServerVersion() } returns null
         coEvery { storage.getBaseURL() } returns TEST_BASE_URL
-        coEvery { dataSource.getVersionInfo(eq(TEST_BASE_URL)) } returns VersionInfo("v0.5.6")
+        coEvery { dataSource.getVersionInfo() } returns VersionInfo("v0.5.6")
         assertThat(subject.getVersion()).isEqualTo(ServerVersion.V0)
     }
 
@@ -143,7 +151,7 @@ class ServerInfoRepoTest : BaseUnitTest() {
     fun `when data source has valid v1 value expect getVersion to return it`() = runTest {
         coEvery { storage.getServerVersion() } returns null
         coEvery { storage.getBaseURL() } returns TEST_BASE_URL
-        coEvery { dataSource.getVersionInfo(eq(TEST_BASE_URL)) } returns VersionInfo("v1.0.0-beta05")
+        coEvery { dataSource.getVersionInfo() } returns VersionInfo("v1.0.0-beta05")
         assertThat(subject.getVersion()).isEqualTo(ServerVersion.V1)
     }
 }

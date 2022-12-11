@@ -28,44 +28,39 @@ class MealieDataSourceV1Impl @Inject constructor(
 ) : MealieDataSourceV1 {
 
     override suspend fun createRecipe(
-        baseUrl: String,
         recipe: CreateRecipeRequestV1
     ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.createRecipe("$baseUrl/api/recipes", recipe) },
+        block = { service.createRecipe(recipe) },
         logMethod = { "createRecipe" },
-        logParameters = { "baseUrl = $baseUrl, recipe = $recipe" }
+        logParameters = { "recipe = $recipe" }
     )
 
     override suspend fun updateRecipe(
-        baseUrl: String,
         slug: String,
         recipe: UpdateRecipeRequestV1
     ): GetRecipeResponseV1 = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.updateRecipe("$baseUrl/api/recipes/$slug", recipe) },
+        block = { service.updateRecipe(recipe, slug) },
         logMethod = { "updateRecipe" },
-        logParameters = { "baseUrl = $baseUrl, slug = $slug, recipe = $recipe" }
+        logParameters = { "slug = $slug, recipe = $recipe" }
     )
 
     override suspend fun authenticate(
-        baseUrl: String,
         username: String,
         password: String,
     ): String = networkRequestWrapper.makeCall(
-        block = { service.getToken("$baseUrl/api/auth/token", username, password) },
+        block = { service.getToken(username, password) },
         logMethod = { "authenticate" },
-        logParameters = { "baseUrl = $baseUrl, username = $username, password = $password" }
+        logParameters = { "username = $username, password = $password" }
     ).map { it.accessToken }.getOrElse {
         val errorBody = (it as? HttpException)?.response()?.errorBody() ?: throw it
         val errorDetailV0 = errorBody.decode<ErrorDetailV1>(json)
         throw if (errorDetailV0.detail == "Unauthorized") NetworkError.Unauthorized(it) else it
     }
 
-    override suspend fun getVersionInfo(
-        baseUrl: String,
-    ): VersionResponseV1 = networkRequestWrapper.makeCall(
-        block = { service.getVersion("$baseUrl/api/app/about") },
+    override suspend fun getVersionInfo(): VersionResponseV1 = networkRequestWrapper.makeCall(
+        block = { service.getVersion() },
         logMethod = { "getVersionInfo" },
-        logParameters = { "baseUrl = $baseUrl" },
+        logParameters = { "" },
     ).getOrElse {
         throw when (it) {
             is HttpException, is SerializationException -> NetworkError.NotMealie(it)
@@ -75,40 +70,36 @@ class MealieDataSourceV1Impl @Inject constructor(
     }
 
     override suspend fun requestRecipes(
-        baseUrl: String,
         page: Int,
         perPage: Int
     ): List<GetRecipeSummaryResponseV1> = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.getRecipeSummary("$baseUrl/api/recipes", page, perPage) },
+        block = { service.getRecipeSummary(page, perPage) },
         logMethod = { "requestRecipes" },
-        logParameters = { "baseUrl = $baseUrl, page = $page, perPage = $perPage" }
+        logParameters = { "page = $page, perPage = $perPage" }
     ).items
 
     override suspend fun requestRecipeInfo(
-        baseUrl: String,
         slug: String
     ): GetRecipeResponseV1 = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.getRecipe("$baseUrl/api/recipes/$slug") },
+        block = { service.getRecipe(slug) },
         logMethod = { "requestRecipeInfo" },
-        logParameters = { "baseUrl = $baseUrl, slug = $slug" }
+        logParameters = { "slug = $slug" }
     )
 
     override suspend fun parseRecipeFromURL(
-        baseUrl: String,
         request: ParseRecipeURLRequestV1
     ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.createRecipeFromURL("$baseUrl/api/recipes/create-url", request) },
+        block = { service.createRecipeFromURL(request) },
         logMethod = { "parseRecipeFromURL" },
-        logParameters = { "baseUrl = $baseUrl, request = $request" }
+        logParameters = { "request = $request" }
     )
 
     override suspend fun createApiToken(
-        baseUrl: String,
         request: CreateApiTokenRequestV1
     ): CreateApiTokenResponseV1 = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.createApiToken("$baseUrl/api/users/api-tokens", request) },
+        block = { service.createApiToken(request) },
         logMethod = { "createApiToken" },
-        logParameters = { "baseUrl = $baseUrl, request = $request" }
+        logParameters = { "request = $request" }
     )
 }
 

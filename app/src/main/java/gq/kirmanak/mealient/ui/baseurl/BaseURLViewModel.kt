@@ -7,9 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
-import gq.kirmanak.mealient.data.baseurl.VersionDataSource
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.OperationUiState
 import kotlinx.coroutines.launch
@@ -20,7 +18,6 @@ class BaseURLViewModel @Inject constructor(
     private val serverInfoRepo: ServerInfoRepo,
     private val authRepo: AuthRepo,
     private val recipeRepo: RecipeRepo,
-    private val versionDataSource: VersionDataSource,
     private val logger: Logger,
 ) : ViewModel() {
 
@@ -42,10 +39,8 @@ class BaseURLViewModel @Inject constructor(
             _uiState.value = OperationUiState.fromResult(Result.success(Unit))
             return
         }
-        val result = runCatchingExceptCancel {
-            // If it returns proper version info then it must be a Mealie
-            val version = versionDataSource.getVersionInfo(baseURL).version
-            serverInfoRepo.storeBaseURL(baseURL, version)
+        val result = serverInfoRepo.tryBaseURL(baseURL)
+        if (result.isSuccess) {
             authRepo.logout()
             recipeRepo.clearLocalData()
         }

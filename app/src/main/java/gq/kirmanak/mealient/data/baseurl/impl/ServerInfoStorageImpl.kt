@@ -19,11 +19,28 @@ class ServerInfoStorageImpl @Inject constructor(
 
     override suspend fun getBaseURL(): String? = getValue(baseUrlKey)
 
-    override suspend fun storeBaseURL(baseURL: String, version: String) {
-        preferencesStorage.storeValues(
-            Pair(baseUrlKey, baseURL),
-            Pair(serverVersionKey, version),
-        )
+    override suspend fun storeBaseURL(baseURL: String) {
+        preferencesStorage.storeValues(Pair(baseUrlKey, baseURL))
+        preferencesStorage.removeValues(serverVersionKey)
+    }
+
+    override suspend fun storeBaseURL(baseURL: String?, version: String?) {
+        when {
+            baseURL == null -> {
+                preferencesStorage.removeValues(baseUrlKey, serverVersionKey)
+            }
+
+            version != null -> {
+                preferencesStorage.storeValues(
+                    Pair(baseUrlKey, baseURL), Pair(serverVersionKey, version)
+                )
+            }
+
+            else -> {
+                preferencesStorage.removeValues(serverVersionKey)
+                preferencesStorage.storeValues(Pair(baseUrlKey, baseURL))
+            }
+        }
     }
 
     override suspend fun getServerVersion(): String? = getValue(serverVersionKey)
@@ -33,4 +50,5 @@ class ServerInfoStorageImpl @Inject constructor(
     }
 
     private suspend fun <T> getValue(key: Preferences.Key<T>): T? = preferencesStorage.getValue(key)
+
 }

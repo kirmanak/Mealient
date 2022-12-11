@@ -4,10 +4,9 @@ interface ServerInfoRepo {
 
     suspend fun getUrl(): String?
 
-    suspend fun requireUrl(): String
-
     suspend fun getVersion(): ServerVersion
 
-    suspend fun storeBaseURL(baseURL: String, version: String)
+    suspend fun tryBaseURL(baseURL: String): Result<Unit>
+
 }
 

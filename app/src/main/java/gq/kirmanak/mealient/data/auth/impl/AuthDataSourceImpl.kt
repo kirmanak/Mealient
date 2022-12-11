@@ -19,18 +19,16 @@ class AuthDataSourceImpl @Inject constructor(
 
     private suspend fun getVersion(): ServerVersion = serverInfoRepo.getVersion()
 
-    private suspend fun getUrl(): String = serverInfoRepo.requireUrl()
-
     override suspend fun authenticate(
         username: String,
         password: String,
     ): String = when (getVersion()) {
-        ServerVersion.V0 -> v0Source.authenticate(getUrl(), username, password)
-        ServerVersion.V1 -> v1Source.authenticate(getUrl(), username, password)
+        ServerVersion.V0 -> v0Source.authenticate(username, password)
+        ServerVersion.V1 -> v1Source.authenticate(username, password)
     }
 
     override suspend fun createApiToken(name: String): String = when (getVersion()) {
-        ServerVersion.V0 -> v0Source.createApiToken(getUrl(), CreateApiTokenRequestV0(name))
-        ServerVersion.V1 -> v1Source.createApiToken(getUrl(), CreateApiTokenRequestV1(name)).token
+        ServerVersion.V0 -> v0Source.createApiToken(CreateApiTokenRequestV0(name))
+        ServerVersion.V1 -> v1Source.createApiToken(CreateApiTokenRequestV1(name)).token
     }
 }
