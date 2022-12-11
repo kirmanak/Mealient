@@ -11,6 +11,8 @@ interface PreferencesStorage {
 
     val isDisclaimerAcceptedKey: Preferences.Key<Boolean>
 
+    val lastExecutedMigrationVersionKey: Preferences.Key<Int>
+
     suspend fun <T> getValue(key: Preferences.Key<T>): T?
 
     suspend fun <T> requireValue(key: Preferences.Key<T>): T

@@ -8,13 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl.Companion.AUTH_HEADER_KEY
-import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl.Companion.EMAIL_KEY
-import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl.Companion.PASSWORD_KEY
-import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
-import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
-import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
-import gq.kirmanak.mealient.test.FakeLogger
 import gq.kirmanak.mealient.test.HiltRobolectricTest
 import io.mockk.MockKAnnotations
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,8 +25,6 @@ class AuthStorageImplTest : HiltRobolectricTest() {
     @Inject
     @ApplicationContext
     lateinit var context: Context
-
-    private val logger: Logger = FakeLogger()
 
     lateinit var subject: AuthStorage
 
@@ -54,17 +46,5 @@ class AuthStorageImplTest : HiltRobolectricTest() {
     @Test
     fun `when authHeader is observed then sends null if nothing saved`() = runTest {
         assertThat(subject.authHeaderFlow.first()).isEqualTo(null)
-    }
-
-    @Test
-    fun `when setEmail then edits shared preferences`() = runTest {
-        subject.setEmail(TEST_USERNAME)
-        assertThat(sharedPreferences.getString(EMAIL_KEY, null)).isEqualTo(TEST_USERNAME)
-    }
-
-    @Test
-    fun `when getPassword then reads shared preferences`() = runTest {
-        sharedPreferences.edit(commit = true) { putString(PASSWORD_KEY, TEST_PASSWORD) }
-        assertThat(subject.getPassword()).isEqualTo(TEST_PASSWORD)
     }
 }

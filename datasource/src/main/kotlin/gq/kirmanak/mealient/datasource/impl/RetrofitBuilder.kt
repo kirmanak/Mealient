@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.datasource
+package gq.kirmanak.mealient.datasource.impl
 
 import gq.kirmanak.mealient.logging.Logger
 import okhttp3.OkHttpClient

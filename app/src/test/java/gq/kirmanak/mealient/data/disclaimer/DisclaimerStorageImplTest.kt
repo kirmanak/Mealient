@@ -11,6 +11,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltAndroidTest
 class DisclaimerStorageImplTest : HiltRobolectricTest() {
+
     @Inject
     lateinit var subject: DisclaimerStorageImpl
 

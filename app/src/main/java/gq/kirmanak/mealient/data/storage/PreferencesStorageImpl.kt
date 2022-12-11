@@ -4,9 +4,15 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import gq.kirmanak.mealient.logging.Logger
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,6 +27,9 @@ class PreferencesStorageImpl @Inject constructor(
     override val serverVersionKey = stringPreferencesKey("serverVersion")
 
     override val isDisclaimerAcceptedKey = booleanPreferencesKey("isDisclaimedAccepted")
+
+    override val lastExecutedMigrationVersionKey: Preferences.Key<Int> =
+        intPreferencesKey("lastExecutedMigrationVersion")
 
     override suspend fun <T> getValue(key: Preferences.Key<T>): T? {
         val value = dataStore.data.first()[key]

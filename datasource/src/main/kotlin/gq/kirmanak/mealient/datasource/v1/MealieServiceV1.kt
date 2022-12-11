@@ -1,6 +1,5 @@
 package gq.kirmanak.mealient.datasource.v1
 
-import gq.kirmanak.mealient.datasource.DataSourceModule.Companion.AUTHORIZATION_HEADER_NAME
 import gq.kirmanak.mealient.datasource.v1.models.*
 import retrofit2.http.*
 
@@ -17,14 +16,12 @@ interface MealieServiceV1 {
     @POST
     suspend fun createRecipe(
         @Url url: String,
-        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
         @Body addRecipeRequest: CreateRecipeRequestV1,
     ): String
 
     @PATCH
     suspend fun updateRecipe(
         @Url url: String,
-        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
         @Body addRecipeRequest: UpdateRecipeRequestV1,
     ): GetRecipeResponseV1
 
@@ -36,7 +33,6 @@ interface MealieServiceV1 {
     @GET
     suspend fun getRecipeSummary(
         @Url url: String,
-        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,
     ): GetRecipesResponseV1
@@ -44,13 +40,17 @@ interface MealieServiceV1 {
     @GET
     suspend fun getRecipe(
         @Url url: String,
-        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
     ): GetRecipeResponseV1
 
     @POST
     suspend fun createRecipeFromURL(
         @Url url: String,
-        @Header(AUTHORIZATION_HEADER_NAME) token: String?,
         @Body request: ParseRecipeURLRequestV1,
     ): String
+
+    @POST
+    suspend fun createApiToken(
+        @Url url: String,
+        @Body request: CreateApiTokenRequestV1,
+    ): CreateApiTokenResponseV1
 }

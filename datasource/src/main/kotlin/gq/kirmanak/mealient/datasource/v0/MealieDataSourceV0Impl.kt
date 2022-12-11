@@ -4,6 +4,7 @@ import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
 import gq.kirmanak.mealient.datasource.decode
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
+import gq.kirmanak.mealient.datasource.v0.models.CreateApiTokenRequestV0
 import gq.kirmanak.mealient.datasource.v0.models.ErrorDetailV0
 import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.GetRecipeSummaryResponseV0
@@ -26,12 +27,11 @@ class MealieDataSourceV0Impl @Inject constructor(
 
     override suspend fun addRecipe(
         baseUrl: String,
-        token: String?,
         recipe: AddRecipeRequestV0,
     ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.addRecipe("$baseUrl/api/recipes/create", token, recipe) },
+        block = { service.addRecipe("$baseUrl/api/recipes/create", recipe) },
         logMethod = { "addRecipe" },
-        logParameters = { "baseUrl = $baseUrl, token = $token, recipe = $recipe" }
+        logParameters = { "baseUrl = $baseUrl, recipe = $recipe" }
     )
 
     override suspend fun authenticate(
@@ -64,33 +64,38 @@ class MealieDataSourceV0Impl @Inject constructor(
 
     override suspend fun requestRecipes(
         baseUrl: String,
-        token: String?,
         start: Int,
         limit: Int,
     ): List<GetRecipeSummaryResponseV0> = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.getRecipeSummary("$baseUrl/api/recipes/summary", token, start, limit) },
+        block = { service.getRecipeSummary("$baseUrl/api/recipes/summary", start, limit) },
         logMethod = { "requestRecipes" },
-        logParameters = { "baseUrl = $baseUrl, token = $token, start = $start, limit = $limit" }
+        logParameters = { "baseUrl = $baseUrl, start = $start, limit = $limit" }
     )
 
     override suspend fun requestRecipeInfo(
         baseUrl: String,
-        token: String?,
         slug: String,
     ): GetRecipeResponseV0 = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.getRecipe("$baseUrl/api/recipes/$slug", token) },
+        block = { service.getRecipe("$baseUrl/api/recipes/$slug") },
         logMethod = { "requestRecipeInfo" },
-        logParameters = { "baseUrl = $baseUrl, token = $token, slug = $slug" }
+        logParameters = { "baseUrl = $baseUrl, slug = $slug" }
     )
 
     override suspend fun parseRecipeFromURL(
         baseUrl: String,
-        token: String?,
         request: ParseRecipeURLRequestV0
     ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.createRecipeFromURL("$baseUrl/api/recipes/create-url", token, request) },
+        block = { service.createRecipeFromURL("$baseUrl/api/recipes/create-url", request) },
         logMethod = { "parseRecipeFromURL" },
-        logParameters = { "baseUrl = $baseUrl, token = $token, request = $request" }
+        logParameters = { "baseUrl = $baseUrl, request = $request" },
+    )
 
+    override suspend fun createApiToken(
+        baseUrl: String,
+        request: CreateApiTokenRequestV0,
+    ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.createApiToken("$baseUrl/api/users/api-tokens", request) },
+        logMethod = { "createApiToken" },
+        logParameters = { "baseUrl = $baseUrl, request = $request" }
     )
 }

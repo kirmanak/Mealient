@@ -3,7 +3,6 @@ package gq.kirmanak.mealient.data.network
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
-import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
@@ -15,7 +14,6 @@ import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_INFO
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_REQUEST_V0
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_CREATE_RECIPE_REQUEST_V1
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_FULL_RECIPE_INFO
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_RESPONSE_V0
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_RESPONSE_V1
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_RESPONSE_V0
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_RESPONSE_V1
@@ -50,36 +48,14 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     @Before
     override fun setUp() {
         super.setUp()
-        subject = MealieDataSourceWrapper(serverInfoRepo, authRepo, v0Source, v1Source, logger)
-    }
-
-    @Test
-    fun `when makeCall fails with Unauthorized expect it to invalidate token`() = runTest {
-        val slug = "porridge"
-        coEvery {
-            v0Source.requestRecipeInfo(any(), isNull(), any())
-        } throws NetworkError.Unauthorized(IOException())
-        coEvery {
-            v0Source.requestRecipeInfo(any(), eq(TEST_AUTH_HEADER), any())
-        } returns PORRIDGE_RECIPE_RESPONSE_V0
-        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
-        coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
-        coEvery { authRepo.getAuthHeader() } returns null andThen TEST_AUTH_HEADER
-
-        subject.requestRecipeInfo(slug)
-
-        coVerifySequence {
-            authRepo.getAuthHeader()
-            authRepo.invalidateAuthHeader()
-            authRepo.getAuthHeader()
-        }
+        subject = MealieDataSourceWrapper(serverInfoRepo, v0Source, v1Source)
     }
 
     @Test
     fun `when server version v1 expect requestRecipeInfo to call v1`() = runTest {
         val slug = "porridge"
         coEvery {
-            v1Source.requestRecipeInfo(eq(TEST_BASE_URL), eq(TEST_AUTH_HEADER), eq(slug))
+            v1Source.requestRecipeInfo(eq(TEST_BASE_URL), eq(slug))
         } returns PORRIDGE_RECIPE_RESPONSE_V1
         coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V1
         coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
@@ -87,7 +63,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
 
         val actual = subject.requestRecipeInfo(slug)
 
-        coVerify { v1Source.requestRecipeInfo(eq(TEST_BASE_URL), eq(TEST_AUTH_HEADER), eq(slug)) }
+        coVerify { v1Source.requestRecipeInfo(eq(TEST_BASE_URL), eq(slug)) }
 
         assertThat(actual).isEqualTo(PORRIDGE_FULL_RECIPE_INFO)
     }
@@ -95,7 +71,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     @Test
     fun `when server version v1 expect requestRecipes to call v1`() = runTest {
         coEvery {
-            v1Source.requestRecipes(any(), any(), any(), any())
+            v1Source.requestRecipes(any(), any(), any())
         } returns listOf(PORRIDGE_RECIPE_SUMMARY_RESPONSE_V1)
         coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V1
         coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
@@ -106,7 +82,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         val page = 5 // 0-9 (1), 10-19 (2), 20-29 (3), 30-39 (4), 40-49 (5)
         val perPage = 10
         coVerify {
-            v1Source.requestRecipes(eq(TEST_BASE_URL), eq(TEST_AUTH_HEADER), eq(page), eq(perPage))
+            v1Source.requestRecipes(eq(TEST_BASE_URL), eq(page), eq(perPage))
         }
 
         assertThat(actual).isEqualTo(listOf(RECIPE_SUMMARY_PORRIDGE_V1))
@@ -115,7 +91,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     @Test
     fun `when server version v0 expect requestRecipes to call v0`() = runTest {
         coEvery {
-            v0Source.requestRecipes(any(), any(), any(), any())
+            v0Source.requestRecipes(any(), any(), any())
         } returns listOf(PORRIDGE_RECIPE_SUMMARY_RESPONSE_V0)
         coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
         coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
@@ -126,7 +102,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         val actual = subject.requestRecipes(start, limit)
 
         coVerify {
-            v0Source.requestRecipes(eq(TEST_BASE_URL), eq(TEST_AUTH_HEADER), eq(start), eq(limit))
+            v0Source.requestRecipes(eq(TEST_BASE_URL), eq(start), eq(limit))
         }
 
         assertThat(actual).isEqualTo(listOf(RECIPE_SUMMARY_PORRIDGE_V0))
@@ -134,7 +110,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
 
     @Test(expected = IOException::class)
     fun `when request fails expect addRecipe to rethrow`() = runTest {
-        coEvery { v0Source.addRecipe(any(), any(), any()) } throws IOException()
+        coEvery { v0Source.addRecipe(any(), any()) } throws IOException()
         coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
         coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
         coEvery { authRepo.getAuthHeader() } returns TEST_AUTH_HEADER
@@ -145,7 +121,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     fun `when server version v0 expect addRecipe to call v0`() = runTest {
         val slug = "porridge"
 
-        coEvery { v0Source.addRecipe(any(), any(), any()) } returns slug
+        coEvery { v0Source.addRecipe(any(), any()) } returns slug
         coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
         coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
         coEvery { authRepo.getAuthHeader() } returns TEST_AUTH_HEADER
@@ -155,7 +131,6 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         coVerify {
             v0Source.addRecipe(
                 eq(TEST_BASE_URL),
-                eq(TEST_AUTH_HEADER),
                 eq(PORRIDGE_ADD_RECIPE_REQUEST_V0),
             )
         }
@@ -167,9 +142,9 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     fun `when server version v1 expect addRecipe to call v1`() = runTest {
         val slug = "porridge"
 
-        coEvery { v1Source.createRecipe(any(), any(), any()) } returns slug
+        coEvery { v1Source.createRecipe(any(), any()) } returns slug
         coEvery {
-            v1Source.updateRecipe(any(), any(), any(), any())
+            v1Source.updateRecipe(any(), any(), any())
         } returns PORRIDGE_RECIPE_RESPONSE_V1
         coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V1
         coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
@@ -180,13 +155,11 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         coVerifySequence {
             v1Source.createRecipe(
                 eq(TEST_BASE_URL),
-                eq(TEST_AUTH_HEADER),
                 eq(PORRIDGE_CREATE_RECIPE_REQUEST_V1),
             )
 
             v1Source.updateRecipe(
                 eq(TEST_BASE_URL),
-                eq(TEST_AUTH_HEADER),
                 eq(slug),
                 eq(PORRIDGE_UPDATE_RECIPE_REQUEST_V1),
             )
