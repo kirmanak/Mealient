@@ -8,9 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl.Companion.AUTH_HEADER_KEY
-import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
-import gq.kirmanak.mealient.test.FakeLogger
 import gq.kirmanak.mealient.test.HiltRobolectricTest
 import io.mockk.MockKAnnotations
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,8 +25,6 @@ class AuthStorageImplTest : HiltRobolectricTest() {
     @Inject
     @ApplicationContext
     lateinit var context: Context
-
-    private val logger: Logger = FakeLogger()
 
     lateinit var subject: AuthStorage
 
