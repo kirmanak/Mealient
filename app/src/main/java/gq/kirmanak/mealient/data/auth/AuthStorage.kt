@@ -9,12 +9,4 @@ interface AuthStorage {
     suspend fun setAuthHeader(authHeader: String?)
 
     suspend fun getAuthHeader(): String?
-
-    suspend fun setEmail(email: String?)
-
-    suspend fun getEmail(): String?
-
-    suspend fun setPassword(password: String?)
-
-    suspend fun getPassword(): String?
 }

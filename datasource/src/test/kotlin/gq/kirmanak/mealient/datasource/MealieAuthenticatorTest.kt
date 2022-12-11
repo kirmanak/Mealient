@@ -17,7 +17,7 @@ class MealieAuthenticatorTest : BaseUnitTest() {
 
     private lateinit var subject: MealieAuthenticator
 
-    @MockK
+    @MockK(relaxUnitFun = true)
     lateinit var authenticationProvider: AuthenticationProvider
 
     @Before
@@ -48,9 +48,16 @@ class MealieAuthenticatorTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when no auth header was set expect authenticate to return null`() {
+    fun `when an auth header was set expect authenticate to return null`() {
         val response = buildResponse(authHeader = "token")
         assertThat(subject.authenticate(null, response)).isNull()
+    }
+
+    @Test
+    fun `when an auth header was set expect authenticate to logout`() {
+        val response = buildResponse(authHeader = "token")
+        subject.authenticate(null, response)
+        coVerify { authenticationProvider.logout() }
     }
 
     @Test

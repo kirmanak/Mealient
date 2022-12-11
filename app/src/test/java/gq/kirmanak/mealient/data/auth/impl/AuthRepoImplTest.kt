@@ -6,6 +6,8 @@ import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_API_AUTH_HEADER
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_API_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
@@ -51,13 +53,15 @@ class AuthRepoImplTest : BaseUnitTest() {
     @Test
     fun `when authenticate successfully then saves to storage`() = runTest {
         coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
-        coEvery { dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD)) } returns TEST_TOKEN
+        coEvery { dataSource.authenticate(any(), any()) } returns TEST_TOKEN
         coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
+        coEvery { dataSource.createApiToken(any()) } returns TEST_API_TOKEN
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD)
-        coVerifyAll {
+        coVerify {
+            dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD))
             storage.setAuthHeader(TEST_AUTH_HEADER)
-            storage.setEmail(TEST_USERNAME)
-            storage.setPassword(TEST_PASSWORD)
+            dataSource.createApiToken(eq("Mealient"))
+            storage.setAuthHeader(TEST_API_AUTH_HEADER)
         }
         confirmVerified(storage)
     }
@@ -71,50 +75,9 @@ class AuthRepoImplTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when logout then removes email, password and header`() = runTest {
+    fun `when logout expect header removal`() = runTest {
         subject.logout()
-        coVerifyAll {
-            storage.setEmail(null)
-            storage.setPassword(null)
-            storage.setAuthHeader(null)
-        }
+        coVerify { storage.setAuthHeader(null) }
         confirmVerified(storage)
-    }
-
-    @Test
-    fun `when invalidate then does not authenticate without email`() = runTest {
-        coEvery { storage.getEmail() } returns null
-        coEvery { storage.getPassword() } returns TEST_PASSWORD
-        subject.invalidateAuthHeader()
-        confirmVerified(dataSource)
-    }
-
-    @Test
-    fun `when invalidate then does not authenticate without password`() = runTest {
-        coEvery { storage.getEmail() } returns TEST_USERNAME
-        coEvery { storage.getPassword() } returns null
-        subject.invalidateAuthHeader()
-        confirmVerified(dataSource)
-    }
-
-    @Test
-    fun `when invalidate with credentials then calls authenticate`() = runTest {
-        coEvery { storage.getEmail() } returns TEST_USERNAME
-        coEvery { storage.getPassword() } returns TEST_PASSWORD
-        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
-        coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
-        coEvery { dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD)) } returns TEST_TOKEN
-        subject.invalidateAuthHeader()
-        coVerifyAll { dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD)) }
-    }
-
-    @Test
-    fun `when invalidate with credentials and auth fails then clears email`() = runTest {
-        coEvery { storage.getEmail() } returns "invalid"
-        coEvery { storage.getPassword() } returns ""
-        coEvery { serverInfoRepo.requireUrl() } returns TEST_BASE_URL
-        coEvery { dataSource.authenticate(any(), any()) } throws RuntimeException()
-        subject.invalidateAuthHeader()
-        coVerify { storage.setEmail(null) }
     }
 }

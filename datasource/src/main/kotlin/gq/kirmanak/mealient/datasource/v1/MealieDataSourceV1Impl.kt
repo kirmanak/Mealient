@@ -3,6 +3,8 @@ package gq.kirmanak.mealient.datasource.v1
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
 import gq.kirmanak.mealient.datasource.decode
+import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.ErrorDetailV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
@@ -98,8 +100,15 @@ class MealieDataSourceV1Impl @Inject constructor(
         block = { service.createRecipeFromURL("$baseUrl/api/recipes/create-url", request) },
         logMethod = { "parseRecipeFromURL" },
         logParameters = { "baseUrl = $baseUrl, request = $request" }
-
     )
 
+    override suspend fun createApiToken(
+        baseUrl: String,
+        request: CreateApiTokenRequestV1
+    ): CreateApiTokenResponseV1 = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.createApiToken("$baseUrl/api/users/api-tokens", request) },
+        logMethod = { "createApiToken" },
+        logParameters = { "baseUrl = $baseUrl, request = $request" }
+    )
 }
 

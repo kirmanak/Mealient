@@ -47,4 +47,10 @@ interface MealieServiceV1 {
         @Url url: String,
         @Body request: ParseRecipeURLRequestV1,
     ): String
+
+    @POST
+    suspend fun createApiToken(
+        @Url url: String,
+        @Body request: CreateApiTokenRequestV1,
+    ): CreateApiTokenResponseV1
 }

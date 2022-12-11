@@ -4,7 +4,9 @@ import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.baseurl.ServerVersion
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
+import gq.kirmanak.mealient.datasource.v0.models.CreateApiTokenRequestV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
+import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenRequestV1
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,14 +17,20 @@ class AuthDataSourceImpl @Inject constructor(
     private val v1Source: MealieDataSourceV1,
 ) : AuthDataSource {
 
+    private suspend fun getVersion(): ServerVersion = serverInfoRepo.getVersion()
+
+    private suspend fun getUrl(): String = serverInfoRepo.requireUrl()
+
     override suspend fun authenticate(
         username: String,
         password: String,
-    ): String {
-        val baseUrl = serverInfoRepo.requireUrl()
-        return when (serverInfoRepo.getVersion()) {
-            ServerVersion.V0 -> v0Source.authenticate(baseUrl, username, password)
-            ServerVersion.V1 -> v1Source.authenticate(baseUrl, username, password)
-        }
+    ): String = when (getVersion()) {
+        ServerVersion.V0 -> v0Source.authenticate(getUrl(), username, password)
+        ServerVersion.V1 -> v1Source.authenticate(getUrl(), username, password)
+    }
+
+    override suspend fun createApiToken(name: String): String = when (getVersion()) {
+        ServerVersion.V0 -> v0Source.createApiToken(getUrl(), CreateApiTokenRequestV0(name))
+        ServerVersion.V1 -> v1Source.createApiToken(getUrl(), CreateApiTokenRequestV1(name)).token
     }
 }

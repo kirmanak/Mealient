@@ -10,9 +10,5 @@ interface AuthRepo {
 
     suspend fun getAuthHeader(): String?
 
-    suspend fun requireAuthHeader(): String
-
     suspend fun logout()
-
-    suspend fun invalidateAuthHeader()
 }

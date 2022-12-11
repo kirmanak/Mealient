@@ -32,14 +32,6 @@ class AuthStorageImpl @Inject constructor(
 
     override suspend fun getAuthHeader(): String? = getString(AUTH_HEADER_KEY)
 
-    override suspend fun setEmail(email: String?) = putString(EMAIL_KEY, email)
-
-    override suspend fun getEmail(): String? = getString(EMAIL_KEY)
-
-    override suspend fun setPassword(password: String?) = putString(PASSWORD_KEY, password)
-
-    override suspend fun getPassword(): String? = getString(PASSWORD_KEY)
-
     private suspend fun putString(
         key: String,
         value: String?
@@ -57,11 +49,5 @@ class AuthStorageImpl @Inject constructor(
     companion object {
         @VisibleForTesting
         const val AUTH_HEADER_KEY = "authHeader"
-
-        @VisibleForTesting
-        const val EMAIL_KEY = "email"
-
-        @VisibleForTesting
-        const val PASSWORD_KEY = "password"
     }
 }

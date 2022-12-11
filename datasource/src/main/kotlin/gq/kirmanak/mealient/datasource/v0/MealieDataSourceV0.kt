@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.datasource.v0
 
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
+import gq.kirmanak.mealient.datasource.v0.models.CreateApiTokenRequestV0
 import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.GetRecipeSummaryResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.ParseRecipeURLRequestV0
@@ -40,5 +41,10 @@ interface MealieDataSourceV0 {
     suspend fun parseRecipeFromURL(
         baseUrl: String,
         request: ParseRecipeURLRequestV0,
+    ): String
+
+    suspend fun createApiToken(
+        baseUrl: String,
+        request: CreateApiTokenRequestV0,
     ): String
 }

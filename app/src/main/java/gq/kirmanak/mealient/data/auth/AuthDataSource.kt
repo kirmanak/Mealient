@@ -5,4 +5,6 @@ interface AuthDataSource {
      * Tries to acquire authentication token using the provided credentials
      */
     suspend fun authenticate(username: String, password: String): String
+
+    suspend fun createApiToken(name: String): String
 }

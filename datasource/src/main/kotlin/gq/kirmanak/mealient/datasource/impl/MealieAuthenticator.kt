@@ -12,21 +12,30 @@ import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
+// TODO has to be interceptor, otherwise only public recipes are visible
 class MealieAuthenticator @Inject constructor(
-    private val authenticationProvider: Provider<AuthenticationProvider>,
+    private val authenticationProviderProvider: Provider<AuthenticationProvider>,
 ) : Authenticator {
+
+    private val authenticationProvider: AuthenticationProvider
+        get() = authenticationProviderProvider.get()
 
     override fun authenticate(route: Route?, response: Response): Request? {
         val supportsBearer = response.challenges().any { it.scheme == BEARER_SCHEME }
         val request = response.request
-        return if (supportsBearer && request.header(HEADER_NAME) == null) {
-            getAuthHeader()?.let { request.copyWithHeader(HEADER_NAME, it) }
-        } else {
-            null // Either Bearer is not supported or we've already tried to authenticate
+        return when {
+            request.header(HEADER_NAME) != null -> {
+                logout()
+                null
+            }
+            supportsBearer -> getAuthHeader()?.let { request.copyWithHeader(HEADER_NAME, it) }
+            else -> null
         }
     }
 
-    private fun getAuthHeader() = runBlocking { authenticationProvider.get().getAuthHeader() }
+    private fun getAuthHeader() = runBlocking { authenticationProvider.getAuthHeader() }
+
+    private fun logout() = runBlocking { authenticationProvider.logout() }
 
     companion object {
         @VisibleForTesting
