@@ -26,10 +26,10 @@ class MigrationDetectorImpl @Inject constructor(
         if (lastVersion != currentVersion) {
             migrationExecutors
                 .filter { it.migratingFrom <= lastVersion }
-                .forEach {
-                    runCatchingExceptCancel { it.executeMigration() }
-                        .onFailure { logger.e(it) { "Migration executor failed: $it" } }
-                        .onSuccess { logger.i { "Migration executor succeeded: $it" } }
+                .forEach { executor ->
+                    runCatchingExceptCancel { executor.executeMigration() }
+                        .onFailure { logger.e(it) { "Migration executor failed: $executor" } }
+                        .onSuccess { logger.i { "Migration executor succeeded: $executor" } }
                 }
         }
 
