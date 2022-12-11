@@ -6,8 +6,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoSet
+import gq.kirmanak.mealient.datasource.impl.AuthInterceptor
 import gq.kirmanak.mealient.datasource.impl.CacheBuilderImpl
-import gq.kirmanak.mealient.datasource.impl.MealieAuthenticator
 import gq.kirmanak.mealient.datasource.impl.NetworkRequestWrapperImpl
 import gq.kirmanak.mealient.datasource.impl.OkHttpBuilderImpl
 import gq.kirmanak.mealient.datasource.impl.RetrofitBuilder
@@ -19,7 +20,7 @@ import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1Impl
 import gq.kirmanak.mealient.datasource.v1.MealieServiceV1
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import okhttp3.Authenticator
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Converter
@@ -90,5 +91,6 @@ interface DataSourceModule {
 
     @Binds
     @Singleton
-    fun bindAuthenticator(mealieAuthenticator: MealieAuthenticator): Authenticator
+    @IntoSet
+    fun bindAuthInterceptor(authInterceptor: AuthInterceptor): Interceptor
 }
