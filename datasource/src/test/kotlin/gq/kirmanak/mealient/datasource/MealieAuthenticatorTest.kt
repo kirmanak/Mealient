@@ -17,7 +17,7 @@ class MealieAuthenticatorTest : BaseUnitTest() {
 
     private lateinit var subject: MealieAuthenticator
 
-    @MockK(relaxUnitFun = true)
+    @MockK
     lateinit var authenticationProvider: AuthenticationProvider
 
     @Before
@@ -48,32 +48,9 @@ class MealieAuthenticatorTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when had auth header but can't invalidate expect authenticate return null`() {
-        coEvery { authenticationProvider.getAuthHeader() } returns null
+    fun `when no auth header was set expect authenticate to return null`() {
         val response = buildResponse(authHeader = "token")
         assertThat(subject.authenticate(null, response)).isNull()
-    }
-
-    @Test
-    fun `when had auth header and invalidate doesn't change it expect authenticate return null`() {
-        coEvery { authenticationProvider.getAuthHeader() } returns "token"
-        val response = buildResponse(authHeader = "token")
-        assertThat(subject.authenticate(null, response)).isNull()
-    }
-
-    @Test
-    fun `when had auth header and invalidate succeeds expect authenticate return new`() {
-        coEvery { authenticationProvider.getAuthHeader() } returns "newToken"
-        val response = buildResponse(authHeader = "token")
-        assertThat(subject.authenticate(null, response)?.header(HEADER_NAME)).isEqualTo("newToken")
-    }
-
-    @Test
-    fun `when had auth header expect authenticate to invalidate it`() {
-        coEvery { authenticationProvider.getAuthHeader() } returns null
-        val response = buildResponse(authHeader = "token")
-        subject.authenticate(null, response)
-        coVerify { authenticationProvider.invalidateAuthHeader() }
     }
 
     @Test
