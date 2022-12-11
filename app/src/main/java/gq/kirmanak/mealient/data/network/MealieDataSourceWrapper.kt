@@ -27,60 +27,43 @@ class MealieDataSourceWrapper @Inject constructor(
     private val v1Source: MealieDataSourceV1,
 ) : AddRecipeDataSource, RecipeDataSource, ParseRecipeDataSource {
 
-    override suspend fun addRecipe(
-        recipe: AddRecipeInfo,
-    ): String = makeCall { url, version ->
-        when (version) {
-            ServerVersion.V0 -> v0Source.addRecipe(url, recipe.toV0Request())
-            ServerVersion.V1 -> {
-                val slug = v1Source.createRecipe(url, recipe.toV1CreateRequest())
-                v1Source.updateRecipe(url, slug, recipe.toV1UpdateRequest())
-                slug
-            }
+    private suspend fun getVersion(): ServerVersion = serverInfoRepo.getVersion()
+
+    private suspend fun getUrl(): String = serverInfoRepo.requireUrl()
+
+    override suspend fun addRecipe(recipe: AddRecipeInfo): String = when (getVersion()) {
+        ServerVersion.V0 -> v0Source.addRecipe(getUrl(), recipe.toV0Request())
+        ServerVersion.V1 -> {
+            val slug = v1Source.createRecipe(getUrl(), recipe.toV1CreateRequest())
+            v1Source.updateRecipe(getUrl(), slug, recipe.toV1UpdateRequest())
+            slug
         }
     }
 
     override suspend fun requestRecipes(
         start: Int,
         limit: Int,
-    ): List<RecipeSummaryInfo> = makeCall { url, version ->
-        when (version) {
-            ServerVersion.V0 -> {
-                v0Source.requestRecipes(url, start, limit).map { it.toRecipeSummaryInfo() }
-            }
-            ServerVersion.V1 -> {
-                // Imagine start is 30 and limit is 15. It means that we already have page 1 and 2, now we need page 3
-                val page = start / limit + 1
-                v1Source.requestRecipes(url, page, limit).map { it.toRecipeSummaryInfo() }
-            }
+    ): List<RecipeSummaryInfo> = when (getVersion()) {
+        ServerVersion.V0 -> {
+            v0Source.requestRecipes(getUrl(), start, limit).map { it.toRecipeSummaryInfo() }
+        }
+        ServerVersion.V1 -> {
+            // Imagine start is 30 and limit is 15. It means that we already have page 1 and 2, now we need page 3
+            val page = start / limit + 1
+            v1Source.requestRecipes(getUrl(), page, limit).map { it.toRecipeSummaryInfo() }
         }
     }
 
-    override suspend fun requestRecipeInfo(
-        slug: String,
-    ): FullRecipeInfo = makeCall { url, version ->
-        when (version) {
-            ServerVersion.V0 -> v0Source.requestRecipeInfo(url, slug).toFullRecipeInfo()
-            ServerVersion.V1 -> v1Source.requestRecipeInfo(url, slug).toFullRecipeInfo()
-        }
+    override suspend fun requestRecipeInfo(slug: String): FullRecipeInfo = when (getVersion()) {
+        ServerVersion.V0 -> v0Source.requestRecipeInfo(getUrl(), slug).toFullRecipeInfo()
+        ServerVersion.V1 -> v1Source.requestRecipeInfo(getUrl(), slug).toFullRecipeInfo()
     }
 
     override suspend fun parseRecipeFromURL(
         parseRecipeURLInfo: ParseRecipeURLInfo,
-    ): String = makeCall { url, version ->
-        when (version) {
-            ServerVersion.V0 -> {
-                v0Source.parseRecipeFromURL(url, parseRecipeURLInfo.toV0Request())
-            }
-            ServerVersion.V1 -> {
-                v1Source.parseRecipeFromURL(url, parseRecipeURLInfo.toV1Request())
-            }
-        }
+    ): String = when (getVersion()) {
+        ServerVersion.V0 -> v0Source.parseRecipeFromURL(getUrl(), parseRecipeURLInfo.toV0Request())
+        ServerVersion.V1 -> v1Source.parseRecipeFromURL(getUrl(), parseRecipeURLInfo.toV1Request())
     }
 
-    private suspend inline fun <T> makeCall(block: (String, ServerVersion) -> T): T {
-        val url = serverInfoRepo.requireUrl()
-        val version = serverInfoRepo.getVersion()
-        return block(url, version)
-    }
 }
