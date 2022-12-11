@@ -4,4 +4,5 @@ interface AuthenticationProvider {
 
     suspend fun getAuthHeader(): String?
 
+    suspend fun invalidateAuthHeader()
 }

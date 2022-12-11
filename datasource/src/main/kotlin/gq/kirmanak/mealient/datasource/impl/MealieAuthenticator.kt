@@ -18,15 +18,25 @@ class MealieAuthenticator @Inject constructor(
 
     override fun authenticate(route: Route?, response: Response): Request? {
         val supportsBearer = response.challenges().any { it.scheme == BEARER_SCHEME }
+        if (!supportsBearer) {
+            return null
+        }
+
         val request = response.request
-        return if (supportsBearer && request.header(HEADER_NAME) == null) {
-            getAuthHeader()?.let { request.copyWithHeader(HEADER_NAME, it) }
-        } else {
-            null // Either Bearer is not supported or we've already tried to authenticate
+        val previousHeader = request.header(HEADER_NAME)
+            ?: return getAuthHeader()?.let { request.copyWithHeader(HEADER_NAME, it) }
+
+        invalidateAuthHeader()
+        return getAuthHeader()?.takeUnless { it == previousHeader }?.let {
+            request.copyWithHeader(HEADER_NAME, it)
         }
     }
 
     private fun getAuthHeader() = runBlocking { authenticationProvider.get().getAuthHeader() }
+
+    private fun invalidateAuthHeader() {
+        runBlocking { authenticationProvider.get().invalidateAuthHeader() }
+    }
 
     companion object {
         @VisibleForTesting
