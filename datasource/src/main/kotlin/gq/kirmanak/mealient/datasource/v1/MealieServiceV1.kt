@@ -46,4 +46,7 @@ interface MealieServiceV1 {
     suspend fun createApiToken(
         @Body request: CreateApiTokenRequestV1,
     ): CreateApiTokenResponseV1
+
+    @GET("/api/users/self")
+    suspend fun getUserSelfInfo(): GetUserInfoResponseV1
 }

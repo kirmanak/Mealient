@@ -64,4 +64,8 @@ class MealieDataSourceWrapper @Inject constructor(
         ServerVersion.V1 -> v1Source.parseRecipeFromURL(parseRecipeURLInfo.toV1Request())
     }
 
+    override suspend fun getFavoriteRecipes(): List<String> = when (getVersion()) {
+        ServerVersion.V0 -> v0Source.requestUserInfo().favoriteRecipes
+        ServerVersion.V1 -> v1Source.requestUserInfo().favoriteRecipes
+    }
 }

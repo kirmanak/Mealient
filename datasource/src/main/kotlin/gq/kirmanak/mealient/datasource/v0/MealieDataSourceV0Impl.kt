@@ -8,6 +8,7 @@ import gq.kirmanak.mealient.datasource.v0.models.CreateApiTokenRequestV0
 import gq.kirmanak.mealient.datasource.v0.models.ErrorDetailV0
 import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.GetRecipeSummaryResponseV0
+import gq.kirmanak.mealient.datasource.v0.models.GetUserInfoResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.ParseRecipeURLRequestV0
 import gq.kirmanak.mealient.datasource.v0.models.VersionResponseV0
 import kotlinx.serialization.SerializationException
@@ -49,7 +50,6 @@ class MealieDataSourceV0Impl @Inject constructor(
     override suspend fun getVersionInfo(): VersionResponseV0 = networkRequestWrapper.makeCall(
         block = { service.getVersion() },
         logMethod = { "getVersionInfo" },
-        logParameters = { "" },
     ).getOrElse {
         throw when (it) {
             is HttpException, is SerializationException -> NetworkError.NotMealie(it)
@@ -90,4 +90,11 @@ class MealieDataSourceV0Impl @Inject constructor(
         logMethod = { "createApiToken" },
         logParameters = { "request = $request" }
     )
+
+    override suspend fun requestUserInfo(): GetUserInfoResponseV0 {
+        return networkRequestWrapper.makeCallAndHandleUnauthorized(
+            block = { service.getUserSelfInfo() },
+            logMethod = { "requestUserInfo" },
+        )
+    }
 }

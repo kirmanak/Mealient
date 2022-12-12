@@ -80,7 +80,7 @@ fun GetRecipeSummaryResponseV1.toRecipeSummaryInfo() = RecipeSummaryInfo(
     imageId = remoteId,
 )
 
-fun RecipeSummaryInfo.toRecipeSummaryEntity() = RecipeSummaryEntity(
+fun RecipeSummaryInfo.toRecipeSummaryEntity(isFavorite: Boolean) = RecipeSummaryEntity(
     remoteId = remoteId,
     name = name,
     slug = slug,
@@ -88,6 +88,7 @@ fun RecipeSummaryInfo.toRecipeSummaryEntity() = RecipeSummaryEntity(
     dateAdded = dateAdded,
     dateUpdated = dateUpdated,
     imageId = imageId,
+    isFavorite = isFavorite,
 )
 
 fun VersionResponseV0.toVersionInfo() = VersionInfo(version)

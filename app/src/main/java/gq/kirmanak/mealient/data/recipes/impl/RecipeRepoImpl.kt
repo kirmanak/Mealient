@@ -66,7 +66,7 @@ class RecipeRepoImpl @Inject constructor(
     override suspend fun refreshRecipes() {
         logger.v { "refreshRecipes() called" }
         runCatchingExceptCancel {
-            storage.refreshAll(dataSource.requestRecipes(0, INITIAL_LOAD_PAGE_SIZE))
+            mediator.updateRecipes(0, INITIAL_LOAD_PAGE_SIZE)
         }.onFailure {
             logger.e(it) { "Can't refresh recipes" }
         }

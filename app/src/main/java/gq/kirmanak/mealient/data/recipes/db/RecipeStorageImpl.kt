@@ -3,7 +3,6 @@ package gq.kirmanak.mealient.data.recipes.db
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
 import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
-import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
 import gq.kirmanak.mealient.database.AppDb
 import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
@@ -11,7 +10,6 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.extensions.toRecipeEntity
 import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
 import gq.kirmanak.mealient.extensions.toRecipeInstructionEntity
-import gq.kirmanak.mealient.extensions.toRecipeSummaryEntity
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,11 +21,9 @@ class RecipeStorageImpl @Inject constructor(
 ) : RecipeStorage {
     private val recipeDao: RecipeDao by lazy { db.recipeDao() }
 
-    override suspend fun saveRecipes(recipes: List<RecipeSummaryInfo>) {
+    override suspend fun saveRecipes(recipes: List<RecipeSummaryEntity>) {
         logger.v { "saveRecipes() called with $recipes" }
-        val entities = recipes.map { it.toRecipeSummaryEntity() }
-        logger.v { "saveRecipes: entities = $entities" }
-        db.withTransaction { recipeDao.insertRecipes(entities) }
+        db.withTransaction { recipeDao.insertRecipes(recipes) }
     }
 
     override fun queryRecipes(query: String?): PagingSource<Int, RecipeSummaryEntity> {
@@ -36,7 +32,7 @@ class RecipeStorageImpl @Inject constructor(
         else recipeDao.queryRecipesByPages(query)
     }
 
-    override suspend fun refreshAll(recipes: List<RecipeSummaryInfo>) {
+    override suspend fun refreshAll(recipes: List<RecipeSummaryEntity>) {
         logger.v { "refreshAll() called with: recipes = $recipes" }
         db.withTransaction {
             recipeDao.removeAllRecipes()
