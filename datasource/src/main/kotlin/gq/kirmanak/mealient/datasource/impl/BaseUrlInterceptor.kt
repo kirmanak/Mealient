@@ -14,8 +14,8 @@ import javax.inject.Singleton
 
 @Singleton
 class BaseUrlInterceptor @Inject constructor(
-    private val serverUrlProviderProvider: Provider<ServerUrlProvider>,
     private val logger: Logger,
+    private val serverUrlProviderProvider: Provider<ServerUrlProvider>,
 ) : LocalInterceptor {
 
     private val serverUrlProvider: ServerUrlProvider
