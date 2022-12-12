@@ -14,8 +14,8 @@ import javax.inject.Singleton
 
 @Singleton
 class BaseUrlInterceptor @Inject constructor(
-    private val serverUrlProviderProvider: Provider<ServerUrlProvider>,
     private val logger: Logger,
+    private val serverUrlProviderProvider: Provider<ServerUrlProvider>,
 ) : LocalInterceptor {
 
     private val serverUrlProvider: ServerUrlProvider
@@ -29,6 +29,7 @@ class BaseUrlInterceptor @Inject constructor(
             .newBuilder()
             .host(baseUrl.host)
             .scheme(baseUrl.scheme)
+            .port(baseUrl.port)
             .build()
         val newRequest = oldRequest.newBuilder().url(correctUrl).build()
         logger.d { "Replaced ${oldRequest.url} with ${newRequest.url}" }
