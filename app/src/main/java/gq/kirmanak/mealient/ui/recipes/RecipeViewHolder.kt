@@ -1,5 +1,7 @@
 package gq.kirmanak.mealient.ui.recipes
 
+import android.view.View
+import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
@@ -43,6 +45,24 @@ class RecipeViewHolder private constructor(
                 logger.d { "bind: item clicked $entity" }
                 clickListener(entity)
             }
+            binding.favoriteIcon.setImageResource(
+                if (item.isFavorite) {
+                    R.drawable.ic_favorite_filled
+                } else {
+                    R.drawable.ic_favorite_unfilled
+                }
+            )
+            binding.favoriteIcon.setContentDescription(
+                if (item.isFavorite) {
+                    R.string.view_holder_recipe_favorite_content_description
+                } else {
+                    R.string.view_holder_recipe_non_favorite_content_description
+                }
+            )
         }
     }
+}
+
+private fun View.setContentDescription(@StringRes resId: Int) {
+    contentDescription = context.getString(resId)
 }
