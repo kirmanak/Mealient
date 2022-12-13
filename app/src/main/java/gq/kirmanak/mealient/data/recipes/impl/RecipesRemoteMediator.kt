@@ -66,6 +66,7 @@ class RecipesRemoteMediator @Inject constructor(
         limit: Int,
         loadType: LoadType = REFRESH,
     ): Int = coroutineScope {
+        logger.v { "updateRecipes() called with: start = $start, limit = $limit, loadType = $loadType" }
         val deferredRecipes = async { network.requestRecipes(start, limit) }
         val favorites = network.getFavoriteRecipes().toHashSet()
         val recipes = deferredRecipes.await()
@@ -81,6 +82,7 @@ class RecipesRemoteMediator @Inject constructor(
     }
 
     suspend fun onFavoritesChange() {
+        logger.v { "onFavoritesChange() called" }
         val favorites = network.getFavoriteRecipes()
         storage.updateFavoriteRecipes(favorites)
         pagingSourceFactory.invalidate()
