@@ -79,4 +79,10 @@ class RecipesRemoteMediator @Inject constructor(
         else storage.saveRecipes(entities)
         recipes.size
     }
+
+    suspend fun onFavoritesChange() {
+        val favorites = network.getFavoriteRecipes()
+        storage.updateFavoriteRecipes(favorites)
+        pagingSourceFactory.invalidate()
+    }
 }

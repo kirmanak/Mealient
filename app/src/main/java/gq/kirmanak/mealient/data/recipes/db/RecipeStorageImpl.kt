@@ -72,4 +72,12 @@ class RecipeStorageImpl @Inject constructor(
         logger.v { "queryRecipeInfo() returned: $fullRecipeInfo" }
         return fullRecipeInfo
     }
+
+    override suspend fun updateFavoriteRecipes(favorites: List<String>) {
+        logger.v { "updateFavoriteRecipes() called with: favorites = $favorites" }
+        db.withTransaction {
+            recipeDao.setFavorite(favorites)
+            recipeDao.setNonFavorite(favorites)
+        }
+    }
 }

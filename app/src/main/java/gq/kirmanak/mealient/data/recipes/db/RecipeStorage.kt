@@ -17,4 +17,6 @@ interface RecipeStorage {
     suspend fun saveRecipeInfo(recipe: FullRecipeInfo)
 
     suspend fun queryRecipeInfo(recipeId: String): FullRecipeEntity?
+
+    suspend fun updateFavoriteRecipes(favorites: List<String>)
 }

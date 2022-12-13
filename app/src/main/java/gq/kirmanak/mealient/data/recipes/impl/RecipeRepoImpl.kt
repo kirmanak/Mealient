@@ -76,6 +76,7 @@ class RecipeRepoImpl @Inject constructor(
         logger.v { "updateIsRecipeFavorite() called with: recipeSlug = $recipeSlug, isFavorite = $isFavorite" }
         runCatchingExceptCancel {
             dataSource.updateIsRecipeFavorite(recipeSlug, isFavorite)
+            mediator.onFavoritesChange()
         }.onFailure {
             logger.e(it) { "Can't update recipe's is favorite status" }
         }
