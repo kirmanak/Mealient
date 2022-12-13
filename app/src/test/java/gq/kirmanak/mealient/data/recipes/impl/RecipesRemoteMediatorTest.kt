@@ -9,6 +9,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.NetworkError.Unauthorized
 import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARIES
+import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARY_ENTITIES
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
@@ -42,7 +43,14 @@ class RecipesRemoteMediatorTest : BaseUnitTest() {
     @Before
     override fun setUp() {
         super.setUp()
-        subject = RecipesRemoteMediator(storage, dataSource, pagingSourceFactory, logger)
+        subject = RecipesRemoteMediator(
+            storage = storage,
+            network = dataSource,
+            pagingSourceFactory = pagingSourceFactory,
+            logger = logger,
+            dispatchers = dispatchers,
+        )
+        coEvery { dataSource.getFavoriteRecipes() } returns emptyList()
     }
 
     @Test
@@ -70,7 +78,7 @@ class RecipesRemoteMediatorTest : BaseUnitTest() {
     fun `when first load with refresh successful then recipes stored`() = runTest {
         coEvery { dataSource.requestRecipes(eq(0), eq(6)) } returns TEST_RECIPE_SUMMARIES
         subject.load(REFRESH, pagingState())
-        coVerify { storage.refreshAll(eq(TEST_RECIPE_SUMMARIES)) }
+        coVerify { storage.refreshAll(eq(TEST_RECIPE_SUMMARY_ENTITIES)) }
     }
 
     @Test
@@ -132,9 +140,7 @@ class RecipesRemoteMediatorTest : BaseUnitTest() {
         subject.load(REFRESH, pagingState())
         coEvery { dataSource.requestRecipes(any(), any()) } throws Unauthorized(RuntimeException())
         subject.load(APPEND, pagingState())
-        coVerify {
-            storage.refreshAll(TEST_RECIPE_SUMMARIES)
-        }
+        coVerify { storage.refreshAll(TEST_RECIPE_SUMMARY_ENTITIES) }
     }
 
     private fun pagingState(

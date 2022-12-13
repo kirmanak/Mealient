@@ -4,7 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.paging.*
 import androidx.paging.LoadType.PREPEND
 import androidx.paging.LoadType.REFRESH
-import gq.kirmanak.mealient.data.configuration.AppDispatchers
+import gq.kirmanak.mealient.architecture.configuration.AppDispatchers
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity

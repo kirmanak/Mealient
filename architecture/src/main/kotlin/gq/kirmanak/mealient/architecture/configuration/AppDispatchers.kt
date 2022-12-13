@@ -1,11 +1,10 @@
-package gq.kirmanak.mealient.data.configuration
+package gq.kirmanak.mealient.architecture.configuration
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.MainCoroutineDispatcher
 
 interface AppDispatchers {
     val io: CoroutineDispatcher
-    val main: MainCoroutineDispatcher
+    val main: CoroutineDispatcher
     val default: CoroutineDispatcher
     val unconfined: CoroutineDispatcher
 }
