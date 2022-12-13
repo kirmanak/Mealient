@@ -72,21 +72,12 @@ class RecipeRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun removeFavoriteRecipe(recipeSlug: String) {
-        logger.v { "removeFavoriteRecipe() called with: recipeSlug = $recipeSlug" }
+    override suspend fun updateIsRecipeFavorite(recipeSlug: String, isFavorite: Boolean) {
+        logger.v { "updateIsRecipeFavorite() called with: recipeSlug = $recipeSlug, isFavorite = $isFavorite" }
         runCatchingExceptCancel {
-            dataSource.removeFavoriteRecipe(recipeSlug)
+            dataSource.updateIsRecipeFavorite(recipeSlug, isFavorite)
         }.onFailure {
-            logger.e(it) { "Can't remove a favorite recipe" }
-        }
-    }
-
-    override suspend fun addFavoriteRecipe(recipeSlug: String) {
-        logger.v { "addFavoriteRecipe() called with: recipeSlug = $recipeSlug" }
-        runCatchingExceptCancel {
-            dataSource.addFavoriteRecipe(recipeSlug)
-        }.onFailure {
-            logger.e(it) { "Can't add a favorite recipe" }
+            logger.e(it) { "Can't update recipe's is favorite status" }
         }
     }
 

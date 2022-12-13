@@ -44,11 +44,10 @@ class RecipesListViewModel @Inject constructor(
     fun onFavoriteIconClick(recipeSummaryEntity: RecipeSummaryEntity) {
         logger.v { "onFavoriteIconClick() called with: recipeSummaryEntity = $recipeSummaryEntity" }
         viewModelScope.launch {
-            if (recipeSummaryEntity.isFavorite) {
-                recipeRepo.removeFavoriteRecipe(recipeSummaryEntity.slug)
-            } else {
-                recipeRepo.addFavoriteRecipe(recipeSummaryEntity.slug)
-            }
+            recipeRepo.updateIsRecipeFavorite(
+                recipeSlug = recipeSummaryEntity.slug,
+                isFavorite = recipeSummaryEntity.isFavorite.not(),
+            )
         }
     }
 }

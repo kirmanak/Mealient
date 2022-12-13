@@ -7,7 +7,5 @@ interface RecipeDataSource {
 
     suspend fun getFavoriteRecipes(): List<String>
 
-    suspend fun removeFavoriteRecipe(recipeSlug: String)
-
-    suspend fun addFavoriteRecipe(recipeSlug: String)
+    suspend fun updateIsRecipeFavorite(recipeSlug: String, isFavorite: Boolean)
 }

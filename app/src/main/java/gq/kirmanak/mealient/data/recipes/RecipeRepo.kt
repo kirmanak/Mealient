@@ -18,7 +18,5 @@ interface RecipeRepo {
 
     suspend fun refreshRecipes()
 
-    suspend fun removeFavoriteRecipe(recipeSlug: String)
-
-    suspend fun addFavoriteRecipe(recipeSlug: String)
+    suspend fun updateIsRecipeFavorite(recipeSlug: String, isFavorite: Boolean)
 }
