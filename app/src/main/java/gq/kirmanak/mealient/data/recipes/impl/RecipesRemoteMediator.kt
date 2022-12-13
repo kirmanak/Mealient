@@ -68,7 +68,9 @@ class RecipesRemoteMediator @Inject constructor(
     ): Int = coroutineScope {
         logger.v { "updateRecipes() called with: start = $start, limit = $limit, loadType = $loadType" }
         val deferredRecipes = async { network.requestRecipes(start, limit) }
-        val favorites = network.getFavoriteRecipes().toHashSet()
+        val favorites = runCatchingExceptCancel {
+            network.getFavoriteRecipes()
+        }.getOrDefault(emptyList()).toHashSet()
         val recipes = deferredRecipes.await()
         val entities = withContext(dispatchers.default) {
             recipes.map { recipe ->
