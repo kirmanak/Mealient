@@ -41,6 +41,8 @@ class RecipesListViewModel @Inject constructor(
         }
     }
 
+    // TODO hide favourite icons if not authorized
+    // TODO show error message when can't update favourite status
     fun onFavoriteIconClick(recipeSummaryEntity: RecipeSummaryEntity) {
         logger.v { "onFavoriteIconClick() called with: recipeSummaryEntity = $recipeSummaryEntity" }
         viewModelScope.launch {
