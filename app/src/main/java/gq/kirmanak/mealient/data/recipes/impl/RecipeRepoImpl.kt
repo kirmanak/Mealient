@@ -72,6 +72,24 @@ class RecipeRepoImpl @Inject constructor(
         }
     }
 
+    override suspend fun removeFavoriteRecipe(recipeSlug: String) {
+        logger.v { "removeFavoriteRecipe() called with: recipeSlug = $recipeSlug" }
+        runCatchingExceptCancel {
+            dataSource.removeFavoriteRecipe(recipeSlug)
+        }.onFailure {
+            logger.e(it) { "Can't remove a favorite recipe" }
+        }
+    }
+
+    override suspend fun addFavoriteRecipe(recipeSlug: String) {
+        logger.v { "addFavoriteRecipe() called with: recipeSlug = $recipeSlug" }
+        runCatchingExceptCancel {
+            dataSource.addFavoriteRecipe(recipeSlug)
+        }.onFailure {
+            logger.e(it) { "Can't add a favorite recipe" }
+        }
+    }
+
     companion object {
         private const val LOAD_PAGE_SIZE = 50
         private const val INITIAL_LOAD_PAGE_SIZE = LOAD_PAGE_SIZE * 3

@@ -68,4 +68,26 @@ class MealieDataSourceWrapper @Inject constructor(
         ServerVersion.V0 -> v0Source.requestUserInfo().favoriteRecipes
         ServerVersion.V1 -> v1Source.requestUserInfo().favoriteRecipes
     }
+
+    override suspend fun removeFavoriteRecipe(recipeSlug: String) = when (getVersion()) {
+        ServerVersion.V0 -> {
+            val userId = v0Source.requestUserInfo().id
+            v0Source.removeFavoriteRecipe(userId, recipeSlug)
+        }
+        ServerVersion.V1 -> {
+            val userId = v1Source.requestUserInfo().id
+            v1Source.removeFavoriteRecipe(userId, recipeSlug)
+        }
+    }
+
+    override suspend fun addFavoriteRecipe(recipeSlug: String) = when (getVersion()) {
+        ServerVersion.V0 -> {
+            val userId = v0Source.requestUserInfo().id
+            v0Source.addFavoriteRecipe(userId, recipeSlug)
+        }
+        ServerVersion.V1 -> {
+            val userId = v1Source.requestUserInfo().id
+            v1Source.addFavoriteRecipe(userId, recipeSlug)
+        }
+    }
 }

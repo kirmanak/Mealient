@@ -42,4 +42,8 @@ interface MealieDataSourceV0 {
     ): String
 
     suspend fun requestUserInfo(): GetUserInfoResponseV0
+
+    suspend fun removeFavoriteRecipe(userId: Int, recipeSlug: String)
+
+    suspend fun addFavoriteRecipe(userId: Int, recipeSlug: String)
 }

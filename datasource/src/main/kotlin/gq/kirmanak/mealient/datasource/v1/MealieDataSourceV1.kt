@@ -50,4 +50,8 @@ interface MealieDataSourceV1 {
     ): CreateApiTokenResponseV1
 
     suspend fun requestUserInfo(): GetUserInfoResponseV1
+
+    suspend fun removeFavoriteRecipe(userId: String, recipeSlug: String)
+
+    suspend fun addFavoriteRecipe(userId: String, recipeSlug: String)
 }

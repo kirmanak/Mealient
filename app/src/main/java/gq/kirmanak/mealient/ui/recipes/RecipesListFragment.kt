@@ -90,7 +90,16 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
     private fun setupRecipeAdapter() {
         logger.v { "setupRecipeAdapter() called" }
 
-        val recipesAdapter = recipePagingAdapterFactory.build { onRecipeClicked(it) }
+        val recipesAdapter = recipePagingAdapterFactory.build {
+            when (it) {
+                is RecipeViewHolder.ClickEvent.FavoriteClick -> {
+                    viewModel.onFavoriteIconClick(it.recipeSummaryEntity)
+                }
+                is RecipeViewHolder.ClickEvent.RecipeClick -> {
+                    onRecipeClicked(it.recipeSummaryEntity)
+                }
+            }
+        }
 
         with(binding.recipes) {
             adapter = recipesAdapter

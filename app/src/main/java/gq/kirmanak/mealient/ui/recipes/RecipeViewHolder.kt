@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.ui.recipes
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.scopes.FragmentScoped
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.ViewHolderRecipeBinding
@@ -10,25 +11,38 @@ import gq.kirmanak.mealient.extensions.resources
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class RecipeViewHolder private constructor(
     private val logger: Logger,
     private val binding: ViewHolderRecipeBinding,
     private val recipeImageLoader: RecipeImageLoader,
-    private val clickListener: (RecipeSummaryEntity) -> Unit,
+    private val clickListener: (ClickEvent) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    @Singleton
+    @FragmentScoped
     class Factory @Inject constructor(
+        private val recipeImageLoader: RecipeImageLoader,
         private val logger: Logger,
     ) {
 
         fun build(
-            recipeImageLoader: RecipeImageLoader,
             binding: ViewHolderRecipeBinding,
-            clickListener: (RecipeSummaryEntity) -> Unit,
+            clickListener: (ClickEvent) -> Unit,
         ) = RecipeViewHolder(logger, binding, recipeImageLoader, clickListener)
+
+    }
+
+    sealed class ClickEvent {
+
+        abstract val recipeSummaryEntity: RecipeSummaryEntity
+
+        data class FavoriteClick(
+            override val recipeSummaryEntity: RecipeSummaryEntity
+        ) : ClickEvent()
+
+        data class RecipeClick(
+            override val recipeSummaryEntity: RecipeSummaryEntity
+        ) : ClickEvent()
 
     }
 
@@ -43,7 +57,10 @@ class RecipeViewHolder private constructor(
         item?.let { entity ->
             binding.root.setOnClickListener {
                 logger.d { "bind: item clicked $entity" }
-                clickListener(entity)
+                clickListener(ClickEvent.RecipeClick(entity))
+            }
+            binding.favoriteIcon.setOnClickListener {
+                clickListener(ClickEvent.FavoriteClick(entity))
             }
             binding.favoriteIcon.setImageResource(
                 if (item.isFavorite) {

@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetUserInfoResponseV1(
+    @SerialName("id") val id: String,
     @SerialName("favoriteRecipes") val favoriteRecipes: List<String> = emptyList(),
 )

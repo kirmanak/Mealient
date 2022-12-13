@@ -6,4 +6,8 @@ interface RecipeDataSource {
     suspend fun requestRecipeInfo(slug: String): FullRecipeInfo
 
     suspend fun getFavoriteRecipes(): List<String>
+
+    suspend fun removeFavoriteRecipe(recipeSlug: String)
+
+    suspend fun addFavoriteRecipe(recipeSlug: String)
 }

@@ -43,4 +43,16 @@ interface MealieServiceV0 {
 
     @GET("/api/users/self")
     suspend fun getUserSelfInfo(): GetUserInfoResponseV0
+
+    @DELETE("/api/users/{userId}/favorites/{recipeSlug}")
+    suspend fun removeFavoriteRecipe(
+        @Path("userId") userId: Int,
+        @Path("recipeSlug") recipeSlug: String
+    )
+
+    @POST("/api/users/{userId}/favorites/{recipeSlug}")
+    suspend fun addFavoriteRecipe(
+        @Path("userId") userId: Int,
+        @Path("recipeSlug") recipeSlug: String
+    )
 }

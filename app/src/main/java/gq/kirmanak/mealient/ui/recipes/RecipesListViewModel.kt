@@ -8,10 +8,12 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.extensions.valueUpdatesOnly
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +38,17 @@ class RecipesListViewModel @Inject constructor(
             val result = recipeRepo.refreshRecipeInfo(recipeSlug)
             logger.v { "refreshRecipeInfo: emitting $result" }
             emit(result)
+        }
+    }
+
+    fun onFavoriteIconClick(recipeSummaryEntity: RecipeSummaryEntity) {
+        logger.v { "onFavoriteIconClick() called with: recipeSummaryEntity = $recipeSummaryEntity" }
+        viewModelScope.launch {
+            if (recipeSummaryEntity.isFavorite) {
+                recipeRepo.removeFavoriteRecipe(recipeSummaryEntity.slug)
+            } else {
+                recipeRepo.addFavoriteRecipe(recipeSummaryEntity.slug)
+            }
         }
     }
 }

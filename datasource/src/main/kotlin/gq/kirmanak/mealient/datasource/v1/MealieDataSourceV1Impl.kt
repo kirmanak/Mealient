@@ -108,5 +108,23 @@ class MealieDataSourceV1Impl @Inject constructor(
             logMethod = { "requestUserInfo" },
         )
     }
+
+    override suspend fun removeFavoriteRecipe(
+        userId: String,
+        recipeSlug: String
+    ): Unit = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.removeFavoriteRecipe(userId, recipeSlug) },
+        logMethod = { "removeFavoriteRecipe" },
+        logParameters = { "userId = $userId, recipeSlug = $recipeSlug" }
+    )
+
+    override suspend fun addFavoriteRecipe(
+        userId: String,
+        recipeSlug: String
+    ): Unit = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.addFavoriteRecipe(userId, recipeSlug) },
+        logMethod = { "addFavoriteRecipe" },
+        logParameters = { "userId = $userId, recipeSlug = $recipeSlug" }
+    )
 }
 
