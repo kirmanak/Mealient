@@ -42,11 +42,13 @@ class RecipesPagingAdapter private constructor(
 
     private object RecipeDiffCallback : DiffUtil.ItemCallback<RecipeSummaryEntity>() {
         override fun areItemsTheSame(
-            oldItem: RecipeSummaryEntity, newItem: RecipeSummaryEntity
+            oldItem: RecipeSummaryEntity,
+            newItem: RecipeSummaryEntity,
         ): Boolean = oldItem.remoteId == newItem.remoteId
 
         override fun areContentsTheSame(
-            oldItem: RecipeSummaryEntity, newItem: RecipeSummaryEntity
-        ): Boolean = oldItem.name == newItem.name && oldItem.slug == newItem.slug
+            oldItem: RecipeSummaryEntity,
+            newItem: RecipeSummaryEntity,
+        ): Boolean = oldItem == newItem
     }
 }
