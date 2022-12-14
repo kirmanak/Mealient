@@ -55,7 +55,9 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
                 checkedMenuItemId = R.id.recipes_list
             )
         }
-        setupRecipeAdapter()
+        viewModel.showFavoriteIcon.observe(viewLifecycleOwner) { showFavoriteIcon ->
+            setupRecipeAdapter(showFavoriteIcon)
+        }
         hideKeyboardOnScroll()
     }
 
@@ -87,10 +89,10 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
         return findNavController().currentDestination?.id != R.id.recipesListFragment
     }
 
-    private fun setupRecipeAdapter() {
+    private fun setupRecipeAdapter(showFavoriteIcon: Boolean) {
         logger.v { "setupRecipeAdapter() called" }
 
-        val recipesAdapter = recipePagingAdapterFactory.build {
+        val recipesAdapter = recipePagingAdapterFactory.build(showFavoriteIcon) {
             when (it) {
                 is RecipeViewHolder.ClickEvent.FavoriteClick -> {
                     onFavoriteClick(it)

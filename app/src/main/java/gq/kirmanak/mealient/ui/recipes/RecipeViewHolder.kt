@@ -2,7 +2,11 @@ package gq.kirmanak.mealient.ui.recipes
 
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.scopes.FragmentScoped
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
@@ -10,25 +14,24 @@ import gq.kirmanak.mealient.databinding.ViewHolderRecipeBinding
 import gq.kirmanak.mealient.extensions.resources
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.images.RecipeImageLoader
-import javax.inject.Inject
 
-class RecipeViewHolder private constructor(
+class RecipeViewHolder @AssistedInject constructor(
     private val logger: Logger,
-    private val binding: ViewHolderRecipeBinding,
+    @Assisted private val binding: ViewHolderRecipeBinding,
     private val recipeImageLoader: RecipeImageLoader,
-    private val clickListener: (ClickEvent) -> Unit,
+    @Assisted private val showFavoriteIcon: Boolean,
+    @Assisted private val clickListener: (ClickEvent) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     @FragmentScoped
-    class Factory @Inject constructor(
-        private val recipeImageLoader: RecipeImageLoader,
-        private val logger: Logger,
-    ) {
+    @AssistedFactory
+    interface Factory {
 
         fun build(
+            showFavoriteIcon: Boolean,
             binding: ViewHolderRecipeBinding,
             clickListener: (ClickEvent) -> Unit,
-        ) = RecipeViewHolder(logger, binding, recipeImageLoader, clickListener)
+        ): RecipeViewHolder
 
     }
 
@@ -59,6 +62,7 @@ class RecipeViewHolder private constructor(
                 logger.d { "bind: item clicked $entity" }
                 clickListener(ClickEvent.RecipeClick(entity))
             }
+            binding.favoriteIcon.isVisible = showFavoriteIcon
             binding.favoriteIcon.setOnClickListener {
                 clickListener(ClickEvent.FavoriteClick(entity))
             }

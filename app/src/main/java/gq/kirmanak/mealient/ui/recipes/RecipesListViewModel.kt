@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.ui.recipes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -23,6 +24,7 @@ class RecipesListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val pagingData = recipeRepo.createPager().flow.cachedIn(viewModelScope)
+    val showFavoriteIcon = authRepo.isAuthorizedFlow.asLiveData()
 
     init {
         authRepo.isAuthorizedFlow.valueUpdatesOnly().onEach { hasAuthorized ->
@@ -40,7 +42,6 @@ class RecipesListViewModel @Inject constructor(
         }
     }
 
-    // TODO hide favourite icons if not authorized
     fun onFavoriteIconClick(recipeSummaryEntity: RecipeSummaryEntity) = liveData {
         logger.v { "onFavoriteIconClick() called with: recipeSummaryEntity = $recipeSummaryEntity" }
         recipeRepo.updateIsRecipeFavorite(
