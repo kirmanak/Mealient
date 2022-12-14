@@ -72,14 +72,15 @@ class RecipeRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateIsRecipeFavorite(recipeSlug: String, isFavorite: Boolean) {
+    override suspend fun updateIsRecipeFavorite(
+        recipeSlug: String,
+        isFavorite: Boolean,
+    ): Result<Unit> = runCatchingExceptCancel {
         logger.v { "updateIsRecipeFavorite() called with: recipeSlug = $recipeSlug, isFavorite = $isFavorite" }
-        runCatchingExceptCancel {
-            dataSource.updateIsRecipeFavorite(recipeSlug, isFavorite)
-            mediator.onFavoritesChange()
-        }.onFailure {
-            logger.e(it) { "Can't update recipe's is favorite status" }
-        }
+        dataSource.updateIsRecipeFavorite(recipeSlug, isFavorite)
+        mediator.onFavoritesChange()
+    }.onFailure {
+        logger.e(it) { "Can't update recipe's is favorite status" }
     }
 
     companion object {

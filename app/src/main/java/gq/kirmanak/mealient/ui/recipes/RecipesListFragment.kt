@@ -93,7 +93,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
         val recipesAdapter = recipePagingAdapterFactory.build {
             when (it) {
                 is RecipeViewHolder.ClickEvent.FavoriteClick -> {
-                    viewModel.onFavoriteIconClick(it.recipeSummaryEntity)
+                    onFavoriteClick(it)
                 }
                 is RecipeViewHolder.ClickEvent.RecipeClick -> {
                     onRecipeClicked(it.recipeSummaryEntity)
@@ -134,6 +134,16 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
         collectWhenViewResumed(binding.refresher.refreshRequestFlow(logger)) {
             logger.v { "setupRecipeAdapter: received refresh request" }
             recipesAdapter.refresh()
+        }
+    }
+
+    private fun onFavoriteClick(event: RecipeViewHolder.ClickEvent) {
+        logger.v { "onFavoriteClick() called with: event = $event" }
+        viewModel.onFavoriteIconClick(event.recipeSummaryEntity).observe(viewLifecycleOwner) {
+            logger.d { "onFavoriteClick: result is $it" }
+            if (it.isFailure) {
+                showLongToast(R.string.fragment_recipes_favorite_update_failed)
+            }
         }
     }
 

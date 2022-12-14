@@ -13,7 +13,6 @@ import gq.kirmanak.mealient.extensions.valueUpdatesOnly
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,14 +41,11 @@ class RecipesListViewModel @Inject constructor(
     }
 
     // TODO hide favourite icons if not authorized
-    // TODO show error message when can't update favourite status
-    fun onFavoriteIconClick(recipeSummaryEntity: RecipeSummaryEntity) {
+    fun onFavoriteIconClick(recipeSummaryEntity: RecipeSummaryEntity) = liveData {
         logger.v { "onFavoriteIconClick() called with: recipeSummaryEntity = $recipeSummaryEntity" }
-        viewModelScope.launch {
-            recipeRepo.updateIsRecipeFavorite(
-                recipeSlug = recipeSummaryEntity.slug,
-                isFavorite = recipeSummaryEntity.isFavorite.not(),
-            )
-        }
+        recipeRepo.updateIsRecipeFavorite(
+            recipeSlug = recipeSummaryEntity.slug,
+            isFavorite = recipeSummaryEntity.isFavorite.not(),
+        ).also { emit(it) }
     }
 }
