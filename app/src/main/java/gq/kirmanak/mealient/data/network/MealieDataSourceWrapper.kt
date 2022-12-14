@@ -90,4 +90,9 @@ class MealieDataSourceWrapper @Inject constructor(
             }
         }
     }
+
+    override suspend fun deleteRecipe(recipeSlug: String) = when (getVersion()) {
+        ServerVersion.V0 -> v0Source.deleteRecipe(recipeSlug)
+        ServerVersion.V1 -> v1Source.deleteRecipe(recipeSlug)
+    }
 }

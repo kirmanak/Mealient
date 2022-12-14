@@ -8,4 +8,6 @@ interface RecipeDataSource {
     suspend fun getFavoriteRecipes(): List<String>
 
     suspend fun updateIsRecipeFavorite(recipeSlug: String, isFavorite: Boolean)
+
+    suspend fun deleteRecipe(recipeSlug: String)
 }

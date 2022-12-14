@@ -83,6 +83,14 @@ class RecipeRepoImpl @Inject constructor(
         logger.e(it) { "Can't update recipe's is favorite status" }
     }
 
+    override suspend fun deleteRecipe(recipeSlug: String): Result<Unit> = runCatchingExceptCancel {
+        logger.v { "deleteRecipe() called with: recipeSlug = $recipeSlug" }
+        dataSource.deleteRecipe(recipeSlug)
+        // TODO update local db
+    }.onFailure {
+        logger.e(it) { "Can't delete recipe" }
+    }
+
     companion object {
         private const val LOAD_PAGE_SIZE = 50
         private const val INITIAL_LOAD_PAGE_SIZE = LOAD_PAGE_SIZE * 3

@@ -100,6 +100,9 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
                 is RecipeViewHolder.ClickEvent.RecipeClick -> {
                     onRecipeClicked(it.recipeSummaryEntity)
                 }
+                is RecipeViewHolder.ClickEvent.DeleteClick -> {
+                    onDeleteClick(it)
+                }
             }
         }
 
@@ -136,6 +139,16 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
         collectWhenViewResumed(binding.refresher.refreshRequestFlow(logger)) {
             logger.v { "setupRecipeAdapter: received refresh request" }
             recipesAdapter.refresh()
+        }
+    }
+
+    private fun onDeleteClick(event: RecipeViewHolder.ClickEvent) {
+        logger.v { "onDeleteClick() called with: event = $event" }
+        viewModel.onDeleteConfirm(event.recipeSummaryEntity).observe(viewLifecycleOwner) {
+            logger.d { "onDeleteClick: result is $it" }
+            if (it.isFailure) {
+                showLongToast(R.string.fragment_recipes_delete_recipe_failed)
+            }
         }
     }
 

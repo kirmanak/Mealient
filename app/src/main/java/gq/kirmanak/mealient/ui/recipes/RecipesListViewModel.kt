@@ -49,4 +49,9 @@ class RecipesListViewModel @Inject constructor(
             isFavorite = recipeSummaryEntity.isFavorite.not(),
         ).also { emit(it) }
     }
+
+    fun onDeleteConfirm(recipeSummaryEntity: RecipeSummaryEntity) = liveData {
+        logger.v { "onDeleteConfirm() called with: recipeSummaryEntity = $recipeSummaryEntity" }
+        recipeRepo.deleteRecipe(recipeSummaryEntity.slug).also { emit(it) }
+    }
 }
