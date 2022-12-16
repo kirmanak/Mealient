@@ -8,9 +8,11 @@ import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.datasource.NetworkError.Unauthorized
 import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_FULL_RECIPE_INFO
+import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_RECIPE_SUMMARY_ENTITY
 import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -105,5 +107,22 @@ class RecipeRepoTest : BaseUnitTest() {
     fun `when refresh recipes expect correct parameters`() = runTest {
         subject.refreshRecipes()
         coVerify { remoteMediator.updateRecipes(eq(0), eq(150), eq(LoadType.REFRESH)) }
+    }
+
+    @Test
+    fun `when delete recipe expect correct sequence`() = runTest {
+        subject.deleteRecipe(CAKE_RECIPE_SUMMARY_ENTITY)
+        coVerifyOrder {
+            dataSource.deleteRecipe(eq("cake"))
+            storage.deleteRecipe(eq(CAKE_RECIPE_SUMMARY_ENTITY))
+            pagingSourceFactory.invalidate()
+        }
+    }
+
+    @Test
+    fun `when delete recipe remotely fails expect it isn't deleted locally`() = runTest {
+        coEvery { dataSource.deleteRecipe(any()) } throws Unauthorized(IOException())
+        subject.deleteRecipe(CAKE_RECIPE_SUMMARY_ENTITY)
+        coVerify(inverse = true) { storage.deleteRecipe(any()) }
     }
 }
