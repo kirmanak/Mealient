@@ -51,6 +51,10 @@
 	<string name="fragment_recipes_load_failure_toast_no_connection">no connection</string>
 	<string name="fragment_recipes_favorite_update_failed">Favorite status update failed</string>
 	<string name="fragment_recipes_delete_recipe_failed">Recipe removal failed</string>
+	<string name="fragment_recipes_delete_recipe_confirm_dialog_title">Delete recipe</string>
+	<string name="fragment_recipes_delete_recipe_confirm_dialog_message">Are you sure you want to delete %1$s? This cannot be undone.</string>
+	<string name="fragment_recipes_delete_recipe_confirm_dialog_positive_btn">Confirm</string>
+	<string name="fragment_recipes_delete_recipe_confirm_dialog_negative_btn">Cancel</string>
 	<string name="menu_navigation_drawer_change_url">Change URL</string>
 	<string name="search_recipes_hint">Search recipes</string>
 	<string name="menu_navigation_drawer_header" translatable="false">@string/app_name</string>

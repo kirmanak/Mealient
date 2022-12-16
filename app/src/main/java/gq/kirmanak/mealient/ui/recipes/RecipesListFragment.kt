@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.ui.recipes
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
@@ -13,6 +14,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
@@ -144,12 +146,28 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
 
     private fun onDeleteClick(event: RecipeViewHolder.ClickEvent) {
         logger.v { "onDeleteClick() called with: event = $event" }
-        viewModel.onDeleteConfirm(event.recipeSummaryEntity).observe(viewLifecycleOwner) {
-            logger.d { "onDeleteClick: result is $it" }
-            if (it.isFailure) {
-                showLongToast(R.string.fragment_recipes_delete_recipe_failed)
+        val entity = event.recipeSummaryEntity
+        val message = getString(
+            R.string.fragment_recipes_delete_recipe_confirm_dialog_message, entity.name
+        )
+        val onPositiveClick = DialogInterface.OnClickListener { _, _ ->
+            viewModel.onDeleteConfirm(entity).observe(viewLifecycleOwner) {
+                logger.d { "onDeleteClick: result is $it" }
+                if (it.isFailure) {
+                    showLongToast(R.string.fragment_recipes_delete_recipe_failed)
+                }
             }
         }
+        val positiveBtnResId = R.string.fragment_recipes_delete_recipe_confirm_dialog_positive_btn
+        val titleResId = R.string.fragment_recipes_delete_recipe_confirm_dialog_title
+        val negativeBtnResId = R.string.fragment_recipes_delete_recipe_confirm_dialog_negative_btn
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(titleResId)
+            .setMessage(message)
+            .setPositiveButton(positiveBtnResId, onPositiveClick)
+            .setNegativeButton(negativeBtnResId) { _, _ -> }
+            .show()
+
     }
 
     private fun onFavoriteClick(event: RecipeViewHolder.ClickEvent) {
