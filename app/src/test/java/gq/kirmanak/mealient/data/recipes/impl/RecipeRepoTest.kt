@@ -25,7 +25,7 @@ class RecipeRepoTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var storage: RecipeStorage
 
-    @MockK
+    @MockK(relaxUnitFun = true)
     lateinit var dataSource: RecipeDataSource
 
     @MockK
