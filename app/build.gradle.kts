@@ -38,10 +38,6 @@ android {
     }
 
     buildTypes {
-        getByName("debug") {
-            enableUnitTestCoverage = true
-            enableAndroidTestCoverage = true
-        }
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
