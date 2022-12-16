@@ -46,4 +46,7 @@ interface RecipeDao {
 
     @Query("UPDATE recipe_summaries SET is_favorite = 0 WHERE slug NOT IN (:favorites)")
     suspend fun setNonFavorite(favorites: List<String>)
+
+    @Delete
+    suspend fun deleteRecipe(entity: RecipeSummaryEntity)
 }

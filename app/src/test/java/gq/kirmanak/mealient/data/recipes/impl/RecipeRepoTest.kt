@@ -70,19 +70,25 @@ class RecipeRepoTest : BaseUnitTest() {
 
     @Test
     fun `when remove favorite recipe expect correct sequence`() = runTest {
+        coEvery { dataSource.getFavoriteRecipes() } returns listOf("porridge")
         subject.updateIsRecipeFavorite("cake", false)
         coVerify {
             dataSource.updateIsRecipeFavorite(eq("cake"), eq(false))
-            remoteMediator.onFavoritesChange()
+            dataSource.getFavoriteRecipes()
+            storage.updateFavoriteRecipes(eq(listOf("porridge")))
+            pagingSourceFactory.invalidate()
         }
     }
 
     @Test
     fun `when add favorite recipe expect correct sequence`() = runTest {
+        coEvery { dataSource.getFavoriteRecipes() } returns listOf("porridge", "cake")
         subject.updateIsRecipeFavorite("porridge", true)
         coVerify {
             dataSource.updateIsRecipeFavorite(eq("porridge"), eq(true))
-            remoteMediator.onFavoritesChange()
+            dataSource.getFavoriteRecipes()
+            storage.updateFavoriteRecipes(eq(listOf("porridge", "cake")))
+            pagingSourceFactory.invalidate()
         }
     }
 
@@ -92,7 +98,7 @@ class RecipeRepoTest : BaseUnitTest() {
             dataSource.updateIsRecipeFavorite(any(), any())
         } throws Unauthorized(IOException())
         subject.updateIsRecipeFavorite("porridge", true)
-        coVerify(inverse = true) { remoteMediator.onFavoritesChange() }
+        coVerify(inverse = true) { dataSource.getFavoriteRecipes() }
     }
 
     @Test

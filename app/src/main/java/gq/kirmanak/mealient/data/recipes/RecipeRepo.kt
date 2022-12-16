@@ -20,5 +20,5 @@ interface RecipeRepo {
 
     suspend fun updateIsRecipeFavorite(recipeSlug: String, isFavorite: Boolean): Result<Unit>
 
-    suspend fun deleteRecipe(recipeSlug: String): Result<Unit>
+    suspend fun deleteRecipe(entity: RecipeSummaryEntity): Result<Unit>
 }
