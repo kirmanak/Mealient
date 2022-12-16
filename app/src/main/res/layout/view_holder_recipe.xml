@@ -65,6 +65,7 @@
 			app:layout_constraintBottom_toTopOf="@+id/image"
 			app:layout_constraintEnd_toStartOf="@id/favorite_icon"
 			app:layout_constraintTop_toTopOf="parent"
+			app:layout_goneMarginEnd="0dp"
 			app:srcCompat="@drawable/ic_delete" />
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
