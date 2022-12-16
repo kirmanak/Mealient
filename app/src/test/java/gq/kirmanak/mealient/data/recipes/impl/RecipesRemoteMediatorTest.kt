@@ -18,6 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import java.io.IOException
 
 @ExperimentalCoroutinesApi
 @OptIn(ExperimentalPagingApi::class)
@@ -141,6 +142,34 @@ class RecipesRemoteMediatorTest : BaseUnitTest() {
         coEvery { dataSource.requestRecipes(any(), any()) } throws Unauthorized(RuntimeException())
         subject.load(APPEND, pagingState())
         coVerify { storage.refreshAll(TEST_RECIPE_SUMMARY_ENTITIES) }
+    }
+
+    @Test
+    fun `when favorites change expect network call`() = runTest {
+        coEvery { dataSource.getFavoriteRecipes() } returns listOf("cake", "porridge")
+        subject.onFavoritesChange()
+        coVerify { dataSource.getFavoriteRecipes() }
+    }
+
+    @Test
+    fun `when favorites change expect storage update`() = runTest {
+        coEvery { dataSource.getFavoriteRecipes() } returns listOf("cake", "porridge")
+        subject.onFavoritesChange()
+        coVerify { storage.updateFavoriteRecipes(eq(listOf("cake", "porridge"))) }
+    }
+
+    @Test
+    fun `when favorites change expect factory invalidation`() = runTest {
+        coEvery { dataSource.getFavoriteRecipes() } returns listOf("cake", "porridge")
+        subject.onFavoritesChange()
+        coVerify { pagingSourceFactory.invalidate() }
+    }
+
+    @Test
+    fun `when recipe update requested but favorite fails expect non-zero updates`() = runTest {
+        coEvery { dataSource.getFavoriteRecipes() } throws Unauthorized(IOException())
+        coEvery { dataSource.requestRecipes(eq(0), eq(6)) } returns TEST_RECIPE_SUMMARIES
+        assertThat(subject.updateRecipes(0, 6, APPEND)).isEqualTo(2)
     }
 
     private fun pagingState(
