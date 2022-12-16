@@ -57,4 +57,10 @@
 	<string name="content_description_activity_share_recipe_progress">Индикатор прогресса</string>
 	<string name="view_holder_recipe_favorite_content_description">Добавлен в избранное</string>
 	<string name="view_holder_recipe_non_favorite_content_description">Не добавлен в избранное</string>
+	<string name="fragment_recipes_delete_recipe_failed">Не удалось удалить рецепт</string>
+	<string name="fragment_recipes_delete_recipe_confirm_dialog_title">Удалить рецепт</string>
+	<string name="fragment_recipes_delete_recipe_confirm_dialog_message">Вы уверены, что хотите удалить %1$s? Удаление необратимо.</string>
+	<string name="view_holder_recipe_delete_content_description">Удалить рецепт</string>
+	<string name="fragment_recipes_delete_recipe_confirm_dialog_positive_btn">Подтвердить</string>
+	<string name="fragment_recipes_delete_recipe_confirm_dialog_negative_btn">Отмена</string>
 </resources>

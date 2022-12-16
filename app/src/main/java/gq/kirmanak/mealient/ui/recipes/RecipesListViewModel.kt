@@ -2,9 +2,9 @@ package gq.kirmanak.mealient.ui.recipes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
@@ -12,8 +12,16 @@ import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.extensions.valueUpdatesOnly
 import gq.kirmanak.mealient.logging.Logger
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,8 +31,18 @@ class RecipesListViewModel @Inject constructor(
     private val logger: Logger,
 ) : ViewModel() {
 
-    val pagingData = recipeRepo.createPager().flow.cachedIn(viewModelScope)
-    val showFavoriteIcon = authRepo.isAuthorizedFlow.asLiveData()
+    val pagingData: Flow<PagingData<RecipeSummaryEntity>> = recipeRepo.createPager().flow
+        .cachedIn(viewModelScope)
+
+    val showFavoriteIcon: StateFlow<Boolean> = authRepo.isAuthorizedFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    private val _deleteRecipeResult = MutableSharedFlow<Result<Unit>>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val deleteRecipeResult: SharedFlow<Result<Unit>> get() = _deleteRecipeResult
 
     init {
         authRepo.isAuthorizedFlow.valueUpdatesOnly().onEach { hasAuthorized ->
@@ -48,5 +66,14 @@ class RecipesListViewModel @Inject constructor(
             recipeSlug = recipeSummaryEntity.slug,
             isFavorite = recipeSummaryEntity.isFavorite.not(),
         ).also { emit(it) }
+    }
+
+    fun onDeleteConfirm(recipeSummaryEntity: RecipeSummaryEntity) {
+        logger.v { "onDeleteConfirm() called with: recipeSummaryEntity = $recipeSummaryEntity" }
+        viewModelScope.launch {
+            val result = recipeRepo.deleteRecipe(recipeSummaryEntity)
+            logger.d { "onDeleteConfirm: delete result is $result" }
+            _deleteRecipeResult.emit(result)
+        }
     }
 }

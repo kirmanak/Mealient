@@ -15,9 +15,7 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.Timeout
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ShareRecipeViewModelTest : BaseUnitTest() {
@@ -26,9 +24,6 @@ class ShareRecipeViewModelTest : BaseUnitTest() {
     lateinit var shareRecipeRepo: ShareRecipeRepo
 
     lateinit var subject: ShareRecipeViewModel
-
-    @get:Rule
-    val timeoutRule: Timeout = Timeout.seconds(5)
 
     @Before
     override fun setUp() {

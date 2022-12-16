@@ -115,4 +115,12 @@ class MealieDataSourceV0Impl @Inject constructor(
         logMethod = { "addFavoriteRecipe" },
         logParameters = { "userId = $userId, recipeSlug = $recipeSlug" }
     )
+
+    override suspend fun deleteRecipe(
+        slug: String
+    ): Unit = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.deleteRecipe(slug) },
+        logMethod = { "deleteRecipe" },
+        logParameters = { "slug = $slug" }
+    )
 }

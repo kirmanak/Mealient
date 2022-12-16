@@ -47,6 +47,10 @@ class RecipeViewHolder @AssistedInject constructor(
             override val recipeSummaryEntity: RecipeSummaryEntity
         ) : ClickEvent()
 
+        data class DeleteClick(
+            override val recipeSummaryEntity: RecipeSummaryEntity
+        ) : ClickEvent()
+
     }
 
     private val loadingPlaceholder by lazy {
@@ -62,6 +66,7 @@ class RecipeViewHolder @AssistedInject constructor(
                 logger.d { "bind: item clicked $entity" }
                 clickListener(ClickEvent.RecipeClick(entity))
             }
+
             binding.favoriteIcon.isVisible = showFavoriteIcon
             binding.favoriteIcon.setOnClickListener {
                 clickListener(ClickEvent.FavoriteClick(entity))
@@ -80,6 +85,10 @@ class RecipeViewHolder @AssistedInject constructor(
                     R.string.view_holder_recipe_non_favorite_content_description
                 }
             )
+
+            binding.deleteIcon.setOnClickListener {
+                clickListener(ClickEvent.DeleteClick(item))
+            }
         }
     }
 }

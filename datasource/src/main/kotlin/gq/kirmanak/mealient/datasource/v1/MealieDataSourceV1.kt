@@ -54,4 +54,5 @@ interface MealieDataSourceV1 {
     suspend fun removeFavoriteRecipe(userId: String, recipeSlug: String)
 
     suspend fun addFavoriteRecipe(userId: String, recipeSlug: String)
+    suspend fun deleteRecipe(slug: String)
 }

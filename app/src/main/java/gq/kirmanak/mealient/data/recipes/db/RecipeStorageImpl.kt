@@ -80,4 +80,9 @@ class RecipeStorageImpl @Inject constructor(
             recipeDao.setNonFavorite(favorites)
         }
     }
+
+    override suspend fun deleteRecipe(entity: RecipeSummaryEntity) {
+        logger.v { "deleteRecipeBySlug() called with: entity = $entity" }
+        recipeDao.deleteRecipe(entity)
+    }
 }

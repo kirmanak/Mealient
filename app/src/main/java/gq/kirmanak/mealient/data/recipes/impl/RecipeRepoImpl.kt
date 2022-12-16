@@ -78,9 +78,22 @@ class RecipeRepoImpl @Inject constructor(
     ): Result<Unit> = runCatchingExceptCancel {
         logger.v { "updateIsRecipeFavorite() called with: recipeSlug = $recipeSlug, isFavorite = $isFavorite" }
         dataSource.updateIsRecipeFavorite(recipeSlug, isFavorite)
-        mediator.onFavoritesChange()
+        val favorites = dataSource.getFavoriteRecipes()
+        storage.updateFavoriteRecipes(favorites)
+        pagingSourceFactory.invalidate()
     }.onFailure {
         logger.e(it) { "Can't update recipe's is favorite status" }
+    }
+
+    override suspend fun deleteRecipe(
+        entity: RecipeSummaryEntity
+    ): Result<Unit> = runCatchingExceptCancel {
+        logger.v { "deleteRecipe() called with: entity = $entity" }
+        dataSource.deleteRecipe(entity.slug)
+        storage.deleteRecipe(entity)
+        pagingSourceFactory.invalidate()
+    }.onFailure {
+        logger.e(it) { "Can't delete recipe" }
     }
 
     companion object {

@@ -55,4 +55,9 @@ interface MealieServiceV0 {
         @Path("userId") userId: Int,
         @Path("recipeSlug") recipeSlug: String
     )
+
+    @DELETE("/api/recipes/{slug}")
+    suspend fun deleteRecipe(
+        @Path("slug") slug: String
+    )
 }
