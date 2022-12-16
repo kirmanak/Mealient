@@ -5,9 +5,12 @@ import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
+import gq.kirmanak.mealient.test.AuthImplTestData.FAVORITE_RECIPES_LIST
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION_V0
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION_V1
+import gq.kirmanak.mealient.test.AuthImplTestData.USER_INFO_V0
+import gq.kirmanak.mealient.test.AuthImplTestData.USER_INFO_V1
 import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_INFO
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_REQUEST_V0
@@ -36,10 +39,10 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var authRepo: AuthRepo
 
-    @MockK
+    @MockK(relaxUnitFun = true)
     lateinit var v0Source: MealieDataSourceV0
 
-    @MockK
+    @MockK(relaxUnitFun = true)
     lateinit var v1Source: MealieDataSourceV1
 
     lateinit var subject: MealieDataSourceWrapper
@@ -48,14 +51,14 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     override fun setUp() {
         super.setUp()
         subject = MealieDataSourceWrapper(serverInfoRepo, v0Source, v1Source)
+        coEvery { v0Source.requestUserInfo() } returns USER_INFO_V0
+        coEvery { v1Source.requestUserInfo() } returns USER_INFO_V1
     }
 
     @Test
     fun `when server version v1 expect requestRecipeInfo to call v1`() = runTest {
         val slug = "porridge"
-        coEvery {
-            v1Source.requestRecipeInfo(eq(slug))
-        } returns PORRIDGE_RECIPE_RESPONSE_V1
+        coEvery { v1Source.requestRecipeInfo(eq(slug)) } returns PORRIDGE_RECIPE_RESPONSE_V1
         coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V1
         coEvery { authRepo.getAuthHeader() } returns TEST_AUTH_HEADER
 
@@ -156,5 +159,71 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         }
 
         assertThat(actual).isEqualTo(slug)
+    }
+
+    @Test
+    fun `when remove favorite recipe info with v0 expect correct sequence`() = runTest {
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
+        subject.updateIsRecipeFavorite(recipeSlug = "cake", isFavorite = false)
+        coVerify {
+            v0Source.requestUserInfo()
+            v0Source.removeFavoriteRecipe(eq(3), eq("cake"))
+        }
+    }
+
+    @Test
+    fun `when remove favorite recipe info with v1 expect correct sequence`() = runTest {
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V1
+        subject.updateIsRecipeFavorite(recipeSlug = "cake", isFavorite = false)
+        coVerify {
+            v1Source.requestUserInfo()
+            v1Source.removeFavoriteRecipe(eq("userId"), eq("cake"))
+        }
+    }
+
+    @Test
+    fun `when add favorite recipe info with v0 expect correct sequence`() = runTest {
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
+        subject.updateIsRecipeFavorite(recipeSlug = "cake", isFavorite = true)
+        coVerify {
+            v0Source.requestUserInfo()
+            v0Source.addFavoriteRecipe(eq(3), eq("cake"))
+        }
+    }
+
+    @Test
+    fun `when add favorite recipe info with v1 expect correct sequence`() = runTest {
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V1
+        subject.updateIsRecipeFavorite(recipeSlug = "cake", isFavorite = true)
+        coVerify {
+            v1Source.requestUserInfo()
+            v1Source.addFavoriteRecipe(eq("userId"), eq("cake"))
+        }
+    }
+
+    @Test
+    fun `when get favorite recipes with v1 expect correct call`() = runTest {
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V1
+        subject.getFavoriteRecipes()
+        coVerify { v1Source.requestUserInfo() }
+    }
+
+    @Test
+    fun `when get favorite recipes with v0 expect correct call`() = runTest {
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
+        subject.getFavoriteRecipes()
+        coVerify { v0Source.requestUserInfo() }
+    }
+
+    @Test
+    fun `when get favorite recipes with v1 expect correct result`() = runTest {
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V1
+        assertThat(subject.getFavoriteRecipes()).isEqualTo(FAVORITE_RECIPES_LIST)
+    }
+
+    @Test
+    fun `when get favorite recipes with v0 expect correct result`() = runTest {
+        coEvery { serverInfoRepo.getVersion() } returns TEST_SERVER_VERSION_V0
+        assertThat(subject.getFavoriteRecipes()).isEqualTo(FAVORITE_RECIPES_LIST)
     }
 }

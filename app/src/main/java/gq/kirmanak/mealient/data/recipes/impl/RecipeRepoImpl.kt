@@ -66,10 +66,21 @@ class RecipeRepoImpl @Inject constructor(
     override suspend fun refreshRecipes() {
         logger.v { "refreshRecipes() called" }
         runCatchingExceptCancel {
-            storage.refreshAll(dataSource.requestRecipes(0, INITIAL_LOAD_PAGE_SIZE))
+            mediator.updateRecipes(0, INITIAL_LOAD_PAGE_SIZE)
         }.onFailure {
             logger.e(it) { "Can't refresh recipes" }
         }
+    }
+
+    override suspend fun updateIsRecipeFavorite(
+        recipeSlug: String,
+        isFavorite: Boolean,
+    ): Result<Unit> = runCatchingExceptCancel {
+        logger.v { "updateIsRecipeFavorite() called with: recipeSlug = $recipeSlug, isFavorite = $isFavorite" }
+        dataSource.updateIsRecipeFavorite(recipeSlug, isFavorite)
+        mediator.onFavoritesChange()
+    }.onFailure {
+        logger.e(it) { "Can't update recipe's is favorite status" }
     }
 
     companion object {

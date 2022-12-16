@@ -4,11 +4,16 @@ import androidx.annotation.VisibleForTesting
 import androidx.paging.*
 import androidx.paging.LoadType.PREPEND
 import androidx.paging.LoadType.REFRESH
+import gq.kirmanak.mealient.architecture.configuration.AppDispatchers
 import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
+import gq.kirmanak.mealient.extensions.toRecipeSummaryEntity
 import gq.kirmanak.mealient.logging.Logger
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,14 +24,14 @@ class RecipesRemoteMediator @Inject constructor(
     private val network: RecipeDataSource,
     private val pagingSourceFactory: RecipePagingSourceFactory,
     private val logger: Logger,
+    private val dispatchers: AppDispatchers,
 ) : RemoteMediator<Int, RecipeSummaryEntity>() {
 
     @VisibleForTesting
     var lastRequestEnd: Int = 0
 
     override suspend fun load(
-        loadType: LoadType,
-        state: PagingState<Int, RecipeSummaryEntity>
+        loadType: LoadType, state: PagingState<Int, RecipeSummaryEntity>
     ): MediatorResult {
         logger.v { "load() called with: lastRequestEnd = $lastRequestEnd, loadType = $loadType, state = $state" }
 
@@ -39,10 +44,7 @@ class RecipesRemoteMediator @Inject constructor(
         val limit = if (loadType == REFRESH) state.config.initialLoadSize else state.config.pageSize
 
         val count: Int = runCatchingExceptCancel {
-            val recipes = network.requestRecipes(start, limit)
-            if (loadType == REFRESH) storage.refreshAll(recipes)
-            else storage.saveRecipes(recipes)
-            recipes.size
+            updateRecipes(start, limit, loadType)
         }.getOrElse {
             logger.e(it) { "load: can't load recipes" }
             return MediatorResult.Error(it)
@@ -57,5 +59,34 @@ class RecipesRemoteMediator @Inject constructor(
         logger.d { "load: expectedCount = $limit, received $count" }
         lastRequestEnd = start + count
         return MediatorResult.Success(endOfPaginationReached = count < limit)
+    }
+
+    suspend fun updateRecipes(
+        start: Int,
+        limit: Int,
+        loadType: LoadType = REFRESH,
+    ): Int = coroutineScope {
+        logger.v { "updateRecipes() called with: start = $start, limit = $limit, loadType = $loadType" }
+        val deferredRecipes = async { network.requestRecipes(start, limit) }
+        val favorites = runCatchingExceptCancel {
+            network.getFavoriteRecipes()
+        }.getOrDefault(emptyList()).toHashSet()
+        val recipes = deferredRecipes.await()
+        val entities = withContext(dispatchers.default) {
+            recipes.map { recipe ->
+                val isFavorite = favorites.contains(recipe.slug)
+                recipe.toRecipeSummaryEntity(isFavorite)
+            }
+        }
+        if (loadType == REFRESH) storage.refreshAll(entities)
+        else storage.saveRecipes(entities)
+        recipes.size
+    }
+
+    suspend fun onFavoritesChange() {
+        logger.v { "onFavoritesChange() called" }
+        val favorites = network.getFavoriteRecipes()
+        storage.updateFavoriteRecipes(favorites)
+        pagingSourceFactory.invalidate()
     }
 }

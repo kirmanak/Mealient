@@ -17,8 +17,7 @@
 			android:id="@+id/name"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="9dp"
-			android:layout_marginBottom="5dp"
+			android:layout_marginVertical="@dimen/margin_small"
 			android:ellipsize="end"
 			android:maxLines="1"
 			android:textAppearance="?textAppearanceHeadline6"
@@ -32,18 +31,29 @@
 			android:id="@+id/image"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
-			android:layout_marginStart="15dp"
-			android:layout_marginTop="20dp"
-			android:layout_marginEnd="13dp"
+			android:layout_marginHorizontal="@dimen/margin_medium"
 			android:contentDescription="@string/content_description_view_holder_recipe_image"
 			android:scaleType="centerCrop"
 			app:layout_constraintBottom_toTopOf="@+id/name"
 			app:layout_constraintDimensionRatio="2:1"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/favorite_icon"
 			app:layout_constraintVertical_chainStyle="packed"
+			app:layout_goneMarginTop="@dimen/margin_medium"
 			app:shapeAppearance="?shapeAppearanceCornerMedium"
 			tools:srcCompat="@drawable/placeholder_recipe" />
+
+		<ImageView
+			android:id="@+id/favorite_icon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginVertical="@dimen/margin_small"
+			android:contentDescription="@string/view_holder_recipe_favorite_content_description"
+			app:layout_constraintBottom_toTopOf="@+id/image"
+			app:layout_constraintEnd_toEndOf="@id/image"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:srcCompat="@drawable/ic_favorite_unfilled"
+			tools:visibility="gone" />
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -9,6 +9,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.NetworkError.Unauthorized
 import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARIES
+import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARY_ENTITIES
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
@@ -17,6 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import java.io.IOException
 
 @ExperimentalCoroutinesApi
 @OptIn(ExperimentalPagingApi::class)
@@ -42,7 +44,14 @@ class RecipesRemoteMediatorTest : BaseUnitTest() {
     @Before
     override fun setUp() {
         super.setUp()
-        subject = RecipesRemoteMediator(storage, dataSource, pagingSourceFactory, logger)
+        subject = RecipesRemoteMediator(
+            storage = storage,
+            network = dataSource,
+            pagingSourceFactory = pagingSourceFactory,
+            logger = logger,
+            dispatchers = dispatchers,
+        )
+        coEvery { dataSource.getFavoriteRecipes() } returns emptyList()
     }
 
     @Test
@@ -70,7 +79,7 @@ class RecipesRemoteMediatorTest : BaseUnitTest() {
     fun `when first load with refresh successful then recipes stored`() = runTest {
         coEvery { dataSource.requestRecipes(eq(0), eq(6)) } returns TEST_RECIPE_SUMMARIES
         subject.load(REFRESH, pagingState())
-        coVerify { storage.refreshAll(eq(TEST_RECIPE_SUMMARIES)) }
+        coVerify { storage.refreshAll(eq(TEST_RECIPE_SUMMARY_ENTITIES)) }
     }
 
     @Test
@@ -132,9 +141,35 @@ class RecipesRemoteMediatorTest : BaseUnitTest() {
         subject.load(REFRESH, pagingState())
         coEvery { dataSource.requestRecipes(any(), any()) } throws Unauthorized(RuntimeException())
         subject.load(APPEND, pagingState())
-        coVerify {
-            storage.refreshAll(TEST_RECIPE_SUMMARIES)
-        }
+        coVerify { storage.refreshAll(TEST_RECIPE_SUMMARY_ENTITIES) }
+    }
+
+    @Test
+    fun `when favorites change expect network call`() = runTest {
+        coEvery { dataSource.getFavoriteRecipes() } returns listOf("cake", "porridge")
+        subject.onFavoritesChange()
+        coVerify { dataSource.getFavoriteRecipes() }
+    }
+
+    @Test
+    fun `when favorites change expect storage update`() = runTest {
+        coEvery { dataSource.getFavoriteRecipes() } returns listOf("cake", "porridge")
+        subject.onFavoritesChange()
+        coVerify { storage.updateFavoriteRecipes(eq(listOf("cake", "porridge"))) }
+    }
+
+    @Test
+    fun `when favorites change expect factory invalidation`() = runTest {
+        coEvery { dataSource.getFavoriteRecipes() } returns listOf("cake", "porridge")
+        subject.onFavoritesChange()
+        coVerify { pagingSourceFactory.invalidate() }
+    }
+
+    @Test
+    fun `when recipe update requested but favorite fails expect non-zero updates`() = runTest {
+        coEvery { dataSource.getFavoriteRecipes() } throws Unauthorized(IOException())
+        coEvery { dataSource.requestRecipes(eq(0), eq(6)) } returns TEST_RECIPE_SUMMARIES
+        assertThat(subject.updateRecipes(0, 6, APPEND)).isEqualTo(2)
     }
 
     private fun pagingState(

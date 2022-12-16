@@ -55,7 +55,9 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
                 checkedMenuItemId = R.id.recipes_list
             )
         }
-        setupRecipeAdapter()
+        viewModel.showFavoriteIcon.observe(viewLifecycleOwner) { showFavoriteIcon ->
+            setupRecipeAdapter(showFavoriteIcon)
+        }
         hideKeyboardOnScroll()
     }
 
@@ -87,10 +89,19 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
         return findNavController().currentDestination?.id != R.id.recipesListFragment
     }
 
-    private fun setupRecipeAdapter() {
+    private fun setupRecipeAdapter(showFavoriteIcon: Boolean) {
         logger.v { "setupRecipeAdapter() called" }
 
-        val recipesAdapter = recipePagingAdapterFactory.build { onRecipeClicked(it) }
+        val recipesAdapter = recipePagingAdapterFactory.build(showFavoriteIcon) {
+            when (it) {
+                is RecipeViewHolder.ClickEvent.FavoriteClick -> {
+                    onFavoriteClick(it)
+                }
+                is RecipeViewHolder.ClickEvent.RecipeClick -> {
+                    onRecipeClicked(it.recipeSummaryEntity)
+                }
+            }
+        }
 
         with(binding.recipes) {
             adapter = recipesAdapter
@@ -125,6 +136,16 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
         collectWhenViewResumed(binding.refresher.refreshRequestFlow(logger)) {
             logger.v { "setupRecipeAdapter: received refresh request" }
             recipesAdapter.refresh()
+        }
+    }
+
+    private fun onFavoriteClick(event: RecipeViewHolder.ClickEvent) {
+        logger.v { "onFavoriteClick() called with: event = $event" }
+        viewModel.onFavoriteIconClick(event.recipeSummaryEntity).observe(viewLifecycleOwner) {
+            logger.d { "onFavoriteClick: result is $it" }
+            if (it.isFailure) {
+                showLongToast(R.string.fragment_recipes_favorite_update_failed)
+            }
         }
     }
 

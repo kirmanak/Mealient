@@ -9,6 +9,7 @@ import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.ErrorDetailV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetUserInfoResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
@@ -60,7 +61,6 @@ class MealieDataSourceV1Impl @Inject constructor(
     override suspend fun getVersionInfo(): VersionResponseV1 = networkRequestWrapper.makeCall(
         block = { service.getVersion() },
         logMethod = { "getVersionInfo" },
-        logParameters = { "" },
     ).getOrElse {
         throw when (it) {
             is HttpException, is SerializationException -> NetworkError.NotMealie(it)
@@ -100,6 +100,31 @@ class MealieDataSourceV1Impl @Inject constructor(
         block = { service.createApiToken(request) },
         logMethod = { "createApiToken" },
         logParameters = { "request = $request" }
+    )
+
+    override suspend fun requestUserInfo(): GetUserInfoResponseV1 {
+        return networkRequestWrapper.makeCallAndHandleUnauthorized(
+            block = { service.getUserSelfInfo() },
+            logMethod = { "requestUserInfo" },
+        )
+    }
+
+    override suspend fun removeFavoriteRecipe(
+        userId: String,
+        recipeSlug: String
+    ): Unit = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.removeFavoriteRecipe(userId, recipeSlug) },
+        logMethod = { "removeFavoriteRecipe" },
+        logParameters = { "userId = $userId, recipeSlug = $recipeSlug" }
+    )
+
+    override suspend fun addFavoriteRecipe(
+        userId: String,
+        recipeSlug: String
+    ): Unit = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.addFavoriteRecipe(userId, recipeSlug) },
+        logMethod = { "addFavoriteRecipe" },
+        logParameters = { "userId = $userId, recipeSlug = $recipeSlug" }
     )
 }
 

@@ -76,7 +76,7 @@ class ModelMappingsTest : BaseUnitTest() {
 
     @Test
     fun `when summary info to entity expect correct entity`() {
-        val actual = RECIPE_SUMMARY_PORRIDGE_V0.toRecipeSummaryEntity()
+        val actual = RECIPE_SUMMARY_PORRIDGE_V0.toRecipeSummaryEntity(isFavorite = false)
         assertThat(actual).isEqualTo(PORRIDGE_RECIPE_SUMMARY_ENTITY)
     }
 

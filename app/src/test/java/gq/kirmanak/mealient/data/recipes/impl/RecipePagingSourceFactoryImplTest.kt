@@ -8,7 +8,6 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.test.HiltRobolectricTest
 import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_RECIPE_SUMMARY_ENTITY
 import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARIES
 import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARY_ENTITIES
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -27,28 +26,28 @@ class RecipePagingSourceFactoryImplTest : HiltRobolectricTest() {
 
     @Test
     fun `when query is ca expect cake only is returned`() = runTest {
-        storage.saveRecipes(TEST_RECIPE_SUMMARIES)
+        storage.saveRecipes(TEST_RECIPE_SUMMARY_ENTITIES)
         subject.setQuery("ca")
         assertThat(queryRecipes()).isEqualTo(listOf(CAKE_RECIPE_SUMMARY_ENTITY))
     }
 
     @Test
     fun `when query is po expect porridge only is returned`() = runTest {
-        storage.saveRecipes(TEST_RECIPE_SUMMARIES)
+        storage.saveRecipes(TEST_RECIPE_SUMMARY_ENTITIES)
         subject.setQuery("po")
         assertThat(queryRecipes()).isEqualTo(listOf(PORRIDGE_RECIPE_SUMMARY_ENTITY))
     }
 
     @Test
     fun `when query is e expect cake and porridge are returned`() = runTest {
-        storage.saveRecipes(TEST_RECIPE_SUMMARIES)
+        storage.saveRecipes(TEST_RECIPE_SUMMARY_ENTITIES)
         subject.setQuery("e")
         assertThat(queryRecipes()).isEqualTo(TEST_RECIPE_SUMMARY_ENTITIES)
     }
 
     @Test
     fun `when query is null expect cake and porridge are returned`() = runTest {
-        storage.saveRecipes(TEST_RECIPE_SUMMARIES)
+        storage.saveRecipes(TEST_RECIPE_SUMMARY_ENTITIES)
         subject.setQuery(null)
         assertThat(queryRecipes()).isEqualTo(TEST_RECIPE_SUMMARY_ENTITIES)
     }

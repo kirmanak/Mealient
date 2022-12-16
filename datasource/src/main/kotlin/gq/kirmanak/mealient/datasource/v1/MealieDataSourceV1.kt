@@ -5,6 +5,7 @@ import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetUserInfoResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
@@ -47,4 +48,10 @@ interface MealieDataSourceV1 {
     suspend fun createApiToken(
         request: CreateApiTokenRequestV1,
     ): CreateApiTokenResponseV1
+
+    suspend fun requestUserInfo(): GetUserInfoResponseV1
+
+    suspend fun removeFavoriteRecipe(userId: String, recipeSlug: String)
+
+    suspend fun addFavoriteRecipe(userId: String, recipeSlug: String)
 }

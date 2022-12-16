@@ -40,4 +40,10 @@ interface RecipeDao {
 
     @Query("DELETE FROM recipe_instruction WHERE recipe_id = :recipeId")
     suspend fun deleteRecipeInstructions(recipeId: String)
+
+    @Query("UPDATE recipe_summaries SET is_favorite = 1 WHERE slug IN (:favorites)")
+    suspend fun setFavorite(favorites: List<String>)
+
+    @Query("UPDATE recipe_summaries SET is_favorite = 0 WHERE slug NOT IN (:favorites)")
+    suspend fun setNonFavorite(favorites: List<String>)
 }

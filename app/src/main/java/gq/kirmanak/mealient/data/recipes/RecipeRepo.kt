@@ -17,4 +17,6 @@ interface RecipeRepo {
     fun updateNameQuery(name: String?)
 
     suspend fun refreshRecipes()
+
+    suspend fun updateIsRecipeFavorite(recipeSlug: String, isFavorite: Boolean): Result<Unit>
 }

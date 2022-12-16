@@ -16,18 +16,40 @@ class NetworkRequestWrapperImpl @Inject constructor(
     override suspend fun <T> makeCall(
         block: suspend () -> T,
         logMethod: () -> String,
-        logParameters: () -> String,
+        logParameters: (() -> String)?,
     ): Result<T> {
-        logger.v { "${logMethod()} called with: ${logParameters()}" }
+        logger.v {
+            if (logParameters == null) {
+                "${logMethod()} called"
+            } else {
+                "${logMethod()} called with: ${logParameters()}"
+            }
+        }
         return runCatchingExceptCancel { block() }
-            .onFailure { logger.e(it) { "${logMethod()} request failed with: ${logParameters()}" } }
-            .onSuccess { logger.d { "${logMethod()} request succeeded with ${logParameters()}, result = $it" } }
+            .onFailure {
+                logger.e(it) {
+                    if (logParameters == null) {
+                        "${logMethod()} request failed"
+                    } else {
+                        "${logMethod()} request failed with: ${logParameters()}"
+                    }
+                }
+            }
+            .onSuccess {
+                logger.d {
+                    if (logParameters == null) {
+                        "${logMethod()} request succeeded, result = $it"
+                    } else {
+                        "${logMethod()} request succeeded with: ${logParameters()}, result = $it"
+                    }
+                }
+            }
     }
 
     override suspend fun <T> makeCallAndHandleUnauthorized(
         block: suspend () -> T,
         logMethod: () -> String,
-        logParameters: () -> String
+        logParameters: (() -> String)?
     ): T = makeCall(block, logMethod, logParameters).getOrElse {
         throw if (it is HttpException && it.code() in listOf(401, 403)) {
             NetworkError.Unauthorized(it)
