@@ -5,6 +5,7 @@ import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
 import gq.kirmanak.mealient.datasource.decode
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
 import gq.kirmanak.mealient.datasource.v0.models.CreateApiTokenRequestV0
+import gq.kirmanak.mealient.datasource.v0.models.CreateApiTokenResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.ErrorDetailV0
 import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.GetRecipeSummaryResponseV0
@@ -85,7 +86,7 @@ class MealieDataSourceV0Impl @Inject constructor(
 
     override suspend fun createApiToken(
         request: CreateApiTokenRequestV0,
-    ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
+    ): CreateApiTokenResponseV0 = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.createApiToken(request) },
         logMethod = { "createApiToken" },
         logParameters = { "request = $request" }

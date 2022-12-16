@@ -28,7 +28,7 @@ class AuthDataSourceImpl @Inject constructor(
     }
 
     override suspend fun createApiToken(name: String): String = when (getVersion()) {
-        ServerVersion.V0 -> v0Source.createApiToken(CreateApiTokenRequestV0(name))
+        ServerVersion.V0 -> v0Source.createApiToken(CreateApiTokenRequestV0(name)).token
         ServerVersion.V1 -> v1Source.createApiToken(CreateApiTokenRequestV1(name)).token
     }
 }
