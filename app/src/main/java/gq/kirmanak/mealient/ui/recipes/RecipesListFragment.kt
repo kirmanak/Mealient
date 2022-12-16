@@ -57,8 +57,14 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
                 checkedMenuItemId = R.id.recipes_list
             )
         }
-        viewModel.showFavoriteIcon.observe(viewLifecycleOwner) { showFavoriteIcon ->
+        collectWhenViewResumed(viewModel.showFavoriteIcon) { showFavoriteIcon ->
             setupRecipeAdapter(showFavoriteIcon)
+        }
+        collectWhenViewResumed(viewModel.deleteRecipeResult) {
+            logger.d { "Delete recipe result is $it" }
+            if (it.isFailure) {
+                showLongToast(R.string.fragment_recipes_delete_recipe_failed)
+            }
         }
         hideKeyboardOnScroll()
     }
@@ -151,12 +157,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
             R.string.fragment_recipes_delete_recipe_confirm_dialog_message, entity.name
         )
         val onPositiveClick = DialogInterface.OnClickListener { _, _ ->
-            viewModel.onDeleteConfirm(entity).observe(viewLifecycleOwner) {
-                logger.d { "onDeleteClick: result is $it" }
-                if (it.isFailure) {
-                    showLongToast(R.string.fragment_recipes_delete_recipe_failed)
-                }
-            }
+            viewModel.onDeleteConfirm(entity)
         }
         val positiveBtnResId = R.string.fragment_recipes_delete_recipe_confirm_dialog_positive_btn
         val titleResId = R.string.fragment_recipes_delete_recipe_confirm_dialog_title
