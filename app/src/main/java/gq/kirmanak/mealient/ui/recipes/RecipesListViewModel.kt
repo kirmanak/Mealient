@@ -72,6 +72,7 @@ class RecipesListViewModel @Inject constructor(
         logger.v { "onDeleteConfirm() called with: recipeSummaryEntity = $recipeSummaryEntity" }
         viewModelScope.launch {
             val result = recipeRepo.deleteRecipe(recipeSummaryEntity)
+            logger.d { "onDeleteConfirm: delete result is $result" }
             _deleteRecipeResult.emit(result)
         }
     }
