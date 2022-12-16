@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.datasource.v0
 
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
 import gq.kirmanak.mealient.datasource.v0.models.CreateApiTokenRequestV0
+import gq.kirmanak.mealient.datasource.v0.models.CreateApiTokenResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.GetRecipeSummaryResponseV0
 import gq.kirmanak.mealient.datasource.v0.models.GetUserInfoResponseV0
@@ -39,7 +40,7 @@ interface MealieDataSourceV0 {
 
     suspend fun createApiToken(
         request: CreateApiTokenRequestV0,
-    ): String
+    ): CreateApiTokenResponseV0
 
     suspend fun requestUserInfo(): GetUserInfoResponseV0
 

@@ -39,7 +39,7 @@ interface MealieServiceV0 {
     @POST("/api/users/api-tokens")
     suspend fun createApiToken(
         @Body request: CreateApiTokenRequestV0,
-    ): String
+    ): CreateApiTokenResponseV0
 
     @GET("/api/users/self")
     suspend fun getUserSelfInfo(): GetUserInfoResponseV0
