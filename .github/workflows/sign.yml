@@ -21,6 +21,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
       - name: Sign APK
         env:
           MEALIENT_KEY_STORE: ${{ secrets.MEALIENT_KEY_STORE }}
@@ -36,7 +39,7 @@ jobs:
           echo "storePassword=$MEALIENT_KEY_STORE_PASSWORD" >> keystore.properties
           echo "keyAlias=$MEALIENT_KEY_ALIAS" >> keystore.properties
           echo "keyPassword=$MEALIENT_KEY_PASSWORD" >> keystore.properties
-          ./gradlew build bundle coverageReport sonar uploadToAppSweepRelease --no-configuration-cache
+          ./gradlew build bundle coverageReport sonar uploadToAppSweepRelease --no-configuration-cache --no-daemon
           cp app/build/outputs/apk/release/*.apk mealient-release.apk
           cp app/build/outputs/bundle/release/*.aab mealient-release.aab
 
