@@ -25,7 +25,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew allDevicesCheck check coverageReport sonar --no-configuration-cache --no-daemon
+        run: ./gradlew allDevicesCheck check coverageReport sonar --no-configuration-cache --no-daemon -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect"
 
       - name: Publish test reports
         uses: mikepenz/action-junit-report@v3
