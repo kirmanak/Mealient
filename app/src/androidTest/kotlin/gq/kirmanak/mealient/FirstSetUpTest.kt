@@ -4,13 +4,14 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.screen.BaseUrlScreen
 import gq.kirmanak.mealient.screen.DisclaimerScreen
 import gq.kirmanak.mealient.screen.RecipesListScreen
+import org.junit.Before
 import org.junit.Test
 
 @HiltAndroidTest
 class FirstSetUpTest : BaseTestCase() {
 
-    override fun setUp() {
-        super.setUp()
+    @Before
+    fun dispatchUrls() {
         mockWebServer.dispatch { url, _ ->
             if (url == "/api/app/about") versionV1Response else notFoundResponse
         }
