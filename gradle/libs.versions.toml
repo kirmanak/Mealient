@@ -77,6 +77,12 @@ desugar = "1.2.2"
 kspPlugin = "1.7.20-1.0.7"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
 shareTarget = "1.2.0"
+# https://github.com/KasperskyLab/Kaspresso/releases
+kaspresso = "1.4.2"
+# https://developer.android.com/jetpack/androidx/releases/test
+androidXTest = "1.5.0"
+# https://developer.android.com/jetpack/androidx/releases/test
+androidXTestOrchestrator = "1.4.2"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -133,6 +139,11 @@ androidx-room-testing = { group = "androidx.room", name = "room-testing", versio
 androidx-test-junit = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security" }
 
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidXTest" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidXTest" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidXTest" }
+androidx-test-orchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidXTestOrchestrator" }
+
 jakewharton-retrofitSerialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerialization" }
 
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
@@ -142,6 +153,7 @@ squareup-leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-an
 okhttp3-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
 okhttp3-okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp3-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+okhttp3-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
 
 bumptech-glide-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 bumptech-glide-okhttp3 = { group = "com.github.bumptech.glide", name = "okhttp3-integration", version.ref = "glide" }
@@ -157,6 +169,8 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 chuckerteam-chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
+
+kaspersky-kaspresso = { group = "com.kaspersky.android-components", name = "kaspresso", version.ref = "kaspresso" }
 
 [plugins]
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }

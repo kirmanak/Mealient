@@ -1,0 +1,4 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- Needed for screenshots in Kaspresso -->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+</manifest>

@@ -22,7 +22,7 @@ open class BaseUnitTest {
     val instantExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule(order = 1)
-    val timeoutRule: Timeout = Timeout.seconds(10)
+    val timeoutRule: Timeout = Timeout.seconds(20)
 
     protected val logger: Logger = FakeLogger()
 

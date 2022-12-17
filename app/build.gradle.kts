@@ -1,5 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
+import com.android.build.api.dsl.ManagedVirtualDevice
 import java.io.FileInputStream
 import java.util.*
 
@@ -17,6 +18,8 @@ android {
         applicationId = "gq.kirmanak.mealient"
         versionCode = 25
         versionName = "0.3.10"
+        testInstrumentationRunner = "gq.kirmanak.mealient.MealientTestRunner"
+        testInstrumentationRunnerArguments += mapOf("clearPackageData" to "true")
     }
 
     signingConfigs {
@@ -54,6 +57,22 @@ android {
     packagingOptions {
         resources.excludes += "DebugProbesKt.bin"
     }
+
+    testOptions {
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+    }
+
+    testOptions {
+        managedDevices {
+            devices {
+                maybeCreate<ManagedVirtualDevice>("pixel2api30").apply {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp-atd"
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -89,6 +108,8 @@ dependencies {
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
+    kaptAndroidTest(libs.google.dagger.hiltAndroidCompiler)
+    androidTestImplementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.androidx.paging.runtimeKtx)
     testImplementation(libs.androidx.paging.commonKtx)
@@ -122,4 +143,13 @@ dependencies {
     testImplementation(libs.io.mockk)
 
     debugImplementation(libs.squareup.leakcanary)
+
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.kaspersky.kaspresso)
+    androidTestImplementation(libs.okhttp3.mockwebserver)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestUtil(libs.androidx.test.orchestrator)
 }

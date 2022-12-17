@@ -28,7 +28,8 @@ class BaseURLViewModel @Inject constructor(
         logger.v { "saveBaseUrl() called with: baseURL = $baseURL" }
         _uiState.value = OperationUiState.Progress()
         val hasPrefix = ALLOWED_PREFIXES.any { baseURL.startsWith(it) }
-        val url = baseURL.takeIf { hasPrefix } ?: WITH_PREFIX_FORMAT.format(baseURL)
+        var url = baseURL.takeIf { hasPrefix } ?: WITH_PREFIX_FORMAT.format(baseURL)
+        url = url.trimStart().trimEnd { it == '/' || it.isWhitespace() }
         viewModelScope.launch { checkBaseURL(url) }
     }
 
