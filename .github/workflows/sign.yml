@@ -30,7 +30,6 @@ jobs:
           MEALIENT_KEY_STORE_PASSWORD: ${{ secrets.MEALIENT_KEY_STORE_PASSWORD }}
           MEALIENT_KEY_ALIAS: ${{ secrets.MEALIENT_KEY_ALIAS }}
           MEALIENT_KEY_PASSWORD: ${{ secrets.MEALIENT_KEY_PASSWORD }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           APPSWEEP_API_KEY: ${{ secrets.APPSWEEP_API_KEY }}
         run: |
