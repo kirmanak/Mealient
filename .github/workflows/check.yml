@@ -48,4 +48,4 @@ jobs:
         uses: android-actions/setup-android@v2
 
       - name: Run tests
-        run: ./gradlew allDevicesCheck --no-daemon -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect"
+        run: ./gradlew allDevicesCheck --no-daemon
