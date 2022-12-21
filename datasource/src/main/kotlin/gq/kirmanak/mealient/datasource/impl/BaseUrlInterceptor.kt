@@ -4,7 +4,7 @@ import gq.kirmanak.mealient.datasource.LocalInterceptor
 import gq.kirmanak.mealient.datasource.ServerUrlProvider
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.runBlocking
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -37,6 +37,7 @@ class BaseUrlInterceptor @Inject constructor(
     }
 
     private fun getBaseUrl() = runBlocking {
-        serverUrlProvider.getUrl()?.toHttpUrlOrNull() ?: throw IOException("Base URL is unknown")
+        val url = serverUrlProvider.getUrl() ?: throw IOException("Base URL is unknown")
+        url.runCatching { toHttpUrl() }.recover { throw IOException(it) }.getOrThrow()
     }
 }
