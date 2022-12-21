@@ -34,8 +34,8 @@ class BaseURLViewModel @Inject constructor(
     private suspend fun checkBaseURL(baseURL: String) {
         logger.v { "checkBaseURL() called with: baseURL = $baseURL" }
 
-        val hasPrefix = ALLOWED_PREFIXES.any { baseURL.startsWith(it) }
-        val urlWithPrefix = baseURL.takeIf { hasPrefix } ?: WITH_PREFIX_FORMAT.format(baseURL)
+        val hasPrefix = listOf("http://", "https://").any { baseURL.startsWith(it) }
+        val urlWithPrefix = baseURL.takeIf { hasPrefix } ?: "https://%s".format(baseURL)
         val url = urlWithPrefix.trimEnd { it == '/' }
 
         logger.d { "checkBaseURL: Created URL = \"$url\", with prefix = \"$urlWithPrefix\"" }
@@ -64,8 +64,4 @@ class BaseURLViewModel @Inject constructor(
         _uiState.value = OperationUiState.fromResult(result)
     }
 
-    companion object {
-        private val ALLOWED_PREFIXES = listOf("http://", "https://")
-        private const val WITH_PREFIX_FORMAT = "https://%s"
-    }
 }
