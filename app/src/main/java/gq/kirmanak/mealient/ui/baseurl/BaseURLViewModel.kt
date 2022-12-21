@@ -12,6 +12,7 @@ import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.OperationUiState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.net.ssl.SSLHandshakeException
 
 @HiltViewModel
 class BaseURLViewModel @Inject constructor(
@@ -27,24 +28,38 @@ class BaseURLViewModel @Inject constructor(
     fun saveBaseUrl(baseURL: String) {
         logger.v { "saveBaseUrl() called with: baseURL = $baseURL" }
         _uiState.value = OperationUiState.Progress()
-        val hasPrefix = ALLOWED_PREFIXES.any { baseURL.startsWith(it) }
-        var url = baseURL.takeIf { hasPrefix } ?: WITH_PREFIX_FORMAT.format(baseURL)
-        url = url.trimStart().trimEnd { it == '/' || it.isWhitespace() }
-        viewModelScope.launch { checkBaseURL(url) }
+        viewModelScope.launch { checkBaseURL(baseURL) }
     }
 
     private suspend fun checkBaseURL(baseURL: String) {
         logger.v { "checkBaseURL() called with: baseURL = $baseURL" }
-        if (baseURL == serverInfoRepo.getUrl()) {
+
+        val hasPrefix = ALLOWED_PREFIXES.any { baseURL.startsWith(it) }
+        val urlWithPrefix = baseURL.takeIf { hasPrefix } ?: WITH_PREFIX_FORMAT.format(baseURL)
+        val url = urlWithPrefix.trimStart().trimEnd { it == '/' || it.isWhitespace() }
+
+        logger.d { "checkBaseURL: Created URL = $url, with prefix = $urlWithPrefix" }
+        if (url == serverInfoRepo.getUrl()) {
             logger.d { "checkBaseURL: new URL matches current" }
             _uiState.value = OperationUiState.fromResult(Result.success(Unit))
             return
         }
-        val result = serverInfoRepo.tryBaseURL(baseURL)
+
+        val result: Result<Unit> = serverInfoRepo.tryBaseURL(url).recoverCatching {
+            logger.e(it) { "checkBaseURL: trying to recover" }
+            if (hasPrefix.not() && it.cause is SSLHandshakeException) {
+                val unencryptedUrl = url.replace("https", "http")
+                serverInfoRepo.tryBaseURL(unencryptedUrl).getOrThrow()
+            } else {
+                throw it
+            }
+        }
+
         if (result.isSuccess) {
             authRepo.logout()
             recipeRepo.clearLocalData()
         }
+
         logger.i { "checkBaseURL: result is $result" }
         _uiState.value = OperationUiState.fromResult(result)
     }
