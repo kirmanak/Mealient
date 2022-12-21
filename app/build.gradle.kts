@@ -16,8 +16,8 @@ plugins {
 android {
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
-        versionCode = 25
-        versionName = "0.3.10"
+        versionCode = 26
+        versionName = "0.3.11"
         testInstrumentationRunner = "gq.kirmanak.mealient.MealientTestRunner"
         testInstrumentationRunnerArguments += mapOf("clearPackageData" to "true")
     }
