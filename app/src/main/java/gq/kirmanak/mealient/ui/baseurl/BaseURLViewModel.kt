@@ -36,9 +36,9 @@ class BaseURLViewModel @Inject constructor(
 
         val hasPrefix = ALLOWED_PREFIXES.any { baseURL.startsWith(it) }
         val urlWithPrefix = baseURL.takeIf { hasPrefix } ?: WITH_PREFIX_FORMAT.format(baseURL)
-        val url = urlWithPrefix.trimStart().trimEnd { it == '/' || it.isWhitespace() }
+        val url = urlWithPrefix.trimEnd { it == '/' }
 
-        logger.d { "checkBaseURL: Created URL = $url, with prefix = $urlWithPrefix" }
+        logger.d { "checkBaseURL: Created URL = \"$url\", with prefix = \"$urlWithPrefix\"" }
         if (url == serverInfoRepo.getUrl()) {
             logger.d { "checkBaseURL: new URL matches current" }
             _uiState.value = OperationUiState.fromResult(Result.success(Unit))
