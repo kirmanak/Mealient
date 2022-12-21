@@ -46,7 +46,7 @@ class BaseURLViewModel @Inject constructor(
         }
 
         val result: Result<Unit> = serverInfoRepo.tryBaseURL(url).recoverCatching {
-            logger.e(it) { "checkBaseURL: trying to recover" }
+            logger.e(it) { "checkBaseURL: trying to recover, had prefix = $hasPrefix" }
             if (hasPrefix.not() && it.cause is SSLHandshakeException) {
                 val unencryptedUrl = url.replace("https", "http")
                 serverInfoRepo.tryBaseURL(unencryptedUrl).getOrThrow()
