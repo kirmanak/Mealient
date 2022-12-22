@@ -66,4 +66,7 @@ interface MealieServiceV1 {
     suspend fun deleteRecipe(
         @Path("slug") slug: String
     )
+
+    @GET("/api/groups/shopping/lists")
+    suspend fun getShoppingLists(): GetShoppingListsResponseV1
 }
