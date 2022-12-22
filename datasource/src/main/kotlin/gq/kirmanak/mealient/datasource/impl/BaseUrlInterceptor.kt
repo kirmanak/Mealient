@@ -38,6 +38,11 @@ class BaseUrlInterceptor @Inject constructor(
 
     private fun getBaseUrl() = runBlocking {
         val url = serverUrlProvider.getUrl() ?: throw IOException("Base URL is unknown")
-        url.runCatching { toHttpUrl() }.recover { throw IOException(it.message, it) }.getOrThrow()
+        url.runCatching {
+            toHttpUrl()
+        }.fold(
+            onSuccess = { it },
+            onFailure = { throw IOException(it.message, it) },
+        )
     }
 }
