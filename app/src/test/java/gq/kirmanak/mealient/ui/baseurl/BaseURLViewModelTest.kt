@@ -4,17 +4,20 @@ import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.ui.OperationUiState
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
+import javax.net.ssl.SSLHandshakeException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BaseURLViewModelTest : BaseUnitTest() {
@@ -104,5 +107,36 @@ class BaseURLViewModelTest : BaseUnitTest() {
         subject.saveBaseUrl(TEST_BASE_URL)
         advanceUntilIdle()
         assertThat(subject.uiState.value).isInstanceOf(OperationUiState.Failure::class.java)
+    }
+
+    @Test
+    fun `when saving base url with no prefix and https throws expect http attempt`() = runTest {
+        coEvery { serverInfoRepo.getUrl() } returns null
+        val err = NetworkError.MalformedUrl(SSLHandshakeException("test"))
+        coEvery { serverInfoRepo.tryBaseURL("https://test") } returns Result.failure(err)
+        coEvery { serverInfoRepo.tryBaseURL("http://test") } returns Result.success(Unit)
+        subject.saveBaseUrl("test")
+        coVerifyOrder {
+            serverInfoRepo.tryBaseURL("https://test")
+            serverInfoRepo.tryBaseURL("http://test")
+        }
+    }
+
+    @Test
+    fun `when saving base url with no prefix and https throws non ssl expect no http`() = runTest {
+        coEvery { serverInfoRepo.getUrl() } returns null
+        val err = NetworkError.NotMealie(IOException())
+        coEvery { serverInfoRepo.tryBaseURL("https://test") } returns Result.failure(err)
+        subject.saveBaseUrl("test")
+        coVerify(inverse = true) { serverInfoRepo.tryBaseURL("http://test") }
+    }
+
+    @Test
+    fun `when saving base url with https prefix and https throws expect no http call`() = runTest {
+        coEvery { serverInfoRepo.getUrl() } returns null
+        val err = NetworkError.MalformedUrl(SSLHandshakeException("test"))
+        coEvery { serverInfoRepo.tryBaseURL("https://test") } returns Result.failure(err)
+        subject.saveBaseUrl("https://test")
+        coVerify(inverse = true) { serverInfoRepo.tryBaseURL("http://test") }
     }
 }

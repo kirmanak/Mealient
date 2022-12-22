@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.OperationUiState
 import kotlinx.coroutines.launch
@@ -27,30 +28,40 @@ class BaseURLViewModel @Inject constructor(
     fun saveBaseUrl(baseURL: String) {
         logger.v { "saveBaseUrl() called with: baseURL = $baseURL" }
         _uiState.value = OperationUiState.Progress()
-        val hasPrefix = ALLOWED_PREFIXES.any { baseURL.startsWith(it) }
-        var url = baseURL.takeIf { hasPrefix } ?: WITH_PREFIX_FORMAT.format(baseURL)
-        url = url.trimStart().trimEnd { it == '/' || it.isWhitespace() }
-        viewModelScope.launch { checkBaseURL(url) }
+        viewModelScope.launch { checkBaseURL(baseURL) }
     }
 
     private suspend fun checkBaseURL(baseURL: String) {
         logger.v { "checkBaseURL() called with: baseURL = $baseURL" }
-        if (baseURL == serverInfoRepo.getUrl()) {
+
+        val hasPrefix = listOf("http://", "https://").any { baseURL.startsWith(it) }
+        val urlWithPrefix = baseURL.takeIf { hasPrefix } ?: "https://%s".format(baseURL)
+        val url = urlWithPrefix.trimEnd { it == '/' }
+
+        logger.d { "checkBaseURL: Created URL = \"$url\", with prefix = \"$urlWithPrefix\"" }
+        if (url == serverInfoRepo.getUrl()) {
             logger.d { "checkBaseURL: new URL matches current" }
             _uiState.value = OperationUiState.fromResult(Result.success(Unit))
             return
         }
-        val result = serverInfoRepo.tryBaseURL(baseURL)
+
+        val result: Result<Unit> = serverInfoRepo.tryBaseURL(url).recoverCatching {
+            logger.e(it) { "checkBaseURL: trying to recover, had prefix = $hasPrefix" }
+            if (hasPrefix || it is NetworkError.NotMealie) {
+                throw it
+            } else {
+                val unencryptedUrl = url.replace("https", "http")
+                serverInfoRepo.tryBaseURL(unencryptedUrl).getOrThrow()
+            }
+        }
+
         if (result.isSuccess) {
             authRepo.logout()
             recipeRepo.clearLocalData()
         }
+
         logger.i { "checkBaseURL: result is $result" }
         _uiState.value = OperationUiState.fromResult(result)
     }
 
-    companion object {
-        private val ALLOWED_PREFIXES = listOf("http://", "https://")
-        private const val WITH_PREFIX_FORMAT = "https://%s"
-    }
 }
