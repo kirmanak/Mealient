@@ -83,11 +83,27 @@ kaspresso = "1.5.1"
 androidXTest = "1.5.0"
 # https://developer.android.com/jetpack/androidx/releases/test
 androidXTestOrchestrator = "1.4.2"
+# https://mvnrepository.com/artifact/com.google.android.material/compose-theme-adapter-3
+composeMaterialAdapter = "1.1.1"
+# https://mvnrepository.com/artifact/androidx.compose/compose-bom
+composeBom = "2022.12.00"
+# https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+composeKotlinCompilerExtension = "1.3.2"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 android-tools-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
+
 android-material-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+android-material-composeAdapter = { group = "com.google.android.material", name = "compose-theme-adapter-3", version.ref = "composeMaterialAdapter" }
+
+android-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+android-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+android-compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+android-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+android-compose-ui-testJunit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+android-compose-ui-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+android-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
 
 google-dagger-hiltPlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt" }
 google-dagger-hiltAndroid = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
@@ -126,6 +142,7 @@ androidx-paging-commonKtx = { group = "androidx.paging", name = "paging-common-k
 
 androidx-lifecycle-livedataKtx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 androidx-datastore-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
