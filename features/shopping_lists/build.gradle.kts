@@ -27,7 +27,7 @@ dependencies {
     implementation(libs.android.compose.ui.toolingPreview)
     implementation(libs.android.compose.runtime.livedata)
     implementation(libs.androidx.lifecycle.viewmodelCompose)
-    implementation(libs.android.material.composeAdapter)
+    implementation(libs.google.accompanist.themeadapter.material3)
     debugImplementation(libs.android.compose.ui.tooling)
     debugImplementation(libs.android.compose.ui.testManifest)
     androidTestImplementation(libs.android.compose.ui.testJunit)
