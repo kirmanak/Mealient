@@ -15,6 +15,7 @@ import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAddRecipeFr
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAuthenticationFragment
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalBaseURLFragment
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalRecipesListFragment
+import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalShoppingListsFragment
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
 import gq.kirmanak.mealient.extensions.collectWhenResumed
@@ -77,6 +78,7 @@ class MainActivity : BaseActivity<MainActivityBinding>(
         val directions = when (menuItem.itemId) {
             R.id.add_recipe -> actionGlobalAddRecipeFragment()
             R.id.recipes_list -> actionGlobalRecipesListFragment()
+            R.id.shopping_lists -> actionGlobalShoppingListsFragment()
             R.id.change_url -> actionGlobalBaseURLFragment(false)
             R.id.login -> actionGlobalAuthenticationFragment()
             R.id.logout -> {

@@ -63,6 +63,11 @@
 		android:label="fragment_add_recipe"
 		tools:layout="@layout/fragment_add_recipe" />
 
+
+	<fragment
+		android:id="@+id/shoppingListsFragment"
+		android:name="gq.kirmanak.mealient.shopping_lists.ui.ShoppingListsFragment" />
+
 	<action
 		android:id="@+id/action_global_authenticationFragment"
 		app:destination="@id/authenticationFragment" />
@@ -80,5 +85,10 @@
 	<action
 		android:id="@+id/action_global_baseURLFragment"
 		app:destination="@id/baseURLFragment"
+		app:popUpTo="@id/recipesListFragment" />
+
+	<action
+		android:id="@+id/action_global_shoppingListsFragment"
+		app:destination="@id/shoppingListsFragment"
 		app:popUpTo="@id/recipesListFragment" />
 </navigation>
