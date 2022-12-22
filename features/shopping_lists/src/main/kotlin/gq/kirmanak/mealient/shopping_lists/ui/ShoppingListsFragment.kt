@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -44,13 +45,15 @@ class ShoppingListsFragment : Fragment() {
 @Preview
 @Composable
 fun PreviewShoppingListsScreen() {
-    val list = (0 until 50).map { ShoppingListInfo("$it-th list", "$it") }
+    val list = (0 until 5).map { ShoppingListInfo("$it-th list", "$it") }
     ShoppingListsScreen(shoppingLists = list)
 }
 
 @Composable
 fun ShoppingListsScreen(shoppingLists: List<ShoppingListInfo>) {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
         items(shoppingLists) {
             ShoppingListCard(shoppingListInfo = it)
         }
