@@ -8,11 +8,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.OperationUiState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.net.ssl.SSLHandshakeException
 
 @HiltViewModel
 class BaseURLViewModel @Inject constructor(
@@ -47,11 +47,11 @@ class BaseURLViewModel @Inject constructor(
 
         val result: Result<Unit> = serverInfoRepo.tryBaseURL(url).recoverCatching {
             logger.e(it) { "checkBaseURL: trying to recover, had prefix = $hasPrefix" }
-            if (hasPrefix.not() && it.cause is SSLHandshakeException) {
+            if (hasPrefix || it is NetworkError.NotMealie) {
+                throw it
+            } else {
                 val unencryptedUrl = url.replace("https", "http")
                 serverInfoRepo.tryBaseURL(unencryptedUrl).getOrThrow()
-            } else {
-                throw it
             }
         }
 

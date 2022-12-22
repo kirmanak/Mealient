@@ -17,7 +17,6 @@ import kotlinx.coroutines.test.*
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
-import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -126,7 +125,7 @@ class BaseURLViewModelTest : BaseUnitTest() {
     @Test
     fun `when saving base url with no prefix and https throws non ssl expect no http`() = runTest {
         coEvery { serverInfoRepo.getUrl() } returns null
-        val err = NetworkError.MalformedUrl(UnknownHostException())
+        val err = NetworkError.NotMealie(IOException())
         coEvery { serverInfoRepo.tryBaseURL("https://test") } returns Result.failure(err)
         subject.saveBaseUrl("test")
         coVerify(inverse = true) { serverInfoRepo.tryBaseURL("http://test") }
