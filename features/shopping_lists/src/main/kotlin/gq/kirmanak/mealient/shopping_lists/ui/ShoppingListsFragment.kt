@@ -28,7 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.AppTheme
-import gq.kirmanak.mealient.Dimensions
+import gq.kirmanak.mealient.Dimens
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListInfo
 
@@ -102,27 +102,22 @@ fun ShoppingListCard(
 ) {
     Card(
         modifier = modifier
-            .padding(
-                start = Dimensions.Medium,
-                end = Dimensions.Medium,
-                top = Dimensions.Small,
-                bottom = Dimensions.Small,
-            )
+            .padding(horizontal = Dimens.Medium, vertical = Dimens.Small)
             .fillMaxWidth()
             .clickable { onItemClick(shoppingListInfo) },
     ) {
         Row(
-            modifier = Modifier.padding(Dimensions.Medium),
+            modifier = Modifier.padding(Dimens.Medium),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_shopping_cart),
                 contentDescription = stringResource(id = R.string.shopping_lists_screen_cart_icon),
-                modifier = Modifier.height(Dimensions.Large),
+                modifier = Modifier.height(Dimens.Large),
             )
             Text(
                 text = shoppingListInfo.name,
-                modifier = Modifier.padding(start = Dimensions.Medium),
+                modifier = Modifier.padding(start = Dimens.Medium),
             )
         }
     }

@@ -30,7 +30,7 @@ fun AppTheme(
     )
 }
 
-object Dimensions {
+object Dimens {
 
     val Small = 8.dp
 
