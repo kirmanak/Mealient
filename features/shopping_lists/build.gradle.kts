@@ -22,6 +22,8 @@ dependencies {
     implementation(project(":logging"))
     implementation(project(":datasource"))
 
+    implementation(libs.android.material.material)
+
     implementation(platform(libs.android.compose.bom))
     implementation(libs.android.compose.material3)
     implementation(libs.android.compose.ui.toolingPreview)

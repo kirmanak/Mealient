@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,10 +24,11 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
+import gq.kirmanak.mealient.AppTheme
+import gq.kirmanak.mealient.Dimensions
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListInfo
 
@@ -43,7 +43,9 @@ class ShoppingListsFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                ShoppingListsScreen()
+                AppTheme {
+                    ShoppingListsScreen()
+                }
             }
         }
     }
@@ -65,7 +67,7 @@ fun ShoppingListsScreen(
 @Composable
 fun PreviewShoppingListsList() {
     val list = (0 until 5).map { ShoppingListInfo("$it-th list", "$it") }
-    ShoppingListsList(shoppingLists = list)
+    AppTheme { ShoppingListsList(shoppingLists = list) }
 }
 
 @Composable
@@ -74,13 +76,11 @@ private fun ShoppingListsList(
     modifier: Modifier = Modifier,
     onItemClick: (ShoppingListInfo) -> Unit = {},
 ) {
-    MaterialTheme {
-        LazyColumn(
-            modifier = modifier.padding(Dimensions.Medium),
-        ) {
-            items(shoppingLists) {
-                ShoppingListCard(shoppingListInfo = it, onItemClick = onItemClick)
-            }
+    LazyColumn(
+        modifier = modifier,
+    ) {
+        items(shoppingLists) {
+            ShoppingListCard(shoppingListInfo = it, onItemClick = onItemClick)
         }
     }
 }
@@ -89,7 +89,9 @@ private fun ShoppingListsList(
 @Composable
 @Preview
 fun PreviewShoppingListCard() {
-    ShoppingListCard(shoppingListInfo = ShoppingListInfo("Weekend shopping", "123"))
+    AppTheme {
+        ShoppingListCard(shoppingListInfo = ShoppingListInfo("Weekend shopping", "123"))
+    }
 }
 
 @Composable
@@ -100,7 +102,12 @@ fun ShoppingListCard(
 ) {
     Card(
         modifier = modifier
-            .padding(Dimensions.Medium)
+            .padding(
+                start = Dimensions.Medium,
+                end = Dimensions.Medium,
+                top = Dimensions.Small,
+                bottom = Dimensions.Small,
+            )
             .fillMaxWidth()
             .clickable { onItemClick(shoppingListInfo) },
     ) {
@@ -121,9 +128,3 @@ fun ShoppingListCard(
     }
 }
 
-object Dimensions {
-
-    val Medium = 16.dp
-
-    val Large = 24.dp
-}
