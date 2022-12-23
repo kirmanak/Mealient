@@ -37,6 +37,10 @@ class ShoppingListsViewModel @Inject constructor(
             _uiState.emit(ShoppingListsUiState(list))
         }
     }
+
+    fun onShoppingListClicked(listInfo: ShoppingListInfo) {
+        logger.v { "onShoppingListClicked() called with: listInfo = $listInfo" }
+    }
 }
 
 data class ShoppingListsUiState(
