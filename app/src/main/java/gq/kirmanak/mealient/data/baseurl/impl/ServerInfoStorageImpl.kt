@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.data.baseurl.impl
 import androidx.datastore.preferences.core.Preferences
 import gq.kirmanak.mealient.data.baseurl.ServerInfoStorage
 import gq.kirmanak.mealient.data.storage.PreferencesStorage
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,6 +48,10 @@ class ServerInfoStorageImpl @Inject constructor(
 
     override suspend fun storeServerVersion(version: String) {
         preferencesStorage.storeValues(Pair(serverVersionKey, version))
+    }
+
+    override fun serverVersionUpdates(): Flow<String?> {
+        return preferencesStorage.valueUpdates(serverVersionKey)
     }
 
     private suspend fun <T> getValue(key: Preferences.Key<T>): T? = preferencesStorage.getValue(key)

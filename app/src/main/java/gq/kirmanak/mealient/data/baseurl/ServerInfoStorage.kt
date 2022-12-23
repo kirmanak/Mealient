@@ -1,5 +1,7 @@
 package gq.kirmanak.mealient.data.baseurl
 
+import kotlinx.coroutines.flow.Flow
+
 interface ServerInfoStorage {
 
     suspend fun getBaseURL(): String?
@@ -12,4 +14,5 @@ interface ServerInfoStorage {
 
     suspend fun getServerVersion(): String?
 
+    fun serverVersionUpdates(): Flow<String?>
 }
