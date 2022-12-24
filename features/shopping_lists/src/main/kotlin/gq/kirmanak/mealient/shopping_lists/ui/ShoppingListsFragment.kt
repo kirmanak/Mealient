@@ -10,13 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -26,19 +23,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.AppTheme
 import gq.kirmanak.mealient.Dimens
+import gq.kirmanak.mealient.database.recipe.entity.ShoppingListEntity
 import gq.kirmanak.mealient.shopping_list.R
-import gq.kirmanak.mealient.shopping_lists.network.ShoppingListInfo
 
 @AndroidEntryPoint
 class ShoppingListsFragment : Fragment() {
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -55,32 +53,25 @@ class ShoppingListsFragment : Fragment() {
 fun ShoppingListsScreen(
     shoppingListsViewModel: ShoppingListsViewModel = viewModel()
 ) {
-    val uiState by shoppingListsViewModel.uiState.collectAsState()
+    val items = shoppingListsViewModel.pages.collectAsLazyPagingItems()
 
     ShoppingListsList(
-        shoppingLists = uiState.shoppingLists,
+        shoppingLists = items,
         onItemClick = shoppingListsViewModel::onShoppingListClicked,
     )
 }
 
-@Preview
-@Composable
-fun PreviewShoppingListsList() {
-    val list = (0 until 5).map { ShoppingListInfo("$it-th list", "$it") }
-    AppTheme { ShoppingListsList(shoppingLists = list) }
-}
-
 @Composable
 private fun ShoppingListsList(
-    shoppingLists: List<ShoppingListInfo>,
+    shoppingLists: LazyPagingItems<ShoppingListEntity>,
     modifier: Modifier = Modifier,
-    onItemClick: (ShoppingListInfo) -> Unit = {},
+    onItemClick: (ShoppingListEntity) -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier,
     ) {
         items(shoppingLists) {
-            ShoppingListCard(shoppingListInfo = it, onItemClick = onItemClick)
+            ShoppingListCard(shoppingListEntity = it, onItemClick = onItemClick)
         }
     }
 }
@@ -90,21 +81,21 @@ private fun ShoppingListsList(
 @Preview
 fun PreviewShoppingListCard() {
     AppTheme {
-        ShoppingListCard(shoppingListInfo = ShoppingListInfo("Weekend shopping", "123"))
+        ShoppingListCard(shoppingListEntity = ShoppingListEntity("1", "Weekend shopping"))
     }
 }
 
 @Composable
 fun ShoppingListCard(
-    shoppingListInfo: ShoppingListInfo,
+    shoppingListEntity: ShoppingListEntity?,
     modifier: Modifier = Modifier,
-    onItemClick: (ShoppingListInfo) -> Unit = {},
+    onItemClick: (ShoppingListEntity) -> Unit = {},
 ) {
     Card(
         modifier = modifier
             .padding(horizontal = Dimens.Medium, vertical = Dimens.Small)
             .fillMaxWidth()
-            .clickable { onItemClick(shoppingListInfo) },
+            .clickable { shoppingListEntity?.let { onItemClick(it) } },
     ) {
         Row(
             modifier = Modifier.padding(Dimens.Medium),
@@ -116,7 +107,7 @@ fun ShoppingListCard(
                 modifier = Modifier.height(Dimens.Large),
             )
             Text(
-                text = shoppingListInfo.name,
+                text = shoppingListEntity?.name.orEmpty(),
                 modifier = Modifier.padding(start = Dimens.Medium),
             )
         }

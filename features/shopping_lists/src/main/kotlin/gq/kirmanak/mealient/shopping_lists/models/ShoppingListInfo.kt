@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.network
+package gq.kirmanak.mealient.shopping_lists.models
 
 data class ShoppingListInfo(
     val name: String,

@@ -9,7 +9,7 @@ import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.ErrorDetailV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetUserInfoResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
@@ -136,9 +136,9 @@ class MealieDataSourceV1Impl @Inject constructor(
         logParameters = { "slug = $slug" }
     )
 
-    override suspend fun getShoppingLists(): List<GetShoppingListsSummaryResponseV1> {
+    override suspend fun getShoppingLists(page: Int, perPage: Int): GetShoppingListsResponseV1 {
         return networkRequestWrapper.makeCallAndHandleUnauthorized(
-            block = { service.getShoppingLists().items },
+            block = { service.getShoppingLists(page, perPage) },
             logMethod = { "getShoppingLists" }
         )
     }

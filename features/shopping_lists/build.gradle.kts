@@ -21,6 +21,7 @@ android {
 dependencies {
     implementation(project(":logging"))
     implementation(project(":datasource"))
+    implementation(project(":database"))
 
     implementation(libs.android.material.material)
 
@@ -39,6 +40,8 @@ dependencies {
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
+
+    implementation(libs.androidx.paging.compose)
 
     implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
     testImplementation(libs.jetbrains.kotlinx.coroutinesTest)

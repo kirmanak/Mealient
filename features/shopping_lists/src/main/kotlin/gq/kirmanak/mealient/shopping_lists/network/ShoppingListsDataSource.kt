@@ -2,5 +2,5 @@ package gq.kirmanak.mealient.shopping_lists.network
 
 interface ShoppingListsDataSource {
 
-    suspend fun getAll(): List<ShoppingListInfo>
+    suspend fun getPage(page: Int, perPage: Int): ShoppingListsInfo
 }

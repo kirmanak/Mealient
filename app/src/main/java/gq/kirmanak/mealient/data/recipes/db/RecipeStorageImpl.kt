@@ -18,8 +18,8 @@ import javax.inject.Singleton
 class RecipeStorageImpl @Inject constructor(
     private val db: AppDb,
     private val logger: Logger,
+    private val recipeDao: RecipeDao,
 ) : RecipeStorage {
-    private val recipeDao: RecipeDao by lazy { db.recipeDao() }
 
     override suspend fun saveRecipes(recipes: List<RecipeSummaryEntity>) {
         logger.v { "saveRecipes() called with $recipes" }
