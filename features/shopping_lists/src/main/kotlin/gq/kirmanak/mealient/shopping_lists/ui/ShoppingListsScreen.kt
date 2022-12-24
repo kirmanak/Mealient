@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -37,35 +38,38 @@ fun ShoppingListsScreen(
 ) {
     val items = shoppingListsViewModel.pages.collectAsLazyPagingItems()
 
-    ShoppingListsList(
-        shoppingLists = items,
-        onItemClick = shoppingListsViewModel::onShoppingListClicked,
-    )
+    LazyPagingColumn(
+        pagingItems = items,
+    ) {
+        ShoppingListCard(
+            shoppingListEntity = it, onItemClick = shoppingListsViewModel::onShoppingListClicked
+        )
+    }
 }
 
 @Composable
-private fun ShoppingListsList(
-    shoppingLists: LazyPagingItems<ShoppingListEntity>,
+private fun <T : Any> LazyPagingColumn(
+    pagingItems: LazyPagingItems<T>,
     modifier: Modifier = Modifier,
-    onItemClick: (ShoppingListEntity) -> Unit = {},
+    itemContent: @Composable LazyItemScope.(T?) -> Unit,
 ) {
 
-    val loadStates = with(shoppingLists.loadState) {
-        listOfNotNull(refresh, prepend, append, source, mediator)
+    val loadStates = with(pagingItems.loadState) {
+        listOfNotNull(
+            refresh, prepend, append,
+            source.prepend, source.append, source.refresh,
+            mediator?.prepend, mediator?.append, mediator?.refresh,
+        )
     }
     val isRefreshing = loadStates.any { it is LoadState.Loading }
 
     SwipeToRefresh(
-        modifier = modifier,
-        isRefreshing = isRefreshing,
-        onRefresh = shoppingLists::refresh
+        modifier = modifier, isRefreshing = isRefreshing, onRefresh = pagingItems::refresh
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
         ) {
-            items(shoppingLists) {
-                ShoppingListCard(shoppingListEntity = it, onItemClick = onItemClick)
-            }
+            items(items = pagingItems, itemContent = itemContent)
         }
     }
 }
@@ -84,8 +88,7 @@ private fun SwipeToRefresh(
     )
 
     Box(
-        modifier = modifier
-            .pullRefresh(state = refreshState)
+        modifier = modifier.pullRefresh(state = refreshState)
     ) {
         content()
 
