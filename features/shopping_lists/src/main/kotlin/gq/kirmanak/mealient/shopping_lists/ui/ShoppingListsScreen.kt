@@ -43,7 +43,6 @@ fun ShoppingListsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ShoppingListsList(
     shoppingLists: LazyPagingItems<ShoppingListEntity>,
@@ -56,14 +55,10 @@ private fun ShoppingListsList(
     }
     val isRefreshing = loadStates.any { it is LoadState.Loading }
 
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = shoppingLists::refresh,
-    )
-
-    Box(
-        modifier = modifier
-            .pullRefresh(pullRefreshState)
+    SwipeToRefresh(
+        modifier = modifier,
+        isRefreshing = isRefreshing,
+        onRefresh = shoppingLists::refresh
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -72,11 +67,32 @@ private fun ShoppingListsList(
                 ShoppingListCard(shoppingListEntity = it, onItemClick = onItemClick)
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun SwipeToRefresh(
+    modifier: Modifier = Modifier,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    val refreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = onRefresh,
+    )
+
+    Box(
+        modifier = modifier
+            .pullRefresh(state = refreshState)
+    ) {
+        content()
 
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
             refreshing = isRefreshing,
-            state = pullRefreshState,
+            state = refreshState
         )
     }
 }
