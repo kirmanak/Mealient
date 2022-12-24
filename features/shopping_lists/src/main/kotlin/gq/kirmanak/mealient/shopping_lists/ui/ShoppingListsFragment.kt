@@ -26,7 +26,7 @@ class ShoppingListsFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 AppTheme {
-                    ShoppingListsScreen()
+                    MealientApp()
                 }
             }
         }

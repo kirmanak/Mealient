@@ -4,6 +4,7 @@ plugins {
     id("gq.kirmanak.mealient.library")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -15,6 +16,14 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeKotlinCompilerExtension.get()
+    }
+
+    libraryVariants.all {
+        kotlin.sourceSets {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/$name/kotlin")
+            }
+        }
     }
 }
 
@@ -44,6 +53,11 @@ dependencies {
     testImplementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.androidx.paging.compose)
+
+    implementation(libs.composeDestinations.core)
+    ksp(libs.composeDestinations.ksp)
+
+    implementation(libs.androidx.hilt.navigationCompose)
 
     implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
     testImplementation(libs.jetbrains.kotlinx.coroutinesTest)

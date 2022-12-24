@@ -93,6 +93,10 @@ accompanistVersion = "0.28.0"
 pagingCompose = "1.0.0-alpha17"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
 materialCompose = "1.3.1"
+# https://composedestinations.rafaelcosta.xyz/setup
+composeDestinations = "1.7.27-beta"
+# https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
+hiltNavigationCompose = "1.0.0"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -116,6 +120,8 @@ google-dagger-hiltAndroid = { group = "com.google.dagger", name = "hilt-android"
 google-dagger-hiltCompiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 google-dagger-hiltAndroidCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 google-dagger-hiltAndroidTesting = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+
+androidx-hilt-navigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 google-protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
 google-protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
@@ -195,6 +201,9 @@ io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 chuckerteam-chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
 
 kaspersky-kaspresso = { group = "com.kaspersky.android-components", name = "kaspresso", version.ref = "kaspresso" }
+
+composeDestinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "composeDestinations" }
+composeDestinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "composeDestinations" }
 
 [plugins]
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }

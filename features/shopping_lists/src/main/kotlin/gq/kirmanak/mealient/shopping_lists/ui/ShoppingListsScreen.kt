@@ -22,19 +22,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gq.kirmanak.mealient.AppTheme
 import gq.kirmanak.mealient.Dimens
 import gq.kirmanak.mealient.database.recipe.entity.ShoppingListEntity
 import gq.kirmanak.mealient.shopping_list.R
+import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
 
+@RootNavGraph(start = true)
+@Destination(start = true)
 @Composable
 fun ShoppingListsScreen(
-    shoppingListsViewModel: ShoppingListsViewModel = viewModel()
+    navigator: DestinationsNavigator,
+    shoppingListsViewModel: ShoppingListsViewModel = hiltViewModel(),
 ) {
     val items = shoppingListsViewModel.pages.collectAsLazyPagingItems()
 
@@ -43,7 +50,10 @@ fun ShoppingListsScreen(
     ) {
         ShoppingListCard(
             shoppingListEntity = it,
-            onItemClick = shoppingListsViewModel::onShoppingListClicked,
+            onItemClick = { clickedEntity ->
+                val shoppingListId = clickedEntity.remoteId
+                navigator.navigate(ShoppingListScreenDestination(shoppingListId))
+            },
         )
     }
 }
@@ -87,7 +97,7 @@ private fun SwipeToRefresh(
         modifier = modifier.pullRefresh(state = refreshState)
     ) {
 
-    content()
+        content()
 
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
