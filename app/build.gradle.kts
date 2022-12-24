@@ -83,6 +83,7 @@ dependencies {
     implementation(project(":datastore"))
     implementation(project(":datasource"))
     implementation(project(":logging"))
+    implementation(project(":ui"))
     implementation(project(":features:shopping_lists"))
     testImplementation(project(":testing"))
 

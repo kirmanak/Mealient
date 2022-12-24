@@ -1,15 +1,21 @@
-package gq.kirmanak.mealient.ui.activity
+package gq.kirmanak.mealient.ui
 
-import androidx.annotation.IdRes
-
-data class MainActivityUiState(
+data class ActivityUiState(
     val isAuthorized: Boolean = false,
     val navigationVisible: Boolean = false,
     val searchVisible: Boolean = false,
-    @IdRes val checkedMenuItemId: Int? = null,
+    val checkedMenuItem: CheckableMenuItem? = null,
     val v1MenuItemsVisible: Boolean = false,
 ) {
     val canShowLogin: Boolean get() = !isAuthorized
 
     val canShowLogout: Boolean get() = isAuthorized
+}
+
+enum class CheckableMenuItem {
+    ShoppingLists,
+    RecipesList,
+    AddRecipe,
+    ChangeUrl,
+    Login
 }

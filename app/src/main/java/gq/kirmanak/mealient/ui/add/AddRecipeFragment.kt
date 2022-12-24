@@ -21,6 +21,7 @@ import gq.kirmanak.mealient.databinding.ViewSingleInputBinding
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.ui.CheckableMenuItem
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import javax.inject.Inject
 
@@ -41,7 +42,7 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
             it.copy(
                 navigationVisible = true,
                 searchVisible = false,
-                checkedMenuItemId = R.id.add_recipe,
+                checkedMenuItem = CheckableMenuItem.AddRecipe,
             )
         }
         viewModel.loadPreservedRequest()

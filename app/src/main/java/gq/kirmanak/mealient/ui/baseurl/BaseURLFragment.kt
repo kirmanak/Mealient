@@ -14,6 +14,7 @@ import gq.kirmanak.mealient.databinding.FragmentBaseUrlBinding
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.ui.CheckableMenuItem
 import gq.kirmanak.mealient.ui.OperationUiState
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import gq.kirmanak.mealient.ui.baseurl.BaseURLFragmentDirections.Companion.actionBaseURLFragmentToRecipesListFragment
@@ -39,7 +40,7 @@ class BaseURLFragment : Fragment(R.layout.fragment_base_url) {
             it.copy(
                 navigationVisible = !args.isOnboarding,
                 searchVisible = false,
-                checkedMenuItemId = R.id.change_url,
+                checkedMenuItem = CheckableMenuItem.ChangeUrl,
             )
         }
     }

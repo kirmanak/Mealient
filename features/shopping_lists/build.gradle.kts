@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":logging"))
     implementation(project(":datasource"))
     implementation(project(":database"))
+    implementation(project(":ui"))
 
     implementation(libs.android.material.material)
     implementation(libs.androidx.compose.material)

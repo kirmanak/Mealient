@@ -13,6 +13,7 @@ import gq.kirmanak.mealient.databinding.FragmentAuthenticationBinding
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.ui.CheckableMenuItem
 import gq.kirmanak.mealient.ui.OperationUiState
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import javax.inject.Inject
@@ -32,7 +33,11 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         logger.v { "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState" }
         binding.button.setOnClickListener { onLoginClicked() }
         activityViewModel.updateUiState {
-            it.copy(navigationVisible = true, searchVisible = false, checkedMenuItemId = R.id.login)
+            it.copy(
+                navigationVisible = true,
+                searchVisible = false,
+                checkedMenuItem = CheckableMenuItem.AddRecipe
+            )
         }
         viewModel.uiState.observe(viewLifecycleOwner, ::onUiStateChange)
     }

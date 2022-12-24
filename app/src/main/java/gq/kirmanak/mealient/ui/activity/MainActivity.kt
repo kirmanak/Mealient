@@ -20,7 +20,9 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
 import gq.kirmanak.mealient.extensions.collectWhenResumed
 import gq.kirmanak.mealient.extensions.observeOnce
+import gq.kirmanak.mealient.ui.ActivityUiState
 import gq.kirmanak.mealient.ui.BaseActivity
+import gq.kirmanak.mealient.ui.CheckableMenuItem
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<MainActivityBinding>(
@@ -61,7 +63,7 @@ class MainActivity : BaseActivity<MainActivityBinding>(
             viewModel.onSearchQuery(query.trim().takeUnless { it.isEmpty() })
         }
         binding.navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
-        viewModel.uiStateLive.observe(this, ::onUiStateChange)
+        collectWhenResumed(viewModel.uiState, ::onUiStateChange)
         collectWhenResumed(viewModel.clearSearchViewFocus) {
             logger.d { "clearSearchViewFocus(): received event" }
             binding.toolbar.clearSearchFocus()
@@ -92,8 +94,16 @@ class MainActivity : BaseActivity<MainActivityBinding>(
         return true
     }
 
-    private fun onUiStateChange(uiState: MainActivityUiState) {
+    private fun onUiStateChange(uiState: ActivityUiState) {
         logger.v { "onUiStateChange() called with: uiState = $uiState" }
+        val checkedMenuItem = when (uiState.checkedMenuItem) {
+            CheckableMenuItem.ShoppingLists -> R.id.shopping_lists
+            CheckableMenuItem.RecipesList -> R.id.recipes_list
+            CheckableMenuItem.AddRecipe -> R.id.add_recipe
+            CheckableMenuItem.ChangeUrl -> R.id.change_url
+            CheckableMenuItem.Login -> R.id.login
+            null -> null
+        }
         for (menuItem in binding.navigationView.menu.iterator()) {
             val itemId = menuItem.itemId
             when (itemId) {
@@ -101,7 +111,7 @@ class MainActivity : BaseActivity<MainActivityBinding>(
                 R.id.login -> menuItem.isVisible = uiState.canShowLogin
                 R.id.shopping_lists -> menuItem.isVisible = uiState.v1MenuItemsVisible
             }
-            menuItem.isChecked = itemId == uiState.checkedMenuItemId
+            menuItem.isChecked = itemId == checkedMenuItem
         }
 
         binding.toolbar.isVisible = uiState.navigationVisible
