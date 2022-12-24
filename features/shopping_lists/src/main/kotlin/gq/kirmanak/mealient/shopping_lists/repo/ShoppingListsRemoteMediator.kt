@@ -24,6 +24,8 @@ class ShoppingListsRemoteMediator @Inject constructor(
 
     private var lastRequestEnd = 0
 
+    override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
+
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, ShoppingListEntity>,
