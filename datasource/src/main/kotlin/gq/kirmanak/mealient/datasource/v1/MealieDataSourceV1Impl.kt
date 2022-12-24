@@ -136,11 +136,13 @@ class MealieDataSourceV1Impl @Inject constructor(
         logParameters = { "slug = $slug" }
     )
 
-    override suspend fun getShoppingLists(page: Int, perPage: Int): GetShoppingListsResponseV1 {
-        return networkRequestWrapper.makeCallAndHandleUnauthorized(
-            block = { service.getShoppingLists(page, perPage) },
-            logMethod = { "getShoppingLists" }
-        )
-    }
+    override suspend fun getShoppingLists(
+        page: Int,
+        perPage: Int,
+    ): GetShoppingListsResponseV1 = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.getShoppingLists(page, perPage) },
+        logMethod = { "getShoppingLists" },
+        logParameters = { "page = $page, perPage = $perPage" }
+    )
 }
 

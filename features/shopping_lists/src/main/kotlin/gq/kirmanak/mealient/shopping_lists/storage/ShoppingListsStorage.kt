@@ -7,5 +7,7 @@ interface ShoppingListsStorage {
 
     suspend fun saveShoppingLists(shoppingLists: List<ShoppingListEntity>)
 
+    suspend fun refreshShoppingLists(shoppingLists: List<ShoppingListEntity>)
+
     fun queryShoppingLists(): PagingSource<Int, ShoppingListEntity>
 }

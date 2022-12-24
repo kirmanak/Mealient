@@ -15,4 +15,7 @@ interface ShoppingListsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertShoppingLists(shoppingLists: List<ShoppingListEntity>)
+
+    @Query("DELETE FROM shopping_lists")
+    suspend fun deleteAllShoppingLists()
 }

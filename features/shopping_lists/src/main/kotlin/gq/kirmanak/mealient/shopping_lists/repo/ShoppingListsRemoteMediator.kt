@@ -22,29 +22,34 @@ class ShoppingListsRemoteMediator @Inject constructor(
     private val logger: Logger,
 ) : RemoteMediator<Int, ShoppingListEntity>() {
 
+    private var lastRequestEnd = 0
+
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, ShoppingListEntity>,
     ): MediatorResult {
-        logger.v { "load() called with: loadType = $loadType, state = $state" }
+        logger.v { "load() called with: lastRequestEnd = $lastRequestEnd, loadType = $loadType, state = $state" }
 
-        // TODO don't think that prevKey/nextKey are set correctly
-        val page = when (loadType) {
-            LoadType.REFRESH -> 1
-            LoadType.PREPEND -> state.pages.firstOrNull()?.prevKey
-            LoadType.APPEND -> state.pages.lastOrNull()?.nextKey
-        } ?: return MediatorResult.Success(endOfPaginationReached = true)
+        val startAtIndex = when (loadType) {
+            LoadType.REFRESH -> 0
+            LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
+            LoadType.APPEND -> lastRequestEnd
+        }
 
         val perPage = when (loadType) {
             LoadType.REFRESH -> state.config.initialLoadSize
             else -> state.config.pageSize
         }
 
+        val page = startAtIndex / perPage + 1
+
+        logger.d { "load: starting at $startAtIndex index, loading $perPage item from page $page" }
+
         val response = runCatchingExceptCancel {
             dataSource.getPage(page, perPage)
         }.fold(
             onSuccess = {
-                logger.d { "load: expected page $page with $perPage items, got page ${it.page} with ${it.items.size} items. Totals are ${it.totalPages}/${it.totalItems}." }
+                logger.d { "load: got page ${it.page} with ${it.items.size} items. Totals are ${it.totalPages}/${it.totalItems}." }
                 it
             },
             onFailure = {
@@ -56,10 +61,14 @@ class ShoppingListsRemoteMediator @Inject constructor(
         val shoppingLists = response.toShoppingListEntities()
 
         runCatchingExceptCancel {
-            storage.saveShoppingLists(shoppingLists)
+            if (loadType == LoadType.REFRESH) {
+                storage.refreshShoppingLists(shoppingLists)
+            } else {
+                storage.saveShoppingLists(shoppingLists)
+            }
         }.fold(
             onSuccess = {
-                logger.d { "load: inserted items" }
+                logger.d { "load: ${if (loadType == LoadType.REFRESH) "refreshed" else "appended"} items" }
             },
             onFailure = {
                 logger.e(it) { "load: can't insert shopping lists" }
@@ -68,6 +77,8 @@ class ShoppingListsRemoteMediator @Inject constructor(
         )
 
         sourceFactory.invalidate()
+
+        lastRequestEnd = startAtIndex + shoppingLists.size
 
         return MediatorResult.Success(endOfPaginationReached = response.page == response.totalPages)
 

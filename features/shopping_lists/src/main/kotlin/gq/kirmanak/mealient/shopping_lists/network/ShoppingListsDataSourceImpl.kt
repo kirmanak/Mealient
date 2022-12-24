@@ -10,8 +10,9 @@ class ShoppingListsDataSourceImpl @Inject constructor(
     private val v1Source: MealieDataSourceV1
 ) : ShoppingListsDataSource {
 
-    override suspend fun getPage(page: Int, perPage: Int): ShoppingListsInfo {
-        return v1Source.getShoppingLists(page, perPage).toShoppingListsInfo()
-    }
+    override suspend fun getPage(
+        page: Int,
+        perPage: Int
+    ): ShoppingListsInfo = v1Source.getShoppingLists(page, perPage).toShoppingListsInfo()
 }
 
