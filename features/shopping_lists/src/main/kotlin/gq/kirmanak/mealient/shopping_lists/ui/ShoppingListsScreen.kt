@@ -42,7 +42,8 @@ fun ShoppingListsScreen(
         pagingItems = items,
     ) {
         ShoppingListCard(
-            shoppingListEntity = it, onItemClick = shoppingListsViewModel::onShoppingListClicked
+            shoppingListEntity = it,
+            onItemClick = shoppingListsViewModel::onShoppingListClicked,
         )
     }
 }
@@ -54,17 +55,12 @@ private fun <T : Any> LazyPagingColumn(
     itemContent: @Composable LazyItemScope.(T?) -> Unit,
 ) {
 
-    val loadStates = with(pagingItems.loadState) {
-        listOfNotNull(
-            refresh, prepend, append,
-            source.prepend, source.append, source.refresh,
-            mediator?.prepend, mediator?.append, mediator?.refresh,
-        )
-    }
-    val isRefreshing = loadStates.any { it is LoadState.Loading }
+    val isRefreshing = pagingItems.loadState.mediator?.refresh is LoadState.Loading
 
     SwipeToRefresh(
-        modifier = modifier, isRefreshing = isRefreshing, onRefresh = pagingItems::refresh
+        modifier = modifier,
+        isRefreshing = isRefreshing,
+        onRefresh = pagingItems::refresh,
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -90,7 +86,8 @@ private fun SwipeToRefresh(
     Box(
         modifier = modifier.pullRefresh(state = refreshState)
     ) {
-        content()
+
+    content()
 
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
