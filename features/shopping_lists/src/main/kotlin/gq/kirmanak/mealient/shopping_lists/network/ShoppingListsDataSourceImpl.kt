@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.shopping_lists.network
 
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
+import gq.kirmanak.mealient.shopping_lists.models.ShoppingListsInfo
 import gq.kirmanak.mealient.shopping_lists.models.toShoppingListsInfo
 import javax.inject.Inject
 import javax.inject.Singleton

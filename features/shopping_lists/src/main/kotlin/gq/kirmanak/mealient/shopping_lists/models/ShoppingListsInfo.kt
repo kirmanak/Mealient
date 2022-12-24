@@ -1,6 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.network
-
-import gq.kirmanak.mealient.shopping_lists.models.ShoppingListInfo
+package gq.kirmanak.mealient.shopping_lists.models
 
 data class ShoppingListsInfo(
     val page: Int,

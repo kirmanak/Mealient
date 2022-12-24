@@ -3,7 +3,6 @@ package gq.kirmanak.mealient.shopping_lists.models
 import gq.kirmanak.mealient.database.recipe.entity.ShoppingListEntity
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsSummaryResponseV1
-import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsInfo
 
 internal fun GetShoppingListsResponseV1.toShoppingListsInfo() = ShoppingListsInfo(
     page = page,
