@@ -1,8 +1,8 @@
 package gq.kirmanak.mealient.data.add.impl
 
 import gq.kirmanak.mealient.data.add.AddRecipeDataSource
-import gq.kirmanak.mealient.data.add.AddRecipeInfo
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
+import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeStorage
 import gq.kirmanak.mealient.extensions.toAddRecipeInfo
 import gq.kirmanak.mealient.extensions.toDraft

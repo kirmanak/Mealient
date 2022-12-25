@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.baseurl
+package gq.kirmanak.mealient.datasource.models
 
 data class VersionInfo(
     val version: String,

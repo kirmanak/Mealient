@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.models
+package gq.kirmanak.mealient.datasource.models
 
 data class ShoppingListsInfo(
     val page: Int,
@@ -6,4 +6,9 @@ data class ShoppingListsInfo(
     val totalPages: Int,
     val totalItems: Int,
     val items: List<ShoppingListInfo>,
+)
+
+data class ShoppingListInfo(
+    val name: String,
+    val id: String,
 )

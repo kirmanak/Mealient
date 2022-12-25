@@ -12,12 +12,12 @@ import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
-import gq.kirmanak.mealient.data.add.AddRecipeInfo
-import gq.kirmanak.mealient.data.add.AddRecipeIngredientInfo
-import gq.kirmanak.mealient.data.add.AddRecipeInstructionInfo
-import gq.kirmanak.mealient.data.add.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.databinding.FragmentAddRecipeBinding
 import gq.kirmanak.mealient.databinding.ViewSingleInputBinding
+import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
+import gq.kirmanak.mealient.datasource.models.AddRecipeIngredientInfo
+import gq.kirmanak.mealient.datasource.models.AddRecipeInstructionInfo
+import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.extensions.checkIfInputIsEmpty
 import gq.kirmanak.mealient.extensions.collectWhenViewResumed
 import gq.kirmanak.mealient.logging.Logger

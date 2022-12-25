@@ -1,22 +1,24 @@
 package gq.kirmanak.mealient.data.network
 
 import gq.kirmanak.mealient.data.add.AddRecipeDataSource
-import gq.kirmanak.mealient.data.add.AddRecipeInfo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.baseurl.ServerVersion
-import gq.kirmanak.mealient.data.recipes.network.FullRecipeInfo
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
-import gq.kirmanak.mealient.data.recipes.network.RecipeSummaryInfo
 import gq.kirmanak.mealient.data.share.ParseRecipeDataSource
-import gq.kirmanak.mealient.data.share.ParseRecipeURLInfo
+import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
+import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
+import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
+import gq.kirmanak.mealient.datasource.models.RecipeSummaryInfo
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
+import gq.kirmanak.mealient.datasource.v0.toFullRecipeInfo
+import gq.kirmanak.mealient.datasource.v0.toRecipeSummaryInfo
+import gq.kirmanak.mealient.datasource.v0.toV0Request
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
-import gq.kirmanak.mealient.extensions.toFullRecipeInfo
-import gq.kirmanak.mealient.extensions.toRecipeSummaryInfo
-import gq.kirmanak.mealient.extensions.toV0Request
-import gq.kirmanak.mealient.extensions.toV1CreateRequest
-import gq.kirmanak.mealient.extensions.toV1Request
-import gq.kirmanak.mealient.extensions.toV1UpdateRequest
+import gq.kirmanak.mealient.datasource.v1.toFullRecipeInfo
+import gq.kirmanak.mealient.datasource.v1.toRecipeSummaryInfo
+import gq.kirmanak.mealient.datasource.v1.toV1CreateRequest
+import gq.kirmanak.mealient.datasource.v1.toV1Request
+import gq.kirmanak.mealient.datasource.v1.toV1UpdateRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 

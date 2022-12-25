@@ -72,4 +72,9 @@ interface MealieServiceV1 {
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,
     ): GetShoppingListsResponseV1
+
+    @GET("/api/groups/shopping/lists/{id}")
+    suspend fun getShoppingList(
+        @Path("id") id: String,
+    ): GetShoppingListResponseV1
 }

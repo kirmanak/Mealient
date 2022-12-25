@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.share
+package gq.kirmanak.mealient.datasource.models
 
 data class ParseRecipeURLInfo(
     val url: String,

@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.data.share
 
 import androidx.core.util.PatternsCompat
+import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton

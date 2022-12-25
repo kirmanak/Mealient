@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.recipes.network
+package gq.kirmanak.mealient.datasource.models
 
 data class FullRecipeInfo(
     val remoteId: String,

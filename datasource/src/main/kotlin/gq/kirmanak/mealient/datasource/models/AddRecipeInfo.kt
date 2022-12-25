@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.data.add
+package gq.kirmanak.mealient.datasource.models
 
 data class AddRecipeInfo(
     val name: String,

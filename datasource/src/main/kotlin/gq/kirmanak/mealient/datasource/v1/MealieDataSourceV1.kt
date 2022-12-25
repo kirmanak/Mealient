@@ -5,6 +5,7 @@ import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetUserInfoResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
@@ -59,4 +60,6 @@ interface MealieDataSourceV1 {
     suspend fun deleteRecipe(slug: String)
 
     suspend fun getShoppingLists(page: Int, perPage: Int): GetShoppingListsResponseV1
+
+    suspend fun getShoppingList(id: String): GetShoppingListResponseV1
 }

@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.data.baseurl
 
 import com.google.common.truth.Truth.assertThat
+import gq.kirmanak.mealient.datasource.models.VersionInfo
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_VERSION
 import gq.kirmanak.mealient.test.BaseUnitTest

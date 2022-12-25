@@ -10,7 +10,7 @@ data class GetRecipeResponseV1(
     @SerialName("recipeYield") val recipeYield: String = "",
     @SerialName("recipeIngredient") val recipeIngredients: List<GetRecipeIngredientResponseV1> = emptyList(),
     @SerialName("recipeInstructions") val recipeInstructions: List<GetRecipeInstructionResponseV1> = emptyList(),
-    @SerialName("settings") val settings: GetRecipeSettingsResponseV1,
+    @SerialName("settings") val settings: GetRecipeSettingsResponseV1? = null,
 )
 
 @Serializable
@@ -25,16 +25,6 @@ data class GetRecipeIngredientResponseV1(
     @SerialName("food") val food: GetRecipeIngredientFoodResponseV1?,
     @SerialName("quantity") val quantity: Double?,
     @SerialName("title") val title: String?,
-)
-
-@Serializable
-data class GetRecipeIngredientFoodResponseV1(
-    @SerialName("name") val name: String = "",
-)
-
-@Serializable
-data class GetRecipeIngredientUnitResponseV1(
-    @SerialName("name") val name: String = "",
 )
 
 @Serializable
