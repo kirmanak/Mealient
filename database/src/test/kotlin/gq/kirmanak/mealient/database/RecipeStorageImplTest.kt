@@ -1,20 +1,10 @@
-package gq.kirmanak.mealient.data.recipes.db
+package gq.kirmanak.mealient.database
 
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.database.recipe.RecipeDao
+import gq.kirmanak.mealient.database.recipe.RecipeStorageImpl
 import gq.kirmanak.mealient.test.HiltRobolectricTest
-import gq.kirmanak.mealient.test.RecipeImplTestData.BREAD_INGREDIENT
-import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_BREAD_RECIPE_INGREDIENT_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_FULL_RECIPE_INFO
-import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_RECIPE_SUMMARY_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_PORRIDGE_INFO_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.MIX_CAKE_RECIPE_INSTRUCTION_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.MIX_INSTRUCTION
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_FULL_RECIPE_INFO
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARY_ENTITIES
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -22,7 +12,7 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 @OptIn(ExperimentalCoroutinesApi::class)
-class RecipeStorageImplTest : HiltRobolectricTest() {
+internal class RecipeStorageImplTest : HiltRobolectricTest() {
 
     @Inject
     lateinit var subject: RecipeStorageImpl
@@ -59,7 +49,11 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     @Test
     fun `when saveRecipeInfo then saves recipe info`() = runTest {
         subject.saveRecipes(listOf(CAKE_RECIPE_SUMMARY_ENTITY))
-        subject.saveRecipeInfo(CAKE_FULL_RECIPE_INFO)
+        subject.saveRecipeInfo(
+            CAKE_RECIPE_ENTITY,
+            listOf(CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY, CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
+            listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY)
+        )
         val actual = recipeDao.queryFullRecipeInfo("1")
         assertThat(actual).isEqualTo(FULL_CAKE_INFO_ENTITY)
     }
@@ -67,29 +61,51 @@ class RecipeStorageImplTest : HiltRobolectricTest() {
     @Test
     fun `when saveRecipeInfo with two then saves second`() = runTest {
         subject.saveRecipes(TEST_RECIPE_SUMMARY_ENTITIES)
-        subject.saveRecipeInfo(CAKE_FULL_RECIPE_INFO)
-        subject.saveRecipeInfo(PORRIDGE_FULL_RECIPE_INFO)
+        subject.saveRecipeInfo(
+            CAKE_RECIPE_ENTITY,
+            listOf(CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY, CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
+            listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY),
+        )
+        subject.saveRecipeInfo(
+            PORRIDGE_RECIPE_ENTITY_FULL,
+            listOf(PORRIDGE_SUGAR_RECIPE_INGREDIENT_ENTITY, PORRIDGE_MILK_RECIPE_INGREDIENT_ENTITY),
+            listOf(PORRIDGE_MIX_RECIPE_INSTRUCTION_ENTITY, PORRIDGE_BOIL_RECIPE_INSTRUCTION_ENTITY),
+        )
         val actual = recipeDao.queryFullRecipeInfo("2")
         assertThat(actual).isEqualTo(FULL_PORRIDGE_INFO_ENTITY)
     }
 
     @Test
-    fun `when saveRecipeInfo secondly then overwrites ingredients`() = runTest {
+    fun `when saveRecipeInfo twice then overwrites ingredients`() = runTest {
         subject.saveRecipes(listOf(CAKE_RECIPE_SUMMARY_ENTITY))
-        subject.saveRecipeInfo(CAKE_FULL_RECIPE_INFO)
-        val newRecipe = CAKE_FULL_RECIPE_INFO.copy(recipeIngredients = listOf(BREAD_INGREDIENT))
-        subject.saveRecipeInfo(newRecipe)
+        subject.saveRecipeInfo(
+            CAKE_RECIPE_ENTITY,
+            listOf(CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY, CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
+            listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY),
+        )
+        subject.saveRecipeInfo(
+            CAKE_RECIPE_ENTITY,
+            listOf(CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
+            listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY),
+        )
         val actual = recipeDao.queryFullRecipeInfo("1")?.recipeIngredients
         val expected = listOf(CAKE_BREAD_RECIPE_INGREDIENT_ENTITY.copy(localId = 3))
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun `when saveRecipeInfo secondly then overwrites instructions`() = runTest {
+    fun `when saveRecipeInfo twice then overwrites instructions`() = runTest {
         subject.saveRecipes(listOf(CAKE_RECIPE_SUMMARY_ENTITY))
-        subject.saveRecipeInfo(CAKE_FULL_RECIPE_INFO)
-        val newRecipe = CAKE_FULL_RECIPE_INFO.copy(recipeInstructions = listOf(MIX_INSTRUCTION))
-        subject.saveRecipeInfo(newRecipe)
+        subject.saveRecipeInfo(
+            CAKE_RECIPE_ENTITY,
+            listOf(CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY, CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
+            listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY),
+        )
+        subject.saveRecipeInfo(
+            CAKE_RECIPE_ENTITY,
+            listOf(CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY, CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
+            listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY),
+        )
         val actual = recipeDao.queryFullRecipeInfo("1")?.recipeInstructions
         val expected = listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY.copy(localId = 3))
         assertThat(actual).isEqualTo(expected)

@@ -3,12 +3,12 @@ package gq.kirmanak.mealient.data.recipes.impl
 import androidx.paging.PagingSource
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
-import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
+import gq.kirmanak.mealient.database.CAKE_RECIPE_SUMMARY_ENTITY
+import gq.kirmanak.mealient.database.PORRIDGE_RECIPE_SUMMARY_ENTITY
+import gq.kirmanak.mealient.database.TEST_RECIPE_SUMMARY_ENTITIES
+import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.test.HiltRobolectricTest
-import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_RECIPE_SUMMARY_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARY_ENTITIES
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test

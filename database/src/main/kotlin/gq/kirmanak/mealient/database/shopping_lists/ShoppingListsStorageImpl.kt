@@ -1,16 +1,15 @@
-package gq.kirmanak.mealient.shopping_lists.storage
+package gq.kirmanak.mealient.database.shopping_lists
 
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
 import gq.kirmanak.mealient.database.AppDb
-import gq.kirmanak.mealient.database.recipe.ShoppingListsDao
-import gq.kirmanak.mealient.database.recipe.entity.ShoppingListEntity
+import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ShoppingListsStorageImpl @Inject constructor(
+internal class ShoppingListsStorageImpl @Inject constructor(
     private val shoppingListsDao: ShoppingListsDao,
     private val appDb: AppDb,
     private val logger: Logger,

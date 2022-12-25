@@ -16,20 +16,23 @@ android {
 }
 
 dependencies {
+    implementation(project(":logging"))
+    testImplementation(project(":testing"))
+    testImplementation(project(":database_test"))
+
     implementation(libs.google.dagger.hiltAndroid)
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
 
-    // withTransaction is used in the app module
-    api(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.paging)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.androidx.room.testing)
 
-    implementation(libs.jetbrains.kotlinx.datetime)
+    api(libs.jetbrains.kotlinx.datetime)
 
     implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
     testImplementation(libs.jetbrains.kotlinx.coroutinesTest)

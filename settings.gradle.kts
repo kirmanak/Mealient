@@ -22,6 +22,7 @@ rootProject.name = "Mealient"
 include(":app")
 include(":architecture")
 include(":database")
+include(":database_test")
 include(":datastore")
 include(":logging")
 include(":datasource")

@@ -1,7 +1,7 @@
-package gq.kirmanak.mealient.shopping_lists.storage
+package gq.kirmanak.mealient.database.shopping_lists
 
 import androidx.paging.PagingSource
-import gq.kirmanak.mealient.database.recipe.entity.ShoppingListEntity
+import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 
 interface ShoppingListsStorage {
 

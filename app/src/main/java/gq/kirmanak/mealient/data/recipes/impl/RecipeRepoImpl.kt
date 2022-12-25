@@ -4,11 +4,14 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
+import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
+import gq.kirmanak.mealient.extensions.toRecipeEntity
+import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
+import gq.kirmanak.mealient.extensions.toRecipeInstructionEntity
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -45,7 +48,15 @@ class RecipeRepoImpl @Inject constructor(
     override suspend fun refreshRecipeInfo(recipeSlug: String): Result<Unit> {
         logger.v { "refreshRecipeInfo() called with: recipeSlug = $recipeSlug" }
         return runCatchingExceptCancel {
-            storage.saveRecipeInfo(dataSource.requestRecipeInfo(recipeSlug))
+            val info = dataSource.requestRecipeInfo(recipeSlug)
+            val entity = info.toRecipeEntity()
+            val ingredients = info.recipeIngredients.map {
+                it.toRecipeIngredientEntity(entity.remoteId)
+            }
+            val instructions = info.recipeInstructions.map {
+                it.toRecipeInstructionEntity(entity.remoteId)
+            }
+            storage.saveRecipeInfo(entity, ingredients, instructions)
         }.onFailure {
             logger.e(it) { "loadRecipeInfo: can't update full recipe info" }
         }

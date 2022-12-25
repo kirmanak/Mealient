@@ -1,9 +1,11 @@
-package gq.kirmanak.mealient.data.recipes.db
+package gq.kirmanak.mealient.database.recipe
 
 import androidx.paging.PagingSource
 import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 
 interface RecipeStorage {
     suspend fun saveRecipes(recipes: List<RecipeSummaryEntity>)
@@ -14,7 +16,11 @@ interface RecipeStorage {
 
     suspend fun clearAllLocalData()
 
-    suspend fun saveRecipeInfo(recipe: FullRecipeInfo)
+    suspend fun saveRecipeInfo(
+        recipe: RecipeEntity,
+        ingredients: List<RecipeIngredientEntity>,
+        instructions: List<RecipeInstructionEntity>
+    )
 
     suspend fun queryRecipeInfo(recipeId: String): FullRecipeEntity?
 

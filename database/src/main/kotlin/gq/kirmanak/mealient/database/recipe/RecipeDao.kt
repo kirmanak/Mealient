@@ -5,7 +5,7 @@ import androidx.room.*
 import gq.kirmanak.mealient.database.recipe.entity.*
 
 @Dao
-interface RecipeDao {
+internal interface RecipeDao {
     @Query("SELECT * FROM recipe_summaries ORDER BY date_added DESC")
     fun queryRecipesByPages(): PagingSource<Int, RecipeSummaryEntity>
 

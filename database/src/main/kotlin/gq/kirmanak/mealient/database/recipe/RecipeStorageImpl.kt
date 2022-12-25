@@ -1,21 +1,19 @@
-package gq.kirmanak.mealient.data.recipes.db
+package gq.kirmanak.mealient.database.recipe
 
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
 import gq.kirmanak.mealient.database.AppDb
-import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
-import gq.kirmanak.mealient.extensions.toRecipeEntity
-import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
-import gq.kirmanak.mealient.extensions.toRecipeInstructionEntity
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RecipeStorageImpl @Inject constructor(
+internal class RecipeStorageImpl @Inject constructor(
     private val db: AppDb,
     private val logger: Logger,
     private val recipeDao: RecipeDao,
@@ -47,21 +45,19 @@ class RecipeStorageImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveRecipeInfo(recipe: FullRecipeInfo) {
+    override suspend fun saveRecipeInfo(
+        recipe: RecipeEntity,
+        ingredients: List<RecipeIngredientEntity>,
+        instructions: List<RecipeInstructionEntity>
+    ) {
         logger.v { "saveRecipeInfo() called with: recipe = $recipe" }
         db.withTransaction {
-            recipeDao.insertRecipe(recipe.toRecipeEntity())
+            recipeDao.insertRecipe(recipe)
 
             recipeDao.deleteRecipeIngredients(recipe.remoteId)
-            val ingredients = recipe.recipeIngredients.map {
-                it.toRecipeIngredientEntity(recipe.remoteId)
-            }
             recipeDao.insertRecipeIngredients(ingredients)
 
             recipeDao.deleteRecipeInstructions(recipe.remoteId)
-            val instructions = recipe.recipeInstructions.map {
-                it.toRecipeInstructionEntity(recipe.remoteId)
-            }
             recipeDao.insertRecipeInstructions(instructions)
         }
     }

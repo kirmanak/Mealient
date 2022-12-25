@@ -1,14 +1,14 @@
-package gq.kirmanak.mealient.database.recipe
+package gq.kirmanak.mealient.database.shopping_lists
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import gq.kirmanak.mealient.database.recipe.entity.ShoppingListEntity
+import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 
 @Dao
-interface ShoppingListsDao {
+internal interface ShoppingListsDao {
 
     @Query("SELECT * FROM shopping_lists")
     fun queryShoppingListsByPages(): PagingSource<Int, ShoppingListEntity>

@@ -1,6 +1,6 @@
 package gq.kirmanak.mealient.shopping_lists.models
 
-import gq.kirmanak.mealient.database.recipe.entity.ShoppingListEntity
+import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListsInfo
 

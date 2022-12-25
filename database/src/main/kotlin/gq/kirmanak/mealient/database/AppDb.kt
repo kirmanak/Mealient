@@ -3,8 +3,9 @@ package gq.kirmanak.mealient.database
 import androidx.room.*
 import androidx.room.migration.AutoMigrationSpec
 import gq.kirmanak.mealient.database.recipe.RecipeDao
-import gq.kirmanak.mealient.database.recipe.ShoppingListsDao
 import gq.kirmanak.mealient.database.recipe.entity.*
+import gq.kirmanak.mealient.database.shopping_lists.ShoppingListsDao
+import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 
 @Database(
     version = 9,
@@ -27,7 +28,7 @@ import gq.kirmanak.mealient.database.recipe.entity.*
     ]
 )
 @TypeConverters(RoomTypeConverters::class)
-abstract class AppDb : RoomDatabase() {
+internal abstract class AppDb : RoomDatabase() {
 
     abstract fun recipeDao(): RecipeDao
 

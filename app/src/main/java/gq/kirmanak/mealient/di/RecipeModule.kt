@@ -10,8 +10,6 @@ import dagger.hilt.components.SingletonComponent
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.network.MealieDataSourceWrapper
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
-import gq.kirmanak.mealient.data.recipes.db.RecipeStorageImpl
 import gq.kirmanak.mealient.data.recipes.impl.*
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
@@ -26,10 +24,6 @@ interface RecipeModule {
     @Binds
     @Singleton
     fun provideRecipeDataSource(mealieDataSourceWrapper: MealieDataSourceWrapper): RecipeDataSource
-
-    @Binds
-    @Singleton
-    fun provideRecipeStorage(recipeStorageImpl: RecipeStorageImpl): RecipeStorage
 
     @Binds
     @Singleton

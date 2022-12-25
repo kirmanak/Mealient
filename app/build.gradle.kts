@@ -80,6 +80,7 @@ dependencies {
 
     implementation(project(":architecture"))
     implementation(project(":database"))
+    testImplementation(project(":database_test"))
     implementation(project(":datastore"))
     implementation(project(":datasource"))
     implementation(project(":logging"))

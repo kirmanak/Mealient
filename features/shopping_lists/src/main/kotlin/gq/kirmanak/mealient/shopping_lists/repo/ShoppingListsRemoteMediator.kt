@@ -4,12 +4,12 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import gq.kirmanak.mealient.database.recipe.entity.ShoppingListEntity
+import gq.kirmanak.mealient.database.shopping_lists.ShoppingListsStorage
+import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.models.toShoppingListEntities
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSource
-import gq.kirmanak.mealient.shopping_lists.storage.ShoppingListsStorage
 import javax.inject.Inject
 import javax.inject.Singleton
 
