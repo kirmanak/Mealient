@@ -2,29 +2,14 @@
 
 plugins {
     id("gq.kirmanak.mealient.library")
+    alias(libs.plugins.ksp)
+    id("gq.kirmanak.mealient.compose")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
-    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "gq.kirmanak.mealient.shopping_list"
-
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeKotlinCompilerExtension.get()
-    }
-
-    libraryVariants.all {
-        kotlin.sourceSets {
-            getByName(name) {
-                kotlin.srcDir("build/generated/ksp/$name/kotlin")
-            }
-        }
-    }
 }
 
 dependencies {
@@ -36,26 +21,12 @@ dependencies {
     implementation(libs.android.material.material)
     implementation(libs.androidx.compose.material)
 
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.ui.toolingPreview)
-    implementation(libs.androidx.compose.runtime.livedata)
-    implementation(libs.androidx.lifecycle.viewmodelCompose)
-    implementation(libs.google.accompanist.themeadapter.material3)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.testManifest)
-    androidTestImplementation(libs.androidx.compose.ui.testJunit)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-
     implementation(libs.google.dagger.hiltAndroid)
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.androidx.paging.compose)
-
-    implementation(libs.composeDestinations.core)
-    ksp(libs.composeDestinations.ksp)
 
     implementation(libs.androidx.hilt.navigationCompose)
 
