@@ -39,12 +39,12 @@ internal interface RecipeDao {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH) // The lint is wrong, the columns are actually used
     @Query(
         "SELECT * FROM recipe " +
-                "JOIN recipe_summaries ON recipe.remote_id = recipe_summaries.remote_id " +
-                "JOIN recipe_ingredient ON recipe_ingredient.recipe_id = recipe.remote_id " +
-                "JOIN recipe_instruction ON recipe_instruction.recipe_id = recipe.remote_id " +
-                "WHERE recipe.remote_id = :recipeId"
+                "JOIN recipe_summaries USING(recipe_id) " +
+                "JOIN recipe_ingredient USING(recipe_id) " +
+                "JOIN recipe_instruction USING(recipe_id) " +
+                "WHERE recipe.recipe_id = :recipeId"
     )
-    suspend fun queryFullRecipeInfo(recipeId: String): FullRecipeEntity?
+    suspend fun queryFullRecipeInfo(recipeId: String): RecipeWithSummaryAndIngredientsAndInstructions?
 
     @Query("DELETE FROM recipe_ingredient WHERE recipe_id IN (:recipeIds)")
     suspend fun deleteRecipeIngredients(vararg recipeIds: String)

@@ -10,14 +10,14 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = ShoppingListEntity::class,
-            parentColumns = ["remote_id"],
+            parentColumns = ["shopping_list_id"],
             childColumns = ["shopping_list_id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class ShoppingListItemEntity(
-    @PrimaryKey @ColumnInfo(name = "remote_id") val remoteId: String,
+    @PrimaryKey @ColumnInfo(name = "shopping_list_item_id") val remoteId: String,
     @ColumnInfo(name = "shopping_list_id", index = true) val shoppingListId: String,
     @ColumnInfo(name = "checked") val checked: Boolean,
     @ColumnInfo(name = "position") val position: Int,

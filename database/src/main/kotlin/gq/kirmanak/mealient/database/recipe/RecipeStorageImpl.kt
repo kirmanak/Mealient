@@ -3,11 +3,11 @@ package gq.kirmanak.mealient.database.recipe
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
 import gq.kirmanak.mealient.database.AppDb
-import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -60,7 +60,7 @@ internal class RecipeStorageImpl @Inject constructor(
         }
     }
 
-    override suspend fun queryRecipeInfo(recipeId: String): FullRecipeEntity? {
+    override suspend fun queryRecipeInfo(recipeId: String): RecipeWithSummaryAndIngredientsAndInstructions? {
         logger.v { "queryRecipeInfo() called with: recipeId = $recipeId" }
         val fullRecipeInfo = recipeDao.queryFullRecipeInfo(recipeId)
         logger.v { "queryRecipeInfo() returned: $fullRecipeInfo" }

@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "shopping_lists")
 data class ShoppingListEntity(
-    @PrimaryKey @ColumnInfo(name = "remote_id") val remoteId: String,
+    @PrimaryKey @ColumnInfo(name = "shopping_list_id") val remoteId: String,
     @ColumnInfo(name = "name") val name: String,
 )

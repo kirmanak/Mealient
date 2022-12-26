@@ -34,12 +34,12 @@ internal interface ShoppingListsDao {
 
     @Query(
         "SELECT * FROM shopping_lists " +
-                "JOIN shopping_list_item ON shopping_list_item.shopping_list_id = shopping_lists.remote_id " +
-                "JOIN shopping_list_item_recipe_reference ON shopping_list_item_recipe_reference.shopping_list_item_id = shopping_list_item.remote_id " +
-                "JOIN recipe ON recipe.remote_id = shopping_list_item_recipe_reference.recipe_id " +
-                "JOIN recipe_summaries ON recipe_summaries.remote_id = shopping_list_item_recipe_reference.recipe_id " +
-                "JOIN recipe_ingredient ON recipe_ingredient.recipe_id = shopping_list_item_recipe_reference.recipe_id " +
-                "WHERE shopping_lists.remote_id = :id"
+                "LEFT JOIN shopping_list_item USING(shopping_list_id) " +
+                "LEFT JOIN shopping_list_item_recipe_reference USING(shopping_list_item_id) " +
+                "LEFT JOIN recipe USING (recipe_id) " +
+                "LEFT JOIN recipe_summaries USING (recipe_id)  " +
+                "LEFT JOIN recipe_ingredient USING (recipe_id)  " +
+                "WHERE shopping_lists.shopping_list_id = :id"
     )
     suspend fun queryFullShoppingList(id: String): ShoppingListWithItems
 }

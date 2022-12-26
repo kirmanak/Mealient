@@ -1,10 +1,10 @@
 package gq.kirmanak.mealient.database
 
-import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
@@ -67,7 +67,7 @@ val CAKE_BREAD_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
     title = null,
 )
 
-val FULL_CAKE_INFO_ENTITY = FullRecipeEntity(
+val FULL_CAKE_INFO_ENTITY = RecipeWithSummaryAndIngredientsAndInstructions(
     recipeEntity = CAKE_RECIPE_ENTITY,
     recipeSummaryEntity = CAKE_RECIPE_SUMMARY_ENTITY,
     recipeIngredients = listOf(
@@ -114,7 +114,7 @@ val PORRIDGE_BOIL_RECIPE_INSTRUCTION_ENTITY = RecipeInstructionEntity(
     text = "Boil the ingredients"
 )
 
-val FULL_PORRIDGE_INFO_ENTITY = FullRecipeEntity(
+val FULL_PORRIDGE_INFO_ENTITY = RecipeWithSummaryAndIngredientsAndInstructions(
     recipeEntity = PORRIDGE_RECIPE_ENTITY_FULL,
     recipeSummaryEntity = PORRIDGE_RECIPE_SUMMARY_ENTITY,
     recipeIngredients = listOf(

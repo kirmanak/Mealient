@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
@@ -24,8 +23,8 @@ class ShoppingListViewModel @Inject constructor(
 
     private val args: ShoppingListNavArgs = ShoppingListScreenDestination.argsFrom(savedStateHandle)
 
-    private val _shoppingList = MutableStateFlow<ShoppingListWithItems?>(null)
-    val shoppingList: StateFlow<ShoppingListWithItems?> = _shoppingList.asStateFlow()
+    private val _shoppingList = MutableStateFlow("Loading...")
+    val shoppingList: StateFlow<String> = _shoppingList.asStateFlow()
 
     init {
         loadShoppingList(args.shoppingListId)
@@ -36,11 +35,16 @@ class ShoppingListViewModel @Inject constructor(
         viewModelScope.launch {
             _shoppingList.value = runCatchingExceptCancel {
                 shoppingListsRepo.requestShoppingList(id)
-            }.onFailure {
-                logger.e(it) { "Failed to load shopping list" }
-            }.onSuccess {
-                logger.d { "Loaded shopping list: $it" }
-            }.getOrNull()
+            }.fold(
+                onSuccess = {
+                    logger.d { "loadShoppingList() success: $it" }
+                    it.shoppingList.name
+                },
+                onFailure = {
+                    logger.e(it) { "loadShoppingList() failed" }
+                    "${it.message}"
+                }
+            )
         }
     }
 }

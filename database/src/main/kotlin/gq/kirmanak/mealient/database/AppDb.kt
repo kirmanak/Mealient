@@ -10,7 +10,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntit
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 
 @Database(
-    version = 10,
+    version = 11,
     entities = [
         RecipeSummaryEntity::class,
         RecipeEntity::class,
@@ -30,11 +30,11 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecip
         AutoMigration(from = 7, to = 8),
         AutoMigration(from = 8, to = 9),
         AutoMigration(from = 9, to = 10),
+        AutoMigration(from = 10, to = 11, spec = AppDb.From10To11Migration::class),
     ]
 )
 @TypeConverters(RoomTypeConverters::class)
 internal abstract class AppDb : RoomDatabase() {
-
     abstract fun recipeDao(): RecipeDao
 
     abstract fun shoppingListsDao(): ShoppingListsDao
@@ -54,4 +54,26 @@ internal abstract class AppDb : RoomDatabase() {
     @DeleteTable(tableName = "categories")
     @DeleteTable(tableName = "category_recipe")
     class From5To6Migration : AutoMigrationSpec
+
+    @RenameColumn(
+        tableName = "recipe_summaries",
+        fromColumnName = "remote_id",
+        toColumnName = "recipe_id"
+    )
+    @RenameColumn(
+        tableName = "recipe",
+        fromColumnName = "remote_id",
+        toColumnName = "recipe_id"
+    )
+    @RenameColumn(
+        tableName = "shopping_lists",
+        fromColumnName = "remote_id",
+        toColumnName = "shopping_list_id"
+    )
+    @RenameColumn(
+        tableName = "shopping_list_item",
+        fromColumnName = "remote_id",
+        toColumnName = "shopping_list_item_id"
+    )
+    class From10To11Migration : AutoMigrationSpec
 }

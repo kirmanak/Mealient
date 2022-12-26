@@ -10,13 +10,13 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
     foreignKeys = [
         ForeignKey(
             entity = ShoppingListItemEntity::class,
-            parentColumns = ["remote_id"],
+            parentColumns = ["shopping_list_item_id"],
             childColumns = ["shopping_list_item_id"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = RecipeEntity::class,
-            parentColumns = ["remote_id"],
+            parentColumns = ["recipe_id"],
             childColumns = ["recipe_id"],
             onDelete = ForeignKey.CASCADE
         ),

@@ -19,5 +19,5 @@ fun ShoppingListScreen(
 ) {
     val shoppingList = shoppingListsViewModel.shoppingList.collectAsState()
 
-    Text(text = shoppingList.value?.shoppingList?.name ?: "Loading...")
+    Text(text = shoppingList.value)
 }
