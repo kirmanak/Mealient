@@ -59,6 +59,86 @@ internal abstract class AppDb : RoomDatabase() {
         toColumnName = "recipe_id"
     )
     @RenameColumn(
+        tableName = "recipe_summaries",
+        fromColumnName = "date_added",
+        toColumnName = "recipe_summaries_date_added"
+    )
+    @RenameColumn(
+        tableName = "recipe_summaries",
+        fromColumnName = "date_updated",
+        toColumnName = "recipe_summaries_date_updated"
+    )
+    @RenameColumn(
+        tableName = "recipe_summaries",
+        fromColumnName = "is_favorite",
+        toColumnName = "recipe_summaries_is_favorite"
+    )
+    @RenameColumn(
+        tableName = "recipe_summaries",
+        fromColumnName = "name",
+        toColumnName = "recipe_summaries_name"
+    )
+    @RenameColumn(
+        tableName = "recipe_summaries",
+        fromColumnName = "description",
+        toColumnName = "recipe_summaries_description"
+    )
+    @RenameColumn(
+        tableName = "recipe_summaries",
+        fromColumnName = "image_id",
+        toColumnName = "recipe_summaries_image_id"
+    )
+    @RenameColumn(
+        tableName = "recipe_summaries",
+        fromColumnName = "slug",
+        toColumnName = "recipe_summaries_slug"
+    )
+    @RenameColumn(
+        tableName = "recipe",
+        fromColumnName = "disable_amounts",
+        toColumnName = "recipe_disable_amounts"
+    )
+    @RenameColumn(
+        tableName = "recipe_instruction",
+        fromColumnName = "local_id",
+        toColumnName = "recipe_instruction_local_id"
+    )
+    @RenameColumn(
+        tableName = "recipe_instruction",
+        fromColumnName = "text",
+        toColumnName = "recipe_instruction_text"
+    )
+    @RenameColumn(
+        tableName = "recipe_ingredient",
+        fromColumnName = "note",
+        toColumnName = "recipe_ingredient_note"
+    )
+    @RenameColumn(
+        tableName = "recipe_ingredient",
+        fromColumnName = "unit",
+        toColumnName = "recipe_ingredient_unit"
+    )
+    @RenameColumn(
+        tableName = "recipe_ingredient",
+        fromColumnName = "quantity",
+        toColumnName = "recipe_ingredient_quantity"
+    )
+    @RenameColumn(
+        tableName = "recipe_ingredient",
+        fromColumnName = "local_id",
+        toColumnName = "recipe_ingredient_local_id"
+    )
+    @RenameColumn(
+        tableName = "recipe_ingredient",
+        fromColumnName = "title",
+        toColumnName = "recipe_ingredient_title"
+    )
+    @RenameColumn(
+        tableName = "recipe_ingredient",
+        fromColumnName = "food",
+        toColumnName = "recipe_ingredient_food"
+    )
+    @RenameColumn(
         tableName = "recipe",
         fromColumnName = "remote_id",
         toColumnName = "recipe_id"

@@ -6,10 +6,10 @@ import gq.kirmanak.mealient.database.recipe.entity.*
 
 @Dao
 internal interface RecipeDao {
-    @Query("SELECT * FROM recipe_summaries ORDER BY date_added DESC")
+    @Query("SELECT * FROM recipe_summaries ORDER BY recipe_summaries_date_added DESC")
     fun queryRecipesByPages(): PagingSource<Int, RecipeSummaryEntity>
 
-    @Query("SELECT * FROM recipe_summaries WHERE recipe_summaries.name LIKE '%' || :query || '%' ORDER BY date_added DESC")
+    @Query("SELECT * FROM recipe_summaries WHERE recipe_summaries_name LIKE '%' || :query || '%' ORDER BY recipe_summaries_date_added DESC")
     fun queryRecipesByPages(query: String): PagingSource<Int, RecipeSummaryEntity>
 
     @Transaction
@@ -20,7 +20,7 @@ internal interface RecipeDao {
     @Query("DELETE FROM recipe_summaries")
     suspend fun removeAllRecipes()
 
-    @Query("SELECT * FROM recipe_summaries ORDER BY date_updated DESC")
+    @Query("SELECT * FROM recipe_summaries ORDER BY recipe_summaries_date_added DESC")
     suspend fun queryAllRecipes(): List<RecipeSummaryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -52,10 +52,10 @@ internal interface RecipeDao {
     @Query("DELETE FROM recipe_instruction WHERE recipe_id IN (:recipeIds)")
     suspend fun deleteRecipeInstructions(vararg recipeIds: String)
 
-    @Query("UPDATE recipe_summaries SET is_favorite = 1 WHERE slug IN (:favorites)")
+    @Query("UPDATE recipe_summaries SET recipe_summaries_is_favorite = 1 WHERE recipe_summaries_slug IN (:favorites)")
     suspend fun setFavorite(favorites: List<String>)
 
-    @Query("UPDATE recipe_summaries SET is_favorite = 0 WHERE slug NOT IN (:favorites)")
+    @Query("UPDATE recipe_summaries SET recipe_summaries_is_favorite = 0 WHERE recipe_summaries_slug NOT IN (:favorites)")
     suspend fun setNonFavorite(favorites: List<String>)
 
     @Delete

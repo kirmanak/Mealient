@@ -26,5 +26,5 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 data class ShoppingListItemRecipeReferenceEntity(
     @ColumnInfo(name = "shopping_list_item_id", index = true) val shoppingListItemId: String,
     @ColumnInfo(name = "recipe_id", index = true) val recipeId: String,
-    @ColumnInfo(name = "quantity") val quantity: Double,
+    @ColumnInfo(name = "shopping_list_item_recipe_reference_quantity") val quantity: Double,
 )

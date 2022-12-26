@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "dce8a5f6a926ef7d7af9b6bcb80669fb",
+    "identityHash": "8f313a2e5b84300be3de1446e95a3a63",
     "entities": [
       {
         "tableName": "recipe_summaries",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipe_id` TEXT NOT NULL, `name` TEXT NOT NULL, `slug` TEXT NOT NULL, `description` TEXT NOT NULL, `date_added` INTEGER NOT NULL, `date_updated` INTEGER NOT NULL, `image_id` TEXT, `is_favorite` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`recipe_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipe_id` TEXT NOT NULL, `recipe_summaries_name` TEXT NOT NULL, `recipe_summaries_slug` TEXT NOT NULL, `recipe_summaries_description` TEXT NOT NULL, `recipe_summaries_date_added` INTEGER NOT NULL, `recipe_summaries_date_updated` INTEGER NOT NULL, `recipe_summaries_image_id` TEXT, `recipe_summaries_is_favorite` INTEGER NOT NULL DEFAULT false, PRIMARY KEY(`recipe_id`))",
         "fields": [
           {
             "fieldPath": "remoteId",
@@ -16,43 +16,43 @@
           },
           {
             "fieldPath": "name",
-            "columnName": "name",
+            "columnName": "recipe_summaries_name",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "slug",
-            "columnName": "slug",
+            "columnName": "recipe_summaries_slug",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "description",
-            "columnName": "description",
+            "columnName": "recipe_summaries_description",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "dateAdded",
-            "columnName": "date_added",
+            "columnName": "recipe_summaries_date_added",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "dateUpdated",
-            "columnName": "date_updated",
+            "columnName": "recipe_summaries_date_updated",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "imageId",
-            "columnName": "image_id",
+            "columnName": "recipe_summaries_image_id",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "isFavorite",
-            "columnName": "is_favorite",
+            "columnName": "recipe_summaries_is_favorite",
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "false"
@@ -69,7 +69,7 @@
       },
       {
         "tableName": "recipe",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipe_id` TEXT NOT NULL, `recipe_yield` TEXT NOT NULL, `disable_amounts` INTEGER NOT NULL DEFAULT true, PRIMARY KEY(`recipe_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipe_id` TEXT NOT NULL, `recipe_yield` TEXT NOT NULL, `recipe_disable_amounts` INTEGER NOT NULL DEFAULT true, PRIMARY KEY(`recipe_id`))",
         "fields": [
           {
             "fieldPath": "remoteId",
@@ -85,7 +85,7 @@
           },
           {
             "fieldPath": "disableAmounts",
-            "columnName": "disable_amounts",
+            "columnName": "recipe_disable_amounts",
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "true"
@@ -102,11 +102,11 @@
       },
       {
         "tableName": "recipe_ingredient",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recipe_id` TEXT NOT NULL, `note` TEXT NOT NULL, `food` TEXT, `unit` TEXT, `quantity` REAL, `title` TEXT, FOREIGN KEY(`recipe_id`) REFERENCES `recipe`(`recipe_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipe_ingredient_local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recipe_id` TEXT NOT NULL, `recipe_ingredient_note` TEXT NOT NULL, `recipe_ingredient_food` TEXT, `recipe_ingredient_unit` TEXT, `recipe_ingredient_quantity` REAL, `recipe_ingredient_title` TEXT, FOREIGN KEY(`recipe_id`) REFERENCES `recipe`(`recipe_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "localId",
-            "columnName": "local_id",
+            "columnName": "recipe_ingredient_local_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -118,38 +118,38 @@
           },
           {
             "fieldPath": "note",
-            "columnName": "note",
+            "columnName": "recipe_ingredient_note",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "food",
-            "columnName": "food",
+            "columnName": "recipe_ingredient_food",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "unit",
-            "columnName": "unit",
+            "columnName": "recipe_ingredient_unit",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "quantity",
-            "columnName": "quantity",
+            "columnName": "recipe_ingredient_quantity",
             "affinity": "REAL",
             "notNull": false
           },
           {
             "fieldPath": "title",
-            "columnName": "title",
+            "columnName": "recipe_ingredient_title",
             "affinity": "TEXT",
             "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "local_id"
+            "recipe_ingredient_local_id"
           ],
           "autoGenerate": true
         },
@@ -180,11 +180,11 @@
       },
       {
         "tableName": "recipe_instruction",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recipe_id` TEXT NOT NULL, `text` TEXT NOT NULL, FOREIGN KEY(`recipe_id`) REFERENCES `recipe`(`recipe_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipe_instruction_local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recipe_id` TEXT NOT NULL, `recipe_instruction_text` TEXT NOT NULL, FOREIGN KEY(`recipe_id`) REFERENCES `recipe`(`recipe_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "localId",
-            "columnName": "local_id",
+            "columnName": "recipe_instruction_local_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -196,14 +196,14 @@
           },
           {
             "fieldPath": "text",
-            "columnName": "text",
+            "columnName": "recipe_instruction_text",
             "affinity": "TEXT",
             "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "local_id"
+            "recipe_instruction_local_id"
           ],
           "autoGenerate": true
         },
@@ -234,7 +234,7 @@
       },
       {
         "tableName": "shopping_lists",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shopping_list_id` TEXT NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`shopping_list_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shopping_list_id` TEXT NOT NULL, `shopping_list_name` TEXT NOT NULL, PRIMARY KEY(`shopping_list_id`))",
         "fields": [
           {
             "fieldPath": "remoteId",
@@ -244,7 +244,7 @@
           },
           {
             "fieldPath": "name",
-            "columnName": "name",
+            "columnName": "shopping_list_name",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -260,7 +260,7 @@
       },
       {
         "tableName": "shopping_list_item",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shopping_list_item_id` TEXT NOT NULL, `shopping_list_id` TEXT NOT NULL, `checked` INTEGER NOT NULL, `position` INTEGER NOT NULL, `is_food` INTEGER NOT NULL, `note` TEXT NOT NULL, `quantity` REAL NOT NULL, `unit` TEXT NOT NULL, `food` TEXT NOT NULL, PRIMARY KEY(`shopping_list_item_id`), FOREIGN KEY(`shopping_list_id`) REFERENCES `shopping_lists`(`shopping_list_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shopping_list_item_id` TEXT NOT NULL, `shopping_list_id` TEXT NOT NULL, `shopping_list_item_checked` INTEGER NOT NULL, `shopping_list_item_position` INTEGER NOT NULL, `shopping_list_item_is_food` INTEGER NOT NULL, `shopping_list_item_note` TEXT NOT NULL, `shopping_list_item_quantity` REAL NOT NULL, `shopping_list_item_unit` TEXT NOT NULL, `shopping_list_item_food` TEXT NOT NULL, PRIMARY KEY(`shopping_list_item_id`), FOREIGN KEY(`shopping_list_id`) REFERENCES `shopping_lists`(`shopping_list_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "remoteId",
@@ -276,43 +276,43 @@
           },
           {
             "fieldPath": "checked",
-            "columnName": "checked",
+            "columnName": "shopping_list_item_checked",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "position",
-            "columnName": "position",
+            "columnName": "shopping_list_item_position",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "isFood",
-            "columnName": "is_food",
+            "columnName": "shopping_list_item_is_food",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "note",
-            "columnName": "note",
+            "columnName": "shopping_list_item_note",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "quantity",
-            "columnName": "quantity",
+            "columnName": "shopping_list_item_quantity",
             "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "unit",
-            "columnName": "unit",
+            "columnName": "shopping_list_item_unit",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "food",
-            "columnName": "food",
+            "columnName": "shopping_list_item_food",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -350,7 +350,7 @@
       },
       {
         "tableName": "shopping_list_item_recipe_reference",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shopping_list_item_id` TEXT NOT NULL, `recipe_id` TEXT NOT NULL, `quantity` REAL NOT NULL, PRIMARY KEY(`shopping_list_item_id`, `recipe_id`), FOREIGN KEY(`shopping_list_item_id`) REFERENCES `shopping_list_item`(`shopping_list_item_id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`recipe_id`) REFERENCES `recipe`(`recipe_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shopping_list_item_id` TEXT NOT NULL, `recipe_id` TEXT NOT NULL, `shopping_list_item_recipe_reference_quantity` REAL NOT NULL, PRIMARY KEY(`shopping_list_item_id`, `recipe_id`), FOREIGN KEY(`shopping_list_item_id`) REFERENCES `shopping_list_item`(`shopping_list_item_id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`recipe_id`) REFERENCES `recipe`(`recipe_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "shoppingListItemId",
@@ -366,7 +366,7 @@
           },
           {
             "fieldPath": "quantity",
-            "columnName": "quantity",
+            "columnName": "shopping_list_item_recipe_reference_quantity",
             "affinity": "REAL",
             "notNull": true
           }
@@ -427,7 +427,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dce8a5f6a926ef7d7af9b6bcb80669fb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8f313a2e5b84300be3de1446e95a3a63')"
     ]
   }
 }

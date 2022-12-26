@@ -17,9 +17,9 @@ import androidx.room.PrimaryKey
     ]
 )
 data class RecipeInstructionEntity(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "local_id") val localId: Long = 0,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "recipe_instruction_local_id") val localId: Long = 0,
     @ColumnInfo(name = "recipe_id", index = true) val recipeId: String,
-    @ColumnInfo(name = "text") val text: String,
+    @ColumnInfo(name = "recipe_instruction_text") val text: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
