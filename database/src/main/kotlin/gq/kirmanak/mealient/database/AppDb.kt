@@ -10,7 +10,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntit
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 
 @Database(
-    version = 11,
+    version = 9,
     entities = [
         RecipeSummaryEntity::class,
         RecipeEntity::class,
@@ -28,9 +28,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecip
         AutoMigration(from = 5, to = 6, spec = AppDb.From5To6Migration::class),
         AutoMigration(from = 6, to = 7),
         AutoMigration(from = 7, to = 8),
-        AutoMigration(from = 8, to = 9),
-        AutoMigration(from = 9, to = 10),
-        AutoMigration(from = 10, to = 11, spec = AppDb.From10To11Migration::class),
+        AutoMigration(from = 8, to = 9, spec = AppDb.From8To9Migration::class),
     ]
 )
 @TypeConverters(RoomTypeConverters::class)
@@ -65,15 +63,5 @@ internal abstract class AppDb : RoomDatabase() {
         fromColumnName = "remote_id",
         toColumnName = "recipe_id"
     )
-    @RenameColumn(
-        tableName = "shopping_lists",
-        fromColumnName = "remote_id",
-        toColumnName = "shopping_list_id"
-    )
-    @RenameColumn(
-        tableName = "shopping_list_item",
-        fromColumnName = "remote_id",
-        toColumnName = "shopping_list_item_id"
-    )
-    class From10To11Migration : AutoMigrationSpec
+    class From8To9Migration : AutoMigrationSpec
 }
