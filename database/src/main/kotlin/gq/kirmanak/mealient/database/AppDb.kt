@@ -6,15 +6,19 @@ import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.entity.*
 import gq.kirmanak.mealient.database.shopping_lists.ShoppingListsDao
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
+import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntity
+import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 
 @Database(
-    version = 9,
+    version = 10,
     entities = [
         RecipeSummaryEntity::class,
         RecipeEntity::class,
         RecipeIngredientEntity::class,
         RecipeInstructionEntity::class,
         ShoppingListEntity::class,
+        ShoppingListItemEntity::class,
+        ShoppingListItemRecipeReferenceEntity::class,
     ],
     exportSchema = true,
     autoMigrations = [
@@ -25,6 +29,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
         AutoMigration(from = 6, to = 7),
         AutoMigration(from = 7, to = 8),
         AutoMigration(from = 8, to = 9),
+        AutoMigration(from = 9, to = 10),
     ]
 )
 @TypeConverters(RoomTypeConverters::class)

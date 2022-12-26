@@ -21,7 +21,7 @@ internal class RecipeStorageImpl @Inject constructor(
 
     override suspend fun saveRecipes(recipes: List<RecipeSummaryEntity>) {
         logger.v { "saveRecipes() called with $recipes" }
-        db.withTransaction { recipeDao.insertRecipes(recipes) }
+        recipeDao.insertRecipeSummaries(recipes)
     }
 
     override fun queryRecipes(query: String?): PagingSource<Int, RecipeSummaryEntity> {
@@ -40,9 +40,7 @@ internal class RecipeStorageImpl @Inject constructor(
 
     override suspend fun clearAllLocalData() {
         logger.v { "clearAllLocalData() called" }
-        db.withTransaction {
-            recipeDao.removeAllRecipes()
-        }
+        recipeDao.removeAllRecipes()
     }
 
     override suspend fun saveRecipeInfo(

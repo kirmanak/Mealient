@@ -2,10 +2,10 @@ package gq.kirmanak.mealient.data.baseurl
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.datasource.models.VersionInfo
+import gq.kirmanak.mealient.datasource_test.VERSION_INFO_V0
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_VERSION
 import gq.kirmanak.mealient.test.BaseUnitTest
-import gq.kirmanak.mealient.test.RecipeImplTestData.VERSION_INFO_V0
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK

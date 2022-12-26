@@ -8,8 +8,10 @@ import gq.kirmanak.mealient.database.TEST_RECIPE_SUMMARY_ENTITIES
 import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.NetworkError.Unauthorized
+import gq.kirmanak.mealient.datasource_test.TEST_RECIPE_SUMMARIES
+import gq.kirmanak.mealient.model_mapper.ModelMapper
+import gq.kirmanak.mealient.model_mapper.ModelMapperImpl
 import gq.kirmanak.mealient.test.BaseUnitTest
-import gq.kirmanak.mealient.test.RecipeImplTestData.TEST_RECIPE_SUMMARIES
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
@@ -41,6 +43,8 @@ class RecipesRemoteMediatorTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var pagingSourceFactory: RecipePagingSourceFactory
 
+    private val modelMapper: ModelMapper = ModelMapperImpl()
+
     @Before
     override fun setUp() {
         super.setUp()
@@ -50,6 +54,7 @@ class RecipesRemoteMediatorTest : BaseUnitTest() {
             pagingSourceFactory = pagingSourceFactory,
             logger = logger,
             dispatchers = dispatchers,
+            modelMapper = modelMapper,
         )
         coEvery { dataSource.getFavoriteRecipes() } returns emptyList()
     }

@@ -9,8 +9,8 @@ import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
-import gq.kirmanak.mealient.extensions.toRecipeSummaryEntity
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.model_mapper.ModelMapper
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
@@ -24,6 +24,7 @@ class RecipesRemoteMediator @Inject constructor(
     private val network: RecipeDataSource,
     private val pagingSourceFactory: RecipePagingSourceFactory,
     private val logger: Logger,
+    private val modelMapper: ModelMapper,
     private val dispatchers: AppDispatchers,
 ) : RemoteMediator<Int, RecipeSummaryEntity>() {
 
@@ -75,7 +76,7 @@ class RecipesRemoteMediator @Inject constructor(
         val entities = withContext(dispatchers.default) {
             recipes.map { recipe ->
                 val isFavorite = favorites.contains(recipe.slug)
-                recipe.toRecipeSummaryEntity(isFavorite)
+                modelMapper.toRecipeSummaryEntity(recipe, isFavorite)
             }
         }
         if (loadType == REFRESH) storage.refreshAll(entities)

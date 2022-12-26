@@ -9,10 +9,8 @@ import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
-import gq.kirmanak.mealient.extensions.toRecipeEntity
-import gq.kirmanak.mealient.extensions.toRecipeIngredientEntity
-import gq.kirmanak.mealient.extensions.toRecipeInstructionEntity
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,6 +22,7 @@ class RecipeRepoImpl @Inject constructor(
     private val pagingSourceFactory: RecipePagingSourceFactory,
     private val dataSource: RecipeDataSource,
     private val logger: Logger,
+    private val modelMapper: ModelMapper,
 ) : RecipeRepo {
 
     override fun createPager(): Pager<Int, RecipeSummaryEntity> {
@@ -49,12 +48,12 @@ class RecipeRepoImpl @Inject constructor(
         logger.v { "refreshRecipeInfo() called with: recipeSlug = $recipeSlug" }
         return runCatchingExceptCancel {
             val info = dataSource.requestRecipeInfo(recipeSlug)
-            val entity = info.toRecipeEntity()
+            val entity = modelMapper.toRecipeEntity(info)
             val ingredients = info.recipeIngredients.map {
-                it.toRecipeIngredientEntity(entity.remoteId)
+                modelMapper.toRecipeIngredientEntity(it, entity.remoteId)
             }
             val instructions = info.recipeInstructions.map {
-                it.toRecipeInstructionEntity(entity.remoteId)
+                modelMapper.toRecipeInstructionEntity(it, entity.remoteId)
             }
             storage.saveRecipeInfo(entity, ingredients, instructions)
         }.onFailure {

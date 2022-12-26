@@ -82,10 +82,13 @@ dependencies {
     implementation(project(":database"))
     testImplementation(project(":database_test"))
     implementation(project(":datastore"))
+    testImplementation(project(":datastore_test"))
     implementation(project(":datasource"))
+    testImplementation(project(":datasource_test"))
     implementation(project(":logging"))
     implementation(project(":ui"))
     implementation(project(":features:shopping_lists"))
+    implementation(project(":model_mapper"))
     testImplementation(project(":testing"))
 
     implementation(libs.android.material.material)

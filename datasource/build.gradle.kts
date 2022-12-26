@@ -21,7 +21,7 @@ dependencies {
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
 
-    implementation(libs.jetbrains.kotlinx.datetime)
+    api(libs.jetbrains.kotlinx.datetime)
 
     implementation(libs.jetbrains.kotlinx.serialization)
 

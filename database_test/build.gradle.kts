@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "gq.kirmanak.mealient.database"
+    namespace = "gq.kirmanak.mealient.database_test"
 }
 
 dependencies {

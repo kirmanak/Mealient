@@ -8,7 +8,7 @@ import gq.kirmanak.mealient.database.shopping_lists.ShoppingListsStorage
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.shopping_lists.models.toShoppingListEntities
+import gq.kirmanak.mealient.model_mapper.ModelMapper
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSource
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,6 +20,7 @@ class ShoppingListsRemoteMediator @Inject constructor(
     private val dataSource: ShoppingListsDataSource,
     private val sourceFactory: ShoppingListsPagingSourceFactory,
     private val logger: Logger,
+    private val modelMapper: ModelMapper,
 ) : RemoteMediator<Int, ShoppingListEntity>() {
 
     private var lastRequestEnd = 0
@@ -60,7 +61,7 @@ class ShoppingListsRemoteMediator @Inject constructor(
             }
         )
 
-        val shoppingLists = response.toShoppingListEntities()
+        val shoppingLists = modelMapper.toShoppingListEntities(response)
 
         runCatchingExceptCancel {
             if (loadType == LoadType.REFRESH) {

@@ -17,6 +17,7 @@ dependencies {
     implementation(project(":datasource"))
     implementation(project(":database"))
     implementation(project(":ui"))
+    implementation(project(":model_mapper"))
 
     implementation(libs.android.material.material)
     implementation(libs.androidx.compose.material)
