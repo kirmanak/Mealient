@@ -162,62 +162,61 @@ fun PreviewShoppingListInfo() {
             ),
         ),
     )
-    AppTheme {
-        ShoppingListItems(
-            shoppingList = ShoppingListWithItems(
-                shoppingList = ShoppingListEntity(
+    val shoppingList = ShoppingListWithItems(
+        shoppingList = ShoppingListEntity(
+            remoteId = "1",
+            name = "Tea with milk",
+        ),
+        shoppingListItems = listOf(
+            ShoppingListItemWithRecipes(
+                item = ShoppingListItemEntity(
                     remoteId = "1",
-                    name = "Tea with milk",
+                    shoppingListId = "1",
+                    checked = false,
+                    position = 0,
+                    isFood = false,
+                    note = "Black tea bags",
+                    quantity = 30.0,
+                    unit = "",
+                    food = "",
                 ),
-                shoppingListItems = listOf(
-                    ShoppingListItemWithRecipes(
-                        item = ShoppingListItemEntity(
-                            remoteId = "1",
-                            shoppingListId = "1",
-                            checked = false,
-                            position = 0,
-                            isFood = false,
-                            note = "Black tea bags",
-                            quantity = 30.0,
-                            unit = "",
-                            food = "",
+                recipes = listOf(
+                    ItemRecipeReferenceWithRecipe(
+                        reference = ShoppingListItemRecipeReferenceEntity(
+                            shoppingListItemId = "1",
+                            recipeId = "1",
+                            quantity = 1.0,
                         ),
-                        recipes = listOf(
-                            ItemRecipeReferenceWithRecipe(
-                                reference = ShoppingListItemRecipeReferenceEntity(
-                                    shoppingListItemId = "1",
-                                    recipeId = "1",
-                                    quantity = 1.0,
-                                ),
-                                recipe = teaWithMilkRecipe,
-                            ),
-                        ),
+                        recipe = teaWithMilkRecipe,
                     ),
-                    ShoppingListItemWithRecipes(
-                        item = ShoppingListItemEntity(
-                            remoteId = "2",
-                            shoppingListId = "1",
-                            checked = true,
-                            position = 1,
-                            isFood = true,
-                            note = "Cold",
+                ),
+            ),
+            ShoppingListItemWithRecipes(
+                item = ShoppingListItemEntity(
+                    remoteId = "2",
+                    shoppingListId = "1",
+                    checked = true,
+                    position = 1,
+                    isFood = true,
+                    note = "Cold",
+                    quantity = 500.0,
+                    unit = "ml",
+                    food = "Milk",
+                ),
+                recipes = listOf(
+                    ItemRecipeReferenceWithRecipe(
+                        reference = ShoppingListItemRecipeReferenceEntity(
+                            shoppingListItemId = "2",
+                            recipeId = "1",
                             quantity = 500.0,
-                            unit = "ml",
-                            food = "Milk",
                         ),
-                        recipes = listOf(
-                            ItemRecipeReferenceWithRecipe(
-                                reference = ShoppingListItemRecipeReferenceEntity(
-                                    shoppingListItemId = "2",
-                                    recipeId = "1",
-                                    quantity = 500.0,
-                                ),
-                                recipe = teaWithMilkRecipe,
-                            ),
-                        ),
-                    )
+                        recipe = teaWithMilkRecipe,
+                    ),
                 ),
             )
-        )
+        ),
+    )
+    AppTheme {
+        ShoppingListItems(shoppingList = shoppingList)
     }
 }
