@@ -69,7 +69,14 @@ class ShoppingListViewModel @Inject constructor(
         disabledItems: List<ShoppingListItemWithRecipes>,
     ): OperationUiState<ShoppingListScreenState> {
         logger.v { "buildUiState() called with: operationState = $operationState, shoppingList = $shoppingList, disabledItems = $disabledItems" }
-        return when (operationState) {
+        return if (shoppingList.shoppingListItems.isEmpty().not()) {
+            OperationUiState.Success(
+                ShoppingListScreenState(
+                    shoppingList = shoppingList,
+                    disabledItems = disabledItems,
+                )
+            )
+        } else when (operationState) {
             is OperationUiState.Failure -> OperationUiState.Failure(operationState.exception)
             is OperationUiState.Initial,
             is OperationUiState.Progress -> OperationUiState.Progress()
