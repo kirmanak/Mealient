@@ -140,7 +140,7 @@ private fun ShoppingListData(
     if (shoppingListWithItems.shoppingListItems.isEmpty()) {
         CenteredEmptyListText(shoppingListWithItems, modifier)
     } else {
-        ShoppingListItemsColumn(modifier, items, disabledItems, onItemCheckedChange)
+        ShoppingListItemsColumn(items, disabledItems, modifier, onItemCheckedChange)
     }
 }
 
@@ -160,9 +160,9 @@ private fun CenteredEmptyListText(
 
 @Composable
 private fun ShoppingListItemsColumn(
-    modifier: Modifier,
     items: List<ShoppingListItemWithRecipes>,
     disabledItems: List<ShoppingListItemWithRecipes>,
+    modifier: Modifier = Modifier,
     onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit
 ) {
     Column(
@@ -270,7 +270,7 @@ fun ShoppingListItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(Dimens.Medium),
+            .padding(top = Dimens.Small, end = Dimens.Small, start = Dimens.Small),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
@@ -290,11 +290,7 @@ fun ShoppingListItem(
             shoppingListItem.item.note,
         ).filter { it.isNotBlank() }.joinToString(" ")
 
-        Text(
-            modifier = Modifier
-                .padding(top = Dimens.Small, bottom = Dimens.Small, end = Dimens.Small),
-            text = text
-        )
+        Text(text = text)
     }
 }
 
