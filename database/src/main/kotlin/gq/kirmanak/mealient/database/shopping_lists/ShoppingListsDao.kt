@@ -10,6 +10,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface ShoppingListsDao {
@@ -41,5 +42,5 @@ internal interface ShoppingListsDao {
                 "LEFT JOIN recipe_ingredient USING (recipe_id)  " +
                 "WHERE shopping_lists.shopping_list_id = :id"
     )
-    suspend fun queryFullShoppingList(id: String): ShoppingListWithItems
+    fun queryShoppingListWithItems(id: String): Flow<ShoppingListWithItems>
 }

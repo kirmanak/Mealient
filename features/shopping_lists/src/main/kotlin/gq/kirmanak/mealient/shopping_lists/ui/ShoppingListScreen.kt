@@ -29,6 +29,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntit
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemWithRecipes
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
+import gq.kirmanak.mealient.ui.OperationUiState
 
 data class ShoppingListNavArgs(
     val shoppingListId: String,
@@ -41,55 +42,60 @@ data class ShoppingListNavArgs(
 fun ShoppingListScreen(
     shoppingListsViewModel: ShoppingListViewModel = hiltViewModel(),
 ) {
-    val screenState = shoppingListsViewModel.shoppingList.collectAsState()
+    val screenState = shoppingListsViewModel.uiState.collectAsState()
 
-    screenState.value?.let { shoppingList ->
-        ShoppingListItems(shoppingList)
-    } ?: Box(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Loading...", modifier = Modifier.align(Alignment.TopCenter))
-    }
+    ShoppingListScreenContent(
+        state = screenState.value,
+    )
 }
 
 @Composable
-fun ShoppingListItems(
-    shoppingList: ShoppingListWithItems,
+fun ShoppingListScreenContent(
+    state: OperationUiState<ShoppingListWithItems>,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-    ) {
-        val nonChecked = shoppingList.shoppingListItems.filter { !it.item.checked }
-        val checked = shoppingList.shoppingListItems.filter { it.item.checked }
-
-        if (nonChecked.isNotEmpty()) {
-            LazyColumn {
-                items(nonChecked) {
-                    ShoppingListItem(it)
-                }
+    when (state) {
+        is OperationUiState.Progress,
+        is OperationUiState.Initial -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter,
+            ) {
+                Text(text = "Loading...")
             }
         }
-
-        if (checked.isNotEmpty()) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
-                text = "Checked"
-            )
-
-            LazyColumn {
-                items(checked) {
-                    ShoppingListItem(it)
-                }
+        is OperationUiState.Failure -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(text = state.exception.message ?: "Unknown error")
             }
         }
+        is OperationUiState.Success -> {
+            val shoppingListWithItems = state.value
+            val items = shoppingListWithItems.shoppingListItems
+                .sortedBy { it.item.checked }
 
-        if (checked.isEmpty() && nonChecked.isEmpty()) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
-                text = "No items in this list"
-            )
+            if (shoppingListWithItems.shoppingListItems.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(text = "${shoppingListWithItems.shoppingList.name} is empty")
+                }
+            } else {
+                Column(
+                    modifier = modifier
+                        .fillMaxSize(),
+                ) {
+                    LazyColumn {
+                        items(items) {
+                            ShoppingListItem(it)
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -217,6 +223,6 @@ fun PreviewShoppingListInfo() {
         ),
     )
     AppTheme {
-        ShoppingListItems(shoppingList = shoppingList)
+        ShoppingListScreenContent(state = OperationUiState.Success(shoppingList))
     }
 }

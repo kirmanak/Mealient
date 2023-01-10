@@ -7,6 +7,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
+import kotlinx.coroutines.flow.Flow
 
 interface ShoppingListsStorage {
 
@@ -23,5 +24,5 @@ interface ShoppingListsStorage {
         recipeIngredients: List<RecipeIngredientEntity>,
     )
 
-    suspend fun getShoppingList(id: String): ShoppingListWithItems
+    fun getShoppingListWithItems(id: String): Flow<ShoppingListWithItems>
 }

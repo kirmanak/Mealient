@@ -13,6 +13,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSource
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,8 +42,13 @@ class ShoppingListsRepoImpl @Inject constructor(
         )
     }
 
-    override suspend fun requestShoppingList(id: String): ShoppingListWithItems {
-        logger.v { "requestShoppingList() called with: id = $id" }
+    override fun getShoppingListWithItems(id: String): Flow<ShoppingListWithItems> {
+        logger.v { "getShoppingList() called with: id = $id" }
+        return storage.getShoppingListWithItems(id)
+    }
+
+    override suspend fun updateShoppingList(id: String) {
+        logger.v { "updateShoppingList() called with: id = $id" }
 
         val response = dataSource.getShoppingList(id)
 
@@ -76,8 +82,6 @@ class ShoppingListsRepoImpl @Inject constructor(
             recipes,
             recipeIngredients,
         )
-
-        return storage.getShoppingList(id)
     }
 
     companion object {

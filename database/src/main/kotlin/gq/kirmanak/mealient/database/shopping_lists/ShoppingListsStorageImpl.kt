@@ -11,6 +11,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntit
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
 import gq.kirmanak.mealient.logging.Logger
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -61,8 +62,8 @@ internal class ShoppingListsStorageImpl @Inject constructor(
         }
     }
 
-    override suspend fun getShoppingList(id: String): ShoppingListWithItems {
-        logger.v { "getShoppingList() called with: id = $id" }
-        return shoppingListsDao.queryFullShoppingList(id)
+    override fun getShoppingListWithItems(id: String): Flow<ShoppingListWithItems> {
+        logger.v { "getShoppingListWithItems() called with: id = $id" }
+        return shoppingListsDao.queryShoppingListWithItems(id)
     }
 }

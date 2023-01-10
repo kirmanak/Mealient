@@ -9,9 +9,12 @@ import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
+import gq.kirmanak.mealient.ui.OperationUiState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,8 +27,17 @@ class ShoppingListViewModel @Inject constructor(
 
     private val args: ShoppingListNavArgs = ShoppingListScreenDestination.argsFrom(savedStateHandle)
 
-    private val _shoppingList = MutableStateFlow<ShoppingListWithItems?>(null)
-    val shoppingList: StateFlow<ShoppingListWithItems?> = _shoppingList.asStateFlow()
+    private val _operationState: MutableStateFlow<OperationUiState<Unit>> =
+        MutableStateFlow(OperationUiState.Initial())
+
+    private val _shoppingListFromDb: StateFlow<ShoppingListWithItems?> =
+        shoppingListsRepo.getShoppingListWithItems(args.shoppingListId)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    val uiState: StateFlow<OperationUiState<ShoppingListWithItems>> =
+        _operationState.zip(_shoppingListFromDb, ::buildUiState)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, OperationUiState.Initial())
+
 
     init {
         loadShoppingList(args.shoppingListId)
@@ -34,18 +46,23 @@ class ShoppingListViewModel @Inject constructor(
     private fun loadShoppingList(id: String) {
         logger.v { "loadShoppingList() called with: id = $id" }
         viewModelScope.launch {
-            _shoppingList.value = runCatchingExceptCancel {
-                shoppingListsRepo.requestShoppingList(id)
-            }.fold(
-                onSuccess = {
-                    logger.d { "loadShoppingList() success: $it" }
-                    it
-                },
-                onFailure = {
-                    logger.e(it) { "loadShoppingList() failed" }
-                    null
-                }
-            )
+            val result = runCatchingExceptCancel {
+                shoppingListsRepo.updateShoppingList(id)
+            }
+            _operationState.value = OperationUiState.fromResult(result)
+        }
+    }
+
+    private fun buildUiState(
+        operationState: OperationUiState<Unit>,
+        shoppingList: ShoppingListWithItems?,
+    ): OperationUiState<ShoppingListWithItems> {
+        return if (shoppingList == null) {
+            operationState.exceptionOrNull
+                ?.let { OperationUiState.Failure(it) }
+                ?: OperationUiState.Progress()
+        } else {
+            OperationUiState.Success(shoppingList)
         }
     }
 }
