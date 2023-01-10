@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemWithRecipes
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
@@ -71,5 +72,13 @@ class ShoppingListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onItemChecked(shoppingListItemWithRecipes: ShoppingListItemWithRecipes) {
+        // TODO
+    }
+
+    fun onItemUnchecked(shoppingListItemWithRecipes: ShoppingListItemWithRecipes) {
+        // TODO
     }
 }

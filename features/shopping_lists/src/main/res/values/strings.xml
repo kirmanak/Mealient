@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="shopping_lists_screen_cart_icon">Shopping cart</string>
+	<string name="shopping_list_screen_unknown_error">Unknown error</string>
+	<string name="shopping_list_screen_empty_list">%1$s is empty</string>
 </resources>

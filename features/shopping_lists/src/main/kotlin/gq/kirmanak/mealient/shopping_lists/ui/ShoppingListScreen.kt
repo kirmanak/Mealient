@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -31,6 +32,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecip
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemWithRecipes
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
 import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.ui.OperationUiState
 
 data class ShoppingListNavArgs(
@@ -48,6 +50,8 @@ fun ShoppingListScreen(
 
     ShoppingListScreenContent(
         state = screenState.value,
+        onItemChecked = shoppingListsViewModel::onItemChecked,
+        onItemUnchecked = shoppingListsViewModel::onItemUnchecked,
     )
 }
 
@@ -55,6 +59,8 @@ fun ShoppingListScreen(
 fun ShoppingListScreenContent(
     state: OperationUiState<ShoppingListWithItems>,
     modifier: Modifier = Modifier,
+    onItemChecked: (ShoppingListItemWithRecipes) -> Unit = {},
+    onItemUnchecked: (ShoppingListItemWithRecipes) -> Unit = {},
 ) {
     when (state) {
         is OperationUiState.Progress,
@@ -71,19 +77,27 @@ fun ShoppingListScreenContent(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(text = state.exception.message ?: "Unknown error")
+                Text(
+                    text = state.exception.message
+                        ?: stringResource(R.string.shopping_list_screen_unknown_error)
+                )
             }
         }
         is OperationUiState.Success -> {
-            val shoppingList = state.value
-            val items = shoppingList.shoppingListItems.sortedBy { it.item.checked }
+            val shoppingListWithItems = state.value
+            val items = shoppingListWithItems.shoppingListItems.sortedBy { it.item.checked }
 
-            if (shoppingList.shoppingListItems.isEmpty()) {
+            if (shoppingListWithItems.shoppingListItems.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(text = "${shoppingList.shoppingList.name} is empty")
+                    Text(
+                        text = stringResource(
+                            R.string.shopping_list_screen_empty_list,
+                            shoppingListWithItems.shoppingList.name
+                        )
+                    )
                 }
             } else {
                 Column(
@@ -91,7 +105,9 @@ fun ShoppingListScreenContent(
                 ) {
                     LazyColumn {
                         items(items) {
-                            ShoppingListItem(it)
+                            ShoppingListItem(it) { isChecked ->
+                                if (isChecked) onItemUnchecked(it) else onItemChecked(it)
+                            }
                         }
                     }
                 }
@@ -115,7 +131,7 @@ fun PreviewShoppingListInfoError() {
     AppTheme {
         ShoppingListScreenContent(
             state = OperationUiState.Failure(
-                NetworkError.Unauthorized(RuntimeException("Test"))
+                NetworkError.Unauthorized(RuntimeException())
             )
         )
     }
@@ -141,6 +157,7 @@ fun PreviewShoppingListInfoProgress() {
 fun ShoppingListItem(
     shoppingListItem: ShoppingListItemWithRecipes,
     modifier: Modifier = Modifier,
+    onCheckedChange: (Boolean) -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -151,7 +168,7 @@ fun ShoppingListItem(
     ) {
         Checkbox(
             checked = shoppingListItem.item.checked,
-            onCheckedChange = { },
+            onCheckedChange = onCheckedChange,
         )
 
         Text(
