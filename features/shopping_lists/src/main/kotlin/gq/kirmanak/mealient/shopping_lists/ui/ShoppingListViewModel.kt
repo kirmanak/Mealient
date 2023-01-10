@@ -32,7 +32,7 @@ class ShoppingListViewModel @Inject constructor(
     private val _operationState: MutableStateFlow<OperationUiState<Unit>> =
         MutableStateFlow(OperationUiState.Initial())
 
-    private val _shoppingListFromDb: Flow<ShoppingListWithItems?> =
+    private val _shoppingListFromDb: Flow<ShoppingListWithItems> =
         shoppingListsRepo.getShoppingListWithItems(args.shoppingListId)
 
     val uiState: StateFlow<OperationUiState<ShoppingListWithItems>> =
@@ -51,7 +51,6 @@ class ShoppingListViewModel @Inject constructor(
     private fun loadShoppingList(id: String) {
         logger.v { "loadShoppingList() called with: id = $id" }
         viewModelScope.launch {
-            _operationState.value = OperationUiState.Progress()
             val result = runCatchingExceptCancel {
                 shoppingListsRepo.updateShoppingList(id)
             }
@@ -61,20 +60,14 @@ class ShoppingListViewModel @Inject constructor(
 
     private fun buildUiState(
         operationState: OperationUiState<Unit>,
-        shoppingList: ShoppingListWithItems?,
+        shoppingList: ShoppingListWithItems,
     ): OperationUiState<ShoppingListWithItems> {
         logger.v { "buildUiState() called with: operationState = $operationState, shoppingList = $shoppingList" }
         return when (operationState) {
             is OperationUiState.Failure -> OperationUiState.Failure(operationState.exception)
             is OperationUiState.Initial,
             is OperationUiState.Progress -> OperationUiState.Progress()
-            is OperationUiState.Success -> {
-                if (shoppingList == null) {
-                    OperationUiState.Progress()
-                } else {
-                    OperationUiState.Success(shoppingList)
-                }
-            }
+            is OperationUiState.Success -> OperationUiState.Success(shoppingList)
         }
     }
 
