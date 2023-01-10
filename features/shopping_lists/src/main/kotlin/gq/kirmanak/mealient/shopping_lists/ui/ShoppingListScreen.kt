@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,6 +30,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntit
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemWithRecipes
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
+import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.ui.OperationUiState
 
 data class ShoppingListNavArgs(
@@ -59,9 +61,9 @@ fun ShoppingListScreenContent(
         is OperationUiState.Initial -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.TopCenter,
+                contentAlignment = Alignment.Center,
             ) {
-                Text(text = "Loading...")
+                CircularProgressIndicator()
             }
         }
         is OperationUiState.Failure -> {
@@ -73,21 +75,19 @@ fun ShoppingListScreenContent(
             }
         }
         is OperationUiState.Success -> {
-            val shoppingListWithItems = state.value
-            val items = shoppingListWithItems.shoppingListItems
-                .sortedBy { it.item.checked }
+            val shoppingList = state.value
+            val items = shoppingList.shoppingListItems.sortedBy { it.item.checked }
 
-            if (shoppingListWithItems.shoppingListItems.isEmpty()) {
+            if (shoppingList.shoppingListItems.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(text = "${shoppingListWithItems.shoppingList.name} is empty")
+                    Text(text = "${shoppingList.shoppingList.name} is empty")
                 }
             } else {
                 Column(
-                    modifier = modifier
-                        .fillMaxSize(),
+                    modifier = modifier.fillMaxSize(),
                 ) {
                     LazyColumn {
                         items(items) {
@@ -97,6 +97,43 @@ fun ShoppingListScreenContent(
                 }
             }
         }
+    }
+}
+
+
+@Composable
+@Preview
+fun PreviewShoppingListInfo() {
+    AppTheme {
+        ShoppingListScreenContent(state = OperationUiState.Success(PreviewData.shoppingList))
+    }
+}
+
+@Composable
+@Preview
+fun PreviewShoppingListInfoError() {
+    AppTheme {
+        ShoppingListScreenContent(
+            state = OperationUiState.Failure(
+                NetworkError.Unauthorized(RuntimeException("Test"))
+            )
+        )
+    }
+}
+
+@Composable
+@Preview
+fun PreviewShoppingListInfoInitial() {
+    AppTheme {
+        ShoppingListScreenContent(state = OperationUiState.Initial())
+    }
+}
+
+@Composable
+@Preview
+fun PreviewShoppingListInfoProgress() {
+    AppTheme {
+        ShoppingListScreenContent(state = OperationUiState.Progress())
     }
 }
 
@@ -134,13 +171,26 @@ fun ShoppingListItem(
                 .padding(Dimens.Small),
             text = shoppingListItem.item.note,
         )
-
     }
 }
 
 @Composable
 @Preview
-fun PreviewShoppingListInfo() {
+fun PreviewShoppingListItemChecked() {
+    AppTheme {
+        ShoppingListItem(shoppingListItem = PreviewData.milk)
+    }
+}
+
+@Composable
+@Preview
+fun PreviewShoppingListItemUnchecked() {
+    AppTheme {
+        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags)
+    }
+}
+
+private object PreviewData {
     val teaWithMilkRecipe = RecipeWithIngredients(
         recipe = RecipeEntity(
             remoteId = "1",
@@ -168,61 +218,57 @@ fun PreviewShoppingListInfo() {
             ),
         ),
     )
-    val shoppingList = ShoppingListWithItems(
-        shoppingList = ShoppingListEntity(
+
+    val blackTeaBags = ShoppingListItemWithRecipes(
+        item = ShoppingListItemEntity(
             remoteId = "1",
-            name = "Tea with milk",
+            shoppingListId = "1",
+            checked = false,
+            position = 0,
+            isFood = false,
+            note = "Black tea bags",
+            quantity = 30.0,
+            unit = "",
+            food = "",
         ),
-        shoppingListItems = listOf(
-            ShoppingListItemWithRecipes(
-                item = ShoppingListItemEntity(
-                    remoteId = "1",
-                    shoppingListId = "1",
-                    checked = false,
-                    position = 0,
-                    isFood = false,
-                    note = "Black tea bags",
-                    quantity = 30.0,
-                    unit = "",
-                    food = "",
+        recipes = listOf(
+            ItemRecipeReferenceWithRecipe(
+                reference = ShoppingListItemRecipeReferenceEntity(
+                    shoppingListItemId = "1",
+                    recipeId = "1",
+                    quantity = 1.0,
                 ),
-                recipes = listOf(
-                    ItemRecipeReferenceWithRecipe(
-                        reference = ShoppingListItemRecipeReferenceEntity(
-                            shoppingListItemId = "1",
-                            recipeId = "1",
-                            quantity = 1.0,
-                        ),
-                        recipe = teaWithMilkRecipe,
-                    ),
-                ),
+                recipe = teaWithMilkRecipe,
             ),
-            ShoppingListItemWithRecipes(
-                item = ShoppingListItemEntity(
-                    remoteId = "2",
-                    shoppingListId = "1",
-                    checked = true,
-                    position = 1,
-                    isFood = true,
-                    note = "Cold",
-                    quantity = 500.0,
-                    unit = "ml",
-                    food = "Milk",
-                ),
-                recipes = listOf(
-                    ItemRecipeReferenceWithRecipe(
-                        reference = ShoppingListItemRecipeReferenceEntity(
-                            shoppingListItemId = "2",
-                            recipeId = "1",
-                            quantity = 500.0,
-                        ),
-                        recipe = teaWithMilkRecipe,
-                    ),
-                ),
-            )
         ),
     )
-    AppTheme {
-        ShoppingListScreenContent(state = OperationUiState.Success(shoppingList))
-    }
+
+    val milk = ShoppingListItemWithRecipes(
+        item = ShoppingListItemEntity(
+            remoteId = "2",
+            shoppingListId = "1",
+            checked = true,
+            position = 1,
+            isFood = true,
+            note = "Cold",
+            quantity = 500.0,
+            unit = "ml",
+            food = "Milk",
+        ),
+        recipes = listOf(
+            ItemRecipeReferenceWithRecipe(
+                reference = ShoppingListItemRecipeReferenceEntity(
+                    shoppingListItemId = "2",
+                    recipeId = "1",
+                    quantity = 500.0,
+                ),
+                recipe = teaWithMilkRecipe,
+            ),
+        ),
+    )
+
+    val shoppingList = ShoppingListWithItems(
+        shoppingList = ShoppingListEntity(remoteId = "1", name = "Tea with milk"),
+        shoppingListItems = listOf(blackTeaBags, milk),
+    )
 }

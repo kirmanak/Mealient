@@ -10,11 +10,12 @@ import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
 import gq.kirmanak.mealient.ui.OperationUiState
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,12 +31,11 @@ class ShoppingListViewModel @Inject constructor(
     private val _operationState: MutableStateFlow<OperationUiState<Unit>> =
         MutableStateFlow(OperationUiState.Initial())
 
-    private val _shoppingListFromDb: StateFlow<ShoppingListWithItems?> =
+    private val _shoppingListFromDb: Flow<ShoppingListWithItems?> =
         shoppingListsRepo.getShoppingListWithItems(args.shoppingListId)
-            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val uiState: StateFlow<OperationUiState<ShoppingListWithItems>> =
-        _operationState.zip(_shoppingListFromDb, ::buildUiState)
+        _operationState.combine(_shoppingListFromDb, ::buildUiState)
             .stateIn(viewModelScope, SharingStarted.Eagerly, OperationUiState.Initial())
 
 
@@ -46,6 +46,7 @@ class ShoppingListViewModel @Inject constructor(
     private fun loadShoppingList(id: String) {
         logger.v { "loadShoppingList() called with: id = $id" }
         viewModelScope.launch {
+            _operationState.value = OperationUiState.Progress()
             val result = runCatchingExceptCancel {
                 shoppingListsRepo.updateShoppingList(id)
             }
@@ -57,12 +58,18 @@ class ShoppingListViewModel @Inject constructor(
         operationState: OperationUiState<Unit>,
         shoppingList: ShoppingListWithItems?,
     ): OperationUiState<ShoppingListWithItems> {
-        return if (shoppingList == null) {
-            operationState.exceptionOrNull
-                ?.let { OperationUiState.Failure(it) }
-                ?: OperationUiState.Progress()
-        } else {
-            OperationUiState.Success(shoppingList)
+        logger.v { "buildUiState() called with: operationState = $operationState, shoppingList = $shoppingList" }
+        return when (operationState) {
+            is OperationUiState.Failure -> OperationUiState.Failure(operationState.exception)
+            is OperationUiState.Initial,
+            is OperationUiState.Progress -> OperationUiState.Progress()
+            is OperationUiState.Success -> {
+                if (shoppingList == null) {
+                    OperationUiState.Progress()
+                } else {
+                    OperationUiState.Success(shoppingList)
+                }
+            }
         }
     }
 }
