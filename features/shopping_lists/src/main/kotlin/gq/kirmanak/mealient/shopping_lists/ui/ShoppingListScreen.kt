@@ -34,6 +34,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.ui.OperationUiState
+import java.text.DecimalFormat
 
 data class ShoppingListNavArgs(
     val shoppingListId: String,
@@ -171,10 +172,12 @@ fun ShoppingListItem(
             onCheckedChange = onCheckedChange,
         )
 
+        val quantityFormat = DecimalFormat.getInstance()
+        val formattedQuantity = quantityFormat.format(shoppingListItem.item.quantity)
         Text(
             modifier = Modifier
                 .padding(Dimens.Small),
-            text = "${shoppingListItem.item.quantity} ${shoppingListItem.item.unit}",
+            text = "$formattedQuantity ${shoppingListItem.item.unit}",
         )
 
         Text(
