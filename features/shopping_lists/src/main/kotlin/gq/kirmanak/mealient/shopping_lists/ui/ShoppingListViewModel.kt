@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,7 +38,7 @@ class ShoppingListViewModel @Inject constructor(
         MutableStateFlow(emptyList())
 
     private val _shoppingListFromDb: Flow<ShoppingListWithItems> =
-        shoppingListsRepo.getShoppingListWithItems(args.shoppingListId)
+        shoppingListsRepo.shoppingListWithItemsFlow(args.shoppingListId)
 
     val uiState: StateFlow<OperationUiState<ShoppingListScreenState>> =
         combine(_operationState, _shoppingListFromDb, _disabledItems, ::buildUiState)
@@ -58,6 +59,9 @@ class ShoppingListViewModel @Inject constructor(
         viewModelScope.launch {
             val result = runCatchingExceptCancel {
                 shoppingListsRepo.updateShoppingList(id)
+            }
+            if (result.isSuccess) {
+                _shoppingListFromDb.first() // wait for the shopping list to be updated
             }
             _operationState.value = OperationUiState.fromResult(result)
         }

@@ -42,7 +42,7 @@ class ShoppingListsRepoImpl @Inject constructor(
         )
     }
 
-    override fun getShoppingListWithItems(id: String): Flow<ShoppingListWithItems> {
+    override fun shoppingListWithItemsFlow(id: String): Flow<ShoppingListWithItems> {
         logger.v { "getShoppingList() called with: id = $id" }
         return storage.getShoppingListWithItems(id)
     }

@@ -9,7 +9,7 @@ interface ShoppingListsRepo {
 
     fun createPager(): Pager<Int, ShoppingListEntity>
 
-    fun getShoppingListWithItems(id: String): Flow<ShoppingListWithItems>
+    fun shoppingListWithItemsFlow(id: String): Flow<ShoppingListWithItems>
 
     suspend fun updateShoppingList(id: String)
 
