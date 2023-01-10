@@ -63,62 +63,101 @@ fun ShoppingListScreenContent(
 ) {
     when (state) {
         is OperationUiState.Progress,
-        is OperationUiState.Initial -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-        is OperationUiState.Failure -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = state.exception.message
-                        ?: stringResource(R.string.shopping_list_screen_unknown_error)
-                )
-            }
-        }
-        is OperationUiState.Success -> {
-            val shoppingListWithItems = state.value.shoppingList
-            val disabledItems = state.value.disabledItems
-            val items = shoppingListWithItems.shoppingListItems.sortedBy { it.item.checked }
+        is OperationUiState.Initial -> CenteredProgressIndicator(modifier)
+        is OperationUiState.Failure -> CenteredErrorMessage(state.exception, modifier)
+        is OperationUiState.Success -> ShoppingListData(state.value, modifier, onItemCheckedChange)
+    }
+}
 
-            if (shoppingListWithItems.shoppingListItems.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = stringResource(
-                            R.string.shopping_list_screen_empty_list,
-                            shoppingListWithItems.shoppingList.name
-                        )
-                    )
-                }
-            } else {
-                Column(
-                    modifier = modifier.fillMaxSize(),
-                ) {
-                    LazyColumn {
-                        items(items) { item ->
-                            ShoppingListItem(
-                                shoppingListItem = item,
-                                isDisabled = item in disabledItems,
-                            ) { isChecked ->
-                                onItemCheckedChange(item, isChecked)
-                            }
-                        }
-                    }
+@Composable
+private fun ShoppingListData(
+    screenState: ShoppingListScreenState,
+    modifier: Modifier,
+    onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit
+) {
+    val shoppingListWithItems = screenState.shoppingList
+    val disabledItems = screenState.disabledItems
+    val items = shoppingListWithItems.shoppingListItems.sortedBy { it.item.checked }
+
+    if (shoppingListWithItems.shoppingListItems.isEmpty()) {
+        CenteredEmptyListText(shoppingListWithItems, modifier)
+    } else {
+        ShoppingListItemsColumn(modifier, items, disabledItems, onItemCheckedChange)
+    }
+}
+
+@Composable
+private fun CenteredEmptyListText(
+    shoppingListWithItems: ShoppingListWithItems,
+    modifier: Modifier = Modifier,
+) {
+    CenteredText(
+        text = stringResource(
+            R.string.shopping_list_screen_empty_list,
+            shoppingListWithItems.shoppingList.name
+        ),
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun ShoppingListItemsColumn(
+    modifier: Modifier,
+    items: List<ShoppingListItemWithRecipes>,
+    disabledItems: List<ShoppingListItemWithRecipes>,
+    onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+    ) {
+        LazyColumn {
+            items(items) { item ->
+                ShoppingListItem(
+                    shoppingListItem = item,
+                    isDisabled = item in disabledItems,
+                ) { isChecked ->
+                    onItemCheckedChange(item, isChecked)
                 }
             }
         }
     }
 }
 
+@Composable
+private fun CenteredErrorMessage(
+    exception: Throwable,
+    modifier: Modifier = Modifier,
+) {
+    CenteredText(
+        text = exception.message ?: stringResource(R.string.shopping_list_screen_unknown_error),
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun CenteredText(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(text = text)
+    }
+}
+
+@Composable
+private fun CenteredProgressIndicator(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
+    }
+}
 
 @Composable
 @Preview

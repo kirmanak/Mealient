@@ -49,6 +49,7 @@ class ShoppingListViewModel @Inject constructor(
     }
 
     private fun refreshShoppingList() {
+        logger.v { "refreshShoppingList() called" }
         loadShoppingList(args.shoppingListId)
     }
 
@@ -67,7 +68,7 @@ class ShoppingListViewModel @Inject constructor(
         shoppingList: ShoppingListWithItems,
         disabledItems: List<ShoppingListItemWithRecipes>,
     ): OperationUiState<ShoppingListScreenState> {
-        logger.v { "buildUiState() called with: operationState = $operationState, shoppingList = $shoppingList" }
+        logger.v { "buildUiState() called with: operationState = $operationState, shoppingList = $shoppingList, disabledItems = $disabledItems" }
         return when (operationState) {
             is OperationUiState.Failure -> OperationUiState.Failure(operationState.exception)
             is OperationUiState.Initial,
