@@ -172,24 +172,20 @@ fun ShoppingListItem(
             onCheckedChange = onCheckedChange,
         )
 
-        val quantityFormat = DecimalFormat.getInstance()
-        val formattedQuantity = quantityFormat.format(shoppingListItem.item.quantity)
-        Text(
-            modifier = Modifier
-                .padding(Dimens.Small),
-            text = "$formattedQuantity ${shoppingListItem.item.unit}",
-        )
+        val quantity = shoppingListItem.item.quantity
+            .takeUnless { it == 0.0 }
+            ?.let { DecimalFormat.getInstance().format(it) }
+        val text = listOfNotNull(
+            quantity,
+            shoppingListItem.item.unit,
+            shoppingListItem.item.food,
+            shoppingListItem.item.note,
+        ).filter { it.isNotBlank() }.joinToString(" ")
 
         Text(
             modifier = Modifier
-                .padding(Dimens.Small),
-            text = shoppingListItem.item.food,
-        )
-
-        Text(
-            modifier = Modifier
-                .padding(Dimens.Small),
-            text = shoppingListItem.item.note,
+                .padding(top = Dimens.Small, bottom = Dimens.Small, end = Dimens.Small),
+            text = text
         )
     }
 }
