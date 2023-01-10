@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,11 +33,14 @@ class ShoppingListViewModel @Inject constructor(
     private val _operationState: MutableStateFlow<OperationUiState<Unit>> =
         MutableStateFlow(OperationUiState.Initial())
 
+    private val _disabledItems: MutableStateFlow<List<ShoppingListItemWithRecipes>> =
+        MutableStateFlow(emptyList())
+
     private val _shoppingListFromDb: Flow<ShoppingListWithItems> =
         shoppingListsRepo.getShoppingListWithItems(args.shoppingListId)
 
-    val uiState: StateFlow<OperationUiState<ShoppingListWithItems>> =
-        _operationState.combine(_shoppingListFromDb, ::buildUiState)
+    val uiState: StateFlow<OperationUiState<ShoppingListScreenState>> =
+        combine(_operationState, _shoppingListFromDb, _disabledItems, ::buildUiState)
             .stateIn(viewModelScope, SharingStarted.Eagerly, OperationUiState.Initial())
 
 
@@ -61,19 +65,23 @@ class ShoppingListViewModel @Inject constructor(
     private fun buildUiState(
         operationState: OperationUiState<Unit>,
         shoppingList: ShoppingListWithItems,
-    ): OperationUiState<ShoppingListWithItems> {
+        disabledItems: List<ShoppingListItemWithRecipes>,
+    ): OperationUiState<ShoppingListScreenState> {
         logger.v { "buildUiState() called with: operationState = $operationState, shoppingList = $shoppingList" }
         return when (operationState) {
             is OperationUiState.Failure -> OperationUiState.Failure(operationState.exception)
             is OperationUiState.Initial,
             is OperationUiState.Progress -> OperationUiState.Progress()
-            is OperationUiState.Success -> OperationUiState.Success(shoppingList)
+            is OperationUiState.Success -> {
+                OperationUiState.Success(ShoppingListScreenState(shoppingList, disabledItems))
+            }
         }
     }
 
     fun onItemCheckedChange(item: ShoppingListItemWithRecipes, isChecked: Boolean) {
         logger.v { "onItemCheckedChange() called with: item = $item, isChecked = $isChecked" }
         viewModelScope.launch {
+            _disabledItems.update { it + item }
             val result = runCatchingExceptCancel {
                 shoppingListsRepo.updateIsShoppingListItemChecked(item.item.remoteId, isChecked)
             }.onFailure {
@@ -81,6 +89,7 @@ class ShoppingListViewModel @Inject constructor(
             }.onSuccess {
                 logger.v { "Item's checked state updated" }
             }
+            _disabledItems.update { it - item }
             if (result.isSuccess) {
                 refreshShoppingList()
             }

@@ -57,7 +57,7 @@ fun ShoppingListScreen(
 
 @Composable
 fun ShoppingListScreenContent(
-    state: OperationUiState<ShoppingListWithItems>,
+    state: OperationUiState<ShoppingListScreenState>,
     modifier: Modifier = Modifier,
     onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit = { _, _ -> },
 ) {
@@ -83,7 +83,8 @@ fun ShoppingListScreenContent(
             }
         }
         is OperationUiState.Success -> {
-            val shoppingListWithItems = state.value
+            val shoppingListWithItems = state.value.shoppingList
+            val disabledItems = state.value.disabledItems
             val items = shoppingListWithItems.shoppingListItems.sortedBy { it.item.checked }
 
             if (shoppingListWithItems.shoppingListItems.isEmpty()) {
@@ -103,9 +104,12 @@ fun ShoppingListScreenContent(
                     modifier = modifier.fillMaxSize(),
                 ) {
                     LazyColumn {
-                        items(items) {
-                            ShoppingListItem(it) { isChecked ->
-                                onItemCheckedChange(it, isChecked)
+                        items(items) { item ->
+                            ShoppingListItem(
+                                shoppingListItem = item,
+                                isDisabled = item in disabledItems,
+                            ) { isChecked ->
+                                onItemCheckedChange(item, isChecked)
                             }
                         }
                     }
@@ -119,8 +123,11 @@ fun ShoppingListScreenContent(
 @Composable
 @Preview
 fun PreviewShoppingListInfo() {
+    val state = OperationUiState.Success(
+        ShoppingListScreenState(PreviewData.shoppingList, listOf(PreviewData.blackTeaBags))
+    )
     AppTheme {
-        ShoppingListScreenContent(state = OperationUiState.Success(PreviewData.shoppingList))
+        ShoppingListScreenContent(state = state)
     }
 }
 
@@ -155,6 +162,7 @@ fun PreviewShoppingListInfoProgress() {
 @Composable
 fun ShoppingListItem(
     shoppingListItem: ShoppingListItemWithRecipes,
+    isDisabled: Boolean,
     modifier: Modifier = Modifier,
     onCheckedChange: (Boolean) -> Unit = {},
 ) {
@@ -168,6 +176,7 @@ fun ShoppingListItem(
         Checkbox(
             checked = shoppingListItem.item.checked,
             onCheckedChange = onCheckedChange,
+            enabled = !isDisabled,
         )
 
         val quantity = shoppingListItem.item.quantity
@@ -192,7 +201,7 @@ fun ShoppingListItem(
 @Preview
 fun PreviewShoppingListItemChecked() {
     AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.milk)
+        ShoppingListItem(shoppingListItem = PreviewData.milk, false)
     }
 }
 
@@ -200,7 +209,23 @@ fun PreviewShoppingListItemChecked() {
 @Preview
 fun PreviewShoppingListItemUnchecked() {
     AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags)
+        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags, false)
+    }
+}
+
+@Composable
+@Preview
+fun PreviewShoppingListItemCheckedDisabled() {
+    AppTheme {
+        ShoppingListItem(shoppingListItem = PreviewData.milk, true)
+    }
+}
+
+@Composable
+@Preview
+fun PreviewShoppingListItemUncheckedDisabled() {
+    AppTheme {
+        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags, true)
     }
 }
 
