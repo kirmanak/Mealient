@@ -12,4 +12,6 @@ interface ShoppingListsRepo {
     fun getShoppingListWithItems(id: String): Flow<ShoppingListWithItems>
 
     suspend fun updateShoppingList(id: String)
+
+    suspend fun updateIsShoppingListItemChecked(id: String, isChecked: Boolean)
 }

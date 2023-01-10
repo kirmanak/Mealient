@@ -41,6 +41,10 @@ class ShoppingListViewModel @Inject constructor(
 
 
     init {
+        refreshShoppingList()
+    }
+
+    private fun refreshShoppingList() {
         loadShoppingList(args.shoppingListId)
     }
 
@@ -74,11 +78,19 @@ class ShoppingListViewModel @Inject constructor(
         }
     }
 
-    fun onItemChecked(shoppingListItemWithRecipes: ShoppingListItemWithRecipes) {
-        // TODO
-    }
-
-    fun onItemUnchecked(shoppingListItemWithRecipes: ShoppingListItemWithRecipes) {
-        // TODO
+    fun onItemCheckedChange(item: ShoppingListItemWithRecipes, isChecked: Boolean) {
+        logger.v { "onItemCheckedChange() called with: item = $item, isChecked = $isChecked" }
+        viewModelScope.launch {
+            val result = runCatchingExceptCancel {
+                shoppingListsRepo.updateIsShoppingListItemChecked(item.item.remoteId, isChecked)
+            }.onFailure {
+                logger.e(it) { "Failed to update item's checked state" }
+            }.onSuccess {
+                logger.v { "Item's checked state updated" }
+            }
+            if (result.isSuccess) {
+                refreshShoppingList()
+            }
+        }
     }
 }

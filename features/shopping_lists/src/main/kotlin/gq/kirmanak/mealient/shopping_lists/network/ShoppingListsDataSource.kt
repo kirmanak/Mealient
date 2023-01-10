@@ -8,4 +8,6 @@ interface ShoppingListsDataSource {
     suspend fun getPage(page: Int, perPage: Int): ShoppingListsInfo
 
     suspend fun getShoppingList(id: String): FullShoppingListInfo
+
+    suspend fun updateIsShoppingListItemChecked(id: String, checked: Boolean)
 }

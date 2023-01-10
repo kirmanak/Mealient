@@ -17,6 +17,12 @@ import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -153,5 +159,35 @@ class MealieDataSourceV1Impl @Inject constructor(
         logMethod = { "getShoppingList" },
         logParameters = { "id = $id" }
     )
-}
 
+    private suspend fun getShoppingListItem(
+        id: String,
+    ): JsonElement = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.getShoppingListItem(id) },
+        logMethod = { "getShoppingListItem" },
+        logParameters = { "id = $id" }
+    )
+
+    private suspend fun updateShoppingListItem(
+        id: String,
+        request: JsonElement,
+    ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.updateShoppingListItem(id, request) },
+        logMethod = { "updateShoppingListItem" },
+        logParameters = { "id = $id, request = $request" }
+    )
+
+    override suspend fun updateIsShoppingListItemChecked(
+        id: String,
+        isChecked: Boolean
+    ) {
+        // Has to be done in two steps because the API doesn't support updating the checked state
+        val item = getShoppingListItem(id)
+        val wasChecked = item.jsonObject.getValue("checked").jsonPrimitive.boolean
+        if (wasChecked == isChecked) return
+        val updatedItem = item.jsonObject.toMutableMap().apply {
+            put("checked", JsonPrimitive(isChecked))
+        }
+        updateShoppingListItem(id, JsonObject(updatedItem))
+    }
+}

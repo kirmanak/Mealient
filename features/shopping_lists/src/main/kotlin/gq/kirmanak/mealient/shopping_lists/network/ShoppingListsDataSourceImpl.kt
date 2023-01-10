@@ -21,5 +21,10 @@ class ShoppingListsDataSourceImpl @Inject constructor(
     override suspend fun getShoppingList(
         id: String
     ): FullShoppingListInfo = modelMapper.toFullShoppingListInfo(v1Source.getShoppingList(id))
+
+    override suspend fun updateIsShoppingListItemChecked(
+        id: String,
+        isChecked: Boolean,
+    ) = v1Source.updateIsShoppingListItemChecked(id, isChecked)
 }
 

@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.datasource.v1
 
 import gq.kirmanak.mealient.datasource.v1.models.*
+import kotlinx.serialization.json.JsonElement
 import retrofit2.http.*
 
 interface MealieServiceV1 {
@@ -77,4 +78,15 @@ interface MealieServiceV1 {
     suspend fun getShoppingList(
         @Path("id") id: String,
     ): GetShoppingListResponseV1
+
+    @GET("/api/groups/shopping/items/{id}")
+    suspend fun getShoppingListItem(
+        @Path("id") id: String,
+    ): JsonElement
+
+    @PUT("/api/groups/shopping/items/{id}")
+    suspend fun updateShoppingListItem(
+        @Path("id") id: String,
+        @Body request: JsonElement,
+    )
 }

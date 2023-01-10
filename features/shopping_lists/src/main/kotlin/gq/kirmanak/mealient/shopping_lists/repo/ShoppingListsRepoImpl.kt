@@ -84,6 +84,11 @@ class ShoppingListsRepoImpl @Inject constructor(
         )
     }
 
+    override suspend fun updateIsShoppingListItemChecked(id: String, isChecked: Boolean) {
+        logger.v { "updateIsShoppingListItemChecked() called with: id = $id, isChecked = $isChecked" }
+        dataSource.updateIsShoppingListItemChecked(id, isChecked)
+    }
+
     companion object {
         private const val LOAD_PAGE_SIZE = 50
         private const val INITIAL_LOAD_PAGE_SIZE = LOAD_PAGE_SIZE * 3

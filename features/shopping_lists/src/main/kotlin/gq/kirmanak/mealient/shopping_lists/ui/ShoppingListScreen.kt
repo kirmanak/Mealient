@@ -51,8 +51,7 @@ fun ShoppingListScreen(
 
     ShoppingListScreenContent(
         state = screenState.value,
-        onItemChecked = shoppingListsViewModel::onItemChecked,
-        onItemUnchecked = shoppingListsViewModel::onItemUnchecked,
+        onItemCheckedChange = shoppingListsViewModel::onItemCheckedChange,
     )
 }
 
@@ -60,8 +59,7 @@ fun ShoppingListScreen(
 fun ShoppingListScreenContent(
     state: OperationUiState<ShoppingListWithItems>,
     modifier: Modifier = Modifier,
-    onItemChecked: (ShoppingListItemWithRecipes) -> Unit = {},
-    onItemUnchecked: (ShoppingListItemWithRecipes) -> Unit = {},
+    onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit = { _, _ -> },
 ) {
     when (state) {
         is OperationUiState.Progress,
@@ -107,7 +105,7 @@ fun ShoppingListScreenContent(
                     LazyColumn {
                         items(items) {
                             ShoppingListItem(it) { isChecked ->
-                                if (isChecked) onItemUnchecked(it) else onItemChecked(it)
+                                onItemCheckedChange(it, isChecked)
                             }
                         }
                     }

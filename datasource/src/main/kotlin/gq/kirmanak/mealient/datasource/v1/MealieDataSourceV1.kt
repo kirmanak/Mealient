@@ -62,4 +62,6 @@ interface MealieDataSourceV1 {
     suspend fun getShoppingLists(page: Int, perPage: Int): GetShoppingListsResponseV1
 
     suspend fun getShoppingList(id: String): GetShoppingListResponseV1
+
+    suspend fun updateIsShoppingListItemChecked(id: String, isChecked: Boolean)
 }
