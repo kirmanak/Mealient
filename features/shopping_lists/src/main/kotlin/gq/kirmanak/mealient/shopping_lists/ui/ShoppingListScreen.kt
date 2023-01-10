@@ -11,9 +11,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,6 +43,8 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.ui.OperationUiState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 
 data class ShoppingListNavArgs(
@@ -44,7 +55,7 @@ data class ShoppingListNavArgs(
     navArgsDelegate = ShoppingListNavArgs::class,
 )
 @Composable
-fun ShoppingListScreen(
+internal fun ShoppingListScreen(
     shoppingListsViewModel: ShoppingListViewModel = hiltViewModel(),
 ) {
     val screenState = shoppingListsViewModel.uiState.collectAsState()
@@ -52,20 +63,67 @@ fun ShoppingListScreen(
     ShoppingListScreenContent(
         state = screenState.value,
         onItemCheckedChange = shoppingListsViewModel::onItemCheckedChange,
+        onSnackbarShown = shoppingListsViewModel::onSnackbarShown,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun ShoppingListScreenContent(
+    state: OperationUiState<ShoppingListScreenState>,
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    scope: CoroutineScope = rememberCoroutineScope(),
+    onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit = { _, _ -> },
+    onSnackbarShown: () -> Unit = {},
+) {
+    Scaffold(
+        modifier = modifier,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        content = {
+            val innerModifier = Modifier.padding(it)
+            when (state) {
+                is OperationUiState.Progress,
+                is OperationUiState.Initial -> {
+                    CenteredProgressIndicator(innerModifier)
+                }
+                is OperationUiState.Failure -> {
+                    CenteredErrorMessage(state.exception, innerModifier)
+                }
+                is OperationUiState.Success -> {
+                    ShoppingListData(state.value, innerModifier, onItemCheckedChange)
+                    ShortSnackbar(
+                        snackbarState = state.value.snackbarState,
+                        snackbarHostState = snackbarHostState,
+                        scope = scope,
+                        onSnackbarShown = onSnackbarShown
+                    )
+                }
+            }
+        },
     )
 }
 
 @Composable
-fun ShoppingListScreenContent(
-    state: OperationUiState<ShoppingListScreenState>,
-    modifier: Modifier = Modifier,
-    onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit = { _, _ -> },
+private fun ShortSnackbar(
+    snackbarState: SnackbarState,
+    snackbarHostState: SnackbarHostState,
+    scope: CoroutineScope,
+    onSnackbarShown: () -> Unit = {},
 ) {
-    when (state) {
-        is OperationUiState.Progress,
-        is OperationUiState.Initial -> CenteredProgressIndicator(modifier)
-        is OperationUiState.Failure -> CenteredErrorMessage(state.exception, modifier)
-        is OperationUiState.Success -> ShoppingListData(state.value, modifier, onItemCheckedChange)
+
+    val currentOnSnackbarShown by rememberUpdatedState(onSnackbarShown)
+
+    when (snackbarState) {
+        is SnackbarState.Hidden -> snackbarHostState.currentSnackbarData?.dismiss()
+        is SnackbarState.Visible -> {
+            LaunchedEffect(snackbarHostState) {
+                scope.launch {
+                    snackbarHostState.showSnackbar(message = snackbarState.message)
+                    currentOnSnackbarShown()
+                }
+            }
+        }
     }
 }
 
@@ -163,7 +221,11 @@ private fun CenteredProgressIndicator(
 @Preview
 fun PreviewShoppingListInfo() {
     val state = OperationUiState.Success(
-        ShoppingListScreenState(PreviewData.shoppingList, listOf(PreviewData.blackTeaBags))
+        ShoppingListScreenState(
+            shoppingList = PreviewData.shoppingList,
+            disabledItems = listOf(PreviewData.blackTeaBags),
+            snackbarState = SnackbarState.Hidden,
+        )
     )
     AppTheme {
         ShoppingListScreenContent(state = state)

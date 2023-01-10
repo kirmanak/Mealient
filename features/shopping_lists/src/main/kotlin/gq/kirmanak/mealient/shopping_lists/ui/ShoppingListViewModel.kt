@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ShoppingListViewModel @Inject constructor(
+internal class ShoppingListViewModel @Inject constructor(
     private val shoppingListsRepo: ShoppingListsRepo,
     private val logger: Logger,
     savedStateHandle: SavedStateHandle,
@@ -37,12 +37,19 @@ class ShoppingListViewModel @Inject constructor(
     private val _disabledItems: MutableStateFlow<List<ShoppingListItemWithRecipes>> =
         MutableStateFlow(emptyList())
 
+    private val _snackbarState: MutableStateFlow<SnackbarState> =
+        MutableStateFlow(SnackbarState.Hidden)
+
     private val _shoppingListFromDb: Flow<ShoppingListWithItems> =
         shoppingListsRepo.shoppingListWithItemsFlow(args.shoppingListId)
 
-    val uiState: StateFlow<OperationUiState<ShoppingListScreenState>> =
-        combine(_operationState, _shoppingListFromDb, _disabledItems, ::buildUiState)
-            .stateIn(viewModelScope, SharingStarted.Eagerly, OperationUiState.Initial())
+    val uiState: StateFlow<OperationUiState<ShoppingListScreenState>> = combine(
+        _operationState,
+        _shoppingListFromDb,
+        _disabledItems,
+        _snackbarState,
+        ::buildUiState,
+    ).stateIn(viewModelScope, SharingStarted.Eagerly, OperationUiState.Initial())
 
 
     init {
@@ -62,6 +69,10 @@ class ShoppingListViewModel @Inject constructor(
             }
             if (result.isSuccess) {
                 _shoppingListFromDb.first() // wait for the shopping list to be updated
+            } else {
+                result.exceptionOrNull()?.message?.let { message ->
+                    _snackbarState.value = SnackbarState.Visible(message)
+                }
             }
             _operationState.value = OperationUiState.fromResult(result)
         }
@@ -71,21 +82,31 @@ class ShoppingListViewModel @Inject constructor(
         operationState: OperationUiState<Unit>,
         shoppingList: ShoppingListWithItems,
         disabledItems: List<ShoppingListItemWithRecipes>,
+        snackbarState: SnackbarState,
     ): OperationUiState<ShoppingListScreenState> {
         logger.v { "buildUiState() called with: operationState = $operationState, shoppingList = $shoppingList, disabledItems = $disabledItems" }
-        return if (shoppingList.shoppingListItems.isEmpty().not()) {
+        return if (shoppingList.shoppingListItems.isNotEmpty()) {
             OperationUiState.Success(
                 ShoppingListScreenState(
                     shoppingList = shoppingList,
                     disabledItems = disabledItems,
+                    snackbarState = snackbarState,
                 )
             )
-        } else when (operationState) {
-            is OperationUiState.Failure -> OperationUiState.Failure(operationState.exception)
-            is OperationUiState.Initial,
-            is OperationUiState.Progress -> OperationUiState.Progress()
-            is OperationUiState.Success -> {
-                OperationUiState.Success(ShoppingListScreenState(shoppingList, disabledItems))
+        } else {
+            when (operationState) {
+                is OperationUiState.Failure -> OperationUiState.Failure(operationState.exception)
+                is OperationUiState.Initial,
+                is OperationUiState.Progress -> OperationUiState.Progress()
+                is OperationUiState.Success -> {
+                    OperationUiState.Success(
+                        ShoppingListScreenState(
+                            shoppingList = shoppingList,
+                            disabledItems = disabledItems,
+                            snackbarState = snackbarState,
+                        )
+                    )
+                }
             }
         }
     }
@@ -104,7 +125,16 @@ class ShoppingListViewModel @Inject constructor(
             _disabledItems.update { it - item }
             if (result.isSuccess) {
                 refreshShoppingList()
+            } else {
+                result.exceptionOrNull()?.message?.let {
+                    _snackbarState.value = SnackbarState.Visible(it)
+                }
             }
         }
+    }
+
+    fun onSnackbarShown() {
+        logger.v { "onSnackbarShown() called" }
+        _snackbarState.value = SnackbarState.Hidden
     }
 }
