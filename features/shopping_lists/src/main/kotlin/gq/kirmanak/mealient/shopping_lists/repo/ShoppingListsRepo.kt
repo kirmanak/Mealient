@@ -14,4 +14,6 @@ interface ShoppingListsRepo {
     suspend fun updateShoppingList(id: String)
 
     suspend fun updateIsShoppingListItemChecked(id: String, isChecked: Boolean)
+
+    suspend fun clearLocalData()
 }

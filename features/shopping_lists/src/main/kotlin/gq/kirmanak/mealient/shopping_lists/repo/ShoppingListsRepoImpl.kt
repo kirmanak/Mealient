@@ -89,6 +89,11 @@ class ShoppingListsRepoImpl @Inject constructor(
         dataSource.updateIsShoppingListItemChecked(id, isChecked)
     }
 
+    override suspend fun clearLocalData() {
+        logger.v { "clearLocalData() called" }
+        storage.clearLocalData()
+    }
+
     companion object {
         private const val LOAD_PAGE_SIZE = 50
         private const val INITIAL_LOAD_PAGE_SIZE = LOAD_PAGE_SIZE * 3

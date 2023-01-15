@@ -10,6 +10,7 @@ import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.ui.OperationUiState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class BaseURLViewModel @Inject constructor(
     private val authRepo: AuthRepo,
     private val recipeRepo: RecipeRepo,
     private val logger: Logger,
+    private val shoppingListsRepo: ShoppingListsRepo,
 ) : ViewModel() {
 
     private val _uiState = MutableLiveData<OperationUiState<Unit>>(OperationUiState.Initial())
@@ -58,6 +60,7 @@ class BaseURLViewModel @Inject constructor(
         if (result.isSuccess) {
             authRepo.logout()
             recipeRepo.clearLocalData()
+            shoppingListsRepo.clearLocalData()
         }
 
         logger.i { "checkBaseURL: result is $result" }

@@ -25,4 +25,6 @@ interface ShoppingListsStorage {
     )
 
     fun getShoppingListWithItems(id: String): Flow<ShoppingListWithItems>
+
+    suspend fun clearLocalData()
 }

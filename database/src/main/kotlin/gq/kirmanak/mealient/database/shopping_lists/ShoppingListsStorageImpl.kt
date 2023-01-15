@@ -66,4 +66,9 @@ internal class ShoppingListsStorageImpl @Inject constructor(
         logger.v { "getShoppingListWithItems() called with: id = $id" }
         return shoppingListsDao.queryShoppingListWithItems(id)
     }
+
+    override suspend fun clearLocalData() {
+        logger.v { "clearLocalData() called" }
+        shoppingListsDao.deleteAllShoppingLists()
+    }
 }
