@@ -102,24 +102,15 @@ private fun ShoppingListScreenContent(
             .fillMaxSize()
 
         when {
-            isListEmpty && isContentRefreshing -> {
+            isListEmpty && (isContentRefreshing || isRefreshing) -> {
                 CenteredProgressIndicator(modifier = innerModifier)
             }
             isListEmpty -> {
-                val text = loadError?.let { getErrorMessage(error = it) }
-                    ?: stringResource(id = R.string.shopping_lists_screen_empty)
-                Box(
+                EmptyListError(
+                    loadError = loadError,
                     modifier = innerModifier,
-                ) {
-                    Column(
-                        modifier = Modifier.align(Alignment.Center),
-                    ) {
-                        Text(text = text)
-                        Button(onClick = onRefresh) {
-                            Text(text = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh))
-                        }
-                    }
-                }
+                    onRefresh = onRefresh
+                )
             }
             else -> {
                 Box(
@@ -139,6 +130,37 @@ private fun ShoppingListScreenContent(
                 } ?: snackbarHostState.currentSnackbarData?.dismiss()
             }
         }
+    }
+}
+
+@Composable
+private fun EmptyListError(
+    loadError: Throwable?,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val text = loadError?.let { getErrorMessage(it) }
+        ?: stringResource(R.string.shopping_lists_screen_empty)
+    Box(
+        modifier = modifier,
+    ) {
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(text = text)
+            Button(onClick = onRefresh) {
+                Text(text = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh))
+            }
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewEmptyListError() {
+    AppTheme {
+        EmptyListError(loadError = null, onRefresh = {})
     }
 }
 
