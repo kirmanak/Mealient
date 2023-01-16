@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.shopping_lists.ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -42,6 +40,8 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemWithR
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.shopping_list.R
+import gq.kirmanak.mealient.shopping_lists.ui.composables.CenteredProgressIndicator
+import gq.kirmanak.mealient.shopping_lists.ui.composables.CenteredText
 import gq.kirmanak.mealient.ui.OperationUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -190,31 +190,6 @@ private fun CenteredErrorMessage(
         text = exception.message ?: stringResource(R.string.shopping_list_screen_unknown_error),
         modifier = modifier,
     )
-}
-
-@Composable
-fun CenteredText(
-    text: String,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(text = text)
-    }
-}
-
-@Composable
-private fun CenteredProgressIndicator(
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        CircularProgressIndicator()
-    }
 }
 
 @Composable
