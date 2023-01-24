@@ -10,6 +10,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: ashutoshgngwr/validate-fastlane-supply-metadata@v2
+        with:
+          fastlaneDir: ./fastlane/metadata/android
+          usePlayStoreLocales: true
+
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
