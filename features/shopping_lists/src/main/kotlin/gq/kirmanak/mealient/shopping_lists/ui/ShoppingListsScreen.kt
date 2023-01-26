@@ -148,8 +148,14 @@ private fun EmptyListError(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = text)
-            Button(onClick = onRefresh) {
+            Text(
+                modifier = Modifier.padding(top = Dimens.Medium),
+                text = text,
+            )
+            Button(
+                modifier = Modifier.padding(top = Dimens.Medium),
+                onClick = onRefresh,
+            ) {
                 Text(text = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh))
             }
         }
