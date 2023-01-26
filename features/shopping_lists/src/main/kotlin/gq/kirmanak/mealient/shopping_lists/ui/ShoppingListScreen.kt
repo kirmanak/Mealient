@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -165,11 +166,16 @@ private fun ShoppingListItemsColumn(
     modifier: Modifier = Modifier,
     onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit
 ) {
+    val firstCheckedItemIndex = items.indexOfFirst { it.item.checked }
+
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
         LazyColumn {
-            items(items) { item ->
+            itemsIndexed(items) { index, item ->
+                if (index == firstCheckedItemIndex && index != 0) {
+                    Divider()
+                }
                 ShoppingListItem(
                     shoppingListItem = item,
                     isDisabled = item in disabledItems,
