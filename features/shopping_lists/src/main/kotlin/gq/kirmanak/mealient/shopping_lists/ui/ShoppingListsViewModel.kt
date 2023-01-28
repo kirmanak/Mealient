@@ -12,8 +12,6 @@ import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsAuthRepo
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
@@ -28,10 +26,8 @@ class ShoppingListsViewModel @Inject constructor(
     val pages: Flow<PagingData<ShoppingListEntity>> =
         shoppingListsRepo.createPager().flow.cachedIn(viewModelScope)
 
-    val refreshEvents: Flow<Unit> = authRepo.isAuthorizedFlow
+    val needRetryFlow: Flow<Boolean> = authRepo.isAuthorizedFlow
         .valueUpdatesOnly()
         .onEach { logger.v { "Authorization state changed to $it" } }
-        .filter { it }
-        .map { }
-        .shareIn(viewModelScope, started = SharingStarted.Eagerly)
+        .shareIn(viewModelScope, started = SharingStarted.Eagerly, replay = 1)
 }

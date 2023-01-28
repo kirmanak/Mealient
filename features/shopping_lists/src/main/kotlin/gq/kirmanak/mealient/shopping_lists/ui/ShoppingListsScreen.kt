@@ -49,6 +49,7 @@ import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.CenteredProgressIndicator
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @RootNavGraph(start = true)
@@ -57,23 +58,13 @@ import kotlinx.coroutines.launch
 fun ShoppingListsScreen(
     navigator: DestinationsNavigator,
     shoppingListsViewModel: ShoppingListsViewModel = hiltViewModel(),
-    logger: Logger = getComposeEntryPoint().provideLogger(),
 ) {
     val items = shoppingListsViewModel.pages.collectAsLazyPagingItems()
 
-    LaunchedEffect(items) {
-        // TODO this coroutine starts after the authentication state changes
-        logger.d { "Starting collection" }
-        try {
-            shoppingListsViewModel.refreshEvents.collect {
-                logger.d { "Refreshing shopping lists" }
-                items.refresh()
-            }
-        } catch (e: CancellationException) {
-            logger.w(e) { "Collection cancelled" }
-            throw e
-        }
-    }
+    RetryWhenRetryNeeded(
+        items = items,
+        needRetryFlow = shoppingListsViewModel.needRetryFlow,
+    )
 
     ShoppingListScreenContent(
         items = items,
@@ -82,6 +73,29 @@ fun ShoppingListsScreen(
             navigator.navigate(ShoppingListScreenDestination(shoppingListId))
         }
     )
+}
+
+@Composable
+private fun RetryWhenRetryNeeded(
+    items: LazyPagingItems<ShoppingListEntity>,
+    needRetryFlow: Flow<Boolean>,
+    logger: Logger = getComposeEntryPoint().provideLogger(),
+) {
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(items) {
+        scope.launch {
+            logger.d { "RetryOnSuccessfulAuth: coroutine started" }
+            try {
+                needRetryFlow.collect { needRetry ->
+                    logger.d { "RetryOnSuccessfulAuth: needRetry = $needRetry" }
+                    if (needRetry) items.retry()
+                }
+            } catch (e: CancellationException) {
+                logger.w(e) { "RetryOnSuccessfulAuth: coroutine cancelled" }
+                throw e
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
@@ -94,13 +108,12 @@ private fun ShoppingListScreenContent(
 ) {
     val loadError = items.firstMediatorErrorOrNull()
     val isRefreshing = items.isMediatorRefreshing()
-    val onRefresh: () -> Unit = {
-        logger.d { "Refreshing shopping lists" }
-        items.refresh()
-    }
     val refreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = onRefresh,
+        onRefresh = {
+            logger.d { "Refreshing shopping lists" }
+            items.refresh()
+        },
     )
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 
@@ -125,7 +138,10 @@ private fun ShoppingListScreenContent(
                 EmptyListError(
                     loadError = loadError,
                     modifier = innerModifier,
-                    onRefresh = onRefresh
+                    onRetry = {
+                        logger.d { "Retrying shopping lists request" }
+                        items.retry()
+                    }
                 )
             }
             else -> {
@@ -152,7 +168,7 @@ private fun ShoppingListScreenContent(
 @Composable
 private fun EmptyListError(
     loadError: Throwable?,
-    onRefresh: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val text = loadError?.let { getErrorMessage(it) }
@@ -170,7 +186,7 @@ private fun EmptyListError(
             )
             Button(
                 modifier = Modifier.padding(top = Dimens.Medium),
-                onClick = onRefresh,
+                onClick = onRetry,
             ) {
                 Text(text = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh))
             }
@@ -182,7 +198,7 @@ private fun EmptyListError(
 @Preview
 private fun PreviewEmptyListError() {
     AppTheme {
-        EmptyListError(loadError = null, onRefresh = {})
+        EmptyListError(loadError = null, onRetry = {})
     }
 }
 
