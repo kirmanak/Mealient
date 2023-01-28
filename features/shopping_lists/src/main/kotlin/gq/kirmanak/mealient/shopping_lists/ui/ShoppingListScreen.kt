@@ -173,12 +173,10 @@ private fun ShoppingListItemsColumn(
     ) {
         LazyColumn {
             itemsIndexed(items) { index, item ->
-                if (index == firstCheckedItemIndex && index != 0) {
-                    Divider()
-                }
                 ShoppingListItem(
                     shoppingListItem = item,
                     isDisabled = item in disabledItems,
+                    showDivider = index == firstCheckedItemIndex && index != 0,
                 ) { isChecked ->
                     onItemCheckedChange(item, isChecked)
                 }
@@ -245,33 +243,40 @@ fun PreviewShoppingListInfoProgress() {
 fun ShoppingListItem(
     shoppingListItem: ShoppingListItemWithRecipes,
     isDisabled: Boolean,
+    showDivider: Boolean,
     modifier: Modifier = Modifier,
     onCheckedChange: (Boolean) -> Unit = {},
 ) {
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = Dimens.Small, end = Dimens.Small, start = Dimens.Small),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start,
     ) {
-        Checkbox(
-            checked = shoppingListItem.item.checked,
-            onCheckedChange = onCheckedChange,
-            enabled = !isDisabled,
-        )
+        if (showDivider) {
+            Divider()
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+        ) {
+            Checkbox(
+                checked = shoppingListItem.item.checked,
+                onCheckedChange = onCheckedChange,
+                enabled = !isDisabled,
+            )
 
-        val quantity = shoppingListItem.item.quantity
-            .takeUnless { it == 0.0 }
-            ?.let { DecimalFormat.getInstance().format(it) }
-        val text = listOfNotNull(
-            quantity,
-            shoppingListItem.item.unit,
-            shoppingListItem.item.food,
-            shoppingListItem.item.note,
-        ).filter { it.isNotBlank() }.joinToString(" ")
+            val quantity = shoppingListItem.item.quantity
+                .takeUnless { it == 0.0 }
+                ?.let { DecimalFormat.getInstance().format(it) }
+            val text = listOfNotNull(
+                quantity,
+                shoppingListItem.item.unit,
+                shoppingListItem.item.food,
+                shoppingListItem.item.note,
+            ).filter { it.isNotBlank() }.joinToString(" ")
 
-        Text(text = text)
+            Text(text = text)
+        }
     }
 }
 
@@ -279,7 +284,7 @@ fun ShoppingListItem(
 @Preview
 fun PreviewShoppingListItemChecked() {
     AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.milk, false)
+        ShoppingListItem(shoppingListItem = PreviewData.milk, false, false)
     }
 }
 
@@ -287,7 +292,7 @@ fun PreviewShoppingListItemChecked() {
 @Preview
 fun PreviewShoppingListItemUnchecked() {
     AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags, false)
+        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags, false, false)
     }
 }
 
@@ -295,7 +300,7 @@ fun PreviewShoppingListItemUnchecked() {
 @Preview
 fun PreviewShoppingListItemCheckedDisabled() {
     AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.milk, true)
+        ShoppingListItem(shoppingListItem = PreviewData.milk, true, false)
     }
 }
 
@@ -303,7 +308,7 @@ fun PreviewShoppingListItemCheckedDisabled() {
 @Preview
 fun PreviewShoppingListItemUncheckedDisabled() {
     AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags, true)
+        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags, true, false)
     }
 }
 
