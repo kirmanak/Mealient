@@ -13,6 +13,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":architecture"))
     implementation(project(":logging"))
     implementation(project(":datasource"))
     implementation(project(":database"))

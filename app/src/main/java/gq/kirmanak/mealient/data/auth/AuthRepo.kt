@@ -1,10 +1,11 @@
 package gq.kirmanak.mealient.data.auth
 
+import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsAuthRepo
 import kotlinx.coroutines.flow.Flow
 
-interface AuthRepo {
+interface AuthRepo : ShoppingListsAuthRepo {
 
-    val isAuthorizedFlow: Flow<Boolean>
+    override val isAuthorizedFlow: Flow<Boolean>
 
     suspend fun authenticate(email: String, password: String)
 

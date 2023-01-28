@@ -48,6 +48,7 @@ import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.CenteredProgressIndicator
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 @RootNavGraph(start = true)
@@ -56,8 +57,23 @@ import kotlinx.coroutines.launch
 fun ShoppingListsScreen(
     navigator: DestinationsNavigator,
     shoppingListsViewModel: ShoppingListsViewModel = hiltViewModel(),
+    logger: Logger = getComposeEntryPoint().provideLogger(),
 ) {
     val items = shoppingListsViewModel.pages.collectAsLazyPagingItems()
+
+    LaunchedEffect(items) {
+        // TODO this coroutine starts after the authentication state changes
+        logger.d { "Starting collection" }
+        try {
+            shoppingListsViewModel.refreshEvents.collect {
+                logger.d { "Refreshing shopping lists" }
+                items.refresh()
+            }
+        } catch (e: CancellationException) {
+            logger.w(e) { "Collection cancelled" }
+            throw e
+        }
+    }
 
     ShoppingListScreenContent(
         items = items,

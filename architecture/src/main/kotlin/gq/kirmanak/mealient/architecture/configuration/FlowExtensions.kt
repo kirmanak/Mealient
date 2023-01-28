@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.extensions
+package gq.kirmanak.mealient.architecture.configuration
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector

@@ -15,6 +15,7 @@ import gq.kirmanak.mealient.data.auth.impl.AuthDataSourceImpl
 import gq.kirmanak.mealient.data.auth.impl.AuthRepoImpl
 import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl
 import gq.kirmanak.mealient.datasource.AuthenticationProvider
+import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsAuthRepo
 import javax.inject.Singleton
 
 @Module
@@ -45,4 +46,8 @@ interface AuthModule {
     @Binds
     @Singleton
     fun bindAuthStorage(authStorageImpl: AuthStorageImpl): AuthStorage
+
+    @Binds
+    @Singleton
+    fun bindShoppingListsAuthRepo(impl: AuthRepoImpl): ShoppingListsAuthRepo
 }

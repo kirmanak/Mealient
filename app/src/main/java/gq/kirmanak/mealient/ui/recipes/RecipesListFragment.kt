@@ -17,6 +17,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
+import gq.kirmanak.mealient.architecture.configuration.valueUpdatesOnly
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesListBinding
 import gq.kirmanak.mealient.datasource.NetworkError
