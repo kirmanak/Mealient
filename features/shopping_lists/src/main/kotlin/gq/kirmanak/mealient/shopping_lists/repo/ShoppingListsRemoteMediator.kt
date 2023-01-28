@@ -83,7 +83,6 @@ class ShoppingListsRemoteMediator @Inject constructor(
 
         lastRequestEnd = startAtIndex + shoppingLists.size
 
-        return MediatorResult.Success(endOfPaginationReached = response.page == response.totalPages)
-
+        return MediatorResult.Success(endOfPaginationReached = response.page >= response.totalPages)
     }
 }
