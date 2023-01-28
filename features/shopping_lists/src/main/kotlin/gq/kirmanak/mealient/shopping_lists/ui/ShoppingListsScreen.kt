@@ -48,7 +48,6 @@ import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.CenteredProgressIndicator
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -84,15 +83,9 @@ private fun RetryWhenRetryNeeded(
     val scope = rememberCoroutineScope()
     LaunchedEffect(items) {
         scope.launch {
-            logger.d { "RetryOnSuccessfulAuth: coroutine started" }
-            try {
-                needRetryFlow.collect { needRetry ->
-                    logger.d { "RetryOnSuccessfulAuth: needRetry = $needRetry" }
-                    if (needRetry) items.retry()
-                }
-            } catch (e: CancellationException) {
-                logger.w(e) { "RetryOnSuccessfulAuth: coroutine cancelled" }
-                throw e
+            needRetryFlow.collect { needRetry ->
+                logger.d { "RetryWhenRetryNeeded: needRetry = $needRetry" }
+                if (needRetry) items.retry()
             }
         }
     }
