@@ -143,5 +143,5 @@ internal abstract class AppDb : RoomDatabase() {
         fromColumnName = "remote_id",
         toColumnName = "recipe_id"
     )
-    class From8To9Migration : AutoMigrationSpec
+    class From8To9Migration : AutoMigrationSpec // TODO does not rename remote_id to recipe_id
 }
