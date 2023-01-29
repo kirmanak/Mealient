@@ -65,4 +65,5 @@
 	<string name="view_holder_recipe_delete_content_description">Удалить рецепт</string>
 	<string name="fragment_recipes_favorite_added">%1$s добавлено в избранное</string>
 	<string name="fragment_recipes_favorite_removed">%1$s удалено из избранного</string>
+	<string name="menu_navigation_drawer_shopping_lists">Списки покупок</string>
 </resources>

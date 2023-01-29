@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="shopping_lists_screen_cart_icon">Корзина для покупок</string>
+	<string name="shopping_list_screen_unknown_error">Неизвестная ошибка</string>
+	<string name="shopping_list_screen_empty_list">%1$s пуст</string>
+	<string name="shopping_lists_screen_empty">Списки покупок не найдены</string>
+	<string name="shopping_lists_screen_unauthorized_error">Требуется авторизация</string>
+	<string name="shopping_lists_screen_no_connection">Нет соединения с сервером</string>
+	<string name="shopping_lists_screen_unknown_error">Неизвестная ошибка</string>
+	<string name="shopping_lists_screen_empty_button_refresh">Попробовать снова</string>
+</resources>
