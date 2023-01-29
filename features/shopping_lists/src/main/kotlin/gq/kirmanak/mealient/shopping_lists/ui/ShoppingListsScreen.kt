@@ -111,7 +111,7 @@ private fun ShoppingListScreenContent(
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 
     val isListEmpty = items.itemCount == 0
-    val isContentRefreshing = items.isMediatorAppending()
+    val isContentRefreshing = items.isLoading()
 
     logger.d { "ShoppingListScreenContent: itemCount = ${items.itemCount}, loadStates = ${items.loadState}" }
 
@@ -124,7 +124,7 @@ private fun ShoppingListScreenContent(
             .fillMaxSize()
 
         when {
-            isListEmpty && (isContentRefreshing || isRefreshing) -> {
+            isListEmpty && isContentRefreshing -> {
                 CenteredProgressIndicator(modifier = innerModifier)
             }
             isListEmpty -> {
@@ -284,12 +284,19 @@ private fun <T : Any> LazyPagingItems<T>.isMediatorRefreshing(): Boolean {
     return loadState.mediator?.refresh is LoadState.Loading
 }
 
-private fun <T : Any> LazyPagingItems<T>.isMediatorAppending(): Boolean {
-    return loadState.mediator?.append is LoadState.Loading
+private fun <T : Any> LazyPagingItems<T>.isLoading(): Boolean {
+    return listOf(
+        loadState.mediator?.refresh,
+        loadState.mediator?.append,
+        loadState.append,
+        loadState.refresh,
+        loadState.source.refresh,
+        loadState.source.append,
+    ).any { it is LoadState.Loading }
 }
 
 private fun <T : Any> LazyPagingItems<T>.firstMediatorErrorOrNull(): Throwable? {
-    return listOfNotNull(
+    return listOf(
         loadState.mediator?.refresh,
         loadState.mediator?.append,
     ).filterIsInstance<LoadState.Error>().firstOrNull()?.error
