@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -18,10 +19,15 @@ fun AppTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        isDynamicColor && isDarkTheme -> dynamicDarkColorScheme(LocalContext.current)
-        isDynamicColor && !isDarkTheme -> dynamicLightColorScheme(LocalContext.current)
-        isDarkTheme -> darkColorScheme()
-        else -> lightColorScheme()
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.S || !isDynamicColor -> {
+            if (isDarkTheme) darkColorScheme() else lightColorScheme()
+        }
+        isDarkTheme -> {
+            dynamicDarkColorScheme(LocalContext.current)
+        }
+        else -> {
+            dynamicLightColorScheme(LocalContext.current)
+        }
     }
 
     MaterialTheme(
