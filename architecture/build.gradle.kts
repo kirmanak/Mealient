@@ -11,4 +11,10 @@ android {
 dependencies {
     implementation(libs.google.dagger.hiltAndroid)
     kapt(libs.google.dagger.hiltCompiler)
+
+    testImplementation(libs.jetbrains.kotlinx.coroutinesTest)
+    testImplementation(libs.androidx.test.junit)
+    testImplementation(libs.androidx.coreTesting)
+    testImplementation(libs.google.truth)
+    testImplementation(project(":testing"))
 }

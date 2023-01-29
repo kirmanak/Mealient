@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gq.kirmanak.mealient.architecture.configuration.valueUpdatesOnly
+import gq.kirmanak.mealient.architecture.valueUpdatesOnly
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity

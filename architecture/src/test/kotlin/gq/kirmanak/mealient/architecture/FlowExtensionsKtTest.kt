@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.extensions
+package gq.kirmanak.mealient.architecture
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.test.BaseUnitTest
