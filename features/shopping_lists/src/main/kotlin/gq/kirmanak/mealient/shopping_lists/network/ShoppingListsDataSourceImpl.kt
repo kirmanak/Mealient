@@ -24,7 +24,7 @@ class ShoppingListsDataSourceImpl @Inject constructor(
 
     override suspend fun updateIsShoppingListItemChecked(
         id: String,
-        isChecked: Boolean,
-    ) = v1Source.updateIsShoppingListItemChecked(id, isChecked)
+        checked: Boolean,
+    ) = v1Source.updateIsShoppingListItemChecked(id, checked)
 }
 
