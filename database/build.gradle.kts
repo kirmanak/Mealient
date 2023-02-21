@@ -6,12 +6,6 @@ plugins {
 }
 
 android {
-    defaultConfig {
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
-
     namespace = "gq.kirmanak.mealient.database"
 }
 

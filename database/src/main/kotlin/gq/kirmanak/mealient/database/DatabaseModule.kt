@@ -25,7 +25,7 @@ internal interface DatabaseModule {
         @Singleton
         fun createDb(@ApplicationContext context: Context): AppDb =
             Room.databaseBuilder(context, AppDb::class.java, "app.db")
-                .fallbackToDestructiveMigrationFrom(2)
+                .fallbackToDestructiveMigration()
                 .build()
 
         @Provides
