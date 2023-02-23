@@ -1,4 +1,10 @@
 <a href='https://play.google.com/store/apps/details?id=gq.kirmanak.mealient&utm_source=github&utm_campaign=readme&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="200" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+<a href="https://f-droid.org/packages/gq.kirmanak.mealient">
+    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80">
+</a>
+
 
 # Mealient
 
@@ -26,7 +32,10 @@ information about each of the recipes. Moreover, you can create a recipe from th
 
 ## How to install
 
-Click on "Get it on Google Play" badge above or download the latest apk from the releases page.
+There are three ways:
+1. Install it with Google Play using the badge above.
+2. Install it with F-droid using the badge above.
+3. Download the latest apk from the releases page
 
 ## Contribution
 
