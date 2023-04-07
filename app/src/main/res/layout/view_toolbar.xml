@@ -9,28 +9,31 @@
 
 	<ImageView
 		android:id="@+id/navigation_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="0dp"
+		android:layout_height="32dp"
+		android:layout_marginVertical="@dimen/margin_small"
 		android:layout_marginStart="@dimen/margin_small"
 		android:contentDescription="@string/view_toolbar_navigation_icon_content_description"
 		android:src="@drawable/ic_menu"
 		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintDimensionRatio="1:1"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
 	<EditText
 		android:id="@+id/search_edit"
 		android:layout_width="0dp"
-		android:layout_height="wrap_content"
+		android:layout_height="0dp"
 		android:layout_margin="@dimen/margin_small"
 		android:background="@null"
 		android:hint="@string/search_recipes_hint"
 		android:importantForAutofill="no"
 		android:inputType="textFilter"
-		android:textAppearance="?textAppearanceBodyLarge"
+		android:textAppearance="?textAppearanceTitleLarge"
 		android:textColor="?colorOnSurfaceVariant"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toEndOf="@id/navigation_icon"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="Search request" />
 </merge>
