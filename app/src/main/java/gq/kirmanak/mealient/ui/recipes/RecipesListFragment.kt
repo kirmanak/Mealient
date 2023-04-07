@@ -177,6 +177,15 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
             logger.d { "onFavoriteClick: result is $it" }
             if (it.isFailure) {
                 showLongToast(R.string.fragment_recipes_favorite_update_failed)
+            } else {
+                val name = event.recipeSummaryEntity.name
+                val isFavorite = it.getOrThrow()
+                val message = if (isFavorite) {
+                    getString(R.string.fragment_recipes_favorite_added, name)
+                } else {
+                    getString(R.string.fragment_recipes_favorite_removed, name)
+                }
+                showLongToast(message)
             }
         }
     }

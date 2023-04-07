@@ -63,4 +63,6 @@
 	<string name="view_holder_recipe_delete_content_description">Удалить рецепт</string>
 	<string name="fragment_recipes_delete_recipe_confirm_dialog_positive_btn">Подтвердить</string>
 	<string name="fragment_recipes_delete_recipe_confirm_dialog_negative_btn">Отмена</string>
+	<string name="fragment_recipes_favorite_added">%1$s добавлено в избранное</string>
+	<string name="fragment_recipes_favorite_removed">%1$s удалено из избранного</string>
 </resources>

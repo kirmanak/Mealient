@@ -18,7 +18,7 @@ interface RecipeRepo {
 
     suspend fun refreshRecipes()
 
-    suspend fun updateIsRecipeFavorite(recipeSlug: String, isFavorite: Boolean): Result<Unit>
+    suspend fun updateIsRecipeFavorite(recipeSlug: String, isFavorite: Boolean): Result<Boolean>
 
     suspend fun deleteRecipe(entity: RecipeSummaryEntity): Result<Unit>
 }

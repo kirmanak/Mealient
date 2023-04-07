@@ -66,4 +66,6 @@
 	<string name="view_holder_recipe_favorite_content_description">Item is favorite</string>
 	<string name="view_holder_recipe_non_favorite_content_description">Item is not favorite</string>
 	<string name="view_holder_recipe_delete_content_description">Delete recipe</string>
+	<string name="fragment_recipes_favorite_added">Added %1$s to favorites</string>
+	<string name="fragment_recipes_favorite_removed">Removed %1$s from favorites</string>
 </resources>
