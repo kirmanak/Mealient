@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="fragment_authentication_input_hint_email">E-mail</string>
+	<string name="fragment_authentication_input_hint_email">Email или username</string>
 	<string name="fragment_authentication_input_hint_password">Пароль</string>
 	<string name="fragment_authentication_input_hint_url">URL сервера</string>
 	<string name="fragment_authentication_button_login">Войти</string>

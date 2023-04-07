@@ -1,6 +1,6 @@
 <resources>
 	<string name="app_name" translatable="false">Mealient</string>
-	<string name="fragment_authentication_input_hint_email">E-mail</string>
+	<string name="fragment_authentication_input_hint_email">Email or username</string>
 	<string name="fragment_authentication_input_hint_password">Password</string>
 	<string name="fragment_authentication_input_hint_url">Server URL</string>
 	<string name="fragment_authentication_button_login">Login</string>
