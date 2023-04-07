@@ -1,6 +1,5 @@
 package gq.kirmanak.mealient.data.baseurl
 
-import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.ServerUrlProvider
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
@@ -38,7 +37,10 @@ class ServerInfoRepoImpl @Inject constructor(
     private fun determineServerVersion(version: String): ServerVersion = when {
         version.startsWith("v0") -> ServerVersion.V0
         version.startsWith("v1") -> ServerVersion.V1
-        else -> throw NetworkError.NotMealie(IllegalStateException("Server version is unknown: $version"))
+        else -> {
+            logger.w { "Unknown server version: $version" }
+            ServerVersion.V1
+        }
     }
 
     override suspend fun tryBaseURL(baseURL: String): Result<Unit> {
