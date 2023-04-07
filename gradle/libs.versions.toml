@@ -1,28 +1,28 @@
 [versions]
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-androidGradlePlugin = "7.3.1"
-# https://kotlinlang.org/docs/gradle.html
+androidGradlePlugin = "7.4.2"
+# https://github.com/JetBrains/kotlin/releases
 kotlin = "1.7.20"
 # https://developer.android.com/jetpack/androidx/releases/navigation
 googleNavigation = "2.5.3"
 # https://dagger.dev/hilt/gradle-setup
-hilt = "2.44"
+hilt = "2.45"
 # https://github.com/protocolbuffers/protobuf/releases
-protobuf = "3.21.9"
+protobuf = "3.22.2"
 # https://github.com/google/protobuf-gradle-plugin/releases
 protobufPlugin = "0.9.1"
 # https://plugins.gradle.org/plugin/org.sonarqube
-sonarqube = "3.5.0.2730"
+sonarqube = "4.0.0.2929"
 # https://plugins.gradle.org/plugin/nl.neotech.plugin.rootcoverage
 rootCoverage = "1.6.0"
 # https://plugins.gradle.org/plugin/com.guardsquare.appsweep
 appsweep = "1.4.0"
 # https://github.com/material-components/material-components-android/releases
-material = "1.7.0"
+material = "1.8.0"
 # https://developer.android.com/kotlin/ktx#core
 coreKtx = "1.9.0"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
-appcompat = "1.5.1"
+appcompat = "1.6.1"
 # https://developer.android.com/jetpack/androidx/releases/constraintlayout
 contraintLayout = "2.1.4"
 # https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout
@@ -30,27 +30,27 @@ swipeRefreshLayout = "1.1.0"
 # https://developer.android.com/jetpack/androidx/releases/core
 splashScreen = "1.0.0"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
-lifecycle = "2.5.1"
+lifecycle = "2.6.1"
 # https://developer.android.com/jetpack/androidx/releases/arch-core
-coreTesting = "2.1.0"
+coreTesting = "2.2.0"
 # https://github.com/square/retrofit/tags
 retrofit = "2.9.0"
 # https://github.com/JakeWharton/retrofit2-kotlinx-serialization-converter/tags
 retrofitKotlinxSerialization = "0.8.0"
 # https://github.com/Kotlin/kotlinx.serialization/releases
-kotlinxSerialization = "1.4.1"
+kotlinxSerialization = "1.5.0"
 # https://github.com/square/okhttp/tags
 okhttp = "4.10.0"
 # https://developer.android.com/jetpack/androidx/releases/paging
 paging = "3.1.1"
 # https://developer.android.com/jetpack/androidx/releases/room
-room = "2.4.3"
+room = "2.5.1"
 # https://github.com/Kotlin/kotlinx-datetime/releases
 kotlinxDatetime = "0.4.0"
 # https://github.com/bumptech/glide/releases
-glide = "4.14.2"
+glide = "4.15.1"
 # https://github.com/androidbroadcast/ViewBindingPropertyDelegate/releases
-viewBindingDelegate = "1.5.6"
+viewBindingDelegate = "1.5.9"
 # https://developer.android.com/jetpack/androidx/releases/datastore
 datastore = "1.0.0"
 # https://developer.android.com/jetpack/androidx/releases/security
@@ -58,27 +58,27 @@ security = "1.0.0"
 # https://github.com/junit-team/junit4/releases
 junit = "4.13.2"
 # https://developer.android.com/jetpack/androidx/releases/test
-junitKtx = "1.1.3"
+junitKtx = "1.1.5"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 coroutines = "1.6.4"
 # https://github.com/robolectric/robolectric/releases
-robolectric = "4.9"
+robolectric = "4.9.2"
 # https://mvnrepository.com/artifact/com.google.truth/truth
 truth = "1.1.3"
 # https://mockk.io/
-mockk = "1.13.2"
+mockk = "1.13.4"
 # https://github.com/square/leakcanary/releases
-leakcanary = "2.9.1"
+leakcanary = "2.10"
 # https://github.com/ChuckerTeam/chucker/releases
 chucker = "3.5.2"
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
-desugar = "1.2.2"
+desugar = "2.0.3"
 # https://github.com/google/ksp/releases
 kspPlugin = "1.7.20-1.0.7"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
 shareTarget = "1.2.0"
 # https://github.com/KasperskyLab/Kaspresso/releases
-kaspresso = "1.4.2"
+kaspresso = "1.5.1"
 # https://developer.android.com/jetpack/androidx/releases/test
 androidXTest = "1.5.0"
 # https://developer.android.com/jetpack/androidx/releases/test
