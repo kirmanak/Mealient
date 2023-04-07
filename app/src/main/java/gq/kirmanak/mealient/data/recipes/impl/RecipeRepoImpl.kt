@@ -75,12 +75,13 @@ class RecipeRepoImpl @Inject constructor(
     override suspend fun updateIsRecipeFavorite(
         recipeSlug: String,
         isFavorite: Boolean,
-    ): Result<Unit> = runCatchingExceptCancel {
+    ): Result<Boolean> = runCatchingExceptCancel {
         logger.v { "updateIsRecipeFavorite() called with: recipeSlug = $recipeSlug, isFavorite = $isFavorite" }
         dataSource.updateIsRecipeFavorite(recipeSlug, isFavorite)
         val favorites = dataSource.getFavoriteRecipes()
         storage.updateFavoriteRecipes(favorites)
         pagingSourceFactory.invalidate()
+        favorites.contains(recipeSlug)
     }.onFailure {
         logger.e(it) { "Can't update recipe's is favorite status" }
     }
