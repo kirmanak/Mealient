@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.data.baseurl
 
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_VERSION
 import gq.kirmanak.mealient.test.BaseUnitTest
@@ -96,21 +95,21 @@ class ServerInfoRepoTest : BaseUnitTest() {
         coVerify { storage.storeServerVersion(TEST_VERSION) }
     }
 
-    @Test(expected = NetworkError.NotMealie::class)
-    fun `when data source has invalid value expect getVersion to throw`() = runTest {
+    @Test
+    fun `when data source has invalid value expect getVersion to return v1`() = runTest {
+        coEvery { storage.getServerVersion() } returns null
+        coEvery { storage.getBaseURL() } returns TEST_BASE_URL
+        coEvery { dataSource.getVersionInfo() } returns VersionInfo("v2.0.0")
+        assertThat(subject.getVersion()).isEqualTo(ServerVersion.V1)
+    }
+
+    @Test
+    fun `when data source has invalid value expect getVersion to save value`() = runTest {
         coEvery { storage.getServerVersion() } returns null
         coEvery { storage.getBaseURL() } returns TEST_BASE_URL
         coEvery { dataSource.getVersionInfo() } returns VersionInfo("v2.0.0")
         subject.getVersion()
-    }
-
-    @Test
-    fun `when data source has invalid value expect getVersion not to save`() = runTest {
-        coEvery { storage.getServerVersion() } returns null
-        coEvery { storage.getBaseURL() } returns TEST_BASE_URL
-        coEvery { dataSource.getVersionInfo() } returns VersionInfo("v2.0.0")
-        subject.runCatching { getVersion() }
-        coVerify(inverse = true) { storage.storeServerVersion(any()) }
+        coVerify { storage.storeServerVersion("v2.0.0") }
     }
 
     @Test
