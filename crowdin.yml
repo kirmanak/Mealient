@@ -6,6 +6,10 @@ files: [
     "translation": "/app/src/main/res/values-%two_letters_code%/strings.xml"
   },
   {
+    "source": "/app/src/main/res/values/plurals.xml",
+    "translation": "/app/src/main/res/values-%two_letters_code%/plurals.xml"
+  },
+  {
     "source": "/fastlane/metadata/android/en-US/short_description.txt",
     "translation": "/fastlane/metadata/android/%locale%/short_description.txt"
   },
