@@ -1,0 +1,1 @@
+Mealient regresará a HTTP si HTTPS no está disponible.
