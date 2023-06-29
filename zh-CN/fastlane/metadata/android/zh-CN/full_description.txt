@@ -1,0 +1,1 @@
+Mealient enables you to easily access the recipes stored in your Mealie instance using your phone.
