@@ -1,0 +1,2 @@
+Share recipes from a web browser to Mealient to save them in Mealie.
+Fixed a case when "No recipes" text was shown on top of recipes.
