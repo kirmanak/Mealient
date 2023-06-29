@@ -1,3 +1,5 @@
+[![Crowdin](https://badges.crowdin.net/mealient/localized.svg)](https://crowdin.com/project/mealient)
+
 <a href='https://play.google.com/store/apps/details?id=gq.kirmanak.mealient&utm_source=github&utm_campaign=readme&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="200" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 <a href="https://f-droid.org/packages/gq.kirmanak.mealient">
     <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
