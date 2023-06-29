@@ -4,5 +4,6 @@
 		<item quantity="one">Хорошо (%d секунда)</item>
 		<item quantity="few">Хорошо (%d секунды)</item>
 		<item quantity="many">Хорошо (%d секунд)</item>
+		<item quantity="other">Хорошо (%d секунд)</item>
 	</plurals>
 </resources>
