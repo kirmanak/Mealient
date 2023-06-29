@@ -1,0 +1,2 @@
+Mealient generará un token de API y lo utilizará en lugar del correo electrónico y la contraseña.
+La aplicación permitirá eliminar recetas o marcarlas como favoritas.
