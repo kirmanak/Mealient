@@ -1,0 +1,1 @@
+Unofficial client for the self-hosted recipe manager Mealie.
