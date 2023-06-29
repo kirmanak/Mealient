@@ -1,0 +1,1 @@
+Mealient will fallback to HTTP if HTTPS is not available.
