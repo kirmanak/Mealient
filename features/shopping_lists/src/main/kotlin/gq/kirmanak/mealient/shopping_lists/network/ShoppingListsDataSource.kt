@@ -2,11 +2,8 @@ package gq.kirmanak.mealient.shopping_lists.network
 
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListsInfo
 
 interface ShoppingListsDataSource {
-
-    suspend fun getPage(page: Int, perPage: Int): ShoppingListsInfo
 
     suspend fun getAllShoppingLists(): List<ShoppingListInfo>
 

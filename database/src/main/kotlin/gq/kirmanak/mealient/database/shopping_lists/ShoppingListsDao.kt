@@ -1,12 +1,10 @@
 package gq.kirmanak.mealient.database.shopping_lists
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
@@ -14,13 +12,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface ShoppingListsDao {
-
-    @Query("SELECT * FROM shopping_lists")
-    fun queryShoppingListsByPages(): PagingSource<Int, ShoppingListEntity>
-
-    @Transaction
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertShoppingLists(shoppingLists: List<ShoppingListEntity>)
 
     @Query("DELETE FROM shopping_lists")
     suspend fun deleteAllShoppingLists()

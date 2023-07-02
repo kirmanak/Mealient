@@ -1,12 +1,8 @@
 package gq.kirmanak.mealient.shopping_lists.repo
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.shopping_lists.ShoppingListsStorage
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
@@ -18,30 +14,13 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OptIn(ExperimentalPagingApi::class)
 @Singleton
 class ShoppingListsRepoImpl @Inject constructor(
-    private val remoteMediator: ShoppingListsRemoteMediator,
-    private val sourceFactory: ShoppingListsPagingSourceFactory,
     private val storage: ShoppingListsStorage,
     private val dataSource: ShoppingListsDataSource,
     private val logger: Logger,
     private val modelMapper: ModelMapper,
 ) : ShoppingListsRepo {
-
-    override fun createPager(): Pager<Int, ShoppingListEntity> {
-        logger.v { "createPager() called" }
-        val pagingConfig = PagingConfig(
-            pageSize = LOAD_PAGE_SIZE,
-            enablePlaceholders = true,
-            initialLoadSize = INITIAL_LOAD_PAGE_SIZE,
-        )
-        return Pager(
-            config = pagingConfig,
-            remoteMediator = remoteMediator,
-            pagingSourceFactory = sourceFactory,
-        )
-    }
 
     override fun shoppingListWithItemsFlow(id: String): Flow<ShoppingListWithItems> {
         logger.v { "getShoppingList() called with: id = $id" }
@@ -98,10 +77,5 @@ class ShoppingListsRepoImpl @Inject constructor(
     override suspend fun getShoppingLists(): List<ShoppingListInfo> {
         logger.v { "getShoppingLists() called" }
         return dataSource.getAllShoppingLists()
-    }
-
-    companion object {
-        private const val LOAD_PAGE_SIZE = 50
-        private const val INITIAL_LOAD_PAGE_SIZE = LOAD_PAGE_SIZE * 3
     }
 }
