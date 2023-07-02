@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.shopping_lists.repo
 import androidx.paging.Pager
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
+import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import kotlinx.coroutines.flow.Flow
 
 interface ShoppingListsRepo {
@@ -16,4 +17,6 @@ interface ShoppingListsRepo {
     suspend fun updateIsShoppingListItemChecked(id: String, isChecked: Boolean)
 
     suspend fun clearLocalData()
+
+    suspend fun getShoppingLists(): List<ShoppingListInfo>
 }

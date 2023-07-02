@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.shopping_lists.network
 
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListsInfo
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.model_mapper.ModelMapper
@@ -17,6 +18,11 @@ class ShoppingListsDataSourceImpl @Inject constructor(
         page: Int,
         perPage: Int
     ): ShoppingListsInfo = modelMapper.toShoppingListsInfo(v1Source.getShoppingLists(page, perPage))
+
+    override suspend fun getAllShoppingLists(): List<ShoppingListInfo> {
+        val response = v1Source.getShoppingLists(1, -1)
+        return response.items.map { modelMapper.toShoppingListInfo(it) }
+    }
 
     override suspend fun getShoppingList(
         id: String

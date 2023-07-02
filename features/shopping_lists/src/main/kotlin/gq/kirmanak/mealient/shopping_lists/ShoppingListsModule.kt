@@ -10,6 +10,8 @@ import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsPagingSourceFactory
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsPagingSourceFactoryImpl
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepoImpl
+import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactory
+import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactoryImpl
 import javax.inject.Singleton
 
 @Module
@@ -27,4 +29,7 @@ interface ShoppingListsModule {
     @Binds
     @Singleton
     fun bindShoppingListsPagingSourceFactory(impl: ShoppingListsPagingSourceFactoryImpl): ShoppingListsPagingSourceFactory
+
+    @Binds
+    fun bindLoadingHelperFactory(impl: LoadingHelperFactoryImpl): LoadingHelperFactory
 }

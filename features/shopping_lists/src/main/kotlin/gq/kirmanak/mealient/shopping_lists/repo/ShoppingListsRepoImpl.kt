@@ -10,6 +10,7 @@ import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
+import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSource
@@ -92,6 +93,11 @@ class ShoppingListsRepoImpl @Inject constructor(
     override suspend fun clearLocalData() {
         logger.v { "clearLocalData() called" }
         storage.clearLocalData()
+    }
+
+    override suspend fun getShoppingLists(): List<ShoppingListInfo> {
+        logger.v { "getShoppingLists() called" }
+        return dataSource.getAllShoppingLists()
     }
 
     companion object {

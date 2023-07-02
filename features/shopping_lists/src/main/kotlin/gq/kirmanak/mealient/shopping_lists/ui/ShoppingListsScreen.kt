@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -23,6 +24,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,22 +35,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gq.kirmanak.mealient.AppTheme
 import gq.kirmanak.mealient.Dimens
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
 import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.CenteredProgressIndicator
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
-import kotlinx.coroutines.flow.Flow
+import gq.kirmanak.mealient.shopping_lists.util.LoadingState
+import gq.kirmanak.mealient.shopping_lists.util.LoadingStateNoData
+import gq.kirmanak.mealient.shopping_lists.util.data
+import gq.kirmanak.mealient.shopping_lists.util.error
+import gq.kirmanak.mealient.shopping_lists.util.isLoading
+import gq.kirmanak.mealient.shopping_lists.util.isRefreshing
 import kotlinx.coroutines.launch
 
 @RootNavGraph(start = true)
@@ -58,62 +61,33 @@ fun ShoppingListsScreen(
     navigator: DestinationsNavigator,
     shoppingListsViewModel: ShoppingListsViewModel = hiltViewModel(),
 ) {
-    val items = shoppingListsViewModel.pages.collectAsLazyPagingItems()
-
-    RetryWhenRetryNeeded(
-        items = items,
-        needRetryFlow = shoppingListsViewModel.needRetryFlow,
-    )
+    val loadingState = shoppingListsViewModel.loadingState.collectAsState()
 
     ShoppingListScreenContent(
-        items = items,
+        loadingState = loadingState.value,
         onItemClick = { clickedEntity ->
-            val shoppingListId = clickedEntity.remoteId
+            val shoppingListId = clickedEntity.id
             navigator.navigate(ShoppingListScreenDestination(shoppingListId))
+        },
+        onRefresh = {
+            shoppingListsViewModel.refresh()
         }
     )
-}
-
-@Composable
-private fun RetryWhenRetryNeeded(
-    items: LazyPagingItems<ShoppingListEntity>,
-    needRetryFlow: Flow<Boolean>,
-    logger: Logger = getComposeEntryPoint().provideLogger(),
-) {
-    val scope = rememberCoroutineScope()
-    LaunchedEffect(items) {
-        scope.launch {
-            needRetryFlow.collect { needRetry ->
-                logger.d { "RetryWhenRetryNeeded: needRetry = $needRetry" }
-                if (needRetry) items.retry()
-            }
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun ShoppingListScreenContent(
-    items: LazyPagingItems<ShoppingListEntity>,
-    onItemClick: (ShoppingListEntity) -> Unit,
+    loadingState: LoadingState<List<ShoppingListInfo>>,
+    onItemClick: (ShoppingListInfo) -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
-    logger: Logger = getComposeEntryPoint().provideLogger(),
 ) {
-    val loadError = items.firstMediatorErrorOrNull()
-    val isRefreshing = items.isMediatorRefreshing()
     val refreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = {
-            logger.d { "Refreshing shopping lists" }
-            items.refresh()
-        },
+        refreshing = loadingState.isRefreshing,
+        onRefresh = onRefresh,
     )
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
-
-    val isListEmpty = items.itemCount == 0
-    val isContentRefreshing = items.isLoading()
-
-    logger.d { "ShoppingListScreenContent: itemCount = ${items.itemCount}, loadStates = ${items.loadState}" }
 
     Scaffold(
         modifier = modifier,
@@ -123,36 +97,40 @@ private fun ShoppingListScreenContent(
             .padding(paddingValues)
             .fillMaxSize()
 
+        val list = loadingState.data ?: emptyList()
+        val loadError = loadingState.error
+
         when {
-            isListEmpty && isContentRefreshing -> {
+            loadingState is LoadingStateNoData.InitialLoad -> {
                 CenteredProgressIndicator(modifier = innerModifier)
             }
-            isListEmpty -> {
+
+            !loadingState.isLoading && list.isEmpty() -> {
                 EmptyListError(
                     loadError = loadError,
                     modifier = innerModifier,
-                    onRetry = {
-                        logger.d { "Retrying shopping lists request" }
-                        items.retry()
-                    }
+                    onRetry = onRefresh,
                 )
             }
+
             else -> {
                 Box(
                     modifier = innerModifier.pullRefresh(refreshState),
                 ) {
-                    LazyShoppingListsColumn(items = items, onItemClick = onItemClick)
+                    LazyShoppingListsColumn(items = list, onItemClick = onItemClick)
 
                     PullRefreshIndicator(
                         modifier = Modifier.align(Alignment.TopCenter),
-                        refreshing = isRefreshing,
+                        refreshing = loadingState.isRefreshing,
                         state = refreshState
                     )
                 }
 
-                loadError?.let { error ->
-                    ErrorSnackbar(error = error, snackbarHostState = snackbarHostState)
-                } ?: snackbarHostState.currentSnackbarData?.dismiss()
+                if (loadError == null) {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                } else {
+                    ErrorSnackbar(error = loadError, snackbarHostState = snackbarHostState)
+                }
             }
         }
     }
@@ -197,8 +175,8 @@ private fun PreviewEmptyListError() {
 
 @Composable
 private fun LazyShoppingListsColumn(
-    items: LazyPagingItems<ShoppingListEntity>,
-    onItemClick: (ShoppingListEntity) -> Unit,
+    items: List<ShoppingListInfo>,
+    onItemClick: (ShoppingListInfo) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
@@ -247,15 +225,15 @@ private fun ErrorSnackbar(
 @Preview
 private fun PreviewShoppingListCard() {
     AppTheme {
-        ShoppingListCard(shoppingListEntity = ShoppingListEntity("1", "Weekend shopping"))
+        ShoppingListCard(shoppingListEntity = ShoppingListInfo("1", "Weekend shopping"))
     }
 }
 
 @Composable
 private fun ShoppingListCard(
-    shoppingListEntity: ShoppingListEntity?,
+    shoppingListEntity: ShoppingListInfo?,
     modifier: Modifier = Modifier,
-    onItemClick: (ShoppingListEntity) -> Unit = {},
+    onItemClick: (ShoppingListInfo) -> Unit = {},
 ) {
     Card(
         modifier = modifier
@@ -280,24 +258,3 @@ private fun ShoppingListCard(
     }
 }
 
-private fun <T : Any> LazyPagingItems<T>.isMediatorRefreshing(): Boolean {
-    return loadState.mediator?.refresh is LoadState.Loading
-}
-
-private fun <T : Any> LazyPagingItems<T>.isLoading(): Boolean {
-    return listOf(
-        loadState.mediator?.refresh,
-        loadState.mediator?.append,
-        loadState.append,
-        loadState.refresh,
-        loadState.source.refresh,
-        loadState.source.append,
-    ).any { it is LoadState.Loading }
-}
-
-private fun <T : Any> LazyPagingItems<T>.firstMediatorErrorOrNull(): Throwable? {
-    return listOf(
-        loadState.mediator?.refresh,
-        loadState.mediator?.append,
-    ).filterIsInstance<LoadState.Error>().firstOrNull()?.error
-}
