@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="shopping_lists_screen_cart_icon">Winkelwagen</string>
+	<string name="shopping_list_screen_unknown_error">Onbekende fout</string>
+	<string name="shopping_list_screen_empty_list">%1$s leeg is</string>
+	<string name="shopping_lists_screen_empty">Geen boodschappenlijstjes gevonden</string>
+	<string name="shopping_lists_screen_unauthorized_error">Authenticatie is vereist</string>
+	<string name="shopping_lists_screen_no_connection">Geen serververbinding</string>
+	<string name="shopping_lists_screen_unknown_error">Onbekende fout</string>
+	<string name="shopping_lists_screen_empty_button_refresh">Probeer het opnieuw</string>
+</resources>
