@@ -28,8 +28,6 @@ dependencies {
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
 
-    implementation(libs.androidx.paging.compose)
-
     implementation(libs.androidx.hilt.navigationCompose)
 
     implementation(libs.jetbrains.kotlinx.coroutinesAndroid)

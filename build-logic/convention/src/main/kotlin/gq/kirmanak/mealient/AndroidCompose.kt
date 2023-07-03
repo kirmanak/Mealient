@@ -19,7 +19,7 @@ internal fun Project.configureAndroidCompose(
     val variants = when (commonExtension) {
         is BaseAppModuleExtension -> commonExtension.applicationVariants
         is LibraryExtension -> commonExtension.libraryVariants
-        else -> throw IllegalStateException("Unsupported extension type")
+        else -> error("Unsupported extension type")
     }
 
     commonExtension.apply {
