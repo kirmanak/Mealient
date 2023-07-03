@@ -8,11 +8,6 @@ sealed class LoadingStateWithData<out T> : LoadingState<T>() {
 
     data class Refreshing<T>(override val data: T) : LoadingStateWithData<T>()
 
-    data class RefreshError<T>(
-        override val data: T,
-        val error: Throwable
-    ) : LoadingStateWithData<T>()
-
     data class Success<T>(override val data: T) : LoadingStateWithData<T>()
 
 }
@@ -27,7 +22,6 @@ sealed class LoadingStateNoData<out T> : LoadingState<T>() {
 val <T> LoadingState<T>.isLoading: Boolean
     get() = when (this) {
         is LoadingStateNoData.LoadError,
-        is LoadingStateWithData.RefreshError,
         is LoadingStateWithData.Success -> false
 
         is LoadingStateNoData.InitialLoad,
@@ -37,7 +31,6 @@ val <T> LoadingState<T>.isLoading: Boolean
 val <T> LoadingState<T>.error: Throwable?
     get() = when (this) {
         is LoadingStateNoData.LoadError -> error
-        is LoadingStateWithData.RefreshError -> error
         is LoadingStateNoData.InitialLoad,
         is LoadingStateWithData.Refreshing,
         is LoadingStateWithData.Success -> null
@@ -53,7 +46,6 @@ val <T> LoadingState<T>.isRefreshing: Boolean
     get() = when (this) {
         is LoadingStateWithData.Refreshing -> true
         is LoadingStateWithData.Success,
-        is LoadingStateWithData.RefreshError,
         is LoadingStateNoData.InitialLoad,
         is LoadingStateNoData.LoadError -> false
     }

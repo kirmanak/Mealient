@@ -13,5 +13,5 @@ class LoadingHelperFactoryImpl @Inject constructor(
     override fun <T> create(
         coroutineScope: CoroutineScope,
         fetch: suspend () -> T
-    ): LoadingHelper<T> = LoadingHelperImpl(logger, coroutineScope, fetch)
+    ): LoadingHelper<T> = LoadingHelperImpl(logger, fetch)
 }

@@ -6,5 +6,5 @@ interface LoadingHelper<T> {
 
     val loadingState: StateFlow<LoadingState<T>>
 
-    fun refresh()
+    suspend fun refresh(): Result<T>
 }

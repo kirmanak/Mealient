@@ -24,8 +24,10 @@ import gq.kirmanak.mealient.shopping_lists.util.isRefreshing
 fun <T> LazyColumnWithLoadingState(
     modifier: Modifier = Modifier,
     loadingState: LoadingState<List<T>>,
-    onRefresh: () -> Unit,
+    errorToShowInSnackbar: Throwable?,
+    onSnackbarShown: () -> Unit,
     defaultEmptyListError: String,
+    onRefresh: () -> Unit,
     lazyColumnContent: LazyListScope.(List<T>) -> Unit,
 ) {
     val refreshState = rememberPullRefreshState(
@@ -43,7 +45,6 @@ fun <T> LazyColumnWithLoadingState(
             .fillMaxSize()
 
         val list = loadingState.data ?: emptyList()
-        val loadError = loadingState.error
 
         when {
             loadingState is LoadingStateNoData.InitialLoad -> {
@@ -52,7 +53,7 @@ fun <T> LazyColumnWithLoadingState(
 
             !loadingState.isLoading && list.isEmpty() -> {
                 EmptyListError(
-                    loadError = loadError,
+                    loadError = loadingState.error,
                     onRetry = onRefresh,
                     defaultError = defaultEmptyListError,
                     modifier = innerModifier,
@@ -67,10 +68,14 @@ fun <T> LazyColumnWithLoadingState(
                     lazyColumnContent = { lazyColumnContent(list) },
                 )
 
-                if (loadError == null) {
+                if (errorToShowInSnackbar == null) {
                     snackbarHostState.currentSnackbarData?.dismiss()
                 } else {
-                    ErrorSnackbar(error = loadError, snackbarHostState = snackbarHostState)
+                    ErrorSnackbar(
+                        error = errorToShowInSnackbar,
+                        snackbarHostState = snackbarHostState,
+                        onSnackbarShown = onSnackbarShown,
+                    )
                 }
             }
         }

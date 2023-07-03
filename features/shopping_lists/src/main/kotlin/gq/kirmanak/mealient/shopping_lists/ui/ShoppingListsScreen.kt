@@ -35,9 +35,12 @@ fun ShoppingListsScreen(
     shoppingListsViewModel: ShoppingListsViewModel = hiltViewModel(),
 ) {
     val loadingState = shoppingListsViewModel.loadingState.collectAsState()
+    val errorToShowInSnackbar = shoppingListsViewModel.errorToShowInSnackBar
 
     LazyColumnWithLoadingState(
         loadingState = loadingState.value,
+        errorToShowInSnackbar = errorToShowInSnackbar,
+        onSnackbarShown = shoppingListsViewModel::onSnackbarShown,
         onRefresh = shoppingListsViewModel::refresh,
         defaultEmptyListError = stringResource(R.string.shopping_lists_screen_empty),
         lazyColumnContent = { items ->

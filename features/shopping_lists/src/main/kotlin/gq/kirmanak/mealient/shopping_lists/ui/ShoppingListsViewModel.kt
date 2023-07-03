@@ -1,5 +1,8 @@
 package gq.kirmanak.mealient.shopping_lists.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +27,9 @@ class ShoppingListsViewModel @Inject constructor(
     }
     val loadingState = loadingHelper.loadingState
 
+    private var _errorToShowInSnackbar by mutableStateOf<Throwable?>(null)
+    val errorToShowInSnackBar: Throwable? get() = _errorToShowInSnackbar
+
     init {
         refresh()
         listenToAuthState(authRepo)
@@ -41,6 +47,13 @@ class ShoppingListsViewModel @Inject constructor(
 
     fun refresh() {
         logger.v { "refresh() called" }
-        loadingHelper.refresh()
+        viewModelScope.launch {
+            _errorToShowInSnackbar = loadingHelper.refresh().exceptionOrNull()
+        }
+    }
+
+    fun onSnackbarShown() {
+        logger.v { "onSnackbarShown() called" }
+        _errorToShowInSnackbar = null
     }
 }

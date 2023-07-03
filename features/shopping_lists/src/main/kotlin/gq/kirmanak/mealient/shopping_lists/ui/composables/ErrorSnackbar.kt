@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 fun ErrorSnackbar(
     error: Throwable,
     snackbarHostState: SnackbarHostState,
+    onSnackbarShown: () -> Unit,
 ) {
     val text = getErrorMessage(error = error)
     val scope = rememberCoroutineScope()
@@ -17,6 +18,7 @@ fun ErrorSnackbar(
     LaunchedEffect(snackbarHostState) {
         scope.launch {
             snackbarHostState.showSnackbar(message = text)
+            onSnackbarShown()
         }
     }
 }

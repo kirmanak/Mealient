@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gq.kirmanak.mealient.architecture.valueUpdatesOnly
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
@@ -19,9 +18,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -62,20 +58,13 @@ internal class ShoppingListViewModel @Inject constructor(
 
     private fun showSnackBarOnRefreshError() {
         logger.v { "showSnackBarOnRefreshError() called" }
-        loadingHelper.loadingState
-            .valueUpdatesOnly()
-            .filterIsInstance<LoadingStateWithData.RefreshError<FullShoppingListInfo>>()
-            .onEach {
-                val message = it.error.message
-                if (message != null) {
-                    _snackbarState.value = SnackbarState.Visible(message)
-                }
-            }.launchIn(viewModelScope)
     }
 
     fun refreshShoppingList() {
         logger.v { "refreshShoppingList() called" }
-        loadingHelper.refresh()
+        viewModelScope.launch {
+            loadingHelper.refresh()
+        }
     }
 
     private fun buildLoadingState(
@@ -91,17 +80,6 @@ internal class ShoppingListViewModel @Inject constructor(
 
             is LoadingStateNoData.LoadError -> {
                 LoadingStateNoData.LoadError(loadingState.error)
-            }
-
-            is LoadingStateWithData.RefreshError -> {
-                LoadingStateWithData.RefreshError(
-                    ShoppingListScreenState(
-                        shoppingList = loadingState.data,
-                        disabledItems = disabledItems,
-                        snackbarState = snackbarState,
-                    ),
-                    error = loadingState.error,
-                )
             }
 
             is LoadingStateWithData.Refreshing -> {
