@@ -1,13 +1,18 @@
 package gq.kirmanak.mealient.shopping_lists.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,6 +49,7 @@ import gq.kirmanak.mealient.shopping_lists.ui.composables.CenteredText
 import gq.kirmanak.mealient.shopping_lists.util.LoadingState
 import gq.kirmanak.mealient.shopping_lists.util.LoadingStateNoData
 import gq.kirmanak.mealient.shopping_lists.util.LoadingStateWithData
+import gq.kirmanak.mealient.shopping_lists.util.isRefreshing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
@@ -63,21 +69,28 @@ internal fun ShoppingListScreen(
 
     ShoppingListScreenContent(
         state = screenState.value,
+        onRefresh = shoppingListsViewModel::refreshShoppingList,
         onItemCheckedChange = shoppingListsViewModel::onItemCheckedChange,
         onSnackbarShown = shoppingListsViewModel::onSnackbarShown,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun ShoppingListScreenContent(
     state: LoadingState<ShoppingListScreenState>,
     modifier: Modifier = Modifier,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    scope: CoroutineScope = rememberCoroutineScope(),
     onItemCheckedChange: (ShoppingListItemInfo, Boolean) -> Unit = { _, _ -> },
     onSnackbarShown: () -> Unit = {},
+    onRefresh: () -> Unit = {},
 ) {
+    val refreshState = rememberPullRefreshState(
+        refreshing = state.isRefreshing,
+        onRefresh = onRefresh,
+    )
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -93,7 +106,13 @@ internal fun ShoppingListScreenContent(
                 }
 
                 is LoadingStateWithData -> {
-                    ShoppingListData(state.data, innerModifier, onItemCheckedChange)
+                    ShoppingListData(
+                        screenState = state.data,
+                        isRefreshing = state.isRefreshing,
+                        refreshState = refreshState,
+                        modifier = innerModifier,
+                        onItemCheckedChange = onItemCheckedChange
+                    )
                     ShortSnackbar(
                         snackbarState = state.data.snackbarState,
                         snackbarHostState = snackbarHostState,
@@ -129,9 +148,12 @@ private fun ShortSnackbar(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ShoppingListData(
     screenState: ShoppingListScreenState,
+    isRefreshing: Boolean,
+    refreshState: PullRefreshState,
     modifier: Modifier,
     onItemCheckedChange: (ShoppingListItemInfo, Boolean) -> Unit
 ) {
@@ -142,7 +164,14 @@ private fun ShoppingListData(
     if (shoppingListWithItems.items.isEmpty()) {
         CenteredEmptyListText(shoppingListWithItems, modifier)
     } else {
-        ShoppingListItemsColumn(items, disabledItems, modifier, onItemCheckedChange)
+        ShoppingListItemsColumn(
+            items = items,
+            disabledItems = disabledItems,
+            isRefreshing = isRefreshing,
+            refreshState = refreshState,
+            modifier = modifier,
+            onItemCheckedChange = onItemCheckedChange
+        )
     }
 }
 
@@ -160,17 +189,20 @@ private fun CenteredEmptyListText(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ShoppingListItemsColumn(
     items: List<ShoppingListItemInfo>,
     disabledItems: List<ShoppingListItemInfo>,
+    isRefreshing: Boolean,
+    refreshState: PullRefreshState,
     modifier: Modifier = Modifier,
     onItemCheckedChange: (ShoppingListItemInfo, Boolean) -> Unit
 ) {
     val firstCheckedItemIndex = items.indexOfFirst { it.checked }
 
-    Column(
-        modifier = modifier.fillMaxSize(),
+    Box(
+        modifier = modifier.pullRefresh(refreshState),
     ) {
         LazyColumn {
             itemsIndexed(items) { index, item ->
@@ -183,6 +215,12 @@ private fun ShoppingListItemsColumn(
                 }
             }
         }
+
+        PullRefreshIndicator(
+            modifier = Modifier.align(Alignment.TopCenter),
+            refreshing = isRefreshing,
+            state = refreshState
+        )
     }
 }
 

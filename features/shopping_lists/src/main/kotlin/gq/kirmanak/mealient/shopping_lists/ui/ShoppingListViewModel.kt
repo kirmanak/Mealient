@@ -54,7 +54,7 @@ internal class ShoppingListViewModel @Inject constructor(
         refreshShoppingList()
     }
 
-    private fun refreshShoppingList() {
+    fun refreshShoppingList() {
         logger.v { "refreshShoppingList() called" }
         loadingHelper.refresh()
     }
