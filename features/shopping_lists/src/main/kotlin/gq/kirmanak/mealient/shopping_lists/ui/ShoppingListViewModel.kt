@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gq.kirmanak.mealient.architecture.valueUpdatesOnly
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
@@ -16,7 +17,11 @@ import gq.kirmanak.mealient.shopping_lists.util.LoadingStateNoData
 import gq.kirmanak.mealient.shopping_lists.util.LoadingStateWithData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -42,7 +47,7 @@ internal class ShoppingListViewModel @Inject constructor(
         shoppingListsRepo.getShoppingList(args.shoppingListId)
     }
 
-    val loadingState = combine(
+    val loadingState: StateFlow<LoadingState<ShoppingListScreenState>> = combine(
         loadingHelper.loadingState,
         _disabledItems,
         _snackbarState,
@@ -52,6 +57,20 @@ internal class ShoppingListViewModel @Inject constructor(
 
     init {
         refreshShoppingList()
+        showSnackBarOnRefreshError()
+    }
+
+    private fun showSnackBarOnRefreshError() {
+        logger.v { "showSnackBarOnRefreshError() called" }
+        loadingHelper.loadingState
+            .valueUpdatesOnly()
+            .filterIsInstance<LoadingStateWithData.RefreshError<FullShoppingListInfo>>()
+            .onEach {
+                val message = it.error.message
+                if (message != null) {
+                    _snackbarState.value = SnackbarState.Visible(message)
+                }
+            }.launchIn(viewModelScope)
     }
 
     fun refreshShoppingList() {
@@ -113,15 +132,15 @@ internal class ShoppingListViewModel @Inject constructor(
             _disabledItems.update { it + item }
             val result = runCatchingExceptCancel {
                 shoppingListsRepo.updateIsShoppingListItemChecked(item.id, isChecked)
-            }.onFailure {
-                logger.e(it) { "Failed to update item's checked state" }
-            }.onSuccess {
-                logger.v { "Item's checked state updated" }
             }
             _disabledItems.update { it - item }
             result.fold(
-                onSuccess = { refreshShoppingList() },
+                onSuccess = {
+                    logger.v { "Item's checked state updated" }
+                    refreshShoppingList()
+                },
                 onFailure = { error ->
+                    logger.e(error) { "Failed to update item's checked state" }
                     error.message?.let {
                         _snackbarState.value = SnackbarState.Visible(it)
                     }
