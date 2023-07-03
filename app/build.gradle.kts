@@ -20,7 +20,7 @@ android {
         versionName = "0.3.13"
         testInstrumentationRunner = "gq.kirmanak.mealient.MealientTestRunner"
         testInstrumentationRunnerArguments += mapOf("clearPackageData" to "true")
-        resourceConfigurations += listOf("en", "es", "ru")
+        resourceConfigurations += listOf("en", "es", "ru", "fr", "nl", "pt", "de")
     }
 
     signingConfigs {
