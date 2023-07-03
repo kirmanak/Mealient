@@ -81,11 +81,11 @@ internal class ShoppingListViewModel @Inject constructor(
         disabledItemIds: Set<String>,
     ): LoadingState<ShoppingListScreenState> {
         logger.v { "buildLoadingState() called with: loadingState = $loadingState, disabledItems = $disabledItemIds" }
-        return loadingState.map {
-            val items = it.items.map { item ->
-                ShoppingListItemState(item = item, isDisabled = item.id in disabledItemIds)
-            }
-            ShoppingListScreenState(name = it.name, items = items)
+        return loadingState.map { shoppingList ->
+            val items = shoppingList.items
+                .sortedBy { it.checked }
+                .map { ShoppingListItemState(item = it, isDisabled = it.id in disabledItemIds) }
+            ShoppingListScreenState(name = shoppingList.name, items = items)
         }
     }
 
