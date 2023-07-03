@@ -1,5 +1,8 @@
 package gq.kirmanak.mealient.data.recipes.network
 
+import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
+import gq.kirmanak.mealient.datasource.models.RecipeSummaryInfo
+
 interface RecipeDataSource {
     suspend fun requestRecipes(start: Int, limit: Int): List<RecipeSummaryInfo>
 

@@ -17,11 +17,13 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.R
+import gq.kirmanak.mealient.architecture.valueUpdatesOnly
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.databinding.FragmentRecipesListBinding
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.extensions.*
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.ui.CheckableMenuItem
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import gq.kirmanak.mealient.ui.recipes.RecipesListFragmentDirections.Companion.actionRecipesFragmentToRecipeInfoFragment
 import gq.kirmanak.mealient.ui.recipes.images.RecipePreloaderFactory
@@ -54,7 +56,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
             it.copy(
                 navigationVisible = true,
                 searchVisible = true,
-                checkedMenuItemId = R.id.recipes_list
+                checkedMenuItem = CheckableMenuItem.RecipesList,
             )
         }
         collectWhenViewResumed(viewModel.showFavoriteIcon) { showFavoriteIcon ->

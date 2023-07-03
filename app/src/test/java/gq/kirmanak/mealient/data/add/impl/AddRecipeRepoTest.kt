@@ -3,10 +3,12 @@ package gq.kirmanak.mealient.data.add.impl
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.add.AddRecipeDataSource
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
+import gq.kirmanak.mealient.datasource_test.PORRIDGE_ADD_RECIPE_INFO
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeStorage
+import gq.kirmanak.mealient.datastore_test.PORRIDGE_RECIPE_DRAFT
+import gq.kirmanak.mealient.model_mapper.ModelMapper
+import gq.kirmanak.mealient.model_mapper.ModelMapperImpl
 import gq.kirmanak.mealient.test.BaseUnitTest
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_INFO
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_DRAFT
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,12 +26,14 @@ class AddRecipeRepoTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var storage: AddRecipeStorage
 
+    private val modelMapper: ModelMapper = ModelMapperImpl()
+
     private lateinit var subject: AddRecipeRepo
 
     @Before
     override fun setUp() {
         super.setUp()
-        subject = AddRecipeRepoImpl(dataSource, storage, logger)
+        subject = AddRecipeRepoImpl(dataSource, storage, logger, modelMapper)
     }
 
     @Test

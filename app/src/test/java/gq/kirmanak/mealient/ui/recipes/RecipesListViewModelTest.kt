@@ -4,8 +4,8 @@ import androidx.lifecycle.asFlow
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.database.CAKE_RECIPE_SUMMARY_ENTITY
 import gq.kirmanak.mealient.test.BaseUnitTest
-import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_RECIPE_SUMMARY_ENTITY
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

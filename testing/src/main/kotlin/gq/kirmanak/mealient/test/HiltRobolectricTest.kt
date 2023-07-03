@@ -8,6 +8,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @Config(application = HiltTestApplication::class, manifest = Config.NONE)
@@ -16,7 +17,8 @@ abstract class HiltRobolectricTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    protected val logger: Logger = FakeLogger()
+    @Inject
+    lateinit var logger: Logger
 
     @Before
     fun inject() {

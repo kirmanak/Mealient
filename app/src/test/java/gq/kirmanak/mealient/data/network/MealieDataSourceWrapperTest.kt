@@ -5,6 +5,18 @@ import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
+import gq.kirmanak.mealient.datasource_test.PORRIDGE_ADD_RECIPE_INFO
+import gq.kirmanak.mealient.datasource_test.PORRIDGE_ADD_RECIPE_REQUEST_V0
+import gq.kirmanak.mealient.datasource_test.PORRIDGE_CREATE_RECIPE_REQUEST_V1
+import gq.kirmanak.mealient.datasource_test.PORRIDGE_FULL_RECIPE_INFO
+import gq.kirmanak.mealient.datasource_test.PORRIDGE_RECIPE_RESPONSE_V1
+import gq.kirmanak.mealient.datasource_test.PORRIDGE_RECIPE_SUMMARY_RESPONSE_V0
+import gq.kirmanak.mealient.datasource_test.PORRIDGE_RECIPE_SUMMARY_RESPONSE_V1
+import gq.kirmanak.mealient.datasource_test.PORRIDGE_UPDATE_RECIPE_REQUEST_V1
+import gq.kirmanak.mealient.datasource_test.RECIPE_SUMMARY_PORRIDGE_V0
+import gq.kirmanak.mealient.datasource_test.RECIPE_SUMMARY_PORRIDGE_V1
+import gq.kirmanak.mealient.model_mapper.ModelMapper
+import gq.kirmanak.mealient.model_mapper.ModelMapperImpl
 import gq.kirmanak.mealient.test.AuthImplTestData.FAVORITE_RECIPES_LIST
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION_V0
@@ -12,16 +24,6 @@ import gq.kirmanak.mealient.test.AuthImplTestData.TEST_SERVER_VERSION_V1
 import gq.kirmanak.mealient.test.AuthImplTestData.USER_INFO_V0
 import gq.kirmanak.mealient.test.AuthImplTestData.USER_INFO_V1
 import gq.kirmanak.mealient.test.BaseUnitTest
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_INFO
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_REQUEST_V0
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_CREATE_RECIPE_REQUEST_V1
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_FULL_RECIPE_INFO
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_RESPONSE_V1
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_RESPONSE_V0
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_RECIPE_SUMMARY_RESPONSE_V1
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_UPDATE_RECIPE_REQUEST_V1
-import gq.kirmanak.mealient.test.RecipeImplTestData.RECIPE_SUMMARY_PORRIDGE_V0
-import gq.kirmanak.mealient.test.RecipeImplTestData.RECIPE_SUMMARY_PORRIDGE_V1
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,12 +47,14 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var v1Source: MealieDataSourceV1
 
+    private val modelMapper: ModelMapper = ModelMapperImpl()
+
     lateinit var subject: MealieDataSourceWrapper
 
     @Before
     override fun setUp() {
         super.setUp()
-        subject = MealieDataSourceWrapper(serverInfoRepo, v0Source, v1Source)
+        subject = MealieDataSourceWrapper(serverInfoRepo, v0Source, v1Source, modelMapper)
         coEvery { v0Source.requestUserInfo() } returns USER_INFO_V0
         coEvery { v1Source.requestUserInfo() } returns USER_INFO_V1
     }

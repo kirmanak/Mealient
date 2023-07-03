@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.data.share
 
+import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
 import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.coVerify

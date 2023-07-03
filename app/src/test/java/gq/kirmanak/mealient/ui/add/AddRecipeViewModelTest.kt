@@ -2,8 +2,8 @@ package gq.kirmanak.mealient.ui.add
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
+import gq.kirmanak.mealient.datasource_test.PORRIDGE_ADD_RECIPE_INFO
 import gq.kirmanak.mealient.test.BaseUnitTest
-import gq.kirmanak.mealient.test.RecipeImplTestData.PORRIDGE_ADD_RECIPE_INFO
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK

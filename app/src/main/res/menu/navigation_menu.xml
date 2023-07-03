@@ -13,6 +13,13 @@
 		android:title="@string/menu_navigation_drawer_add_recipe" />
 
 	<item
+		android:id="@+id/shopping_lists"
+		android:visible="false"
+		android:checkable="true"
+		android:icon="@drawable/ic_shopping_cart"
+		android:title="@string/menu_navigation_drawer_shopping_lists" />
+
+	<item
 		android:id="@+id/change_url"
 		android:checkable="true"
 		android:icon="@drawable/ic_change"

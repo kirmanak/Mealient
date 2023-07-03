@@ -3,6 +3,9 @@ package gq.kirmanak.mealient.data.baseurl
 import gq.kirmanak.mealient.datasource.ServerUrlProvider
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -54,5 +57,12 @@ class ServerInfoRepoImpl @Inject constructor(
         }.onFailure {
             serverInfoStorage.storeBaseURL(oldBaseUrl, oldVersion)
         }
+    }
+
+    override fun versionUpdates(): Flow<ServerVersion> {
+        return serverInfoStorage
+            .serverVersionUpdates()
+            .filterNotNull()
+            .map { determineServerVersion(it) }
     }
 }

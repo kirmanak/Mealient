@@ -4,12 +4,13 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
-import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
+import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,6 +22,7 @@ class RecipeRepoImpl @Inject constructor(
     private val pagingSourceFactory: RecipePagingSourceFactory,
     private val dataSource: RecipeDataSource,
     private val logger: Logger,
+    private val modelMapper: ModelMapper,
 ) : RecipeRepo {
 
     override fun createPager(): Pager<Int, RecipeSummaryEntity> {
@@ -45,13 +47,21 @@ class RecipeRepoImpl @Inject constructor(
     override suspend fun refreshRecipeInfo(recipeSlug: String): Result<Unit> {
         logger.v { "refreshRecipeInfo() called with: recipeSlug = $recipeSlug" }
         return runCatchingExceptCancel {
-            storage.saveRecipeInfo(dataSource.requestRecipeInfo(recipeSlug))
+            val info = dataSource.requestRecipeInfo(recipeSlug)
+            val entity = modelMapper.toRecipeEntity(info)
+            val ingredients = info.recipeIngredients.map {
+                modelMapper.toRecipeIngredientEntity(it, entity.remoteId)
+            }
+            val instructions = info.recipeInstructions.map {
+                modelMapper.toRecipeInstructionEntity(it, entity.remoteId)
+            }
+            storage.saveRecipeInfo(entity, ingredients, instructions)
         }.onFailure {
             logger.e(it) { "loadRecipeInfo: can't update full recipe info" }
         }
     }
 
-    override suspend fun loadRecipeInfo(recipeId: String): FullRecipeEntity? {
+    override suspend fun loadRecipeInfo(recipeId: String): RecipeWithSummaryAndIngredientsAndInstructions? {
         logger.v { "loadRecipeInfo() called with: recipeId = $recipeId" }
         val recipeInfo = storage.queryRecipeInfo(recipeId)
         logger.v { "loadRecipeInfo() returned: $recipeInfo" }

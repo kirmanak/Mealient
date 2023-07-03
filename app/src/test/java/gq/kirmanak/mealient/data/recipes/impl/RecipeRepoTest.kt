@@ -3,13 +3,20 @@ package gq.kirmanak.mealient.data.recipes.impl
 import androidx.paging.LoadType
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
-import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
+import gq.kirmanak.mealient.database.BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY
+import gq.kirmanak.mealient.database.CAKE_BREAD_RECIPE_INGREDIENT_ENTITY
+import gq.kirmanak.mealient.database.CAKE_RECIPE_ENTITY
+import gq.kirmanak.mealient.database.CAKE_RECIPE_SUMMARY_ENTITY
+import gq.kirmanak.mealient.database.CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY
+import gq.kirmanak.mealient.database.FULL_CAKE_INFO_ENTITY
+import gq.kirmanak.mealient.database.MIX_CAKE_RECIPE_INSTRUCTION_ENTITY
+import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.datasource.NetworkError.Unauthorized
+import gq.kirmanak.mealient.datasource_test.CAKE_FULL_RECIPE_INFO
+import gq.kirmanak.mealient.model_mapper.ModelMapper
+import gq.kirmanak.mealient.model_mapper.ModelMapperImpl
 import gq.kirmanak.mealient.test.BaseUnitTest
-import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_FULL_RECIPE_INFO
-import gq.kirmanak.mealient.test.RecipeImplTestData.CAKE_RECIPE_SUMMARY_ENTITY
-import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -36,12 +43,21 @@ class RecipeRepoTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var pagingSourceFactory: RecipePagingSourceFactory
 
+    private val modelMapper: ModelMapper = ModelMapperImpl()
+
     lateinit var subject: RecipeRepo
 
     @Before
     override fun setUp() {
         super.setUp()
-        subject = RecipeRepoImpl(remoteMediator, storage, pagingSourceFactory, dataSource, logger)
+        subject = RecipeRepoImpl(
+            remoteMediator,
+            storage,
+            pagingSourceFactory,
+            dataSource,
+            logger,
+            modelMapper,
+        )
     }
 
     @Test
@@ -55,7 +71,18 @@ class RecipeRepoTest : BaseUnitTest() {
     fun `when refreshRecipeInfo expect call to storage`() = runTest {
         coEvery { dataSource.requestRecipeInfo(eq("cake")) } returns CAKE_FULL_RECIPE_INFO
         subject.refreshRecipeInfo("cake")
-        coVerify { storage.saveRecipeInfo(eq(CAKE_FULL_RECIPE_INFO)) }
+        coVerify {
+            storage.saveRecipeInfo(
+                eq(CAKE_RECIPE_ENTITY),
+                eq(
+                    listOf(
+                        CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY,
+                        CAKE_BREAD_RECIPE_INGREDIENT_ENTITY
+                    )
+                ),
+                eq(listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY))
+            )
+        }
     }
 
     @Test

@@ -3,8 +3,8 @@ package gq.kirmanak.mealient.ui.recipes.info
 import androidx.lifecycle.asFlow
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.database.FULL_CAKE_INFO_ENTITY
 import gq.kirmanak.mealient.test.BaseUnitTest
-import gq.kirmanak.mealient.test.RecipeImplTestData.FULL_CAKE_INFO_ENTITY
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi

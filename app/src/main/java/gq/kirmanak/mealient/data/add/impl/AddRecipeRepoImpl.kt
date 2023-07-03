@@ -1,12 +1,11 @@
 package gq.kirmanak.mealient.data.add.impl
 
 import gq.kirmanak.mealient.data.add.AddRecipeDataSource
-import gq.kirmanak.mealient.data.add.AddRecipeInfo
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
+import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeStorage
-import gq.kirmanak.mealient.extensions.toAddRecipeInfo
-import gq.kirmanak.mealient.extensions.toDraft
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.model_mapper.ModelMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -18,14 +17,15 @@ class AddRecipeRepoImpl @Inject constructor(
     private val addRecipeDataSource: AddRecipeDataSource,
     private val addRecipeStorage: AddRecipeStorage,
     private val logger: Logger,
+    private val modelMapper: ModelMapper,
 ) : AddRecipeRepo {
 
     override val addRecipeRequestFlow: Flow<AddRecipeInfo>
-        get() = addRecipeStorage.updates.map { it.toAddRecipeInfo() }
+        get() = addRecipeStorage.updates.map { modelMapper.toAddRecipeInfo(it) }
 
     override suspend fun preserve(recipe: AddRecipeInfo) {
         logger.v { "preserveRecipe() called with: recipe = $recipe" }
-        addRecipeStorage.save(recipe.toDraft())
+        addRecipeStorage.save(modelMapper.toDraft(recipe))
     }
 
     override suspend fun clear() {

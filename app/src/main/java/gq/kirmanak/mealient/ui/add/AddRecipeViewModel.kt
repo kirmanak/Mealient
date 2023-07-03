@@ -3,8 +3,8 @@ package gq.kirmanak.mealient.ui.add
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gq.kirmanak.mealient.data.add.AddRecipeInfo
 import gq.kirmanak.mealient.data.add.AddRecipeRepo
+import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.channels.Channel

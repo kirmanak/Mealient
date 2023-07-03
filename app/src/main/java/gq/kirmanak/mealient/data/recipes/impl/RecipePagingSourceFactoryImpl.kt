@@ -1,7 +1,7 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
 import androidx.paging.InvalidatingPagingSourceFactory
-import gq.kirmanak.mealient.data.recipes.db.RecipeStorage
+import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.logging.Logger
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject

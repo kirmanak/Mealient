@@ -27,7 +27,11 @@ internal fun Project.configureKotlinAndroid(
         }
 
         lint {
-            disable += listOf("ObsoleteLintCustomCheck", "IconMissingDensityFolder")
+            disable += listOf(
+                "ObsoleteLintCustomCheck",
+                "IconMissingDensityFolder",
+                "MissingTranslation"
+            )
             enable += listOf(
                 "ConvertToWebp",
                 "DuplicateStrings",

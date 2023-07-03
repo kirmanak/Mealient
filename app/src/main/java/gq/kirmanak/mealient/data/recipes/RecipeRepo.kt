@@ -1,8 +1,8 @@
 package gq.kirmanak.mealient.data.recipes
 
 import androidx.paging.Pager
-import gq.kirmanak.mealient.database.recipe.entity.FullRecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 
 interface RecipeRepo {
 
@@ -12,7 +12,7 @@ interface RecipeRepo {
 
     suspend fun refreshRecipeInfo(recipeSlug: String): Result<Unit>
 
-    suspend fun loadRecipeInfo(recipeId: String): FullRecipeEntity?
+    suspend fun loadRecipeInfo(recipeId: String): RecipeWithSummaryAndIngredientsAndInstructions?
 
     fun updateNameQuery(name: String?)
 

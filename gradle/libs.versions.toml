@@ -2,7 +2,7 @@
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
 androidGradlePlugin = "7.4.2"
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "1.7.20"
+kotlin = "1.8.22"
 # https://developer.android.com/jetpack/androidx/releases/navigation
 googleNavigation = "2.5.3"
 # https://dagger.dev/hilt/gradle-setup
@@ -74,7 +74,7 @@ chucker = "3.5.2"
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
 desugar = "2.0.3"
 # https://github.com/google/ksp/releases
-kspPlugin = "1.7.20-1.0.7"
+kspPlugin = "1.8.22-1.0.11"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
 shareTarget = "1.2.0"
 # https://github.com/KasperskyLab/Kaspresso/releases
@@ -83,17 +83,43 @@ kaspresso = "1.5.1"
 androidXTest = "1.5.0"
 # https://developer.android.com/jetpack/androidx/releases/test
 androidXTestOrchestrator = "1.4.2"
+# https://mvnrepository.com/artifact/androidx.compose/compose-bom
+composeBom = "2023.06.01"
+# https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+composeKotlinCompilerExtension = "1.4.8"
+# https://google.github.io/accompanist/
+accompanistVersion = "0.30.1"
+# https://developer.android.com/jetpack/androidx/releases/compose-material
+materialCompose = "1.4.3"
+# https://composedestinations.rafaelcosta.xyz/setup
+composeDestinations = "1.8.42-beta"
+# https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
+hiltNavigationCompose = "1.0.0"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 android-tools-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
 android-material-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-ui-toolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-testJunit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-compose-ui-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
+
+androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "materialCompose" }
+
+google-accompanist-themeadapter-material3 = { group = "com.google.accompanist", name = "accompanist-themeadapter-material3", version.ref = "accompanistVersion" }
+
 google-dagger-hiltPlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt" }
 google-dagger-hiltAndroid = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 google-dagger-hiltCompiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 google-dagger-hiltAndroidCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 google-dagger-hiltAndroidTesting = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+
+androidx-hilt-navigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 google-protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
 google-protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
@@ -126,6 +152,7 @@ androidx-paging-commonKtx = { group = "androidx.paging", name = "paging-common-k
 
 androidx-lifecycle-livedataKtx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 androidx-datastore-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
@@ -171,6 +198,9 @@ io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 chuckerteam-chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
 
 kaspersky-kaspresso = { group = "com.kaspersky.android-components", name = "kaspresso", version.ref = "kaspresso" }
+
+composeDestinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "composeDestinations" }
+composeDestinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "composeDestinations" }
 
 [plugins]
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
