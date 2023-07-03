@@ -96,13 +96,15 @@ fun ShoppingListItem(
                 enabled = !isDisabled,
             )
 
+            val isFood = shoppingListItem.isFood
             val quantity = shoppingListItem.quantity
                 .takeUnless { it == 0.0 }
+                .takeUnless { it == 1.0 && !isFood }
                 ?.let { DecimalFormat.getInstance().format(it) }
             val text = listOfNotNull(
                 quantity,
-                shoppingListItem.unit,
-                shoppingListItem.food,
+                shoppingListItem.unit.takeIf { isFood },
+                shoppingListItem.food.takeIf { isFood },
                 shoppingListItem.note,
             ).filter { it.isNotBlank() }.joinToString(" ")
 
