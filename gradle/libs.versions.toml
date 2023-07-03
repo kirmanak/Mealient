@@ -2,7 +2,7 @@
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
 androidGradlePlugin = "7.4.2"
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "1.7.20"
+kotlin = "1.8.22"
 # https://developer.android.com/jetpack/androidx/releases/navigation
 googleNavigation = "2.5.3"
 # https://dagger.dev/hilt/gradle-setup
@@ -74,7 +74,7 @@ chucker = "3.5.2"
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
 desugar = "2.0.3"
 # https://github.com/google/ksp/releases
-kspPlugin = "1.7.20-1.0.7"
+kspPlugin = "1.8.22-1.0.11"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
 shareTarget = "1.2.0"
 # https://github.com/KasperskyLab/Kaspresso/releases
@@ -84,15 +84,15 @@ androidXTest = "1.5.0"
 # https://developer.android.com/jetpack/androidx/releases/test
 androidXTestOrchestrator = "1.4.2"
 # https://mvnrepository.com/artifact/androidx.compose/compose-bom
-composeBom = "2023.01.00"
+composeBom = "2023.06.01"
 # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-composeKotlinCompilerExtension = "1.3.2"
+composeKotlinCompilerExtension = "1.4.8"
 # https://google.github.io/accompanist/
-accompanistVersion = "0.28.0"
+accompanistVersion = "0.30.1"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
-materialCompose = "1.3.1"
+materialCompose = "1.4.3"
 # https://composedestinations.rafaelcosta.xyz/setup
-composeDestinations = "1.7.33-beta"
+composeDestinations = "1.8.42-beta"
 # https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
 hiltNavigationCompose = "1.0.0"
 

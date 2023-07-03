@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -19,7 +18,7 @@ import gq.kirmanak.mealient.shopping_lists.util.error
 import gq.kirmanak.mealient.shopping_lists.util.isLoading
 import gq.kirmanak.mealient.shopping_lists.util.isRefreshing
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T> LazyColumnWithLoadingState(
     loadingState: LoadingState<List<T>>,
