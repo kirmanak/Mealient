@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="shopping_lists_screen_cart_icon">Carrinho de compras</string>
+	<string name="shopping_list_screen_unknown_error">Erro desconhecido</string>
+	<string name="shopping_list_screen_empty_list">%1$s está vazio</string>
+	<string name="shopping_lists_screen_empty">Não foram encontradas listas de compras</string>
+	<string name="shopping_lists_screen_unauthorized_error">A autenticação é necessária</string>
+	<string name="shopping_lists_screen_no_connection">Sem ligação ao servidor</string>
+	<string name="shopping_lists_screen_unknown_error">Erro desconhecido</string>
+	<string name="shopping_lists_screen_empty_button_refresh">Tentar novamente</string>
+</resources>
