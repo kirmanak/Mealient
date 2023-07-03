@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="shopping_lists_screen_cart_icon">Einkaufswagen</string>
+	<string name="shopping_list_screen_unknown_error">Unbekannter Fehler</string>
+	<string name="shopping_list_screen_empty_list">%1$s ist leer</string>
+	<string name="shopping_lists_screen_empty">Keine Einkaufslisten gefunden</string>
+	<string name="shopping_lists_screen_unauthorized_error">Authentifizierung ist erforderlich</string>
+	<string name="shopping_lists_screen_no_connection">Keine Serververbindung</string>
+	<string name="shopping_lists_screen_unknown_error">Unbekannter Fehler</string>
+	<string name="shopping_lists_screen_empty_button_refresh">Erneut versuchen</string>
+</resources>

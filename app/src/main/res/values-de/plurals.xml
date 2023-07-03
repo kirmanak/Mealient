@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<plurals name="fragment_disclaimer_button_okay_timer">
+		<item quantity="one">Okay (%d Sekunde)</item>
+		<item quantity="other">Okay (%d Sekunden)</item>
+	</plurals>
+</resources>

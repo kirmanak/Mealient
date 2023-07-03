@@ -65,4 +65,5 @@
 	<string name="view_holder_recipe_delete_content_description">Eliminar receta</string>
 	<string name="fragment_recipes_favorite_added">Añadido %1$s a favoritos</string>
 	<string name="fragment_recipes_favorite_removed">Eliminado %1$s de favoritos</string>
+	<string name="menu_navigation_drawer_shopping_lists">Listas de la compra</string>
 </resources>
