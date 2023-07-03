@@ -4,9 +4,6 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntity
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeInstructionInfo
@@ -51,48 +48,12 @@ import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ModelMapperImpl @Inject constructor() : ModelMapper {
-
-    override fun toShoppingListEntities(
-        shoppingListsInfo: ShoppingListsInfo
-    ) = shoppingListsInfo.items.map {
-        toShoppingListEntity(it)
-    }
-
-    override fun toShoppingListEntity(
-        shoppingListInfo: ShoppingListInfo
-    ) = ShoppingListEntity(
-        remoteId = shoppingListInfo.id,
-        name = shoppingListInfo.name,
-    )
-
-    override fun toShoppingListItemEntity(
-        shoppingListItemInfo: ShoppingListItemInfo
-    ) = ShoppingListItemEntity(
-        shoppingListId = shoppingListItemInfo.shoppingListId,
-        remoteId = shoppingListItemInfo.id,
-        checked = shoppingListItemInfo.checked,
-        position = shoppingListItemInfo.position,
-        isFood = shoppingListItemInfo.isFood,
-        note = shoppingListItemInfo.note,
-        quantity = shoppingListItemInfo.quantity,
-        unit = shoppingListItemInfo.unit,
-        food = shoppingListItemInfo.food,
-    )
-
-    override fun toShoppingListItemRecipeReferenceEntity(
-        shoppingListItemRecipeReferenceInfo: ShoppingListItemRecipeReferenceInfo,
-        shoppingListItemId: String
-    ) = ShoppingListItemRecipeReferenceEntity(
-        recipeId = shoppingListItemRecipeReferenceInfo.recipeId,
-        quantity = shoppingListItemRecipeReferenceInfo.recipeQuantity,
-        shoppingListItemId = shoppingListItemId,
-    )
 
 
     override fun toRecipeEntity(fullRecipeInfo: FullRecipeInfo) = RecipeEntity(

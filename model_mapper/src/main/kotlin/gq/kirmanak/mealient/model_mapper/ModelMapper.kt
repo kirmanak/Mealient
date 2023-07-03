@@ -4,9 +4,6 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntity
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeInstructionInfo
@@ -53,17 +50,6 @@ import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 
 interface ModelMapper {
-
-    fun toShoppingListEntities(shoppingListsInfo: ShoppingListsInfo): List<ShoppingListEntity>
-
-    fun toShoppingListEntity(shoppingListInfo: ShoppingListInfo): ShoppingListEntity
-
-    fun toShoppingListItemEntity(shoppingListItemInfo: ShoppingListItemInfo): ShoppingListItemEntity
-
-    fun toShoppingListItemRecipeReferenceEntity(
-        shoppingListItemRecipeReferenceInfo: ShoppingListItemRecipeReferenceInfo,
-        shoppingListItemId: String
-    ): ShoppingListItemRecipeReferenceEntity
 
     fun toRecipeEntity(fullRecipeInfo: FullRecipeInfo): RecipeEntity
 

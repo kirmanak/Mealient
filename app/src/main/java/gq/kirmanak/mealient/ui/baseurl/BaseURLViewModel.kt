@@ -60,7 +60,6 @@ class BaseURLViewModel @Inject constructor(
         if (result.isSuccess) {
             authRepo.logout()
             recipeRepo.clearLocalData()
-            shoppingListsRepo.clearLocalData()
         }
 
         logger.i { "checkBaseURL: result is $result" }
