@@ -49,3 +49,10 @@ val <T> LoadingState<T>.isRefreshing: Boolean
         is LoadingStateNoData.InitialLoad,
         is LoadingStateNoData.LoadError -> false
     }
+
+inline fun <T, E> LoadingState<T>.map(block: (T) -> E) = when (this) {
+    is LoadingStateWithData.Success -> LoadingStateWithData.Success(block(data))
+    is LoadingStateWithData.Refreshing -> LoadingStateWithData.Refreshing(block(data))
+    is LoadingStateNoData.InitialLoad -> LoadingStateNoData.InitialLoad
+    is LoadingStateNoData.LoadError -> LoadingStateNoData.LoadError(error)
+}

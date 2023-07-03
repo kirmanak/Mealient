@@ -8,10 +8,15 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ErrorSnackbar(
-    error: Throwable,
+    error: Throwable?,
     snackbarHostState: SnackbarHostState,
     onSnackbarShown: () -> Unit,
 ) {
+    if (error == null) {
+        snackbarHostState.currentSnackbarData?.dismiss()
+        return
+    }
+
     val text = getErrorMessage(error = error)
     val scope = rememberCoroutineScope()
 

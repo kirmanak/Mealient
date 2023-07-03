@@ -22,13 +22,13 @@ import gq.kirmanak.mealient.shopping_lists.util.isRefreshing
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun <T> LazyColumnWithLoadingState(
-    modifier: Modifier = Modifier,
     loadingState: LoadingState<List<T>>,
-    errorToShowInSnackbar: Throwable?,
-    onSnackbarShown: () -> Unit,
     defaultEmptyListError: String,
-    onRefresh: () -> Unit,
-    lazyColumnContent: LazyListScope.(List<T>) -> Unit,
+    modifier: Modifier = Modifier,
+    errorToShowInSnackbar: Throwable? = null,
+    onSnackbarShown: () -> Unit = {},
+    onRefresh: () -> Unit = {},
+    lazyColumnContent: LazyListScope.(List<T>) -> Unit = {},
 ) {
     val refreshState = rememberPullRefreshState(
         refreshing = loadingState.isRefreshing,
@@ -68,15 +68,11 @@ fun <T> LazyColumnWithLoadingState(
                     lazyColumnContent = { lazyColumnContent(list) },
                 )
 
-                if (errorToShowInSnackbar == null) {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-                } else {
-                    ErrorSnackbar(
-                        error = errorToShowInSnackbar,
-                        snackbarHostState = snackbarHostState,
-                        onSnackbarShown = onSnackbarShown,
-                    )
-                }
+                ErrorSnackbar(
+                    error = errorToShowInSnackbar,
+                    snackbarHostState = snackbarHostState,
+                    onSnackbarShown = onSnackbarShown,
+                )
             }
         }
     }

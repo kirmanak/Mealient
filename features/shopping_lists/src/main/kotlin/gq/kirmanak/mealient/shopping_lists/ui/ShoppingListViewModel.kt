@@ -1,5 +1,8 @@
 package gq.kirmanak.mealient.shopping_lists.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +16,7 @@ import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDes
 import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactory
 import gq.kirmanak.mealient.shopping_lists.util.LoadingState
 import gq.kirmanak.mealient.shopping_lists.util.LoadingStateNoData
-import gq.kirmanak.mealient.shopping_lists.util.LoadingStateWithData
+import gq.kirmanak.mealient.shopping_lists.util.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -33,11 +36,7 @@ internal class ShoppingListViewModel @Inject constructor(
 
     private val args: ShoppingListNavArgs = ShoppingListScreenDestination.argsFrom(savedStateHandle)
 
-    private val _disabledItems: MutableStateFlow<List<ShoppingListItemInfo>> =
-        MutableStateFlow(emptyList())
-
-    private val _snackbarState: MutableStateFlow<SnackbarState> =
-        MutableStateFlow(SnackbarState.Hidden)
+    private val _disabledItemIds: MutableStateFlow<Set<String>> = MutableStateFlow(mutableSetOf())
 
     private val loadingHelper = loadingHelperFactory.create(viewModelScope) {
         shoppingListsRepo.getShoppingList(args.shoppingListId)
@@ -45,90 +44,57 @@ internal class ShoppingListViewModel @Inject constructor(
 
     val loadingState: StateFlow<LoadingState<ShoppingListScreenState>> = combine(
         loadingHelper.loadingState,
-        _disabledItems,
-        _snackbarState,
+        _disabledItemIds,
         ::buildLoadingState,
     ).stateIn(viewModelScope, SharingStarted.Eagerly, LoadingStateNoData.InitialLoad)
 
+    private var _errorToShowInSnackbar: Throwable? by mutableStateOf(null)
+    val errorToShowInSnackbar: Throwable? get() = _errorToShowInSnackbar
 
     init {
         refreshShoppingList()
-        showSnackBarOnRefreshError()
-    }
-
-    private fun showSnackBarOnRefreshError() {
-        logger.v { "showSnackBarOnRefreshError() called" }
     }
 
     fun refreshShoppingList() {
         logger.v { "refreshShoppingList() called" }
         viewModelScope.launch {
-            loadingHelper.refresh()
+            _errorToShowInSnackbar = loadingHelper.refresh().exceptionOrNull()
         }
     }
 
     private fun buildLoadingState(
         loadingState: LoadingState<FullShoppingListInfo>,
-        disabledItems: List<ShoppingListItemInfo>,
-        snackbarState: SnackbarState,
+        disabledItemIds: Set<String>,
     ): LoadingState<ShoppingListScreenState> {
-        logger.v { "buildLoadingState() called with: loadingState = $loadingState, disabledItems = $disabledItems, snackbarState = $snackbarState" }
-        return when (loadingState) {
-            is LoadingStateNoData.InitialLoad -> {
-                LoadingStateNoData.InitialLoad
+        logger.v { "buildLoadingState() called with: loadingState = $loadingState, disabledItems = $disabledItemIds" }
+        return loadingState.map {
+            val items = it.items.map { item ->
+                ShoppingListItemState(item = item, isDisabled = item.id in disabledItemIds)
             }
-
-            is LoadingStateNoData.LoadError -> {
-                LoadingStateNoData.LoadError(loadingState.error)
-            }
-
-            is LoadingStateWithData.Refreshing -> {
-                LoadingStateWithData.Refreshing(
-                    ShoppingListScreenState(
-                        shoppingList = loadingState.data,
-                        disabledItems = disabledItems,
-                        snackbarState = snackbarState,
-                    ),
-                )
-            }
-
-            is LoadingStateWithData.Success -> {
-                LoadingStateWithData.Success(
-                    ShoppingListScreenState(
-                        shoppingList = loadingState.data,
-                        disabledItems = disabledItems,
-                        snackbarState = snackbarState,
-                    ),
-                )
-            }
+            ShoppingListScreenState(name = it.name, items = items)
         }
     }
 
     fun onItemCheckedChange(item: ShoppingListItemInfo, isChecked: Boolean) {
         logger.v { "onItemCheckedChange() called with: item = $item, isChecked = $isChecked" }
         viewModelScope.launch {
-            _disabledItems.update { it + item }
+            _disabledItemIds.update { it + item.id }
             val result = runCatchingExceptCancel {
                 shoppingListsRepo.updateIsShoppingListItemChecked(item.id, isChecked)
+            }.onFailure {
+                logger.e(it) { "Failed to update item's checked state" }
             }
-            _disabledItems.update { it - item }
-            result.fold(
-                onSuccess = {
-                    logger.v { "Item's checked state updated" }
-                    refreshShoppingList()
-                },
-                onFailure = { error ->
-                    logger.e(error) { "Failed to update item's checked state" }
-                    error.message?.let {
-                        _snackbarState.value = SnackbarState.Visible(it)
-                    }
-                },
-            )
+            _disabledItemIds.update { it - item.id }
+            _errorToShowInSnackbar = result.exceptionOrNull()
+            if (result.isSuccess) {
+                logger.v { "Item's checked state updated" }
+                refreshShoppingList()
+            }
         }
     }
 
     fun onSnackbarShown() {
         logger.v { "onSnackbarShown() called" }
-        _snackbarState.value = SnackbarState.Hidden
+        _errorToShowInSnackbar = null
     }
 }
