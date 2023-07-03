@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.shopping_lists.repo
 
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
+import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import kotlinx.coroutines.flow.Flow
 
@@ -15,4 +16,6 @@ interface ShoppingListsRepo {
     suspend fun clearLocalData()
 
     suspend fun getShoppingLists(): List<ShoppingListInfo>
+
+    suspend fun getShoppingList(id: String): FullShoppingListInfo
 }

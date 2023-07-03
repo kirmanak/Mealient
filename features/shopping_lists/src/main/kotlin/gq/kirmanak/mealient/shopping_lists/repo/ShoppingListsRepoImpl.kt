@@ -6,6 +6,7 @@ import gq.kirmanak.mealient.database.shopping_lists.ShoppingListsStorage
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
 import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
+import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.model_mapper.ModelMapper
@@ -77,5 +78,10 @@ class ShoppingListsRepoImpl @Inject constructor(
     override suspend fun getShoppingLists(): List<ShoppingListInfo> {
         logger.v { "getShoppingLists() called" }
         return dataSource.getAllShoppingLists()
+    }
+
+    override suspend fun getShoppingList(id: String): FullShoppingListInfo {
+        logger.v { "getShoppingListItems() called with: id = $id" }
+        return dataSource.getShoppingList(id)
     }
 }

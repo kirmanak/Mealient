@@ -1,11 +1,11 @@
 package gq.kirmanak.mealient.shopping_lists.ui
 
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemWithRecipes
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
+import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 
 internal data class ShoppingListScreenState(
-    val shoppingList: ShoppingListWithItems,
-    val disabledItems: List<ShoppingListItemWithRecipes>,
+    val shoppingList: FullShoppingListInfo,
+    val disabledItems: List<ShoppingListItemInfo>,
     val snackbarState: SnackbarState,
 )
 

@@ -30,20 +30,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.AppTheme
 import gq.kirmanak.mealient.Dimens
-import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
-import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
-import gq.kirmanak.mealient.database.shopping_lists.entity.ItemRecipeReferenceWithRecipe
-import gq.kirmanak.mealient.database.shopping_lists.entity.RecipeWithIngredients
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListEntity
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemEntity
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemRecipeReferenceEntity
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemWithRecipes
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
 import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
+import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
+import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
+import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
+import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
+import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.CenteredProgressIndicator
 import gq.kirmanak.mealient.shopping_lists.ui.composables.CenteredText
-import gq.kirmanak.mealient.ui.OperationUiState
+import gq.kirmanak.mealient.shopping_lists.util.LoadingState
+import gq.kirmanak.mealient.shopping_lists.util.LoadingStateNoData
+import gq.kirmanak.mealient.shopping_lists.util.LoadingStateWithData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
@@ -59,7 +59,7 @@ data class ShoppingListNavArgs(
 internal fun ShoppingListScreen(
     shoppingListsViewModel: ShoppingListViewModel = hiltViewModel(),
 ) {
-    val screenState = shoppingListsViewModel.uiState.collectAsState()
+    val screenState = shoppingListsViewModel.loadingState.collectAsState()
 
     ShoppingListScreenContent(
         state = screenState.value,
@@ -71,11 +71,11 @@ internal fun ShoppingListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ShoppingListScreenContent(
-    state: OperationUiState<ShoppingListScreenState>,
+    state: LoadingState<ShoppingListScreenState>,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     scope: CoroutineScope = rememberCoroutineScope(),
-    onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit = { _, _ -> },
+    onItemCheckedChange: (ShoppingListItemInfo, Boolean) -> Unit = { _, _ -> },
     onSnackbarShown: () -> Unit = {},
 ) {
     Scaffold(
@@ -84,17 +84,18 @@ internal fun ShoppingListScreenContent(
         content = {
             val innerModifier = Modifier.padding(it)
             when (state) {
-                is OperationUiState.Progress,
-                is OperationUiState.Initial -> {
+                is LoadingStateNoData.InitialLoad -> {
                     CenteredProgressIndicator(innerModifier)
                 }
-                is OperationUiState.Failure -> {
-                    CenteredErrorMessage(state.exception, innerModifier)
+
+                is LoadingStateNoData.LoadError -> {
+                    CenteredErrorMessage(state.error, innerModifier)
                 }
-                is OperationUiState.Success -> {
-                    ShoppingListData(state.value, innerModifier, onItemCheckedChange)
+
+                is LoadingStateWithData -> {
+                    ShoppingListData(state.data, innerModifier, onItemCheckedChange)
                     ShortSnackbar(
-                        snackbarState = state.value.snackbarState,
+                        snackbarState = state.data.snackbarState,
                         snackbarHostState = snackbarHostState,
                         scope = scope,
                         onSnackbarShown = onSnackbarShown
@@ -132,13 +133,13 @@ private fun ShortSnackbar(
 private fun ShoppingListData(
     screenState: ShoppingListScreenState,
     modifier: Modifier,
-    onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit
+    onItemCheckedChange: (ShoppingListItemInfo, Boolean) -> Unit
 ) {
     val shoppingListWithItems = screenState.shoppingList
     val disabledItems = screenState.disabledItems
-    val items = shoppingListWithItems.shoppingListItems.sortedBy { it.item.checked }
+    val items = shoppingListWithItems.items.sortedBy { it.checked }
 
-    if (shoppingListWithItems.shoppingListItems.isEmpty()) {
+    if (shoppingListWithItems.items.isEmpty()) {
         CenteredEmptyListText(shoppingListWithItems, modifier)
     } else {
         ShoppingListItemsColumn(items, disabledItems, modifier, onItemCheckedChange)
@@ -147,13 +148,13 @@ private fun ShoppingListData(
 
 @Composable
 private fun CenteredEmptyListText(
-    shoppingListWithItems: ShoppingListWithItems,
+    shoppingListWithItems: FullShoppingListInfo,
     modifier: Modifier = Modifier,
 ) {
     CenteredText(
         text = stringResource(
             R.string.shopping_list_screen_empty_list,
-            shoppingListWithItems.shoppingList.name
+            shoppingListWithItems.name
         ),
         modifier = modifier,
     )
@@ -161,12 +162,12 @@ private fun CenteredEmptyListText(
 
 @Composable
 private fun ShoppingListItemsColumn(
-    items: List<ShoppingListItemWithRecipes>,
-    disabledItems: List<ShoppingListItemWithRecipes>,
+    items: List<ShoppingListItemInfo>,
+    disabledItems: List<ShoppingListItemInfo>,
     modifier: Modifier = Modifier,
-    onItemCheckedChange: (ShoppingListItemWithRecipes, Boolean) -> Unit
+    onItemCheckedChange: (ShoppingListItemInfo, Boolean) -> Unit
 ) {
-    val firstCheckedItemIndex = items.indexOfFirst { it.item.checked }
+    val firstCheckedItemIndex = items.indexOfFirst { it.checked }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -199,7 +200,7 @@ private fun CenteredErrorMessage(
 @Composable
 @Preview
 fun PreviewShoppingListInfo() {
-    val state = OperationUiState.Success(
+    val state = LoadingStateWithData.Success(
         ShoppingListScreenState(
             shoppingList = PreviewData.shoppingList,
             disabledItems = listOf(PreviewData.blackTeaBags),
@@ -216,7 +217,7 @@ fun PreviewShoppingListInfo() {
 fun PreviewShoppingListInfoError() {
     AppTheme {
         ShoppingListScreenContent(
-            state = OperationUiState.Failure(
+            state = LoadingStateNoData.LoadError(
                 NetworkError.Unauthorized(RuntimeException())
             )
         )
@@ -227,7 +228,7 @@ fun PreviewShoppingListInfoError() {
 @Preview
 fun PreviewShoppingListInfoInitial() {
     AppTheme {
-        ShoppingListScreenContent(state = OperationUiState.Initial())
+        ShoppingListScreenContent(state = LoadingStateNoData.InitialLoad)
     }
 }
 
@@ -235,13 +236,13 @@ fun PreviewShoppingListInfoInitial() {
 @Preview
 fun PreviewShoppingListInfoProgress() {
     AppTheme {
-        ShoppingListScreenContent(state = OperationUiState.Progress())
+        ShoppingListScreenContent(state = LoadingStateNoData.InitialLoad)
     }
 }
 
 @Composable
 fun ShoppingListItem(
-    shoppingListItem: ShoppingListItemWithRecipes,
+    shoppingListItem: ShoppingListItemInfo,
     isDisabled: Boolean,
     showDivider: Boolean,
     modifier: Modifier = Modifier,
@@ -260,19 +261,19 @@ fun ShoppingListItem(
             horizontalArrangement = Arrangement.Start,
         ) {
             Checkbox(
-                checked = shoppingListItem.item.checked,
+                checked = shoppingListItem.checked,
                 onCheckedChange = onCheckedChange,
                 enabled = !isDisabled,
             )
 
-            val quantity = shoppingListItem.item.quantity
+            val quantity = shoppingListItem.quantity
                 .takeUnless { it == 0.0 }
                 ?.let { DecimalFormat.getInstance().format(it) }
             val text = listOfNotNull(
                 quantity,
-                shoppingListItem.item.unit,
-                shoppingListItem.item.food,
-                shoppingListItem.item.note,
+                shoppingListItem.unit,
+                shoppingListItem.food,
+                shoppingListItem.note,
             ).filter { it.isNotBlank() }.joinToString(" ")
 
             Text(text = text)
@@ -313,25 +314,19 @@ fun PreviewShoppingListItemUncheckedDisabled() {
 }
 
 private object PreviewData {
-    val teaWithMilkRecipe = RecipeWithIngredients(
-        recipe = RecipeEntity(
-            remoteId = "1",
-            recipeYield = "1 serving",
-            disableAmounts = false,
-        ),
-        ingredients = listOf(
-            RecipeIngredientEntity(
-                localId = 1,
-                recipeId = "1",
+    val teaWithMilkRecipe = FullRecipeInfo(
+        remoteId = "1",
+        name = "Tea with milk",
+        recipeYield = "1 serving",
+        recipeIngredients = listOf(
+            RecipeIngredientInfo(
                 note = "Tea bag",
                 food = "",
                 unit = "",
                 quantity = 1.0,
                 title = "",
             ),
-            RecipeIngredientEntity(
-                localId = 1,
-                recipeId = "1",
+            RecipeIngredientInfo(
                 note = "",
                 food = "Milk",
                 unit = "ml",
@@ -339,58 +334,64 @@ private object PreviewData {
                 title = "",
             ),
         ),
+        recipeInstructions = listOf(
+            RecipeInstructionInfo("Boil water"),
+            RecipeInstructionInfo("Put tea bag in a cup"),
+            RecipeInstructionInfo("Pour water into the cup"),
+            RecipeInstructionInfo("Wait for 5 minutes"),
+            RecipeInstructionInfo("Remove tea bag"),
+            RecipeInstructionInfo("Add milk"),
+        ),
+        settings = RecipeSettingsInfo(
+            disableAmounts = false
+        ),
     )
 
-    val blackTeaBags = ShoppingListItemWithRecipes(
-        item = ShoppingListItemEntity(
-            remoteId = "1",
-            shoppingListId = "1",
-            checked = false,
-            position = 0,
-            isFood = false,
-            note = "Black tea bags",
-            quantity = 30.0,
-            unit = "",
-            food = "",
-        ),
-        recipes = listOf(
-            ItemRecipeReferenceWithRecipe(
-                reference = ShoppingListItemRecipeReferenceEntity(
-                    shoppingListItemId = "1",
-                    recipeId = "1",
-                    quantity = 1.0,
-                ),
+    val blackTeaBags = ShoppingListItemInfo(
+        id = "1",
+        shoppingListId = "1",
+        checked = false,
+        position = 0,
+        isFood = false,
+        note = "Black tea bags",
+        quantity = 30.0,
+        unit = "",
+        food = "",
+        recipeReferences = listOf(
+            ShoppingListItemRecipeReferenceInfo(
+                shoppingListId = "1",
+                id = "1",
+                recipeId = "1",
+                recipeQuantity = 1.0,
                 recipe = teaWithMilkRecipe,
             ),
         ),
     )
 
-    val milk = ShoppingListItemWithRecipes(
-        item = ShoppingListItemEntity(
-            remoteId = "2",
-            shoppingListId = "1",
-            checked = true,
-            position = 1,
-            isFood = true,
-            note = "Cold",
-            quantity = 500.0,
-            unit = "ml",
-            food = "Milk",
-        ),
-        recipes = listOf(
-            ItemRecipeReferenceWithRecipe(
-                reference = ShoppingListItemRecipeReferenceEntity(
-                    shoppingListItemId = "2",
-                    recipeId = "1",
-                    quantity = 500.0,
-                ),
+    val milk = ShoppingListItemInfo(
+        id = "2",
+        shoppingListId = "1",
+        checked = true,
+        position = 1,
+        isFood = true,
+        note = "Cold",
+        quantity = 500.0,
+        unit = "ml",
+        food = "Milk",
+        recipeReferences = listOf(
+            ShoppingListItemRecipeReferenceInfo(
+                shoppingListId = "1",
+                id = "2",
+                recipeId = "1",
+                recipeQuantity = 500.0,
                 recipe = teaWithMilkRecipe,
             ),
         ),
     )
 
-    val shoppingList = ShoppingListWithItems(
-        shoppingList = ShoppingListEntity(remoteId = "1", name = "Tea with milk"),
-        shoppingListItems = listOf(blackTeaBags, milk),
+    val shoppingList = FullShoppingListInfo(
+        id = "1",
+        name = "Tea with milk",
+        items = listOf(blackTeaBags, milk),
     )
 }

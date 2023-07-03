@@ -4,19 +4,19 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListItemWithRecipes
-import gq.kirmanak.mealient.database.shopping_lists.entity.ShoppingListWithItems
+import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
-import gq.kirmanak.mealient.ui.OperationUiState
-import kotlinx.coroutines.flow.Flow
+import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactory
+import gq.kirmanak.mealient.shopping_lists.util.LoadingState
+import gq.kirmanak.mealient.shopping_lists.util.LoadingStateNoData
+import gq.kirmanak.mealient.shopping_lists.util.LoadingStateWithData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,30 +26,28 @@ import javax.inject.Inject
 internal class ShoppingListViewModel @Inject constructor(
     private val shoppingListsRepo: ShoppingListsRepo,
     private val logger: Logger,
+    loadingHelperFactory: LoadingHelperFactory,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val args: ShoppingListNavArgs = ShoppingListScreenDestination.argsFrom(savedStateHandle)
 
-    private val _operationState: MutableStateFlow<OperationUiState<Unit>> =
-        MutableStateFlow(OperationUiState.Initial())
-
-    private val _disabledItems: MutableStateFlow<List<ShoppingListItemWithRecipes>> =
+    private val _disabledItems: MutableStateFlow<List<ShoppingListItemInfo>> =
         MutableStateFlow(emptyList())
 
     private val _snackbarState: MutableStateFlow<SnackbarState> =
         MutableStateFlow(SnackbarState.Hidden)
 
-    private val _shoppingListFromDb: Flow<ShoppingListWithItems> =
-        shoppingListsRepo.shoppingListWithItemsFlow(args.shoppingListId)
+    private val loadingHelper = loadingHelperFactory.create(viewModelScope) {
+        shoppingListsRepo.getShoppingList(args.shoppingListId)
+    }
 
-    val uiState: StateFlow<OperationUiState<ShoppingListScreenState>> = combine(
-        _operationState,
-        _shoppingListFromDb,
+    val loadingState = combine(
+        loadingHelper.loadingState,
         _disabledItems,
         _snackbarState,
-        ::buildUiState,
-    ).stateIn(viewModelScope, SharingStarted.Eagerly, OperationUiState.Initial())
+        ::buildLoadingState,
+    ).stateIn(viewModelScope, SharingStarted.Eagerly, LoadingStateNoData.InitialLoad)
 
 
     init {
@@ -58,78 +56,77 @@ internal class ShoppingListViewModel @Inject constructor(
 
     private fun refreshShoppingList() {
         logger.v { "refreshShoppingList() called" }
-        loadShoppingList(args.shoppingListId)
+        loadingHelper.refresh()
     }
 
-    private fun loadShoppingList(id: String) {
-        logger.v { "loadShoppingList() called with: id = $id" }
-        viewModelScope.launch {
-            val result = runCatchingExceptCancel {
-                shoppingListsRepo.updateShoppingList(id)
-            }
-            if (result.isSuccess) {
-                _shoppingListFromDb.first() // wait for the shopping list to be updated
-            } else {
-                result.exceptionOrNull()?.message?.let { message ->
-                    _snackbarState.value = SnackbarState.Visible(message)
-                }
-            }
-            _operationState.value = OperationUiState.fromResult(result)
-        }
-    }
-
-    private fun buildUiState(
-        operationState: OperationUiState<Unit>,
-        shoppingList: ShoppingListWithItems,
-        disabledItems: List<ShoppingListItemWithRecipes>,
+    private fun buildLoadingState(
+        loadingState: LoadingState<FullShoppingListInfo>,
+        disabledItems: List<ShoppingListItemInfo>,
         snackbarState: SnackbarState,
-    ): OperationUiState<ShoppingListScreenState> {
-        logger.v { "buildUiState() called with: operationState = $operationState, shoppingList = $shoppingList, disabledItems = $disabledItems" }
-        return if (shoppingList.shoppingListItems.isNotEmpty()) {
-            OperationUiState.Success(
-                ShoppingListScreenState(
-                    shoppingList = shoppingList,
-                    disabledItems = disabledItems,
-                    snackbarState = snackbarState,
+    ): LoadingState<ShoppingListScreenState> {
+        logger.v { "buildLoadingState() called with: loadingState = $loadingState, disabledItems = $disabledItems, snackbarState = $snackbarState" }
+        return when (loadingState) {
+            is LoadingStateNoData.InitialLoad -> {
+                LoadingStateNoData.InitialLoad
+            }
+
+            is LoadingStateNoData.LoadError -> {
+                LoadingStateNoData.LoadError(loadingState.error)
+            }
+
+            is LoadingStateWithData.RefreshError -> {
+                LoadingStateWithData.RefreshError(
+                    ShoppingListScreenState(
+                        shoppingList = loadingState.data,
+                        disabledItems = disabledItems,
+                        snackbarState = snackbarState,
+                    ),
+                    error = loadingState.error,
                 )
-            )
-        } else {
-            when (operationState) {
-                is OperationUiState.Failure -> OperationUiState.Failure(operationState.exception)
-                is OperationUiState.Initial,
-                is OperationUiState.Progress -> OperationUiState.Progress()
-                is OperationUiState.Success -> {
-                    OperationUiState.Success(
-                        ShoppingListScreenState(
-                            shoppingList = shoppingList,
-                            disabledItems = disabledItems,
-                            snackbarState = snackbarState,
-                        )
-                    )
-                }
+            }
+
+            is LoadingStateWithData.Refreshing -> {
+                LoadingStateWithData.Refreshing(
+                    ShoppingListScreenState(
+                        shoppingList = loadingState.data,
+                        disabledItems = disabledItems,
+                        snackbarState = snackbarState,
+                    ),
+                )
+            }
+
+            is LoadingStateWithData.Success -> {
+                LoadingStateWithData.Success(
+                    ShoppingListScreenState(
+                        shoppingList = loadingState.data,
+                        disabledItems = disabledItems,
+                        snackbarState = snackbarState,
+                    ),
+                )
             }
         }
     }
 
-    fun onItemCheckedChange(item: ShoppingListItemWithRecipes, isChecked: Boolean) {
+    fun onItemCheckedChange(item: ShoppingListItemInfo, isChecked: Boolean) {
         logger.v { "onItemCheckedChange() called with: item = $item, isChecked = $isChecked" }
         viewModelScope.launch {
             _disabledItems.update { it + item }
             val result = runCatchingExceptCancel {
-                shoppingListsRepo.updateIsShoppingListItemChecked(item.item.remoteId, isChecked)
+                shoppingListsRepo.updateIsShoppingListItemChecked(item.id, isChecked)
             }.onFailure {
                 logger.e(it) { "Failed to update item's checked state" }
             }.onSuccess {
                 logger.v { "Item's checked state updated" }
             }
             _disabledItems.update { it - item }
-            if (result.isSuccess) {
-                refreshShoppingList()
-            } else {
-                result.exceptionOrNull()?.message?.let {
-                    _snackbarState.value = SnackbarState.Visible(it)
-                }
-            }
+            result.fold(
+                onSuccess = { refreshShoppingList() },
+                onFailure = { error ->
+                    error.message?.let {
+                        _snackbarState.value = SnackbarState.Visible(it)
+                    }
+                },
+            )
         }
     }
 
