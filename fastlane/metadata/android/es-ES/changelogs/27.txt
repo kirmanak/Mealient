@@ -1,2 +1,0 @@
-Se ha añadido soporte para versiones nocturnas de Mealie.
-Se han añadido algunas mejoras UI/UX.
