@@ -1,1 +1,0 @@
-Las cantidades de ingredientes y los títulos de los ingredientes ahora están soportados.

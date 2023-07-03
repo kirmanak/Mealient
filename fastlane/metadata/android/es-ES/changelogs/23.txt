@@ -1,2 +1,0 @@
-Comparte recetas desde un navegador web a Mealient para guardarlas en Mealie.
-Se corrigió un caso en el que el texto "Sin recetas" se mostraba encima de las recetas.

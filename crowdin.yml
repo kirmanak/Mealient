@@ -10,19 +10,7 @@ files: [
     "translation": "/app/src/main/res/values-%two_letters_code%/plurals.xml"
   },
   {
-    "source": "/fastlane/metadata/android/en-US/short_description.txt",
-    "translation": "/fastlane/metadata/android/%locale%/short_description.txt"
-  },
-  {
-    "source": "/fastlane/metadata/android/en-US/full_description.txt",
-    "translation": "/fastlane/metadata/android/%locale%/full_description.txt"
-  },
-  {
-    "source": "/fastlane/metadata/android/en-US/changelogs/*",
-    "translation": "/fastlane/metadata/android/%locale%/changelogs/%original_file_name%"
-  },
-  {
-    "source": "/fastlane/metadata/android/en-US/title.txt",
-    "translation": "/fastlane/metadata/android/%locale%/title.txt"
+    "source": "/features/shopping_lists/src/main/res/values/strings.xml",
+    "translation": "/features/shopping_lists/src/main/res/values-%two_letters_code%/strings.xml"
   }
 ]
