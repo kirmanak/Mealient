@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.shopping_lists.util
 
+import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -50,7 +51,7 @@ class LoadingHelperImpl<T>(
             }
         }
 
-        val result = runCatching { fetch() }
+        val result = runCatchingExceptCancel { fetch() }
 
         _loadingState.update { currentState ->
             result.fold(
