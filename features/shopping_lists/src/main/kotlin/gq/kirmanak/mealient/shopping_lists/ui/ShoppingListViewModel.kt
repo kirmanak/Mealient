@@ -7,10 +7,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gq.kirmanak.mealient.architecture.valueUpdatesOnly
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsAuthRepo
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
 import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactory
@@ -30,6 +32,7 @@ import javax.inject.Inject
 internal class ShoppingListViewModel @Inject constructor(
     private val shoppingListsRepo: ShoppingListsRepo,
     private val logger: Logger,
+    private val authRepo: ShoppingListsAuthRepo,
     loadingHelperFactory: LoadingHelperFactory,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -53,6 +56,17 @@ internal class ShoppingListViewModel @Inject constructor(
 
     init {
         refreshShoppingList()
+        listenToAuthState()
+    }
+
+    private fun listenToAuthState() {
+        logger.v { "listenToAuthState() called" }
+        viewModelScope.launch {
+            authRepo.isAuthorizedFlow.valueUpdatesOnly().collect {
+                logger.d { "Authorization state changed to $it" }
+                if (it) refreshShoppingList()
+            }
+        }
     }
 
     fun refreshShoppingList() {

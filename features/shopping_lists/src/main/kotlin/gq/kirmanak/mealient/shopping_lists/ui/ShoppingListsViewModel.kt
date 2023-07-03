@@ -18,8 +18,8 @@ import javax.inject.Inject
 class ShoppingListsViewModel @Inject constructor(
     private val logger: Logger,
     private val shoppingListsRepo: ShoppingListsRepo,
+    private val authRepo: ShoppingListsAuthRepo,
     loadingHelperFactory: LoadingHelperFactory,
-    authRepo: ShoppingListsAuthRepo,
 ) : ViewModel() {
 
     private val loadingHelper = loadingHelperFactory.create(viewModelScope) {
@@ -32,10 +32,10 @@ class ShoppingListsViewModel @Inject constructor(
 
     init {
         refresh()
-        listenToAuthState(authRepo)
+        listenToAuthState()
     }
 
-    private fun listenToAuthState(authRepo: ShoppingListsAuthRepo) {
+    private fun listenToAuthState() {
         logger.v { "listenToAuthState() called" }
         viewModelScope.launch {
             authRepo.isAuthorizedFlow.valueUpdatesOnly().collect {
