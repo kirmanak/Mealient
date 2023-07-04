@@ -3,9 +3,7 @@ package gq.kirmanak.mealient.test
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.logging.MessageSupplier
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class FakeLogger @Inject constructor() : Logger {
     override fun v(throwable: Throwable?, tag: String?, messageSupplier: MessageSupplier) {
         print("V", throwable, messageSupplier)

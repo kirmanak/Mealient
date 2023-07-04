@@ -20,10 +20,9 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
     private val binding by viewBinding(FragmentRecipeInfoBinding::bind)
     private val viewModel by viewModels<RecipeInfoViewModel>()
     private lateinit var ingredientsAdapter: RecipeIngredientsAdapter
-    private val instructionsAdapter by lazy { recipeInstructionsAdapterFactory.build() }
 
     @Inject
-    lateinit var recipeInstructionsAdapterFactory: RecipeInstructionsAdapter.Factory
+    lateinit var instructionsAdapter: RecipeInstructionsAdapter
 
     @Inject
     lateinit var recipeIngredientsAdapterFactory: RecipeIngredientsAdapter.Factory

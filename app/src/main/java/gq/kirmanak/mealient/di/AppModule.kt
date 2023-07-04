@@ -27,6 +27,5 @@ interface AppModule {
     }
 
     @Binds
-    @Singleton
     fun bindPreferencesStorage(preferencesStorage: PreferencesStorageImpl): PreferencesStorage
 }

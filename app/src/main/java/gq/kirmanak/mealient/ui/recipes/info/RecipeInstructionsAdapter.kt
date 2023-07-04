@@ -5,6 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.databinding.ViewHolderInstructionBinding
@@ -12,20 +15,11 @@ import gq.kirmanak.mealient.extensions.resources
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.info.RecipeInstructionsAdapter.RecipeInstructionViewHolder
 import javax.inject.Inject
-import javax.inject.Singleton
 
-class RecipeInstructionsAdapter private constructor(
+class RecipeInstructionsAdapter @Inject constructor(
     private val logger: Logger,
     private val recipeInstructionViewHolderFactory: RecipeInstructionViewHolder.Factory,
 ) : ListAdapter<RecipeInstructionEntity, RecipeInstructionViewHolder>(RecipeInstructionDiffCallback) {
-
-    @Singleton
-    class Factory @Inject constructor(
-        private val logger: Logger,
-        private val recipeInstructionViewHolderFactory: RecipeInstructionViewHolder.Factory,
-    ) {
-        fun build() = RecipeInstructionsAdapter(logger, recipeInstructionViewHolderFactory)
-    }
 
     private object RecipeInstructionDiffCallback :
         DiffUtil.ItemCallback<RecipeInstructionEntity>() {
@@ -40,15 +34,14 @@ class RecipeInstructionsAdapter private constructor(
         ): Boolean = oldItem == newItem
     }
 
-    class RecipeInstructionViewHolder private constructor(
-        private val binding: ViewHolderInstructionBinding,
+    class RecipeInstructionViewHolder @AssistedInject constructor(
+        @Assisted private val binding: ViewHolderInstructionBinding,
         private val logger: Logger,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        @Singleton
-        class Factory @Inject constructor(private val logger: Logger) {
-            fun build(binding: ViewHolderInstructionBinding) =
-                RecipeInstructionViewHolder(binding, logger)
+        @AssistedFactory
+        interface Factory {
+            fun build(binding: ViewHolderInstructionBinding): RecipeInstructionViewHolder
         }
 
         fun bind(item: RecipeInstructionEntity, position: Int) {

@@ -6,9 +6,7 @@ import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class DisclaimerStorageImpl @Inject constructor(
     private val preferencesStorage: PreferencesStorage,
     private val logger: Logger,

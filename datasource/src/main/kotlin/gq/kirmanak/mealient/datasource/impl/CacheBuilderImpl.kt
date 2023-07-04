@@ -8,9 +8,7 @@ import gq.kirmanak.mealient.logging.Logger
 import okhttp3.Cache
 import java.io.File
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class CacheBuilderImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val logger: Logger,

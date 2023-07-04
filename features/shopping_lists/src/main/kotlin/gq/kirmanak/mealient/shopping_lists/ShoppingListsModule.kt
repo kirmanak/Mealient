@@ -10,18 +10,15 @@ import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepoImpl
 import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactory
 import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactoryImpl
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface ShoppingListsModule {
 
     @Binds
-    @Singleton
     fun bindShoppingListsDataSource(impl: ShoppingListsDataSourceImpl): ShoppingListsDataSource
 
     @Binds
-    @Singleton
     fun bindShoppingListsRepo(impl: ShoppingListsRepoImpl): ShoppingListsRepo
 
     @Binds

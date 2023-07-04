@@ -3,9 +3,7 @@ package gq.kirmanak.mealient.logging
 import android.util.Log
 import java.util.regex.Pattern
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class LoggerImpl @Inject constructor(
     private val appenders: Set<@JvmSuppressWildcards Appender>,
 ) : Logger {

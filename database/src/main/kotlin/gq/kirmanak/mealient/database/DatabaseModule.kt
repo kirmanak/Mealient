@@ -26,11 +26,9 @@ internal interface DatabaseModule {
                 .build()
 
         @Provides
-        @Singleton
         fun provideRecipeDao(db: AppDb): RecipeDao = db.recipeDao()
     }
 
     @Binds
-    @Singleton
     fun provideRecipeStorage(recipeStorageImpl: RecipeStorageImpl): RecipeStorage
 }

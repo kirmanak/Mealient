@@ -10,9 +10,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 internal class RecipeStorageImpl @Inject constructor(
     private val db: AppDb,
     private val logger: Logger,

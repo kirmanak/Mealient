@@ -73,32 +73,25 @@ interface DataSourceModule {
     }
 
     @Binds
-    @Singleton
     fun bindCacheBuilder(cacheBuilderImpl: CacheBuilderImpl): CacheBuilder
 
     @Binds
-    @Singleton
     fun bindOkHttpBuilder(okHttpBuilderImpl: OkHttpBuilderImpl): OkHttpBuilder
 
     @Binds
-    @Singleton
     fun bindMealieDataSource(mealientDataSourceImpl: MealieDataSourceV0Impl): MealieDataSourceV0
 
     @Binds
-    @Singleton
     fun bindMealieDataSourceV1(mealientDataSourceImpl: MealieDataSourceV1Impl): MealieDataSourceV1
 
     @Binds
-    @Singleton
     fun bindNetworkRequestWrapper(networkRequestWrapperImpl: NetworkRequestWrapperImpl): NetworkRequestWrapper
 
     @Binds
-    @Singleton
     @IntoSet
     fun bindAuthInterceptor(authInterceptor: AuthInterceptor): LocalInterceptor
 
     @Binds
-    @Singleton
     @IntoSet
     fun bindBaseUrlInterceptor(baseUrlInterceptor: BaseUrlInterceptor): LocalInterceptor
 }

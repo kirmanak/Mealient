@@ -50,9 +50,7 @@ import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class ModelMapperImpl @Inject constructor() : ModelMapper {
 
 

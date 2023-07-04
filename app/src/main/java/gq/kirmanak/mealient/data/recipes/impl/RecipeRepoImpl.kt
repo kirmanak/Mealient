@@ -12,10 +12,8 @@ import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @OptIn(ExperimentalPagingApi::class)
-@Singleton
 class RecipeRepoImpl @Inject constructor(
     private val mediator: RecipesRemoteMediator,
     private val storage: RecipeStorage,

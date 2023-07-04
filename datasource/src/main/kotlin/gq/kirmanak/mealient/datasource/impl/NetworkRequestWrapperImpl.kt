@@ -6,9 +6,7 @@ import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import retrofit2.HttpException
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class NetworkRequestWrapperImpl @Inject constructor(
     private val logger: Logger,
 ) : NetworkRequestWrapper {

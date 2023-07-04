@@ -9,9 +9,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 
-@Singleton
 class AuthInterceptor @Inject constructor(
     private val logger: Logger,
     private val authenticationProviderProvider: Provider<AuthenticationProvider>,

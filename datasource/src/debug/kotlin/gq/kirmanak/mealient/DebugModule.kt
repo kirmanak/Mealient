@@ -14,13 +14,11 @@ import gq.kirmanak.mealient.datasource.BuildConfig
 import gq.kirmanak.mealient.logging.Logger
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DebugModule {
     @Provides
-    @Singleton
     @IntoSet
     fun provideLoggingInterceptor(logger: Logger): Interceptor {
         val interceptor = HttpLoggingInterceptor { message -> logger.v(tag = "OkHttp") { message } }
@@ -32,7 +30,6 @@ object DebugModule {
     }
 
     @Provides
-    @Singleton
     @IntoSet
     fun provideChuckerInterceptor(@ApplicationContext context: Context): Interceptor {
         val collector = ChuckerCollector(
