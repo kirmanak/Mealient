@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 
-class OkHttpBuilderImpl @Inject constructor(
+internal class OkHttpBuilderImpl @Inject constructor(
     private val cacheBuilder: CacheBuilder,
     // Use @JvmSuppressWildcards because otherwise dagger can't inject it (https://stackoverflow.com/a/43149382)
     private val interceptors: Set<@JvmSuppressWildcards Interceptor>,

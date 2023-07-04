@@ -8,10 +8,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.datasource.CertificateCombinedException
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.TrustedCertificatesStore
 import gq.kirmanak.mealient.datasource.findCauseAsInstanceOf
-import gq.kirmanak.mealient.datasource.impl.CertificateCombinedException
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.OperationUiState
 import kotlinx.coroutines.channels.Channel

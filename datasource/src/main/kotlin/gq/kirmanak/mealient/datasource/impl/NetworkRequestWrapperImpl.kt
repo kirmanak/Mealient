@@ -7,7 +7,7 @@ import gq.kirmanak.mealient.logging.Logger
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class NetworkRequestWrapperImpl @Inject constructor(
+internal class NetworkRequestWrapperImpl @Inject constructor(
     private val logger: Logger,
 ) : NetworkRequestWrapper {
 

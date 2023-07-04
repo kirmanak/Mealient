@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.datasource.impl
 
 import android.annotation.SuppressLint
+import gq.kirmanak.mealient.datasource.CertificateCombinedException
 import gq.kirmanak.mealient.datasource.TrustedCertificatesStore
 import gq.kirmanak.mealient.datasource.findCauseAsInstanceOf
 import java.security.KeyStore
@@ -10,15 +11,15 @@ import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
 @SuppressLint("CustomX509TrustManager")
-class AdvancedX509TrustManager @Inject constructor(
+internal class AdvancedX509TrustManager @Inject constructor(
     private val trustedCertificatesStore: TrustedCertificatesStore
 ) : X509TrustManager {
 
     private val standardTrustManager: X509TrustManager by lazy {
-        initialiseTrustManager()
+        findStandardTrustManager()
     }
 
-    private fun initialiseTrustManager(): X509TrustManager {
+    private fun findStandardTrustManager(): X509TrustManager {
         val factory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
         factory.init(null as KeyStore?)
         return factory.trustManagers

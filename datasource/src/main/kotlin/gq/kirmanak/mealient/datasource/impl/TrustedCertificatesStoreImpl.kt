@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TrustedCertificatesStoreImpl @Inject constructor(
+internal class TrustedCertificatesStoreImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val logger: Logger,
 ) : TrustedCertificatesStore {

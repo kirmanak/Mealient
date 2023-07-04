@@ -9,7 +9,7 @@ import okhttp3.Cache
 import java.io.File
 import javax.inject.Inject
 
-class CacheBuilderImpl @Inject constructor(
+internal class CacheBuilderImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val logger: Logger,
 ) : CacheBuilder {

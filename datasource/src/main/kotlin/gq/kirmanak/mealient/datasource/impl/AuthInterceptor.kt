@@ -10,7 +10,7 @@ import okhttp3.Response
 import javax.inject.Inject
 import javax.inject.Provider
 
-class AuthInterceptor @Inject constructor(
+internal class AuthInterceptor @Inject constructor(
     private val logger: Logger,
     private val authenticationProviderProvider: Provider<AuthenticationProvider>,
 ) : LocalInterceptor {
