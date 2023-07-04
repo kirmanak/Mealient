@@ -24,91 +24,35 @@ import javax.net.ssl.SSLPeerUnverifiedException
  *
  * @author David A. Velasco
  */
-class CertificateCombinedException(private val x509Certificate: X509Certificate) : RuntimeException() {
+class CertificateCombinedException(val serverCert: X509Certificate) : RuntimeException() {
 
-    private var mServerCert: X509Certificate? = null
-    private var mHostInUrl: String? = null
-    private var mCertificateExpiredException: CertificateExpiredException? = null
-    private var mCertificateNotYetValidException: CertificateNotYetValidException? = null
-    private var mCertPathValidatorException: CertPathValidatorException? = null
-    private var mOtherCertificateException: CertificateException? = null
-    private var mSslPeerUnverifiedException: SSLPeerUnverifiedException? = null
-
-    init {
-        mServerCert = x509Certificate
-    }
-
-    fun getServerCertificate(): X509Certificate? {
-        return mServerCert
-    }
-
-    fun getHostInUrl(): String? {
-        return mHostInUrl
-    }
-
-    fun setHostInUrl(host: String?) {
-        mHostInUrl = host
-    }
-
-    fun getCertificateExpiredException(): CertificateExpiredException? {
-        return mCertificateExpiredException
-    }
-
-    fun setCertificateExpiredException(c: CertificateExpiredException?) {
-        mCertificateExpiredException = c
-    }
-
-    fun getCertificateNotYetValidException(): CertificateNotYetValidException? {
-        return mCertificateNotYetValidException
-    }
-
-    fun setCertificateNotYetException(c: CertificateNotYetValidException?) {
-        mCertificateNotYetValidException = c
-    }
-
-    fun getCertPathValidatorException(): CertPathValidatorException? {
-        return mCertPathValidatorException
-    }
-
-    fun setCertPathValidatorException(c: CertPathValidatorException?) {
-        mCertPathValidatorException = c
-    }
-
-    fun getOtherCertificateException(): CertificateException? {
-        return mOtherCertificateException
-    }
-
-    fun setOtherCertificateException(c: CertificateException?) {
-        mOtherCertificateException = c
-    }
-
-    fun getSslPeerUnverifiedException(): SSLPeerUnverifiedException? {
-        return mSslPeerUnverifiedException
-    }
-
-    fun setSslPeerUnverifiedException(s: SSLPeerUnverifiedException?) {
-        mSslPeerUnverifiedException = s
-    }
+    var hostInUrl: String? = null
+    var certificateExpiredException: CertificateExpiredException? = null
+    var certificateNotYetValidException: CertificateNotYetValidException? = null
+    var certPathValidatorException: CertPathValidatorException? = null
+    var otherCertificateException: CertificateException? = null
+    var sslPeerUnverifiedException: SSLPeerUnverifiedException? = null
 
     fun isException(): Boolean {
-        return (mCertificateExpiredException != null ||
-                mCertificateNotYetValidException != null ||
-                mCertPathValidatorException != null ||
-                mOtherCertificateException != null ||
-                mSslPeerUnverifiedException != null)
+        return listOf(
+            certificateExpiredException,
+            certificateNotYetValidException,
+            certPathValidatorException,
+            otherCertificateException,
+            sslPeerUnverifiedException
+        ).any { it != null }
     }
 
     fun isRecoverable(): Boolean {
-        return (mCertificateExpiredException != null ||
-                mCertificateNotYetValidException != null ||
-                mCertPathValidatorException != null ||
-                mSslPeerUnverifiedException != null)
+        return listOf(
+            certificateExpiredException,
+            certificateNotYetValidException,
+            certPathValidatorException,
+            sslPeerUnverifiedException
+        ).any { it != null }
     }
 
     companion object {
-        /**
-         * Generated - to refresh every time the class changes
-         */
-        private val serialVersionUID: Long = -8875782030758554999L
+        private const val serialVersionUID: Long = -8875782030758554999L
     }
 }
