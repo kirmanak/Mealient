@@ -9,9 +9,9 @@ import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.TrustedCertificatesStore
 import gq.kirmanak.mealient.datasource.findCauseAsInstanceOf
 import gq.kirmanak.mealient.datasource.impl.CertificateCombinedException
-import gq.kirmanak.mealient.datasource.impl.KnownServersStoreHolder
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.OperationUiState
 import kotlinx.coroutines.channels.Channel
@@ -26,7 +26,7 @@ class BaseURLViewModel @Inject constructor(
     private val authRepo: AuthRepo,
     private val recipeRepo: RecipeRepo,
     private val logger: Logger,
-    private val knownServersStoreHolder: KnownServersStoreHolder,
+    private val trustedCertificatesStore: TrustedCertificatesStore,
 ) : ViewModel() {
 
     private val _uiState = MutableLiveData<OperationUiState<Unit>>(OperationUiState.Initial())
@@ -80,6 +80,6 @@ class BaseURLViewModel @Inject constructor(
 
     fun acceptInvalidCertificate(certificate: X509Certificate) {
         logger.v { "acceptInvalidCertificate() called with: certificate = $certificate" }
-        knownServersStoreHolder.addCertToKnownServersStore(certificate)
+        trustedCertificatesStore.addTrustedCertificate(certificate)
     }
 }

@@ -13,6 +13,7 @@ import gq.kirmanak.mealient.datasource.impl.CacheBuilderImpl
 import gq.kirmanak.mealient.datasource.impl.NetworkRequestWrapperImpl
 import gq.kirmanak.mealient.datasource.impl.OkHttpBuilderImpl
 import gq.kirmanak.mealient.datasource.impl.RetrofitBuilder
+import gq.kirmanak.mealient.datasource.impl.TrustedCertificatesStoreImpl
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0Impl
 import gq.kirmanak.mealient.datasource.v0.MealieServiceV0
@@ -94,4 +95,7 @@ interface DataSourceModule {
     @Binds
     @IntoSet
     fun bindBaseUrlInterceptor(baseUrlInterceptor: BaseUrlInterceptor): LocalInterceptor
+
+    @Binds
+    fun bindTrustedCertificatesStore(impl: TrustedCertificatesStoreImpl): TrustedCertificatesStore
 }
