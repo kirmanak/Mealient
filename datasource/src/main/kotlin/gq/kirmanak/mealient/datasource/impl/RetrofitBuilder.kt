@@ -6,7 +6,7 @@ import retrofit2.Converter.Factory
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-class RetrofitBuilder @Inject constructor(
+internal class RetrofitBuilder @Inject constructor(
     private val okHttpClient: OkHttpClient,
     private val converterFactory: Factory,
     private val logger: Logger,

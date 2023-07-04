@@ -11,7 +11,7 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Provider
 
-class BaseUrlInterceptor @Inject constructor(
+internal class BaseUrlInterceptor @Inject constructor(
     private val logger: Logger,
     private val serverUrlProviderProvider: Provider<ServerUrlProvider>,
 ) : LocalInterceptor {

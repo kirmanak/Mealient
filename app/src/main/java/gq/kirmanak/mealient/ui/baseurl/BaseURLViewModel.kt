@@ -8,11 +8,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.datasource.CertificateCombinedException
 import gq.kirmanak.mealient.datasource.NetworkError
+import gq.kirmanak.mealient.datasource.TrustedCertificatesStore
+import gq.kirmanak.mealient.datasource.findCauseAsInstanceOf
 import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.ui.OperationUiState
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.security.cert.X509Certificate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,11 +26,14 @@ class BaseURLViewModel @Inject constructor(
     private val authRepo: AuthRepo,
     private val recipeRepo: RecipeRepo,
     private val logger: Logger,
-    private val shoppingListsRepo: ShoppingListsRepo,
+    private val trustedCertificatesStore: TrustedCertificatesStore,
 ) : ViewModel() {
 
     private val _uiState = MutableLiveData<OperationUiState<Unit>>(OperationUiState.Initial())
     val uiState: LiveData<OperationUiState<Unit>> get() = _uiState
+
+    private val invalidCertificatesChannel = Channel<X509Certificate>(Channel.UNLIMITED)
+    val invalidCertificatesFlow = invalidCertificatesChannel.receiveAsFlow()
 
     fun saveBaseUrl(baseURL: String) {
         logger.v { "saveBaseUrl() called with: baseURL = $baseURL" }
@@ -49,7 +57,11 @@ class BaseURLViewModel @Inject constructor(
 
         val result: Result<Unit> = serverInfoRepo.tryBaseURL(url).recoverCatching {
             logger.e(it) { "checkBaseURL: trying to recover, had prefix = $hasPrefix" }
-            if (hasPrefix || it is NetworkError.NotMealie) {
+            val certificateError = it.findCauseAsInstanceOf<CertificateCombinedException>()
+            if (certificateError != null) {
+                invalidCertificatesChannel.send(certificateError.serverCert)
+                throw certificateError
+            } else if (hasPrefix || it is NetworkError.NotMealie) {
                 throw it
             } else {
                 val unencryptedUrl = url.replace("https", "http")
@@ -66,4 +78,8 @@ class BaseURLViewModel @Inject constructor(
         _uiState.value = OperationUiState.fromResult(result)
     }
 
+    fun acceptInvalidCertificate(certificate: X509Certificate) {
+        logger.v { "acceptInvalidCertificate() called with: certificate = $certificate" }
+        trustedCertificatesStore.addTrustedCertificate(certificate)
+    }
 }

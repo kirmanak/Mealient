@@ -20,3 +20,13 @@ inline fun <T> runCatchingExceptCancel(block: () -> T): Result<T> = try {
 
 @OptIn(ExperimentalSerializationApi::class)
 inline fun <reified R> ResponseBody.decode(json: Json): R = json.decodeFromStream(byteStream())
+
+inline fun <reified T> Throwable.findCauseAsInstanceOf(): T? {
+    var cause: Throwable? = this
+    var previousCause: Throwable? = null
+    while (cause != null && cause != previousCause && cause !is T) {
+        previousCause = cause
+        cause = cause.cause
+    }
+    return cause as? T
+}
