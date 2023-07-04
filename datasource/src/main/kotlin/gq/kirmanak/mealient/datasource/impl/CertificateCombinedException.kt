@@ -26,7 +26,6 @@ import javax.net.ssl.SSLPeerUnverifiedException
  */
 class CertificateCombinedException(val serverCert: X509Certificate) : RuntimeException() {
 
-    var hostInUrl: String? = null
     var certificateExpiredException: CertificateExpiredException? = null
     var certificateNotYetValidException: CertificateNotYetValidException? = null
     var certPathValidatorException: CertPathValidatorException? = null
@@ -39,15 +38,6 @@ class CertificateCombinedException(val serverCert: X509Certificate) : RuntimeExc
             certificateNotYetValidException,
             certPathValidatorException,
             otherCertificateException,
-            sslPeerUnverifiedException
-        ).any { it != null }
-    }
-
-    fun isRecoverable(): Boolean {
-        return listOf(
-            certificateExpiredException,
-            certificateNotYetValidException,
-            certPathValidatorException,
             sslPeerUnverifiedException
         ).any { it != null }
     }
