@@ -9,18 +9,15 @@ import gq.kirmanak.mealient.data.migration.From24AuthMigrationExecutor
 import gq.kirmanak.mealient.data.migration.MigrationDetector
 import gq.kirmanak.mealient.data.migration.MigrationDetectorImpl
 import gq.kirmanak.mealient.data.migration.MigrationExecutor
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface MigrationModule {
 
     @Binds
-    @Singleton
     @IntoSet
     fun bindFrom24AuthMigrationExecutor(from24AuthMigrationExecutor: From24AuthMigrationExecutor): MigrationExecutor
 
     @Binds
-    @Singleton
     fun bindMigrationDetector(migrationDetectorImpl: MigrationDetectorImpl): MigrationDetector
 }

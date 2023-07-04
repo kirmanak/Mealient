@@ -9,9 +9,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class VersionDataSourceImpl @Inject constructor(
     private val v0Source: MealieDataSourceV0,
     private val v1Source: MealieDataSourceV1,

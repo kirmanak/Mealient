@@ -3,9 +3,7 @@ package gq.kirmanak.mealient.logging
 import android.util.Log
 import gq.kirmanak.mealient.architecture.configuration.BuildConfiguration
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class LogcatAppender @Inject constructor(
     private val buildConfiguration: BuildConfiguration,
 ) : Appender {

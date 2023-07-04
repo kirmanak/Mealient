@@ -12,7 +12,6 @@ import gq.kirmanak.mealient.databinding.ViewHolderIngredientBinding
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.info.RecipeIngredientsAdapter.RecipeIngredientViewHolder
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class RecipeIngredientsAdapter private constructor(
     private val recipeIngredientViewHolderFactory: RecipeIngredientViewHolder.Factory,
@@ -20,7 +19,6 @@ class RecipeIngredientsAdapter private constructor(
     private val disableAmounts: Boolean,
 ) : ListAdapter<RecipeIngredientEntity, RecipeIngredientViewHolder>(RecipeIngredientDiffCallback) {
 
-    @Singleton
     class Factory @Inject constructor(
         private val recipeIngredientViewHolderFactory: RecipeIngredientViewHolder.Factory,
         private val logger: Logger,
@@ -38,7 +36,6 @@ class RecipeIngredientsAdapter private constructor(
         private val disableAmounts: Boolean,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        @Singleton
         class Factory @Inject constructor(
             private val logger: Logger,
         ) {

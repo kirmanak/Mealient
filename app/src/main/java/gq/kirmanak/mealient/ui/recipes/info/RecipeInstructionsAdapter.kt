@@ -12,14 +12,12 @@ import gq.kirmanak.mealient.extensions.resources
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.info.RecipeInstructionsAdapter.RecipeInstructionViewHolder
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class RecipeInstructionsAdapter private constructor(
     private val logger: Logger,
     private val recipeInstructionViewHolderFactory: RecipeInstructionViewHolder.Factory,
 ) : ListAdapter<RecipeInstructionEntity, RecipeInstructionViewHolder>(RecipeInstructionDiffCallback) {
 
-    @Singleton
     class Factory @Inject constructor(
         private val logger: Logger,
         private val recipeInstructionViewHolderFactory: RecipeInstructionViewHolder.Factory,
@@ -45,7 +43,6 @@ class RecipeInstructionsAdapter private constructor(
         private val logger: Logger,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        @Singleton
         class Factory @Inject constructor(private val logger: Logger) {
             fun build(binding: ViewHolderInstructionBinding) =
                 RecipeInstructionViewHolder(binding, logger)

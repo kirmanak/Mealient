@@ -18,9 +18,7 @@ import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class MealieDataSourceV0Impl @Inject constructor(
     private val networkRequestWrapper: NetworkRequestWrapper,
     private val service: MealieServiceV0,

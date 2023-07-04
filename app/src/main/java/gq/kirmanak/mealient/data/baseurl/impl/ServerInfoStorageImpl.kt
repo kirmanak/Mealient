@@ -5,9 +5,7 @@ import gq.kirmanak.mealient.data.baseurl.ServerInfoStorage
 import gq.kirmanak.mealient.data.storage.PreferencesStorage
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class ServerInfoStorageImpl @Inject constructor(
     private val preferencesStorage: PreferencesStorage,
 ) : ServerInfoStorage {

@@ -13,9 +13,7 @@ import gq.kirmanak.mealient.datasource.v0.MealieDataSourceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class MealieDataSourceWrapper @Inject constructor(
     private val serverInfoRepo: ServerInfoRepo,
     private val v0Source: MealieDataSourceV0,

@@ -5,9 +5,7 @@ import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class AddRecipeStorageImpl @Inject constructor(
     private val dataStore: DataStore<AddRecipeInput>,
     private val logger: Logger,

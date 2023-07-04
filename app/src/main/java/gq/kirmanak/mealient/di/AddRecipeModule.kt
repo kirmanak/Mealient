@@ -10,7 +10,6 @@ import gq.kirmanak.mealient.data.add.impl.AddRecipeRepoImpl
 import gq.kirmanak.mealient.data.network.MealieDataSourceWrapper
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeStorage
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeStorageImpl
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -18,14 +17,11 @@ interface AddRecipeModule {
 
 
     @Binds
-    @Singleton
     fun provideAddRecipeRepo(repo: AddRecipeRepoImpl): AddRecipeRepo
 
     @Binds
-    @Singleton
     fun bindAddRecipeDataSource(mealieDataSourceWrapper: MealieDataSourceWrapper): AddRecipeDataSource
 
     @Binds
-    @Singleton
     fun bindAddRecipeStorage(addRecipeStorageImpl: AddRecipeStorageImpl): AddRecipeStorage
 }

@@ -7,9 +7,7 @@ import gq.kirmanak.mealient.logging.Logger
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class OkHttpBuilderImpl @Inject constructor(
     private val cacheBuilder: CacheBuilder,
     // Use @JvmSuppressWildcards because otherwise dagger can't inject it (https://stackoverflow.com/a/43149382)

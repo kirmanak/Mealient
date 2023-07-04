@@ -5,9 +5,7 @@ import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class ShoppingListsDataSourceImpl @Inject constructor(
     private val v1Source: MealieDataSourceV1,
     private val modelMapper: ModelMapper,

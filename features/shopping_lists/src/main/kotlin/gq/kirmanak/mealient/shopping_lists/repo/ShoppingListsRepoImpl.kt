@@ -5,9 +5,7 @@ import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSource
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class ShoppingListsRepoImpl @Inject constructor(
     private val dataSource: ShoppingListsDataSource,
     private val logger: Logger,

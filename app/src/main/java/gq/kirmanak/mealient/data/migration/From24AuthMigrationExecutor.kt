@@ -8,9 +8,7 @@ import gq.kirmanak.mealient.datastore.DataStoreModule.Companion.ENCRYPTED
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
-@Singleton
 class From24AuthMigrationExecutor @Inject constructor(
     @Named(ENCRYPTED) private val sharedPreferences: SharedPreferences,
     private val authRepo: AuthRepo,

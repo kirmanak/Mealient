@@ -6,7 +6,6 @@ import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.logging.LoggingModule
-import javax.inject.Singleton
 
 @Module
 @TestInstallIn(
@@ -16,6 +15,5 @@ import javax.inject.Singleton
 interface FakeLoggingModule {
 
     @Binds
-    @Singleton
     fun bindFakeLogger(impl: FakeLogger): Logger
 }

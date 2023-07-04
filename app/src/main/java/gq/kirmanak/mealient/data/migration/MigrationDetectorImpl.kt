@@ -5,16 +5,13 @@ import gq.kirmanak.mealient.data.storage.PreferencesStorage
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class MigrationDetectorImpl @Inject constructor(
     private val preferencesStorage: PreferencesStorage,
     private val migrationExecutors: Set<@JvmSuppressWildcards MigrationExecutor>,
     private val buildConfiguration: BuildConfiguration,
     private val logger: Logger,
 ) : MigrationDetector {
-
 
     override suspend fun executeMigrations() {
         val key = preferencesStorage.lastExecutedMigrationVersionKey

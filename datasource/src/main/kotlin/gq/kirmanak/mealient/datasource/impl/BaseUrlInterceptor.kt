@@ -10,9 +10,7 @@ import okhttp3.Response
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 
-@Singleton
 class BaseUrlInterceptor @Inject constructor(
     private val logger: Logger,
     private val serverUrlProviderProvider: Provider<ServerUrlProvider>,

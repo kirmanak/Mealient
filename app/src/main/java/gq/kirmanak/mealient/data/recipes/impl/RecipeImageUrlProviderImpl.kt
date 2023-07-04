@@ -4,9 +4,7 @@ import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.logging.Logger
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class RecipeImageUrlProviderImpl @Inject constructor(
     private val serverInfoRepo: ServerInfoRepo,
     private val logger: Logger,

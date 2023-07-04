@@ -11,7 +11,6 @@ import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.runBlocking
 import java.io.InputStream
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class RecipeModelLoader private constructor(
     private val recipeImageUrlProvider: RecipeImageUrlProvider,
@@ -20,7 +19,6 @@ class RecipeModelLoader private constructor(
     cache: ModelCache<RecipeSummaryEntity, GlideUrl>,
 ) : BaseGlideUrlLoader<RecipeSummaryEntity>(concreteLoader, cache) {
 
-    @Singleton
     class Factory @Inject constructor(
         private val recipeImageUrlProvider: RecipeImageUrlProvider,
         private val logger: Logger,
