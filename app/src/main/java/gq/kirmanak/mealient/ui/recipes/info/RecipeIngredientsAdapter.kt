@@ -7,47 +7,38 @@ import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.databinding.ViewHolderIngredientBinding
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.recipes.info.RecipeIngredientsAdapter.RecipeIngredientViewHolder
-import javax.inject.Inject
 
-class RecipeIngredientsAdapter private constructor(
+class RecipeIngredientsAdapter @AssistedInject constructor(
     private val recipeIngredientViewHolderFactory: RecipeIngredientViewHolder.Factory,
     private val logger: Logger,
-    private val disableAmounts: Boolean,
+    @Assisted private val disableAmounts: Boolean,
 ) : ListAdapter<RecipeIngredientEntity, RecipeIngredientViewHolder>(RecipeIngredientDiffCallback) {
 
-    class Factory @Inject constructor(
-        private val recipeIngredientViewHolderFactory: RecipeIngredientViewHolder.Factory,
-        private val logger: Logger,
-    ) {
-        fun build(disableAmounts: Boolean) = RecipeIngredientsAdapter(
-            recipeIngredientViewHolderFactory = recipeIngredientViewHolderFactory,
-            logger = logger,
-            disableAmounts = disableAmounts,
-        )
+    @AssistedFactory
+    interface Factory {
+        fun build(disableAmounts: Boolean): RecipeIngredientsAdapter
     }
 
-    class RecipeIngredientViewHolder private constructor(
-        private val binding: ViewHolderIngredientBinding,
+    class RecipeIngredientViewHolder @AssistedInject constructor(
+        @Assisted private val binding: ViewHolderIngredientBinding,
+        @Assisted private val disableAmounts: Boolean,
         private val logger: Logger,
-        private val disableAmounts: Boolean,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        class Factory @Inject constructor(
-            private val logger: Logger,
-        ) {
+        @AssistedFactory
+        interface Factory {
 
             fun build(
                 binding: ViewHolderIngredientBinding,
                 disableAmounts: Boolean,
-            ) = RecipeIngredientViewHolder(
-                binding = binding,
-                logger = logger,
-                disableAmounts = disableAmounts,
-            )
+            ): RecipeIngredientViewHolder
         }
 
         fun bind(item: RecipeIngredientEntity) {
@@ -130,15 +121,18 @@ fun Double.mediantMethod(d: Int = 10, mixed: Boolean = true): Triple<Int, Int, I
                             n1 += n2
                             d2 = d + 1
                         }
+
                         d1 > d2 -> d2 = d + 1
                         else -> d1 = d + 1
                     }
                     break
                 }
+
                 x < m -> {
                     n2 += n1
                     d2 += d1
                 }
+
                 else -> {
                     n1 += n2
                     d1 += d2

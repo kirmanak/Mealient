@@ -5,29 +5,29 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.ModelCache
 import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.runBlocking
 import java.io.InputStream
-import javax.inject.Inject
 
-class RecipeModelLoader private constructor(
+class RecipeModelLoader @AssistedInject constructor(
     private val recipeImageUrlProvider: RecipeImageUrlProvider,
     private val logger: Logger,
-    concreteLoader: ModelLoader<GlideUrl, InputStream>,
-    cache: ModelCache<RecipeSummaryEntity, GlideUrl>,
+    @Assisted concreteLoader: ModelLoader<GlideUrl, InputStream>,
+    @Assisted cache: ModelCache<RecipeSummaryEntity, GlideUrl>,
 ) : BaseGlideUrlLoader<RecipeSummaryEntity>(concreteLoader, cache) {
 
-    class Factory @Inject constructor(
-        private val recipeImageUrlProvider: RecipeImageUrlProvider,
-        private val logger: Logger,
-    ) {
+    @AssistedFactory
+    interface Factory {
 
         fun build(
             concreteLoader: ModelLoader<GlideUrl, InputStream>,
             cache: ModelCache<RecipeSummaryEntity, GlideUrl>,
-        ) = RecipeModelLoader(recipeImageUrlProvider, logger, concreteLoader, cache)
+        ): RecipeModelLoader
 
     }
 

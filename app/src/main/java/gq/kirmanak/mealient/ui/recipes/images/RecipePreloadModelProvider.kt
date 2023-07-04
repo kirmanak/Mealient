@@ -6,13 +6,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.ListPreloader
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.request.RequestOptions
-import dagger.hilt.android.scopes.FragmentScoped
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.logging.Logger
-import javax.inject.Inject
 
-class RecipePreloadModelProvider(
-    private val adapter: PagingDataAdapter<RecipeSummaryEntity, *>,
+class RecipePreloadModelProvider @AssistedInject constructor(
+    @Assisted private val adapter: PagingDataAdapter<RecipeSummaryEntity, *>,
     private val fragment: Fragment,
     private val requestOptions: RequestOptions,
     private val logger: Logger,
@@ -28,15 +29,9 @@ class RecipePreloadModelProvider(
         return Glide.with(fragment).load(item).apply(requestOptions)
     }
 
-    @FragmentScoped
-    class Factory @Inject constructor(
-        private val fragment: Fragment,
-        private val requestOptions: RequestOptions,
-        private val logger: Logger,
-    ) {
+    @AssistedFactory
+    interface Factory {
 
-        fun create(
-            adapter: PagingDataAdapter<RecipeSummaryEntity, *>,
-        ) = RecipePreloadModelProvider(adapter, fragment, requestOptions, logger)
+        fun create(adapter: PagingDataAdapter<RecipeSummaryEntity, *>): RecipePreloadModelProvider
     }
 }
