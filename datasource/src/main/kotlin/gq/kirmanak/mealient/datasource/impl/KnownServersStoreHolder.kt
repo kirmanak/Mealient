@@ -33,7 +33,7 @@ class KnownServersStoreHolder @Inject constructor(
         return store
     }
 
-    fun addCertToKnownServersStore(cert: Certificate, context: Context) {
+    fun addCertToKnownServersStore(cert: Certificate) {
         knownServersStore.setCertificateEntry(cert.hashCode().toString(), cert)
         context.openFileOutput(LOCAL_TRUSTSTORE_FILENAME, Context.MODE_PRIVATE).use {
             knownServersStore.store(it, LOCAL_TRUSTSTORE_PASSWORD.toCharArray())

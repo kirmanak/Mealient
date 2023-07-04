@@ -17,6 +17,10 @@
 	<string name="fragment_base_url_malformed_url">Check URL format: %s</string>
 	<string name="fragment_base_url_save">Proceed</string>
 	<string name="fragment_base_url_unknown_error" translatable="false">@string/fragment_authentication_unknown_error</string>
+	<string name="fragment_base_url_invalid_certificate_title">The identity of the server could not be verified</string>
+	<string name="fragment_base_url_invalid_certificate_message">Do you trust this certificate?\n\nCertificate Information:\nIssuer: %1$s\nSubject: %2$s\nValid From: %3$s\nValid Until: %4$s</string>
+	<string name="fragment_base_url_invalid_certificate_accept">Trust</string>
+	<string name="fragment_base_url_invalid_certificate_deny">No</string>
 	<string name="menu_navigation_drawer_login">Login</string>
 	<string name="fragment_disclaimer_button_okay">Okay</string>
 	<string name="view_holder_recipe_instructions_step">Step: %d</string>

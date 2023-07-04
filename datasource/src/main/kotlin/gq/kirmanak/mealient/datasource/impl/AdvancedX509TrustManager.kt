@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.datasource.impl
 
 import android.annotation.SuppressLint
+import gq.kirmanak.mealient.datasource.findCauseAsInstanceOf
 import gq.kirmanak.mealient.logging.Logger
 import java.security.KeyStore
 import java.security.KeyStoreException
@@ -18,6 +19,9 @@ class AdvancedX509TrustManager @Inject constructor(
     private val standardTrustManager: X509TrustManager by lazy {
         initialiseTrustManager()
     }
+
+    private val keyStore: KeyStore
+        get() = knownServersStoreHolder.knownServersStore
 
     private fun initialiseTrustManager(): X509TrustManager {
         val factory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
@@ -45,13 +49,8 @@ class AdvancedX509TrustManager @Inject constructor(
             try {
                 standardTrustManager.checkServerTrusted(certificates, authType)
             } catch (c: CertificateException) {
-                var cause = c.cause
-                var previousCause: Throwable? = null
-                while (cause != null && cause != previousCause && cause !is CertPathValidatorException) {
-                    previousCause = cause
-                    cause = cause.cause
-                }
-                if (cause is CertPathValidatorException) {
+                val cause = c.findCauseAsInstanceOf<CertPathValidatorException>()
+                if (cause != null) {
                     result.certPathValidatorException = cause
                 } else {
                     result.otherCertificateException = c
@@ -68,9 +67,9 @@ class AdvancedX509TrustManager @Inject constructor(
         return standardTrustManager.acceptedIssuers
     }
 
-    fun isKnownServer(cert: X509Certificate): Boolean {
+    private fun isKnownServer(cert: X509Certificate): Boolean {
         return try {
-            knownServersStoreHolder.knownServersStore.getCertificateAlias(cert) != null
+            keyStore.getCertificateAlias(cert) != null
         } catch (e: KeyStoreException) {
             logger.e(e) { "Fail while checking certificate in the known-servers store" }
             false

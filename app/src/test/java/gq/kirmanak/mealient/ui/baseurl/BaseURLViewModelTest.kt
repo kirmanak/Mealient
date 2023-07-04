@@ -5,7 +5,7 @@ import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.datasource.NetworkError
-import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
+import gq.kirmanak.mealient.datasource.impl.KnownServersStoreHolder
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.ui.OperationUiState
@@ -33,7 +33,7 @@ class BaseURLViewModelTest : BaseUnitTest() {
     lateinit var recipeRepo: RecipeRepo
 
     @MockK(relaxUnitFun = true)
-    lateinit var shoppingListsRepo: ShoppingListsRepo
+    lateinit var knownServersStoreHolder: KnownServersStoreHolder
 
     lateinit var subject: BaseURLViewModel
 
@@ -45,7 +45,7 @@ class BaseURLViewModelTest : BaseUnitTest() {
             authRepo = authRepo,
             recipeRepo = recipeRepo,
             logger = logger,
-            shoppingListsRepo = shoppingListsRepo,
+            knownServersStoreHolder = knownServersStoreHolder,
         )
     }
 
