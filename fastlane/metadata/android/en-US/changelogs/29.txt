@@ -1,0 +1,3 @@
+Added an option to display the shopping lists.
+Added an option to accept self-signed SSL certificates.
+Added machine translation to Dutch, German, French, and Portuguese.
