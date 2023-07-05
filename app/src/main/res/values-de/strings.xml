@@ -15,6 +15,10 @@
 	<string name="fragment_base_url_unexpected_response">Unerwartete Antwort. Ist es Mealie?</string>
 	<string name="fragment_base_url_malformed_url">URL-Format prüfen: %s</string>
 	<string name="fragment_base_url_save">Weiter</string>
+	<string name="fragment_base_url_invalid_certificate_title">Die Identität des Servers konnte nicht überprüft werden</string>
+	<string name="fragment_base_url_invalid_certificate_message">Vertrauen Sie diesem Zertifikat?\n\nInformationen zum Zertifikat:\nAussteller: %1$s\nBetreff: %2$s\nGültig von: %3$s\nGültig bis: %4$s</string>
+	<string name="fragment_base_url_invalid_certificate_accept">Vertrauen</string>
+	<string name="fragment_base_url_invalid_certificate_deny">Nein</string>
 	<string name="menu_navigation_drawer_login">Anmeldung</string>
 	<string name="fragment_disclaimer_button_okay">Okay</string>
 	<string name="view_holder_recipe_instructions_step">Schritt: %d</string>
