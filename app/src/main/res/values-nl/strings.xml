@@ -15,6 +15,10 @@
 	<string name="fragment_base_url_unexpected_response">Onverwachte reactie. Is het Mealie?</string>
 	<string name="fragment_base_url_malformed_url">Controleer URL-indeling: %s</string>
 	<string name="fragment_base_url_save">Ga verder</string>
+	<string name="fragment_base_url_invalid_certificate_title">De identiteit van de server kon niet worden geverifieerd</string>
+	<string name="fragment_base_url_invalid_certificate_message">Vertrouwt u dit certificaat?\n\nCertificaatinformatie:\nUitgevende instelling: %1$s\nOnderwerp: %2$s\nGeldig vanaf: %3$s\nGeldig tot: %4$s</string>
+	<string name="fragment_base_url_invalid_certificate_accept">Vertrouwen</string>
+	<string name="fragment_base_url_invalid_certificate_deny">Geen</string>
 	<string name="menu_navigation_drawer_login">Inloggen</string>
 	<string name="fragment_disclaimer_button_okay">Oké</string>
 	<string name="view_holder_recipe_instructions_step">Stap: %d</string>

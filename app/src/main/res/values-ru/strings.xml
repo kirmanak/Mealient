@@ -15,6 +15,10 @@
 	<string name="fragment_base_url_unexpected_response">Неожиданный ответ. Это Mealie?</string>
 	<string name="fragment_base_url_malformed_url">Проверьте формат URL: %s</string>
 	<string name="fragment_base_url_save">Продолжить</string>
+	<string name="fragment_base_url_invalid_certificate_title">Не удалось проверить подлинность сервера</string>
+	<string name="fragment_base_url_invalid_certificate_message">Доверяете ли вы этому сертификату?\n\nИнформация о сертификате:\nIssuer: %1$s\nSubject: %2$s\nДействителен с: %3$s\nДействителен до: %4$s</string>
+	<string name="fragment_base_url_invalid_certificate_accept">Доверять</string>
+	<string name="fragment_base_url_invalid_certificate_deny">Нет</string>
 	<string name="menu_navigation_drawer_login">Войти</string>
 	<string name="fragment_disclaimer_button_okay">Хорошо</string>
 	<string name="view_holder_recipe_instructions_step">Шаг: %d</string>
