@@ -188,4 +188,12 @@ class MealieDataSourceV1Impl @Inject constructor(
         }
         updateShoppingListItem(id, JsonObject(updatedItem))
     }
+
+    override suspend fun deleteShoppingListItem(
+        id: String,
+    ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.deleteShoppingListItem(id) },
+        logMethod = { "deleteShoppingListItem" },
+        logParameters = { "id = $id" }
+    )
 }

@@ -3,6 +3,7 @@
 	<string name="shopping_lists_screen_cart_icon">Shopping cart</string>
 	<string name="shopping_list_screen_unknown_error">Unknown error</string>
 	<string name="shopping_list_screen_empty_list">%1$s is empty</string>
+	<string name="shopping_list_screen_delete_icon_content_description">Delete</string>
 	<string name="shopping_lists_screen_empty">No shopping lists found</string>
 	<string name="shopping_lists_screen_unauthorized_error">Authentication is required</string>
 	<string name="shopping_lists_screen_no_connection">No server connection</string>

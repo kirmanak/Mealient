@@ -25,4 +25,9 @@ class ShoppingListsRepoImpl @Inject constructor(
         logger.v { "getShoppingListItems() called with: id = $id" }
         return dataSource.getShoppingList(id)
     }
+
+    override suspend fun deleteShoppingListItem(id: String) {
+        logger.v { "deleteShoppingListItem() called with: id = $id" }
+        dataSource.deleteShoppingListItem(id)
+    }
 }

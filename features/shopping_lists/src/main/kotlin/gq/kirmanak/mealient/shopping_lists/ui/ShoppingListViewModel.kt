@@ -111,4 +111,20 @@ internal class ShoppingListViewModel @Inject constructor(
         logger.v { "onSnackbarShown() called" }
         _errorToShowInSnackbar = null
     }
+
+    fun deleteShoppingListItem(item: ShoppingListItemInfo) {
+        logger.v { "deleteShoppingListItem() called with: item = $item" }
+        viewModelScope.launch {
+            val result = runCatchingExceptCancel {
+                shoppingListsRepo.deleteShoppingListItem(item.id)
+            }.onFailure {
+                logger.e(it) { "Failed to delete item" }
+            }
+            _errorToShowInSnackbar = result.exceptionOrNull()
+            if (result.isSuccess) {
+                logger.v { "Item deleted" }
+                refreshShoppingList()
+            }
+        }
+    }
 }
