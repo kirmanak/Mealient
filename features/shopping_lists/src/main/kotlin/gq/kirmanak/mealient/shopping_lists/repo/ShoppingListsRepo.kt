@@ -10,4 +10,6 @@ interface ShoppingListsRepo {
     suspend fun getShoppingLists(): List<ShoppingListInfo>
 
     suspend fun getShoppingList(id: String): FullShoppingListInfo
+
+    suspend fun deleteShoppingListItem(id: String)
 }

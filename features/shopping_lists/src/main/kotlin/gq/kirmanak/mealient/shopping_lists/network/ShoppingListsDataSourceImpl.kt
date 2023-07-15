@@ -24,5 +24,10 @@ class ShoppingListsDataSourceImpl @Inject constructor(
         id: String,
         checked: Boolean,
     ) = v1Source.updateIsShoppingListItemChecked(id, checked)
+
+    override suspend fun deleteShoppingListItem(
+        id: String
+    ) = v1Source.deleteShoppingListItem(id)
+
 }
 

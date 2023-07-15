@@ -89,4 +89,9 @@ interface MealieServiceV1 {
         @Path("id") id: String,
         @Body request: JsonElement,
     )
+
+    @DELETE("/api/groups/shopping/items/{id}")
+    suspend fun deleteShoppingListItem(
+        @Path("id") id: String,
+    )
 }

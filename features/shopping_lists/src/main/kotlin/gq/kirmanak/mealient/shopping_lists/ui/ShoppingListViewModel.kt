@@ -39,7 +39,9 @@ internal class ShoppingListViewModel @Inject constructor(
 
     private val args: ShoppingListNavArgs = ShoppingListScreenDestination.argsFrom(savedStateHandle)
 
-    private val _disabledItemIds: MutableStateFlow<Set<String>> = MutableStateFlow(mutableSetOf())
+    private val checkedOverride = MutableStateFlow<MutableMap<String, Boolean>>(mutableMapOf())
+
+    private val deletedItemIds = MutableStateFlow<Set<String>>(mutableSetOf())
 
     private val loadingHelper = loadingHelperFactory.create(viewModelScope) {
         shoppingListsRepo.getShoppingList(args.shoppingListId)
@@ -47,7 +49,8 @@ internal class ShoppingListViewModel @Inject constructor(
 
     val loadingState: StateFlow<LoadingState<ShoppingListScreenState>> = combine(
         loadingHelper.loadingState,
-        _disabledItemIds,
+        checkedOverride,
+        deletedItemIds,
         ::buildLoadingState,
     ).stateIn(viewModelScope, SharingStarted.Eagerly, LoadingStateNoData.InitialLoad)
 
@@ -64,7 +67,7 @@ internal class ShoppingListViewModel @Inject constructor(
         viewModelScope.launch {
             authRepo.isAuthorizedFlow.valueUpdatesOnly().collect {
                 logger.d { "Authorization state changed to $it" }
-                if (it) refreshShoppingList()
+                if (it) doRefresh()
             }
         }
     }
@@ -72,19 +75,25 @@ internal class ShoppingListViewModel @Inject constructor(
     fun refreshShoppingList() {
         logger.v { "refreshShoppingList() called" }
         viewModelScope.launch {
-            _errorToShowInSnackbar = loadingHelper.refresh().exceptionOrNull()
+            doRefresh()
         }
+    }
+
+    private suspend fun doRefresh() {
+        _errorToShowInSnackbar = loadingHelper.refresh().exceptionOrNull()
     }
 
     private fun buildLoadingState(
         loadingState: LoadingState<FullShoppingListInfo>,
-        disabledItemIds: Set<String>,
+        checkedOverrideMap: Map<String, Boolean>,
+        deletedItemIds: Set<String>,
     ): LoadingState<ShoppingListScreenState> {
-        logger.v { "buildLoadingState() called with: loadingState = $loadingState, disabledItems = $disabledItemIds" }
+        logger.v { "buildLoadingState() called with: loadingState = $loadingState, checkedOverrideMap = $checkedOverrideMap, deletedItemIds = $deletedItemIds" }
         return loadingState.map { shoppingList ->
             val items = shoppingList.items
+                .filter { it.id !in deletedItemIds }
+                .map { it.copy(checked = checkedOverrideMap[it.id] ?: it.checked) }
                 .sortedBy { it.checked }
-                .map { ShoppingListItemState(item = it, isDisabled = it.id in disabledItemIds) }
             ShoppingListScreenState(name = shoppingList.name, items = items)
         }
     }
@@ -92,17 +101,22 @@ internal class ShoppingListViewModel @Inject constructor(
     fun onItemCheckedChange(item: ShoppingListItemInfo, isChecked: Boolean) {
         logger.v { "onItemCheckedChange() called with: item = $item, isChecked = $isChecked" }
         viewModelScope.launch {
-            _disabledItemIds.update { it + item.id }
+            checkedOverride.update { originalMap ->
+                originalMap.toMutableMap().also { newMap -> newMap[item.id] = isChecked }
+            }
+            checkedOverride.value[item.id] = isChecked
             val result = runCatchingExceptCancel {
                 shoppingListsRepo.updateIsShoppingListItemChecked(item.id, isChecked)
             }.onFailure {
                 logger.e(it) { "Failed to update item's checked state" }
             }
-            _disabledItemIds.update { it - item.id }
             _errorToShowInSnackbar = result.exceptionOrNull()
             if (result.isSuccess) {
                 logger.v { "Item's checked state updated" }
-                refreshShoppingList()
+                doRefresh()
+            }
+            checkedOverride.update { originalMap ->
+                originalMap.toMutableMap().also { newMap -> newMap.remove(item.id) }
             }
         }
     }
@@ -110,5 +124,23 @@ internal class ShoppingListViewModel @Inject constructor(
     fun onSnackbarShown() {
         logger.v { "onSnackbarShown() called" }
         _errorToShowInSnackbar = null
+    }
+
+    fun deleteShoppingListItem(item: ShoppingListItemInfo) {
+        logger.v { "deleteShoppingListItem() called with: item = $item" }
+        viewModelScope.launch {
+            deletedItemIds.update { it + item.id }
+            val result = runCatchingExceptCancel {
+                shoppingListsRepo.deleteShoppingListItem(item.id)
+            }.onFailure {
+                logger.e(it) { "Failed to delete item" }
+            }
+            _errorToShowInSnackbar = result.exceptionOrNull()
+            if (result.isSuccess) {
+                logger.v { "Item deleted" }
+                doRefresh()
+            }
+            deletedItemIds.update { it - item.id }
+        }
     }
 }

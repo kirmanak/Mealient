@@ -10,4 +10,6 @@ interface ShoppingListsDataSource {
     suspend fun getShoppingList(id: String): FullShoppingListInfo
 
     suspend fun updateIsShoppingListItemChecked(id: String, checked: Boolean)
+
+    suspend fun deleteShoppingListItem(id: String)
 }
