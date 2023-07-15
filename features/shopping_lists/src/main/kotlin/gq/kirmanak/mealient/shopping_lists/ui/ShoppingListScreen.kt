@@ -72,19 +72,18 @@ internal fun ShoppingListScreen(
         onRefresh = shoppingListViewModel::refreshShoppingList,
         onSnackbarShown = shoppingListViewModel::onSnackbarShown
     ) { items ->
-        val firstCheckedItemIndex = items.indexOfFirst { it.item.checked }
+        val firstCheckedItemIndex = items.indexOfFirst { it.checked }
 
-        itemsIndexed(items, { _, item -> item.item.id }) { index, item ->
+        itemsIndexed(items, { _, item -> item.id }) { index, item ->
             ShoppingListItem(
-                shoppingListItem = item.item,
-                isDisabled = item.isDisabled,
+                shoppingListItem = item,
                 showDivider = index == firstCheckedItemIndex && index != 0,
                 modifier = Modifier.background(MaterialTheme.colorScheme.surface),
                 onCheckedChange = { isChecked ->
-                    shoppingListViewModel.onItemCheckedChange(item.item, isChecked)
+                    shoppingListViewModel.onItemCheckedChange(item, isChecked)
                 },
                 onDismissed = {
-                    shoppingListViewModel.deleteShoppingListItem(item.item)
+                    shoppingListViewModel.deleteShoppingListItem(item)
                 }
             )
         }
@@ -95,7 +94,6 @@ internal fun ShoppingListScreen(
 @Composable
 fun ShoppingListItem(
     shoppingListItem: ShoppingListItemInfo,
-    isDisabled: Boolean,
     showDivider: Boolean,
     modifier: Modifier = Modifier,
     onCheckedChange: (Boolean) -> Unit = {},
@@ -147,7 +145,6 @@ fun ShoppingListItem(
                     Checkbox(
                         checked = shoppingListItem.checked,
                         onCheckedChange = onCheckedChange,
-                        enabled = !isDisabled,
                     )
 
                     val isFood = shoppingListItem.isFood
@@ -175,7 +172,7 @@ fun ShoppingListItem(
 @Preview
 fun PreviewShoppingListItemChecked() {
     AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.milk, false, false)
+        ShoppingListItem(shoppingListItem = PreviewData.milk, false)
     }
 }
 
@@ -183,23 +180,7 @@ fun PreviewShoppingListItemChecked() {
 @Preview
 fun PreviewShoppingListItemUnchecked() {
     AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags, false, false)
-    }
-}
-
-@Composable
-@Preview
-fun PreviewShoppingListItemCheckedDisabled() {
-    AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.milk, true, false)
-    }
-}
-
-@Composable
-@Preview
-fun PreviewShoppingListItemUncheckedDisabled() {
-    AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags, true, false)
+        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags, false)
     }
 }
 

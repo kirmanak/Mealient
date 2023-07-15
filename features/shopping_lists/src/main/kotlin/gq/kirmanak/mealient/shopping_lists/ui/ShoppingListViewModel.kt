@@ -39,9 +39,9 @@ internal class ShoppingListViewModel @Inject constructor(
 
     private val args: ShoppingListNavArgs = ShoppingListScreenDestination.argsFrom(savedStateHandle)
 
-    private val disabledItemIds: MutableStateFlow<Set<String>> = MutableStateFlow(mutableSetOf())
+    private val checkedOverride = MutableStateFlow<MutableMap<String, Boolean>>(mutableMapOf())
 
-    private val deletedItemIds: MutableStateFlow<Set<String>> = MutableStateFlow(mutableSetOf())
+    private val deletedItemIds = MutableStateFlow<Set<String>>(mutableSetOf())
 
     private val loadingHelper = loadingHelperFactory.create(viewModelScope) {
         shoppingListsRepo.getShoppingList(args.shoppingListId)
@@ -49,7 +49,7 @@ internal class ShoppingListViewModel @Inject constructor(
 
     val loadingState: StateFlow<LoadingState<ShoppingListScreenState>> = combine(
         loadingHelper.loadingState,
-        disabledItemIds,
+        checkedOverride,
         deletedItemIds,
         ::buildLoadingState,
     ).stateIn(viewModelScope, SharingStarted.Eagerly, LoadingStateNoData.InitialLoad)
@@ -85,15 +85,15 @@ internal class ShoppingListViewModel @Inject constructor(
 
     private fun buildLoadingState(
         loadingState: LoadingState<FullShoppingListInfo>,
-        disabledItemIds: Set<String>,
+        checkedOverrideMap: Map<String, Boolean>,
         deletedItemIds: Set<String>,
     ): LoadingState<ShoppingListScreenState> {
-        logger.v { "buildLoadingState() called with: loadingState = $loadingState, disabledItems = $disabledItemIds" }
+        logger.v { "buildLoadingState() called with: loadingState = $loadingState, checkedOverrideMap = $checkedOverrideMap, deletedItemIds = $deletedItemIds" }
         return loadingState.map { shoppingList ->
             val items = shoppingList.items
                 .filter { it.id !in deletedItemIds }
+                .map { it.copy(checked = checkedOverrideMap[it.id] ?: it.checked) }
                 .sortedBy { it.checked }
-                .map { ShoppingListItemState(item = it, isDisabled = it.id in disabledItemIds) }
             ShoppingListScreenState(name = shoppingList.name, items = items)
         }
     }
@@ -101,7 +101,10 @@ internal class ShoppingListViewModel @Inject constructor(
     fun onItemCheckedChange(item: ShoppingListItemInfo, isChecked: Boolean) {
         logger.v { "onItemCheckedChange() called with: item = $item, isChecked = $isChecked" }
         viewModelScope.launch {
-            disabledItemIds.update { it + item.id }
+            checkedOverride.update { originalMap ->
+                originalMap.toMutableMap().also { newMap -> newMap[item.id] = isChecked }
+            }
+            checkedOverride.value[item.id] = isChecked
             val result = runCatchingExceptCancel {
                 shoppingListsRepo.updateIsShoppingListItemChecked(item.id, isChecked)
             }.onFailure {
@@ -112,7 +115,9 @@ internal class ShoppingListViewModel @Inject constructor(
                 logger.v { "Item's checked state updated" }
                 doRefresh()
             }
-            disabledItemIds.update { it - item.id }
+            checkedOverride.update { originalMap ->
+                originalMap.toMutableMap().also { newMap -> newMap.remove(item.id) }
+            }
         }
     }
 
