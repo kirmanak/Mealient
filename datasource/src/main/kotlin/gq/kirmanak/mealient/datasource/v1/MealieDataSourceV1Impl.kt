@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.datasource.v1
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
 import gq.kirmanak.mealient.datasource.decode
+import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
@@ -20,9 +21,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -175,20 +174,6 @@ class MealieDataSourceV1Impl @Inject constructor(
         logParameters = { "id = $id, request = $request" }
     )
 
-    override suspend fun updateIsShoppingListItemChecked(
-        id: String,
-        isChecked: Boolean
-    ) {
-        // Has to be done in two steps because the API doesn't support updating the checked state
-        val item = getShoppingListItem(id)
-        val wasChecked = item.jsonObject.getValue("checked").jsonPrimitive.boolean
-        if (wasChecked == isChecked) return
-        val updatedItem = item.jsonObject.toMutableMap().apply {
-            put("checked", JsonPrimitive(isChecked))
-        }
-        updateShoppingListItem(id, JsonObject(updatedItem))
-    }
-
     override suspend fun deleteShoppingListItem(
         id: String,
     ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
@@ -196,4 +181,17 @@ class MealieDataSourceV1Impl @Inject constructor(
         logMethod = { "deleteShoppingListItem" },
         logParameters = { "id = $id" }
     )
+
+    override suspend fun updateShoppingListItem(
+        item: ShoppingListItemInfo
+    ) {
+        // Has to be done in two steps because we can't specify only the changed fields
+        val remoteItem = getShoppingListItem(item.id)
+        val updatedItem = remoteItem.jsonObject.toMutableMap().apply {
+            put("checked", JsonPrimitive(item.checked))
+            put("note", JsonPrimitive(item.note))
+            put("quantity", JsonPrimitive(item.quantity))
+        }
+        updateShoppingListItem(item.id, JsonObject(updatedItem))
+    }
 }

@@ -11,25 +11,34 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissState
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -74,45 +83,153 @@ internal fun ShoppingListScreen(
         onRefresh = shoppingListViewModel::refreshShoppingList,
         onSnackbarShown = shoppingListViewModel::onSnackbarShown
     ) { items ->
-        val firstCheckedItemIndex = items.indexOfFirst { it.checked }
+        val firstCheckedItemIndex = items.indexOfFirst { it.item.checked }
 
-        itemsIndexed(items, { _, item -> item.id }) { index, item ->
-            ShoppingListItem(
-                shoppingListItem = item,
-                showDivider = index == firstCheckedItemIndex && index != 0,
-                modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-                onCheckedChange = { isChecked ->
-                    shoppingListViewModel.onItemCheckedChange(item, isChecked)
+        itemsIndexed(items, { _, item -> item.item.id }) { index, itemState ->
+            if (itemState.isEditing) {
+                val state = remember { ShoppingListEditorState(state = itemState) }
+                ShoppingListItemEditor(
+                    state = state,
+                    onEditCancelled = { shoppingListViewModel.onEditCancel(itemState) },
+                    onEditConfirmed = { shoppingListViewModel.onEditConfirm(itemState, state) }
+                )
+            } else {
+                ShoppingListItem(
+                    itemState = itemState,
+                    showDivider = index == firstCheckedItemIndex && index != 0,
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                    onCheckedChange = { shoppingListViewModel.onItemCheckedChange(itemState, it) },
+                    onDismissed = { shoppingListViewModel.deleteShoppingListItem(itemState) },
+                    onEditStart = { shoppingListViewModel.onEditStart(itemState) },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ShoppingListItemEditor(
+    state: ShoppingListEditorState,
+    modifier: Modifier = Modifier,
+    onEditCancelled: () -> Unit = {},
+    onEditConfirmed: () -> Unit = {},
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(Dimens.Small),
+        horizontalAlignment = Alignment.End,
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(Dimens.Small),
+        ) {
+            OutlinedTextField(
+                value = state.quantity,
+                onValueChange = { newValue ->
+                    val input = newValue.trim()
+                        .let {
+                            if (state.quantity == "0") {
+                                it.removeSuffix("0").removePrefix("0")
+                            } else {
+                                it
+                            }
+                        }
+                        .ifEmpty { "0" }
+                    if (input.toDoubleOrNull() != null) {
+                        state.quantity = input
+                    }
                 },
-                onDismissed = {
-                    shoppingListViewModel.deleteShoppingListItem(item)
-                }
+                modifier = Modifier.weight(1f),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.shopping_list_screen_editor_quantity_label),
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
+                singleLine = true,
+            )
+
+            OutlinedTextField(
+                value = state.note,
+                onValueChange = { state.note = it },
+                textStyle = MaterialTheme.typography.bodyMedium,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.shopping_list_screen_editor_note_label),
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                },
+                singleLine = true,
+                modifier = Modifier.weight(3f, true),
             )
         }
+        Row(horizontalArrangement = Arrangement.spacedBy(Dimens.Small)) {
+            IconButton(onClick = onEditCancelled) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(id = R.string.shopping_list_screen_editor_cancel_button)
+                )
+            }
+
+            IconButton(onClick = onEditConfirmed) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = stringResource(id = R.string.shopping_list_screen_editor_save_button)
+                )
+            }
+        }
+    }
+}
+
+class ShoppingListEditorState(
+    state: ShoppingListItemState,
+) {
+
+    var note: String by mutableStateOf(state.item.note)
+
+    var quantity: String by mutableStateOf(state.item.quantity.toString())
+}
+
+@Preview
+@Composable
+fun ShoppingListItemEditorPreview() {
+    AppTheme {
+        ShoppingListItemEditor(
+            state = ShoppingListEditorState(state = ShoppingListItemState(PreviewData.milk))
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingListItem(
-    shoppingListItem: ShoppingListItemInfo,
+    itemState: ShoppingListItemState,
     showDivider: Boolean,
     modifier: Modifier = Modifier,
     onCheckedChange: (Boolean) -> Unit = {},
     onDismissed: () -> Unit = {},
+    onEditStart: () -> Unit = {},
     dismissState: DismissState = rememberDismissState(
         confirmValueChange = {
-            if (it == DismissValue.DismissedToStart) onDismissed()
+            when (it) {
+                DismissValue.DismissedToStart -> onDismissed()
+                DismissValue.DismissedToEnd -> onEditStart()
+                DismissValue.Default -> Unit
+            }
             true
         }
     )
 ) {
+    val shoppingListItem = itemState.item
     SwipeToDismiss(
         state = dismissState,
         background = {
             if (dismissState.targetValue == DismissValue.DismissedToStart) {
                 val color by animateColorAsState(MaterialTheme.colorScheme.error)
-                val iconColor by animateColorAsState(MaterialTheme.colorScheme.onSurface)
+                val iconColor by animateColorAsState(MaterialTheme.colorScheme.onError)
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -125,6 +242,23 @@ fun ShoppingListItem(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(end = Dimens.Small)
+                    )
+                }
+            } else if (dismissState.targetValue == DismissValue.DismissedToEnd) {
+                val color by animateColorAsState(MaterialTheme.colorScheme.primary)
+                val iconColor by animateColorAsState(MaterialTheme.colorScheme.onPrimary)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.shopping_list_screen_edit_icon_content_description),
+                        tint = iconColor,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = Dimens.Small)
                     )
                 }
             }
@@ -143,7 +277,7 @@ fun ShoppingListItem(
                     horizontalArrangement = Arrangement.Start,
                 ) {
                     Checkbox(
-                        checked = shoppingListItem.checked,
+                        checked = itemState.item.checked,
                         onCheckedChange = onCheckedChange,
                     )
 
@@ -164,7 +298,6 @@ fun ShoppingListItem(
             }
         },
         modifier = modifier,
-        directions = setOf(DismissDirection.EndToStart),
     )
 }
 
@@ -174,7 +307,7 @@ fun ShoppingListItem(
 fun PreviewShoppingListItemChecked() {
     AppTheme {
         ShoppingListItem(
-            shoppingListItem = PreviewData.milk,
+            itemState = ShoppingListItemState(PreviewData.milk),
             showDivider = false
         )
     }
@@ -186,7 +319,7 @@ fun PreviewShoppingListItemChecked() {
 fun PreviewShoppingListItemUnchecked() {
     AppTheme {
         ShoppingListItem(
-            shoppingListItem = PreviewData.blackTeaBags,
+            itemState = ShoppingListItemState(PreviewData.blackTeaBags),
             showDivider = true
         )
     }
@@ -198,10 +331,25 @@ fun PreviewShoppingListItemUnchecked() {
 fun PreviewShoppingListItemDismissed() {
     AppTheme {
         ShoppingListItem(
-            shoppingListItem = PreviewData.blackTeaBags,
+            itemState = ShoppingListItemState(PreviewData.blackTeaBags),
             showDivider = false,
             dismissState = rememberDismissState(
                 initialValue = DismissValue.DismissedToStart,
+            ),
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+@Preview
+fun PreviewShoppingListItemEditing() {
+    AppTheme {
+        ShoppingListItem(
+            itemState = ShoppingListItemState(PreviewData.blackTeaBags),
+            showDivider = false,
+            dismissState = rememberDismissState(
+                initialValue = DismissValue.DismissedToEnd,
             ),
         )
     }

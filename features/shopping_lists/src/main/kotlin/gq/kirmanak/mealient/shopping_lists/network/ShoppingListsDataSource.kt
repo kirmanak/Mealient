@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.shopping_lists.network
 
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 
 interface ShoppingListsDataSource {
 
@@ -9,7 +10,7 @@ interface ShoppingListsDataSource {
 
     suspend fun getShoppingList(id: String): FullShoppingListInfo
 
-    suspend fun updateIsShoppingListItemChecked(id: String, checked: Boolean)
-
     suspend fun deleteShoppingListItem(id: String)
+
+    suspend fun updateShoppingListItem(item: ShoppingListItemInfo)
 }

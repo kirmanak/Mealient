@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.shopping_lists.network
 
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
@@ -20,14 +21,12 @@ class ShoppingListsDataSourceImpl @Inject constructor(
         id: String
     ): FullShoppingListInfo = modelMapper.toFullShoppingListInfo(v1Source.getShoppingList(id))
 
-    override suspend fun updateIsShoppingListItemChecked(
-        id: String,
-        checked: Boolean,
-    ) = v1Source.updateIsShoppingListItemChecked(id, checked)
-
     override suspend fun deleteShoppingListItem(
         id: String
     ) = v1Source.deleteShoppingListItem(id)
 
+    override suspend fun updateShoppingListItem(
+        item: ShoppingListItemInfo
+    ) = v1Source.updateShoppingListItem(item)
 }
 
