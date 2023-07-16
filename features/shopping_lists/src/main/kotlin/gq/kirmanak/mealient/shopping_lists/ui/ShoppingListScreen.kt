@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissState
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +51,7 @@ data class ShoppingListNavArgs(
     val shoppingListId: String,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Destination(
     navArgsDelegate = ShoppingListNavArgs::class,
 )
@@ -98,15 +100,13 @@ fun ShoppingListItem(
     modifier: Modifier = Modifier,
     onCheckedChange: (Boolean) -> Unit = {},
     onDismissed: () -> Unit = {},
-) {
-    val dismissState = rememberDismissState(
+    dismissState: DismissState = rememberDismissState(
         confirmValueChange = {
-            if (it == DismissValue.DismissedToStart) {
-                onDismissed()
-            }
+            if (it == DismissValue.DismissedToStart) onDismissed()
             true
         }
     )
+) {
     SwipeToDismiss(
         state = dismissState,
         background = {
@@ -168,19 +168,42 @@ fun ShoppingListItem(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun PreviewShoppingListItemChecked() {
     AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.milk, false)
+        ShoppingListItem(
+            shoppingListItem = PreviewData.milk,
+            showDivider = false
+        )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun PreviewShoppingListItemUnchecked() {
     AppTheme {
-        ShoppingListItem(shoppingListItem = PreviewData.blackTeaBags, false)
+        ShoppingListItem(
+            shoppingListItem = PreviewData.blackTeaBags,
+            showDivider = true
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+@Preview
+fun PreviewShoppingListItemDismissed() {
+    AppTheme {
+        ShoppingListItem(
+            shoppingListItem = PreviewData.blackTeaBags,
+            showDivider = false,
+            dismissState = rememberDismissState(
+                initialValue = DismissValue.DismissedToStart,
+            ),
+        )
     }
 }
 
