@@ -124,6 +124,7 @@ internal class ShoppingListViewModel @Inject constructor(
                 .sortedBy { it.item.checked }
             ShoppingListScreenState(
                 name = data.shoppingList.name,
+                listId = data.shoppingList.id,
                 items = existingItems + editingState.newItems,
                 foods = data.foods.sortedBy { it.name },
                 units = data.units.sortedBy { it.name },
@@ -227,13 +228,13 @@ internal class ShoppingListViewModel @Inject constructor(
 
     fun onAddItemClicked() {
         logger.v { "onAddItemClicked() called" }
-        val shoppingListData = loadingHelper.loadingState.value.data ?: return
-        val maxPosition = shoppingListData.shoppingList.items.maxOfOrNull { it.position } ?: 0
+        val shoppingListScreenState = loadingState.value.data ?: return
+        val maxPosition = shoppingListScreenState.items.maxOfOrNull { it.position } ?: 0
         val editorState = ShoppingListItemEditorState(
-            foods = shoppingListData.foods,
-            units = shoppingListData.units,
+            foods = shoppingListScreenState.foods,
+            units = shoppingListScreenState.units,
             position = maxPosition + 1,
-            listId = shoppingListData.shoppingList.id,
+            listId = shoppingListScreenState.listId,
         )
         val item = ShoppingListItemState.NewItem(editorState)
         editingStateFlow.update {

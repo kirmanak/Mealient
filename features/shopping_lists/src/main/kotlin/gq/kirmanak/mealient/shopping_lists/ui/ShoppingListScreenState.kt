@@ -7,6 +7,7 @@ import java.util.UUID
 
 internal data class ShoppingListScreenState(
     val name: String,
+    val listId: String,
     val items: List<ShoppingListItemState>,
     val foods: List<FoodInfo>,
     val units: List<UnitInfo>,
@@ -35,4 +36,10 @@ val ShoppingListItemState.checked: Boolean
     get() = when (this) {
         is ShoppingListItemState.ExistingItem -> item.checked
         is ShoppingListItemState.NewItem -> false
+    }
+
+val ShoppingListItemState.position: Int
+    get() = when (this) {
+        is ShoppingListItemState.ExistingItem -> item.position
+        is ShoppingListItemState.NewItem -> item.position
     }
