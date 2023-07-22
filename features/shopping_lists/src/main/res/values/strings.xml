@@ -6,7 +6,11 @@
     <string name="shopping_list_screen_delete_icon_content_description">Delete</string>
     <string name="shopping_list_screen_editor_quantity_label">Qty</string>
     <string name="shopping_list_screen_editor_note_label">Note</string>
+    <string name="shopping_list_screen_editor_food_label">Food</string>
+    <string name="shopping_list_screen_editor_unit_label">Unit</string>
     <string name="shopping_list_screen_editor_save_button">Save</string>
+    <string name="shopping_list_screen_editor_not_food_button">Not food</string>
+    <string name="shopping_list_screen_editor_food_button">Food</string>
     <string name="shopping_list_screen_editor_cancel_button">Cancel</string>
     <string name="shopping_list_screen_edit_icon_content_description">Edit</string>
 

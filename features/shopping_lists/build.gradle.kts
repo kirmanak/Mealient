@@ -22,6 +22,7 @@ dependencies {
 
     implementation(libs.android.material.material)
     implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.materialIconsExtended)
 
     implementation(libs.google.dagger.hiltAndroid)
     kapt(libs.google.dagger.hiltCompiler)

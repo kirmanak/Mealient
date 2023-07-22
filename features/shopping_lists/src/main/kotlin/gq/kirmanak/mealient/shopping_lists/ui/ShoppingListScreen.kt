@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.NoMeals
+import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DismissState
 import androidx.compose.material3.DismissValue
@@ -119,68 +121,157 @@ fun ShoppingListItemEditor(
         verticalArrangement = Arrangement.spacedBy(Dimens.Small),
         horizontalAlignment = Alignment.End,
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(Dimens.Small),
-        ) {
-            OutlinedTextField(
-                value = state.quantity,
-                onValueChange = { newValue ->
-                    val input = newValue.trim()
-                        .let {
-                            if (state.quantity == "0") {
-                                it.removeSuffix("0").removePrefix("0")
-                            } else {
-                                it
-                            }
+        ShoppingListItemEditorFirstRow(
+            state = state
+        )
+        if (state.isFood) {
+            ShoppingListItemEditorFoodRow(state = state)
+        }
+        ShoppingListItemEditorButtonRow(
+            state = state,
+            onEditCancelled = onEditCancelled,
+            onEditConfirmed = onEditConfirmed
+        )
+    }
+}
+
+@Composable
+private fun ShoppingListItemEditorFirstRow(
+    state: ShoppingListEditorState,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(Dimens.Small),
+    ) {
+        OutlinedTextField(
+            value = state.quantity,
+            onValueChange = { newValue ->
+                val input = newValue.trim()
+                    .let {
+                        if (state.quantity == "0") {
+                            it.removeSuffix("0").removePrefix("0")
+                        } else {
+                            it
                         }
-                        .ifEmpty { "0" }
-                    if (input.toDoubleOrNull() != null) {
-                        state.quantity = input
                     }
-                },
-                modifier = Modifier.weight(1f),
-                textStyle = MaterialTheme.typography.bodyMedium,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.shopping_list_screen_editor_quantity_label),
-                        style = MaterialTheme.typography.labelMedium,
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                ),
-                singleLine = true,
-            )
+                    .ifEmpty { "0" }
+                if (input.toDoubleOrNull() != null) {
+                    state.quantity = input
+                }
+            },
+            modifier = Modifier.weight(1f),
+            textStyle = MaterialTheme.typography.bodyMedium,
+            label = {
+                Text(
+                    text = stringResource(id = R.string.shopping_list_screen_editor_quantity_label),
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+            ),
+            singleLine = true,
+        )
 
-            OutlinedTextField(
-                value = state.note,
-                onValueChange = { state.note = it },
-                textStyle = MaterialTheme.typography.bodyMedium,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.shopping_list_screen_editor_note_label),
-                        style = MaterialTheme.typography.labelMedium,
-                    )
-                },
-                singleLine = true,
-                modifier = Modifier.weight(3f, true),
+        OutlinedTextField(
+            value = state.note,
+            onValueChange = { state.note = it },
+            textStyle = MaterialTheme.typography.bodyMedium,
+            label = {
+                Text(
+                    text = stringResource(id = R.string.shopping_list_screen_editor_note_label),
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            },
+            singleLine = true,
+            modifier = Modifier.weight(3f, true),
+        )
+    }
+}
+
+@Composable
+private fun ShoppingListItemEditorButtonRow(
+    state: ShoppingListEditorState,
+    modifier: Modifier = Modifier,
+    onEditCancelled: () -> Unit = {},
+    onEditConfirmed: () -> Unit = {},
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(Dimens.Small)
+    ) {
+        IconButton(onClick = {
+            state.isFood = !state.isFood
+        }) {
+            val stringId = if (state.isFood) {
+                R.string.shopping_list_screen_editor_not_food_button
+            } else {
+                R.string.shopping_list_screen_editor_food_button
+            }
+            val icon = if (state.isFood) {
+                Icons.Default.NoMeals
+            } else {
+                Icons.Default.Restaurant
+            }
+            Icon(
+                imageVector = icon,
+                contentDescription = stringResource(id = stringId)
             )
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(Dimens.Small)) {
-            IconButton(onClick = onEditCancelled) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = stringResource(id = R.string.shopping_list_screen_editor_cancel_button)
-                )
-            }
 
-            IconButton(onClick = onEditConfirmed) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = stringResource(id = R.string.shopping_list_screen_editor_save_button)
-                )
-            }
+        IconButton(onClick = onEditCancelled) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = stringResource(id = R.string.shopping_list_screen_editor_cancel_button)
+            )
         }
+
+        IconButton(onClick = onEditConfirmed) {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = stringResource(id = R.string.shopping_list_screen_editor_save_button)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ShoppingListItemEditorFoodRow(
+    state: ShoppingListEditorState,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(Dimens.Small),
+    ) {
+        OutlinedTextField(
+            value = state.food,
+            onValueChange = { state.food = it },
+            modifier = Modifier.weight(1f),
+            textStyle = MaterialTheme.typography.bodyMedium,
+            label = {
+                Text(
+                    text = stringResource(id = R.string.shopping_list_screen_editor_food_label),
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            },
+            singleLine = true,
+        )
+
+        OutlinedTextField(
+            value = state.unit,
+            onValueChange = { state.unit = it },
+            textStyle = MaterialTheme.typography.bodyMedium,
+            label = {
+                Text(
+                    text = stringResource(id = R.string.shopping_list_screen_editor_unit_label),
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            },
+            singleLine = true,
+            modifier = Modifier.weight(1f),
+        )
     }
 }
 
@@ -191,6 +282,12 @@ class ShoppingListEditorState(
     var note: String by mutableStateOf(state.item.note)
 
     var quantity: String by mutableStateOf(state.item.quantity.toString())
+
+    var isFood: Boolean by mutableStateOf(state.item.isFood)
+
+    var food: String by mutableStateOf(state.item.food)
+
+    var unit: String by mutableStateOf(state.item.unit)
 }
 
 @Preview
@@ -199,6 +296,16 @@ fun ShoppingListItemEditorPreview() {
     AppTheme {
         ShoppingListItemEditor(
             state = ShoppingListEditorState(state = ShoppingListItemState(PreviewData.milk))
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ShoppingListItemEditorNonFoodPreview() {
+    AppTheme {
+        ShoppingListItemEditor(
+            state = ShoppingListEditorState(state = ShoppingListItemState(PreviewData.blackTeaBags))
         )
     }
 }
