@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -27,6 +28,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -88,7 +90,15 @@ internal fun ShoppingListScreen(
         defaultEmptyListError = defaultEmptyListError,
         errorToShowInSnackbar = shoppingListViewModel.errorToShowInSnackbar,
         onRefresh = shoppingListViewModel::refreshShoppingList,
-        onSnackbarShown = shoppingListViewModel::onSnackbarShown
+        onSnackbarShown = shoppingListViewModel::onSnackbarShown,
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(id = R.string.shopping_list_screen_add_icon_content_description),
+                )
+            }
+        }
     ) { items ->
         val firstCheckedItemIndex = items.indexOfFirst { it.item.checked }
 

@@ -15,6 +15,7 @@
     <string name="shopping_list_screen_edit_icon_content_description">Edit</string>
     <string name="shopping_list_screen_editor_checked_unit_content_description">Selected unit</string>
     <string name="shopping_list_screen_editor_checked_food_content_description">Selected food</string>
+    <string name="shopping_list_screen_add_icon_content_description">Add item</string>
 
     <string name="shopping_lists_screen_empty">No shopping lists found</string>
     <string name="shopping_lists_screen_unauthorized_error">Authentication is required</string>

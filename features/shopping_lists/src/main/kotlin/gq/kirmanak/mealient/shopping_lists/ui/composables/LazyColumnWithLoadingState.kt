@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -32,6 +33,8 @@ fun <T> LazyColumnWithLoadingState(
     errorToShowInSnackbar: Throwable? = null,
     onSnackbarShown: () -> Unit = {},
     onRefresh: () -> Unit = {},
+    floatingActionButton: @Composable () -> Unit = {},
+    floatingActionButtonPosition: FabPosition = FabPosition.End,
     lazyColumnContent: LazyListScope.(List<T>) -> Unit = {},
 ) {
     val refreshState = rememberPullRefreshState(
@@ -42,6 +45,8 @@ fun <T> LazyColumnWithLoadingState(
 
     Scaffold(
         modifier = modifier,
+        floatingActionButton = floatingActionButton,
+        floatingActionButtonPosition = floatingActionButtonPosition,
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         val innerModifier = Modifier
