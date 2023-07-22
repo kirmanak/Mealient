@@ -128,6 +128,8 @@ internal class ShoppingListViewModel @Inject constructor(
                 foods = data.foods.sortedBy { it.name },
                 units = data.units.sortedBy { it.name },
             )
+        }.also {
+            logger.v { "buildLoadingState() returned: $it" }
         }
     }
 
