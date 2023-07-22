@@ -9,6 +9,7 @@ internal data class ShoppingListScreenState(
     val items: List<ShoppingListItemState>,
     val foods: List<FoodInfo>,
     val units: List<UnitInfo>,
+    val newItems: List<ShoppingListEditorState>,
 )
 
 data class ShoppingListItemState(

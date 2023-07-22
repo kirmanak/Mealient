@@ -40,13 +40,7 @@ internal class ShoppingListViewModel @Inject constructor(
 
     private val args: ShoppingListNavArgs = ShoppingListScreenDestination.argsFrom(savedStateHandle)
 
-    private val deletedItemIdsFlow = MutableStateFlow<Set<String>>(mutableSetOf())
-
-    private val editingItemIdsFlow = MutableStateFlow<Set<String>>(mutableSetOf())
-
-    private val editedItemsFlow = MutableStateFlow<MutableMap<String, ShoppingListItemInfo>>(
-        mutableMapOf()
-    )
+    private val editingStateFlow = MutableStateFlow(ShoppingListEditingState())
 
     private val loadingHelper = loadingHelperFactory.create(viewModelScope) {
         loadShoppingListData()
@@ -54,9 +48,7 @@ internal class ShoppingListViewModel @Inject constructor(
 
     val loadingState: StateFlow<LoadingState<ShoppingListScreenState>> = combine(
         loadingHelper.loadingState,
-        deletedItemIdsFlow,
-        editingItemIdsFlow,
-        editedItemsFlow,
+        editingStateFlow,
         ::buildLoadingState,
     ).stateIn(viewModelScope, SharingStarted.Eagerly, LoadingStateNoData.InitialLoad)
 
@@ -115,18 +107,16 @@ internal class ShoppingListViewModel @Inject constructor(
 
     private fun buildLoadingState(
         loadingState: LoadingState<ShoppingListData>,
-        deletedItemIds: Set<String>,
-        editingItemIds: Set<String>,
-        editedItems: Map<String, ShoppingListItemInfo>,
+        editingState: ShoppingListEditingState,
     ): LoadingState<ShoppingListScreenState> {
-        logger.v { "buildLoadingState() called with: loadingState = $loadingState, deletedItemIds = $deletedItemIds, editingItemIds = $editingItemIds, editedItems = $editedItems" }
+        logger.v { "buildLoadingState() called with: loadingState = $loadingState, editingState = $editingState" }
         return loadingState.map { data ->
             val items = data.shoppingList.items
-                .filter { it.id !in deletedItemIds }
+                .filter { it.id !in editingState.deletedItemIds }
                 .map {
                     ShoppingListItemState(
-                        item = editedItems[it.id] ?: it,
-                        isEditing = it.id in editingItemIds,
+                        item = editingState.modifiedItems[it.id] ?: it,
+                        isEditing = it.id in editingState.editingItemIds,
                     )
                 }
                 .sortedBy { it.item.checked }
@@ -135,6 +125,7 @@ internal class ShoppingListViewModel @Inject constructor(
                 items = items,
                 foods = data.foods.sortedBy { it.name },
                 units = data.units.sortedBy { it.name },
+                newItems = editingState.newItems,
             )
         }
     }
@@ -154,7 +145,9 @@ internal class ShoppingListViewModel @Inject constructor(
         logger.v { "deleteShoppingListItem() called with: state = $state" }
         val item = state.item
         viewModelScope.launch {
-            deletedItemIdsFlow.update { it + item.id }
+            editingStateFlow.update {
+                it.copy(deletedItemIds = it.deletedItemIds + item.id)
+            }
             val result = runCatchingExceptCancel {
                 shoppingListsRepo.deleteShoppingListItem(item.id)
             }.onFailure {
@@ -165,26 +158,34 @@ internal class ShoppingListViewModel @Inject constructor(
                 logger.v { "Item deleted" }
                 doRefresh()
             }
-            deletedItemIdsFlow.update { it - item.id }
+            editingStateFlow.update {
+                it.copy(deletedItemIds = it.deletedItemIds - item.id)
+            }
         }
     }
 
     fun onEditStart(state: ShoppingListItemState) {
         logger.v { "onEditStart() called with: state = $state" }
         val item = state.item
-        editingItemIdsFlow.update { it + item.id }
+        editingStateFlow.update {
+            it.copy(editingItemIds = it.editingItemIds + item.id)
+        }
     }
 
     fun onEditCancel(state: ShoppingListItemState) {
         logger.v { "onEditCancel() called with: state = $state" }
         val item = state.item
-        editingItemIdsFlow.update { it - item.id }
+        editingStateFlow.update {
+            it.copy(editingItemIds = it.editingItemIds - item.id)
+        }
     }
 
     fun onEditConfirm(state: ShoppingListItemState, input: ShoppingListEditorState) {
         logger.v { "onEditConfirm() called with: state = $state, input = $input" }
         val id = state.item.id
-        editingItemIdsFlow.update { it - id }
+        editingStateFlow.update {
+            it.copy(editingItemIds = it.editingItemIds - id)
+        }
         val updatedItem = state.item.copy(
             note = input.note,
             quantity = input.quantity.toDouble(),
@@ -199,8 +200,8 @@ internal class ShoppingListViewModel @Inject constructor(
         logger.v { "updateItemInformation() called with: updatedItem = $updatedItem" }
         val id = updatedItem.id
         viewModelScope.launch {
-            editedItemsFlow.update { originalMap ->
-                originalMap.toMutableMap().also { newMap -> newMap[id] = updatedItem }
+            editingStateFlow.update { state ->
+                state.copy(modifiedItems = state.modifiedItems + (id to updatedItem))
             }
             val result = runCatchingExceptCancel {
                 shoppingListsRepo.updateShoppingListItem(updatedItem)
@@ -212,8 +213,8 @@ internal class ShoppingListViewModel @Inject constructor(
                 logger.v { "Item updated" }
                 doRefresh()
             }
-            editedItemsFlow.update { originalMap ->
-                originalMap.toMutableMap().also { newMap -> newMap.remove(id) }
+            editingStateFlow.update { state ->
+                state.copy(modifiedItems = state.modifiedItems - id)
             }
         }
     }
