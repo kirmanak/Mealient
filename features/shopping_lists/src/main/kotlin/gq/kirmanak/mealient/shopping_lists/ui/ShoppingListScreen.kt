@@ -92,7 +92,7 @@ internal fun ShoppingListScreen(
         onRefresh = shoppingListViewModel::refreshShoppingList,
         onSnackbarShown = shoppingListViewModel::onSnackbarShown,
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = shoppingListViewModel::onAddItemClicked) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(id = R.string.shopping_list_screen_add_icon_content_description),
@@ -100,30 +100,40 @@ internal fun ShoppingListScreen(
             }
         }
     ) { items ->
-        val firstCheckedItemIndex = items.indexOfFirst { it.item.checked }
+        val firstCheckedItemIndex = items.indexOfFirst { it.checked }
 
-        itemsIndexed(items, { _, item -> item.item.id }) { index, itemState ->
-            if (itemState.isEditing) {
-                val state = remember {
-                    ShoppingListEditorState(
-                        state = itemState,
-                        foods = loadingState.data?.foods.orEmpty(),
-                        units = loadingState.data?.units.orEmpty(),
+        itemsIndexed(items, { _, item -> item.id }) { index, itemState ->
+            if (itemState is ShoppingListItemState.ExistingItem) {
+                if (itemState.isEditing) {
+                    val state = remember {
+                        ShoppingListItemEditorState(
+                            state = itemState,
+                            foods = loadingState.data?.foods.orEmpty(),
+                            units = loadingState.data?.units.orEmpty(),
+                        )
+                    }
+                    ShoppingListItemEditor(
+                        state = state,
+                        onEditCancelled = { shoppingListViewModel.onEditCancel(itemState) },
+                        onEditConfirmed = { shoppingListViewModel.onEditConfirm(itemState, state) }
+                    )
+                } else {
+                    ShoppingListItem(
+                        itemState = itemState,
+                        showDivider = index == firstCheckedItemIndex && index != 0,
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                        onCheckedChange = {
+                            shoppingListViewModel.onItemCheckedChange(itemState, it)
+                        },
+                        onDismissed = { shoppingListViewModel.deleteShoppingListItem(itemState) },
+                        onEditStart = { shoppingListViewModel.onEditStart(itemState) },
                     )
                 }
+            } else if (itemState is ShoppingListItemState.NewItem) {
                 ShoppingListItemEditor(
-                    state = state,
-                    onEditCancelled = { shoppingListViewModel.onEditCancel(itemState) },
-                    onEditConfirmed = { shoppingListViewModel.onEditConfirm(itemState, state) }
-                )
-            } else {
-                ShoppingListItem(
-                    itemState = itemState,
-                    showDivider = index == firstCheckedItemIndex && index != 0,
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-                    onCheckedChange = { shoppingListViewModel.onItemCheckedChange(itemState, it) },
-                    onDismissed = { shoppingListViewModel.deleteShoppingListItem(itemState) },
-                    onEditStart = { shoppingListViewModel.onEditStart(itemState) },
+                    state = itemState.item,
+                    onEditCancelled = { shoppingListViewModel.onAddCancel(itemState) },
+                    onEditConfirmed = { shoppingListViewModel.onAddConfirm(itemState.item) }
                 )
             }
         }
@@ -132,7 +142,7 @@ internal fun ShoppingListScreen(
 
 @Composable
 fun ShoppingListItemEditor(
-    state: ShoppingListEditorState,
+    state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
     onEditCancelled: () -> Unit = {},
     onEditConfirmed: () -> Unit = {},
@@ -158,7 +168,7 @@ fun ShoppingListItemEditor(
 
 @Composable
 private fun ShoppingListItemEditorFirstRow(
-    state: ShoppingListEditorState,
+    state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -213,7 +223,7 @@ private fun ShoppingListItemEditorFirstRow(
 
 @Composable
 private fun ShoppingListItemEditorButtonRow(
-    state: ShoppingListEditorState,
+    state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
     onEditCancelled: () -> Unit = {},
     onEditConfirmed: () -> Unit = {},
@@ -260,7 +270,7 @@ private fun ShoppingListItemEditorButtonRow(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ShoppingListItemEditorFoodRow(
-    state: ShoppingListEditorState,
+    state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -371,7 +381,7 @@ private fun ShoppingListItemEditorFoodRow(
     }
 }
 
-class ShoppingListEditorState(
+class ShoppingListItemEditorState(
     val foods: List<FoodInfo>,
     val units: List<UnitInfo>,
     note: String = "",
@@ -382,7 +392,7 @@ class ShoppingListEditorState(
 ) {
 
     constructor(
-        state: ShoppingListItemState,
+        state: ShoppingListItemState.ExistingItem,
         foods: List<FoodInfo>,
         units: List<UnitInfo>,
     ) : this(
@@ -415,8 +425,8 @@ class ShoppingListEditorState(
 fun ShoppingListItemEditorPreview() {
     AppTheme {
         ShoppingListItemEditor(
-            state = ShoppingListEditorState(
-                state = ShoppingListItemState(PreviewData.milk),
+            state = ShoppingListItemEditorState(
+                state = ShoppingListItemState.ExistingItem(PreviewData.milk),
                 foods = emptyList(),
                 units = emptyList(),
             )
@@ -429,8 +439,8 @@ fun ShoppingListItemEditorPreview() {
 fun ShoppingListItemEditorNonFoodPreview() {
     AppTheme {
         ShoppingListItemEditor(
-            state = ShoppingListEditorState(
-                state = ShoppingListItemState(PreviewData.blackTeaBags),
+            state = ShoppingListItemEditorState(
+                state = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
                 foods = emptyList(),
                 units = emptyList(),
             )
@@ -441,7 +451,7 @@ fun ShoppingListItemEditorNonFoodPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingListItem(
-    itemState: ShoppingListItemState,
+    itemState: ShoppingListItemState.ExistingItem,
     showDivider: Boolean,
     modifier: Modifier = Modifier,
     onCheckedChange: (Boolean) -> Unit = {},
@@ -542,7 +552,7 @@ fun ShoppingListItem(
 fun PreviewShoppingListItemChecked() {
     AppTheme {
         ShoppingListItem(
-            itemState = ShoppingListItemState(PreviewData.milk),
+            itemState = ShoppingListItemState.ExistingItem(PreviewData.milk),
             showDivider = false
         )
     }
@@ -554,7 +564,7 @@ fun PreviewShoppingListItemChecked() {
 fun PreviewShoppingListItemUnchecked() {
     AppTheme {
         ShoppingListItem(
-            itemState = ShoppingListItemState(PreviewData.blackTeaBags),
+            itemState = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
             showDivider = true
         )
     }
@@ -566,7 +576,7 @@ fun PreviewShoppingListItemUnchecked() {
 fun PreviewShoppingListItemDismissed() {
     AppTheme {
         ShoppingListItem(
-            itemState = ShoppingListItemState(PreviewData.blackTeaBags),
+            itemState = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
             showDivider = false,
             dismissState = rememberDismissState(
                 initialValue = DismissValue.DismissedToStart,
@@ -581,7 +591,7 @@ fun PreviewShoppingListItemDismissed() {
 fun PreviewShoppingListItemEditing() {
     AppTheme {
         ShoppingListItem(
-            itemState = ShoppingListItemState(PreviewData.blackTeaBags),
+            itemState = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
             showDivider = false,
             dismissState = rememberDismissState(
                 initialValue = DismissValue.DismissedToEnd,

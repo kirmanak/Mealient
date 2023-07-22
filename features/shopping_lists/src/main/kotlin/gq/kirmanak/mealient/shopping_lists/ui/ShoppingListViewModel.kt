@@ -17,6 +17,7 @@ import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDes
 import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactory
 import gq.kirmanak.mealient.shopping_lists.util.LoadingState
 import gq.kirmanak.mealient.shopping_lists.util.LoadingStateNoData
+import gq.kirmanak.mealient.shopping_lists.util.data
 import gq.kirmanak.mealient.shopping_lists.util.map
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -111,10 +112,10 @@ internal class ShoppingListViewModel @Inject constructor(
     ): LoadingState<ShoppingListScreenState> {
         logger.v { "buildLoadingState() called with: loadingState = $loadingState, editingState = $editingState" }
         return loadingState.map { data ->
-            val items = data.shoppingList.items
+            val existingItems = data.shoppingList.items
                 .filter { it.id !in editingState.deletedItemIds }
                 .map {
-                    ShoppingListItemState(
+                    ShoppingListItemState.ExistingItem(
                         item = editingState.modifiedItems[it.id] ?: it,
                         isEditing = it.id in editingState.editingItemIds,
                     )
@@ -122,15 +123,14 @@ internal class ShoppingListViewModel @Inject constructor(
                 .sortedBy { it.item.checked }
             ShoppingListScreenState(
                 name = data.shoppingList.name,
-                items = items,
+                items = existingItems + editingState.newItems,
                 foods = data.foods.sortedBy { it.name },
                 units = data.units.sortedBy { it.name },
-                newItems = editingState.newItems,
             )
         }
     }
 
-    fun onItemCheckedChange(state: ShoppingListItemState, isChecked: Boolean) {
+    fun onItemCheckedChange(state: ShoppingListItemState.ExistingItem, isChecked: Boolean) {
         logger.v { "onItemCheckedChange() called with: state = $state, isChecked = $isChecked" }
         val updatedItem = state.item.copy(checked = isChecked)
         updateItemInformation(updatedItem)
@@ -141,7 +141,7 @@ internal class ShoppingListViewModel @Inject constructor(
         _errorToShowInSnackbar = null
     }
 
-    fun deleteShoppingListItem(state: ShoppingListItemState) {
+    fun deleteShoppingListItem(state: ShoppingListItemState.ExistingItem) {
         logger.v { "deleteShoppingListItem() called with: state = $state" }
         val item = state.item
         viewModelScope.launch {
@@ -164,7 +164,7 @@ internal class ShoppingListViewModel @Inject constructor(
         }
     }
 
-    fun onEditStart(state: ShoppingListItemState) {
+    fun onEditStart(state: ShoppingListItemState.ExistingItem) {
         logger.v { "onEditStart() called with: state = $state" }
         val item = state.item
         editingStateFlow.update {
@@ -172,7 +172,7 @@ internal class ShoppingListViewModel @Inject constructor(
         }
     }
 
-    fun onEditCancel(state: ShoppingListItemState) {
+    fun onEditCancel(state: ShoppingListItemState.ExistingItem) {
         logger.v { "onEditCancel() called with: state = $state" }
         val item = state.item
         editingStateFlow.update {
@@ -180,7 +180,10 @@ internal class ShoppingListViewModel @Inject constructor(
         }
     }
 
-    fun onEditConfirm(state: ShoppingListItemState, input: ShoppingListEditorState) {
+    fun onEditConfirm(
+        state: ShoppingListItemState.ExistingItem,
+        input: ShoppingListItemEditorState
+    ) {
         logger.v { "onEditConfirm() called with: state = $state, input = $input" }
         val id = state.item.id
         editingStateFlow.update {
@@ -217,5 +220,32 @@ internal class ShoppingListViewModel @Inject constructor(
                 state.copy(modifiedItems = state.modifiedItems - id)
             }
         }
+    }
+
+    fun onAddItemClicked() {
+        logger.v { "onAddItemClicked() called" }
+        val shoppingListData = loadingHelper.loadingState.value.data
+        val editorState = ShoppingListItemEditorState(
+            foods = shoppingListData?.foods.orEmpty(),
+            units = shoppingListData?.units.orEmpty(),
+        )
+        val item = ShoppingListItemState.NewItem(editorState)
+        editingStateFlow.update {
+            it.copy(newItems = it.newItems + item)
+        }
+    }
+
+    fun onAddCancel(state: ShoppingListItemState.NewItem) {
+        logger.v { "onAddCancel() called with: state = $state" }
+        editingStateFlow.update {
+            it.copy(newItems = it.newItems - state)
+        }
+    }
+
+    fun onAddConfirm(
+        input: ShoppingListItemEditorState
+    ) {
+        logger.v { "onAddConfirm() called with: input = $input" }
+        // TODO
     }
 }

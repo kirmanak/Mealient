@@ -6,5 +6,5 @@ data class ShoppingListEditingState(
     val deletedItemIds: Set<String> = emptySet(),
     val editingItemIds: Set<String> = emptySet(),
     val modifiedItems: Map<String, ShoppingListItemInfo> = emptyMap(),
-    val newItems: List<ShoppingListEditorState> = emptyList(),
+    val newItems: List<ShoppingListItemState.NewItem> = emptyList(),
 )
