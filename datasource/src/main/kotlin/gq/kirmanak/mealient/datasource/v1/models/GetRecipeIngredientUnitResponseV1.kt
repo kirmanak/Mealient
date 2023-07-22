@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetRecipeIngredientUnitResponseV1(
     @SerialName("name") val name: String = "",
+    @SerialName("id") val id: String = "",
 )

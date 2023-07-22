@@ -23,7 +23,10 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DismissState
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,12 +49,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.AppTheme
 import gq.kirmanak.mealient.Dimens
+import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
+import gq.kirmanak.mealient.datasource.models.UnitInfo
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.shopping_lists.util.data
@@ -89,7 +94,13 @@ internal fun ShoppingListScreen(
 
         itemsIndexed(items, { _, item -> item.item.id }) { index, itemState ->
             if (itemState.isEditing) {
-                val state = remember { ShoppingListEditorState(state = itemState) }
+                val state = remember {
+                    ShoppingListEditorState(
+                        state = itemState,
+                        foods = loadingState.data?.foods.orEmpty(),
+                        units = loadingState.data?.units.orEmpty(),
+                    )
+                }
                 ShoppingListItemEditor(
                     state = state,
                     onEditCancelled = { shoppingListViewModel.onEditCancel(itemState) },
@@ -236,6 +247,7 @@ private fun ShoppingListItemEditorButtonRow(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ShoppingListItemEditorFoodRow(
     state: ShoppingListEditorState,
@@ -245,23 +257,52 @@ private fun ShoppingListItemEditorFoodRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(Dimens.Small),
     ) {
-        OutlinedTextField(
-            value = state.food,
-            onValueChange = { state.food = it },
+        ExposedDropdownMenuBox(
+            expanded = state.foodsExpanded,
+            onExpandedChange = { state.foodsExpanded = it },
             modifier = Modifier.weight(1f),
-            textStyle = MaterialTheme.typography.bodyMedium,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.shopping_list_screen_editor_food_label),
-                    style = MaterialTheme.typography.labelMedium,
-                )
-            },
-            singleLine = true,
-        )
+        ) {
+            OutlinedTextField(
+                value = state.food?.name.orEmpty(),
+                onValueChange = { },
+                modifier = Modifier.menuAnchor(),
+                readOnly = true,
+                textStyle = MaterialTheme.typography.bodyMedium,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.shopping_list_screen_editor_food_label),
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                },
+                singleLine = true,
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.foodsExpanded)
+                },
+                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            )
+
+            ExposedDropdownMenu(
+                expanded = state.foodsExpanded,
+                onDismissRequest = { state.foodsExpanded = false }
+            ) {
+                state.foods.forEach {
+                    DropdownMenuItem(
+                        text = {
+                            Text(text = it.name, style = MaterialTheme.typography.bodyMedium)
+                        },
+                        onClick = {
+                            state.food = it
+                            state.foodsExpanded = false
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                }
+            }
+        }
 
         OutlinedTextField(
-            value = state.unit,
-            onValueChange = { state.unit = it },
+            value = state.unit?.name.orEmpty(),
+            onValueChange = { },
             textStyle = MaterialTheme.typography.bodyMedium,
             label = {
                 Text(
@@ -277,6 +318,8 @@ private fun ShoppingListItemEditorFoodRow(
 
 class ShoppingListEditorState(
     state: ShoppingListItemState,
+    val foods: List<FoodInfo>,
+    val units: List<UnitInfo>,
 ) {
 
     var note: String by mutableStateOf(state.item.note)
@@ -285,9 +328,13 @@ class ShoppingListEditorState(
 
     var isFood: Boolean by mutableStateOf(state.item.isFood)
 
-    var food: String by mutableStateOf(state.item.food)
+    var food: FoodInfo? by mutableStateOf(state.item.food)
 
-    var unit: String by mutableStateOf(state.item.unit)
+    var unit: UnitInfo? by mutableStateOf(state.item.unit)
+
+    var foodsExpanded: Boolean by mutableStateOf(false)
+
+    var unitsExpanded: Boolean by mutableStateOf(false)
 }
 
 @Preview
@@ -295,7 +342,11 @@ class ShoppingListEditorState(
 fun ShoppingListItemEditorPreview() {
     AppTheme {
         ShoppingListItemEditor(
-            state = ShoppingListEditorState(state = ShoppingListItemState(PreviewData.milk))
+            state = ShoppingListEditorState(
+                state = ShoppingListItemState(PreviewData.milk),
+                foods = emptyList(),
+                units = emptyList(),
+            )
         )
     }
 }
@@ -305,7 +356,11 @@ fun ShoppingListItemEditorPreview() {
 fun ShoppingListItemEditorNonFoodPreview() {
     AppTheme {
         ShoppingListItemEditor(
-            state = ShoppingListEditorState(state = ShoppingListItemState(PreviewData.blackTeaBags))
+            state = ShoppingListEditorState(
+                state = ShoppingListItemState(PreviewData.blackTeaBags),
+                foods = emptyList(),
+                units = emptyList(),
+            )
         )
     }
 }
@@ -395,8 +450,8 @@ fun ShoppingListItem(
                         ?.let { DecimalFormat.getInstance().format(it) }
                     val text = listOfNotNull(
                         quantity,
-                        shoppingListItem.unit.takeIf { isFood },
-                        shoppingListItem.food.takeIf { isFood },
+                        shoppingListItem.unit.takeIf { isFood }?.name,
+                        shoppingListItem.food.takeIf { isFood }?.name,
                         shoppingListItem.note,
                     ).filter { it.isNotBlank() }.joinToString(" ")
 
@@ -500,12 +555,11 @@ private object PreviewData {
         id = "1",
         shoppingListId = "1",
         checked = false,
-        position = 0,
         isFood = false,
         note = "Black tea bags",
         quantity = 30.0,
-        unit = "",
-        food = "",
+        unit = null,
+        food = null,
         recipeReferences = listOf(
             ShoppingListItemRecipeReferenceInfo(
                 shoppingListId = "1",
@@ -521,12 +575,11 @@ private object PreviewData {
         id = "2",
         shoppingListId = "1",
         checked = true,
-        position = 1,
         isFood = true,
         note = "Cold",
         quantity = 500.0,
-        unit = "ml",
-        food = "Milk",
+        unit = UnitInfo("ml", ""),
+        food = FoodInfo("Milk", ""),
         recipeReferences = listOf(
             ShoppingListItemRecipeReferenceInfo(
                 shoppingListId = "1",

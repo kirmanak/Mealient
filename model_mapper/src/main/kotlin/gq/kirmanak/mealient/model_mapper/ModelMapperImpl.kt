@@ -38,7 +38,9 @@ import gq.kirmanak.mealient.datasource.v1.models.AddRecipeSettingsV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.GetFoodResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetFoodsResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientFoodResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientUnitResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeInstructionResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSettingsResponseV1
@@ -200,15 +202,28 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
         shoppingListId = getShoppingListItemResponseV1.shoppingListId,
         id = getShoppingListItemResponseV1.id,
         checked = getShoppingListItemResponseV1.checked,
-        position = getShoppingListItemResponseV1.position,
         isFood = getShoppingListItemResponseV1.isFood,
         note = getShoppingListItemResponseV1.note,
         quantity = getShoppingListItemResponseV1.quantity,
-        unit = getShoppingListItemResponseV1.unit?.name.orEmpty(),
-        food = getShoppingListItemResponseV1.food?.name.orEmpty(),
+        unit = getShoppingListItemResponseV1.unit?.let { toUnitInfo(it) },
+        food = getShoppingListItemResponseV1.food?.let { toFoodInfo(it) },
         recipeReferences = getShoppingListItemResponseV1.recipeReferences.map { it.recipeId }
             .mapNotNull { recipes[it] }.flatten().map { toShoppingListItemRecipeReferenceInfo(it) },
     )
+
+    private fun toUnitInfo(getRecipeIngredientUnitResponseV1: GetRecipeIngredientUnitResponseV1): UnitInfo {
+        return UnitInfo(
+            name = getRecipeIngredientUnitResponseV1.name,
+            id = getRecipeIngredientUnitResponseV1.id,
+        )
+    }
+
+    private fun toFoodInfo(getRecipeIngredientFoodResponseV1: GetRecipeIngredientFoodResponseV1): FoodInfo {
+        return FoodInfo(
+            name = getRecipeIngredientFoodResponseV1.name,
+            id = getRecipeIngredientFoodResponseV1.id,
+        )
+    }
 
     override fun toShoppingListItemRecipeReferenceInfo(
         getShoppingListItemRecipeReferenceFullResponseV1: GetShoppingListItemRecipeReferenceFullResponseV1
