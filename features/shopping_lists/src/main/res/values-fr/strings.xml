@@ -3,6 +3,7 @@
 	<string name="shopping_lists_screen_cart_icon">Panier d\'achat</string>
 	<string name="shopping_list_screen_unknown_error">Erreur inconnue</string>
 	<string name="shopping_list_screen_empty_list">%1$s est vide</string>
+	<string name="shopping_list_screen_delete_icon_content_description">Supprimer</string>
 	<string name="shopping_lists_screen_empty">Aucune liste de courses n\'a été trouvée</string>
 	<string name="shopping_lists_screen_unauthorized_error">L\'authentification est requise</string>
 	<string name="shopping_lists_screen_no_connection">Pas de connexion au serveur</string>
