@@ -3,14 +3,18 @@ package gq.kirmanak.mealient.datasource.v1
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
 import gq.kirmanak.mealient.datasource.decode
+import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.CreateShoppingListItemRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.ErrorDetailV1
+import gq.kirmanak.mealient.datasource.v1.models.GetFoodsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetUnitsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetUserInfoResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
@@ -20,9 +24,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -175,25 +177,51 @@ class MealieDataSourceV1Impl @Inject constructor(
         logParameters = { "id = $id, request = $request" }
     )
 
-    override suspend fun updateIsShoppingListItemChecked(
-        id: String,
-        isChecked: Boolean
-    ) {
-        // Has to be done in two steps because the API doesn't support updating the checked state
-        val item = getShoppingListItem(id)
-        val wasChecked = item.jsonObject.getValue("checked").jsonPrimitive.boolean
-        if (wasChecked == isChecked) return
-        val updatedItem = item.jsonObject.toMutableMap().apply {
-            put("checked", JsonPrimitive(isChecked))
-        }
-        updateShoppingListItem(id, JsonObject(updatedItem))
-    }
-
     override suspend fun deleteShoppingListItem(
         id: String,
     ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.deleteShoppingListItem(id) },
         logMethod = { "deleteShoppingListItem" },
         logParameters = { "id = $id" }
+    )
+
+    override suspend fun updateShoppingListItem(
+        item: ShoppingListItemInfo
+    ) {
+        // Has to be done in two steps because we can't specify only the changed fields
+        val remoteItem = getShoppingListItem(item.id)
+        val updatedItem = remoteItem.jsonObject.toMutableMap().apply {
+            put("checked", JsonPrimitive(item.checked))
+            put("isFood", JsonPrimitive(item.isFood))
+            put("note", JsonPrimitive(item.note))
+            put("quantity", JsonPrimitive(item.quantity))
+            put("foodId", JsonPrimitive(item.food?.id))
+            put("unitId", JsonPrimitive(item.unit?.id))
+            remove("unit")
+            remove("food")
+        }
+        updateShoppingListItem(item.id, JsonObject(updatedItem))
+    }
+
+    override suspend fun getFoods(): GetFoodsResponseV1 {
+        return networkRequestWrapper.makeCallAndHandleUnauthorized(
+            block = { service.getFoods(perPage = -1) },
+            logMethod = { "getFoods" },
+        )
+    }
+
+    override suspend fun getUnits(): GetUnitsResponseV1 {
+        return networkRequestWrapper.makeCallAndHandleUnauthorized(
+            block = { service.getUnits(perPage = -1) },
+            logMethod = { "getUnits" },
+        )
+    }
+
+    override suspend fun addShoppingListItem(
+        request: CreateShoppingListItemRequestV1
+    ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.createShoppingListItem(request) },
+        logMethod = { "addShoppingListItem" },
+        logParameters = { "request = $request" }
     )
 }

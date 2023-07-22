@@ -14,8 +14,8 @@ data class ShoppingListItemInfo(
     val isFood: Boolean,
     val note: String,
     val quantity: Double,
-    val unit: String,
-    val food: String,
+    val unit: UnitInfo?,
+    val food: FoodInfo?,
     val recipeReferences: List<ShoppingListItemRecipeReferenceInfo>,
 )
 

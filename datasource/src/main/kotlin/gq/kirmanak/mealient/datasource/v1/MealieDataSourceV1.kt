@@ -1,12 +1,16 @@
 package gq.kirmanak.mealient.datasource.v1
 
+import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.CreateShoppingListItemRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.GetFoodsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetUnitsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetUserInfoResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
@@ -63,7 +67,13 @@ interface MealieDataSourceV1 {
 
     suspend fun getShoppingList(id: String): GetShoppingListResponseV1
 
-    suspend fun updateIsShoppingListItemChecked(id: String, isChecked: Boolean)
-
     suspend fun deleteShoppingListItem(id: String)
+
+    suspend fun updateShoppingListItem(item: ShoppingListItemInfo)
+
+    suspend fun getFoods(): GetFoodsResponseV1
+
+    suspend fun getUnits(): GetUnitsResponseV1
+
+    suspend fun addShoppingListItem(request: CreateShoppingListItemRequestV1)
 }

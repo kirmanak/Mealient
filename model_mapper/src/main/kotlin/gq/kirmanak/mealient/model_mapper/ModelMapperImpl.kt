@@ -8,8 +8,10 @@ import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
+import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
@@ -19,6 +21,7 @@ import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListsInfo
+import gq.kirmanak.mealient.datasource.models.UnitInfo
 import gq.kirmanak.mealient.datasource.models.VersionInfo
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeIngredientV0
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeInstructionV0
@@ -34,7 +37,12 @@ import gq.kirmanak.mealient.datasource.v1.models.AddRecipeIngredientV1
 import gq.kirmanak.mealient.datasource.v1.models.AddRecipeInstructionV1
 import gq.kirmanak.mealient.datasource.v1.models.AddRecipeSettingsV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.CreateShoppingListItemRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.GetFoodResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetFoodsResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientFoodResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientUnitResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeInstructionResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSettingsResponseV1
@@ -44,6 +52,8 @@ import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListItemResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetUnitResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetUnitsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
@@ -198,11 +208,25 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
         isFood = getShoppingListItemResponseV1.isFood,
         note = getShoppingListItemResponseV1.note,
         quantity = getShoppingListItemResponseV1.quantity,
-        unit = getShoppingListItemResponseV1.unit?.name.orEmpty(),
-        food = getShoppingListItemResponseV1.food?.name.orEmpty(),
+        unit = getShoppingListItemResponseV1.unit?.let { toUnitInfo(it) },
+        food = getShoppingListItemResponseV1.food?.let { toFoodInfo(it) },
         recipeReferences = getShoppingListItemResponseV1.recipeReferences.map { it.recipeId }
             .mapNotNull { recipes[it] }.flatten().map { toShoppingListItemRecipeReferenceInfo(it) },
     )
+
+    private fun toUnitInfo(getRecipeIngredientUnitResponseV1: GetRecipeIngredientUnitResponseV1): UnitInfo {
+        return UnitInfo(
+            name = getRecipeIngredientUnitResponseV1.name,
+            id = getRecipeIngredientUnitResponseV1.id,
+        )
+    }
+
+    private fun toFoodInfo(getRecipeIngredientFoodResponseV1: GetRecipeIngredientFoodResponseV1): FoodInfo {
+        return FoodInfo(
+            name = getRecipeIngredientFoodResponseV1.name,
+            id = getRecipeIngredientFoodResponseV1.id,
+        )
+    }
 
     override fun toShoppingListItemRecipeReferenceInfo(
         getShoppingListItemRecipeReferenceFullResponseV1: GetShoppingListItemRecipeReferenceFullResponseV1
@@ -305,4 +329,39 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
     override fun toV0Request(parseRecipeURLInfo: ParseRecipeURLInfo) = ParseRecipeURLRequestV0(
         url = parseRecipeURLInfo.url,
     )
+
+    override fun toFoodInfo(getFoodsResponseV1: GetFoodsResponseV1): List<FoodInfo> {
+        return getFoodsResponseV1.items.map { toFoodInfo(it) }
+    }
+
+    private fun toFoodInfo(getFoodResponseV1: GetFoodResponseV1): FoodInfo {
+        return FoodInfo(
+            name = getFoodResponseV1.name,
+            id = getFoodResponseV1.id,
+        )
+    }
+
+    override fun toUnitInfo(getUnitsResponseV1: GetUnitsResponseV1): List<UnitInfo> {
+        return getUnitsResponseV1.items.map { toUnitInfo(it) }
+    }
+
+    private fun toUnitInfo(getUnitResponseV1: GetUnitResponseV1): UnitInfo {
+        return UnitInfo(
+            name = getUnitResponseV1.name,
+            id = getUnitResponseV1.id,
+        )
+    }
+
+    override fun toV1CreateRequest(addRecipeInfo: NewShoppingListItemInfo): CreateShoppingListItemRequestV1 {
+        return CreateShoppingListItemRequestV1(
+            shoppingListId = addRecipeInfo.shoppingListId,
+            checked = false,
+            position = addRecipeInfo.position,
+            isFood = addRecipeInfo.isFood,
+            note = addRecipeInfo.note,
+            quantity = addRecipeInfo.quantity,
+            foodId = addRecipeInfo.food?.id,
+            unitId = addRecipeInfo.unit?.id,
+        )
+    }
 }
