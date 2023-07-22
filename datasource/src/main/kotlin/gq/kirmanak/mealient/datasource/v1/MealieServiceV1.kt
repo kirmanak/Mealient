@@ -104,4 +104,9 @@ interface MealieServiceV1 {
     suspend fun getUnits(
         @Query("perPage") perPage: Int,
     ): GetUnitsResponseV1
+
+    @POST("/api/groups/shopping/items")
+    suspend fun createShoppingListItem(
+        @Body request: CreateShoppingListItemRequestV1,
+    )
 }

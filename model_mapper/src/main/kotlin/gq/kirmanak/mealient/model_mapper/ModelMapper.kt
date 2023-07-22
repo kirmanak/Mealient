@@ -11,6 +11,7 @@ import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
@@ -36,6 +37,7 @@ import gq.kirmanak.mealient.datasource.v1.models.AddRecipeIngredientV1
 import gq.kirmanak.mealient.datasource.v1.models.AddRecipeInstructionV1
 import gq.kirmanak.mealient.datasource.v1.models.AddRecipeSettingsV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.CreateShoppingListItemRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.GetFoodsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeInstructionResponseV1
@@ -135,4 +137,6 @@ interface ModelMapper {
     fun toFoodInfo(getFoodsResponseV1: GetFoodsResponseV1): List<FoodInfo>
 
     fun toUnitInfo(getUnitsResponseV1: GetUnitsResponseV1): List<UnitInfo>
+
+    fun toV1CreateRequest(addRecipeInfo: NewShoppingListItemInfo): CreateShoppingListItemRequestV1
 }

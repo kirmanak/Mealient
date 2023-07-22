@@ -11,6 +11,7 @@ import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
@@ -36,6 +37,7 @@ import gq.kirmanak.mealient.datasource.v1.models.AddRecipeIngredientV1
 import gq.kirmanak.mealient.datasource.v1.models.AddRecipeInstructionV1
 import gq.kirmanak.mealient.datasource.v1.models.AddRecipeSettingsV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.CreateShoppingListItemRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.GetFoodResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetFoodsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientFoodResponseV1
@@ -202,6 +204,7 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
         shoppingListId = getShoppingListItemResponseV1.shoppingListId,
         id = getShoppingListItemResponseV1.id,
         checked = getShoppingListItemResponseV1.checked,
+        position = getShoppingListItemResponseV1.position,
         isFood = getShoppingListItemResponseV1.isFood,
         note = getShoppingListItemResponseV1.note,
         quantity = getShoppingListItemResponseV1.quantity,
@@ -346,6 +349,19 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
         return UnitInfo(
             name = getUnitResponseV1.name,
             id = getUnitResponseV1.id,
+        )
+    }
+
+    override fun toV1CreateRequest(addRecipeInfo: NewShoppingListItemInfo): CreateShoppingListItemRequestV1 {
+        return CreateShoppingListItemRequestV1(
+            shoppingListId = addRecipeInfo.shoppingListId,
+            checked = false,
+            position = addRecipeInfo.position,
+            isFood = addRecipeInfo.isFood,
+            note = addRecipeInfo.note,
+            quantity = addRecipeInfo.quantity,
+            foodId = addRecipeInfo.food?.id,
+            unitId = addRecipeInfo.unit?.id,
         )
     }
 }

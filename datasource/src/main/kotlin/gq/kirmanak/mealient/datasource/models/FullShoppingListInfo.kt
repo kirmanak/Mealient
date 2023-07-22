@@ -10,6 +10,7 @@ data class ShoppingListItemInfo(
     val shoppingListId: String,
     val id: String,
     val checked: Boolean,
+    val position: Int,
     val isFood: Boolean,
     val note: String,
     val quantity: Double,

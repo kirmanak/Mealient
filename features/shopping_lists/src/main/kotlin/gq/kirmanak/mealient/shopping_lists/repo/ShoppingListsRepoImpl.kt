@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.shopping_lists.repo
 
 import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.UnitInfo
@@ -42,5 +43,10 @@ class ShoppingListsRepoImpl @Inject constructor(
     override suspend fun getUnits(): List<UnitInfo> {
         logger.v { "getUnits() called" }
         return dataSource.getUnits()
+    }
+
+    override suspend fun addShoppingListItem(item: NewShoppingListItemInfo) {
+        logger.v { "addShoppingListItem() called with: item = $item" }
+        dataSource.addShoppingListItem(item)
     }
 }

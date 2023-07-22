@@ -133,7 +133,7 @@ internal fun ShoppingListScreen(
                 ShoppingListItemEditor(
                     state = itemState.item,
                     onEditCancelled = { shoppingListViewModel.onAddCancel(itemState) },
-                    onEditConfirmed = { shoppingListViewModel.onAddConfirm(itemState.item) }
+                    onEditConfirmed = { shoppingListViewModel.onAddConfirm(itemState) }
                 )
             }
         }
@@ -384,6 +384,8 @@ private fun ShoppingListItemEditorFoodRow(
 class ShoppingListItemEditorState(
     val foods: List<FoodInfo>,
     val units: List<UnitInfo>,
+    val position: Int,
+    val listId: String,
     note: String = "",
     quantity: String = "1.0",
     isFood: Boolean = false,
@@ -398,6 +400,8 @@ class ShoppingListItemEditorState(
     ) : this(
         foods = foods,
         units = units,
+        position = state.item.position,
+        listId = state.item.shoppingListId,
         note = state.item.note,
         quantity = state.item.quantity.toString(),
         isFood = state.item.isFood,
@@ -638,6 +642,7 @@ private object PreviewData {
         id = "1",
         shoppingListId = "1",
         checked = false,
+        position = 0,
         isFood = false,
         note = "Black tea bags",
         quantity = 30.0,
@@ -658,6 +663,7 @@ private object PreviewData {
         id = "2",
         shoppingListId = "1",
         checked = true,
+        position = 0,
         isFood = true,
         note = "Cold",
         quantity = 500.0,

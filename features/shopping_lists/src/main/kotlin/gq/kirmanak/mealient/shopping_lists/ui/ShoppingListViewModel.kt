@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.architecture.valueUpdatesOnly
+import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
@@ -224,10 +225,13 @@ internal class ShoppingListViewModel @Inject constructor(
 
     fun onAddItemClicked() {
         logger.v { "onAddItemClicked() called" }
-        val shoppingListData = loadingHelper.loadingState.value.data
+        val shoppingListData = loadingHelper.loadingState.value.data ?: return
+        val maxPosition = shoppingListData.shoppingList.items.maxOfOrNull { it.position } ?: 0
         val editorState = ShoppingListItemEditorState(
-            foods = shoppingListData?.foods.orEmpty(),
-            units = shoppingListData?.units.orEmpty(),
+            foods = shoppingListData.foods,
+            units = shoppingListData.units,
+            position = maxPosition + 1,
+            listId = shoppingListData.shoppingList.id,
         )
         val item = ShoppingListItemState.NewItem(editorState)
         editingStateFlow.update {
@@ -243,9 +247,33 @@ internal class ShoppingListViewModel @Inject constructor(
     }
 
     fun onAddConfirm(
-        input: ShoppingListItemEditorState
+        state: ShoppingListItemState.NewItem,
     ) {
-        logger.v { "onAddConfirm() called with: input = $input" }
-        // TODO
+        logger.v { "onAddConfirm() called with: state = $state" }
+        val item = state.item
+        val newItem = NewShoppingListItemInfo(
+            shoppingListId = item.listId,
+            note = item.note,
+            quantity = item.quantity.toDouble(),
+            isFood = item.isFood,
+            unit = item.unit,
+            food = item.food,
+            position = item.position,
+        )
+        viewModelScope.launch {
+            val result = runCatchingExceptCancel {
+                shoppingListsRepo.addShoppingListItem(newItem)
+            }.onFailure {
+                logger.e(it) { "Failed to add item" }
+            }
+            _errorToShowInSnackbar = result.exceptionOrNull()
+            if (result.isSuccess) {
+                logger.v { "Item added" }
+                doRefresh()
+            }
+            editingStateFlow.update {
+                it.copy(newItems = it.newItems - state)
+            }
+        }
     }
 }
