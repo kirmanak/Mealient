@@ -8,6 +8,7 @@ import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
+import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
@@ -19,6 +20,7 @@ import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListsInfo
+import gq.kirmanak.mealient.datasource.models.UnitInfo
 import gq.kirmanak.mealient.datasource.models.VersionInfo
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeIngredientV0
 import gq.kirmanak.mealient.datasource.v0.models.AddRecipeInstructionV0
@@ -34,6 +36,7 @@ import gq.kirmanak.mealient.datasource.v1.models.AddRecipeIngredientV1
 import gq.kirmanak.mealient.datasource.v1.models.AddRecipeInstructionV1
 import gq.kirmanak.mealient.datasource.v1.models.AddRecipeSettingsV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
+import gq.kirmanak.mealient.datasource.v1.models.GetFoodsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeInstructionResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
@@ -44,6 +47,7 @@ import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListItemResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsSummaryResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetUnitsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
@@ -127,4 +131,8 @@ interface ModelMapper {
     fun toV0Instruction(addRecipeInstructionInfo: AddRecipeInstructionInfo): AddRecipeInstructionV0
 
     fun toV0Request(parseRecipeURLInfo: ParseRecipeURLInfo): ParseRecipeURLRequestV0
+
+    fun toFoodInfo(getFoodsResponseV1: GetFoodsResponseV1): List<FoodInfo>
+
+    fun toUnitInfo(getUnitsResponseV1: GetUnitsResponseV1): List<UnitInfo>
 }

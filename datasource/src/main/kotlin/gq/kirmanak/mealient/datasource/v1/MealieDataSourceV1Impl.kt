@@ -8,10 +8,12 @@ import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateApiTokenResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.ErrorDetailV1
+import gq.kirmanak.mealient.datasource.v1.models.GetFoodsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsResponseV1
+import gq.kirmanak.mealient.datasource.v1.models.GetUnitsResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.GetUserInfoResponseV1
 import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
 import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
@@ -193,5 +195,19 @@ class MealieDataSourceV1Impl @Inject constructor(
             put("quantity", JsonPrimitive(item.quantity))
         }
         updateShoppingListItem(item.id, JsonObject(updatedItem))
+    }
+
+    override suspend fun getFoods(): GetFoodsResponseV1 {
+        return networkRequestWrapper.makeCallAndHandleUnauthorized(
+            block = { service.getFoods(perPage = -1) },
+            logMethod = { "getFoods" },
+        )
+    }
+
+    override suspend fun getUnits(): GetUnitsResponseV1 {
+        return networkRequestWrapper.makeCallAndHandleUnauthorized(
+            block = { service.getUnits(perPage = -1) },
+            logMethod = { "getUnits" },
+        )
     }
 }

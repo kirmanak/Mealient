@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.architecture.valueUpdatesOnly
-import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
@@ -19,6 +18,8 @@ import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactory
 import gq.kirmanak.mealient.shopping_lists.util.LoadingState
 import gq.kirmanak.mealient.shopping_lists.util.LoadingStateNoData
 import gq.kirmanak.mealient.shopping_lists.util.map
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -48,7 +49,7 @@ internal class ShoppingListViewModel @Inject constructor(
     )
 
     private val loadingHelper = loadingHelperFactory.create(viewModelScope) {
-        shoppingListsRepo.getShoppingList(args.shoppingListId)
+        loadShoppingListData()
     }
 
     val loadingState: StateFlow<LoadingState<ShoppingListScreenState>> = combine(
@@ -84,19 +85,43 @@ internal class ShoppingListViewModel @Inject constructor(
         }
     }
 
+    private suspend fun loadShoppingListData(): ShoppingListData = coroutineScope {
+        val foodsDeferred = async {
+            runCatchingExceptCancel {
+                shoppingListsRepo.getFoods()
+            }.getOrDefault(emptyList())
+        }
+
+        val unitsDeferred = async {
+            runCatchingExceptCancel {
+                shoppingListsRepo.getUnits()
+            }.getOrDefault(emptyList())
+        }
+
+        val shoppingListDeferred = async {
+            shoppingListsRepo.getShoppingList(args.shoppingListId)
+        }
+
+        ShoppingListData(
+            foods = foodsDeferred.await(),
+            units = unitsDeferred.await(),
+            shoppingList = shoppingListDeferred.await(),
+        )
+    }
+
     private suspend fun doRefresh() {
         _errorToShowInSnackbar = loadingHelper.refresh().exceptionOrNull()
     }
 
     private fun buildLoadingState(
-        loadingState: LoadingState<FullShoppingListInfo>,
+        loadingState: LoadingState<ShoppingListData>,
         deletedItemIds: Set<String>,
         editingItemIds: Set<String>,
         editedItems: Map<String, ShoppingListItemInfo>,
     ): LoadingState<ShoppingListScreenState> {
         logger.v { "buildLoadingState() called with: loadingState = $loadingState, deletedItemIds = $deletedItemIds, editingItemIds = $editingItemIds, editedItems = $editedItems" }
-        return loadingState.map { shoppingList ->
-            val items = shoppingList.items
+        return loadingState.map { data ->
+            val items = data.shoppingList.items
                 .filter { it.id !in deletedItemIds }
                 .map {
                     ShoppingListItemState(
@@ -105,7 +130,12 @@ internal class ShoppingListViewModel @Inject constructor(
                     )
                 }
                 .sortedBy { it.item.checked }
-            ShoppingListScreenState(name = shoppingList.name, items = items)
+            ShoppingListScreenState(
+                name = data.shoppingList.name,
+                items = items,
+                foods = data.foods,
+                units = data.units,
+            )
         }
     }
 

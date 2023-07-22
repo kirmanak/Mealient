@@ -1,8 +1,10 @@
 package gq.kirmanak.mealient.shopping_lists.network
 
+import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
+import gq.kirmanak.mealient.datasource.models.UnitInfo
 
 interface ShoppingListsDataSource {
 
@@ -13,4 +15,8 @@ interface ShoppingListsDataSource {
     suspend fun deleteShoppingListItem(id: String)
 
     suspend fun updateShoppingListItem(item: ShoppingListItemInfo)
+
+    suspend fun getFoods(): List<FoodInfo>
+
+    suspend fun getUnits(): List<UnitInfo>
 }

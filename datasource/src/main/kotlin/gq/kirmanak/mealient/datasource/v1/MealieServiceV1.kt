@@ -94,4 +94,14 @@ interface MealieServiceV1 {
     suspend fun deleteShoppingListItem(
         @Path("id") id: String,
     )
+
+    @GET("/api/foods")
+    suspend fun getFoods(
+        @Query("perPage") perPage: Int,
+    ): GetFoodsResponseV1
+
+    @GET("/api/units")
+    suspend fun getUnits(
+        @Query("perPage") perPage: Int,
+    ): GetUnitsResponseV1
 }

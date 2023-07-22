@@ -1,8 +1,10 @@
 package gq.kirmanak.mealient.shopping_lists.network
 
+import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
+import gq.kirmanak.mealient.datasource.models.UnitInfo
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
@@ -28,5 +30,9 @@ class ShoppingListsDataSourceImpl @Inject constructor(
     override suspend fun updateShoppingListItem(
         item: ShoppingListItemInfo
     ) = v1Source.updateShoppingListItem(item)
+
+    override suspend fun getFoods(): List<FoodInfo> = modelMapper.toFoodInfo(v1Source.getFoods())
+
+    override suspend fun getUnits(): List<UnitInfo> = modelMapper.toUnitInfo(v1Source.getUnits())
 }
 
