@@ -191,8 +191,13 @@ class MealieDataSourceV1Impl @Inject constructor(
         val remoteItem = getShoppingListItem(item.id)
         val updatedItem = remoteItem.jsonObject.toMutableMap().apply {
             put("checked", JsonPrimitive(item.checked))
+            put("isFood", JsonPrimitive(item.isFood))
             put("note", JsonPrimitive(item.note))
             put("quantity", JsonPrimitive(item.quantity))
+            put("foodId", JsonPrimitive(item.food?.id))
+            put("unitId", JsonPrimitive(item.unit?.id))
+            remove("unit")
+            remove("food")
         }
         updateShoppingListItem(item.id, JsonObject(updatedItem))
     }

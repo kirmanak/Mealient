@@ -188,6 +188,9 @@ internal class ShoppingListViewModel @Inject constructor(
         val updatedItem = state.item.copy(
             note = input.note,
             quantity = input.quantity.toDouble(),
+            isFood = input.isFood,
+            unit = input.unit,
+            food = input.food,
         )
         updateItemInformation(updatedItem)
     }
