@@ -89,7 +89,12 @@ internal fun ShoppingListScreen(
 
     LazyColumnWithLoadingState(
         loadingState = loadingState.map { it.items },
-        contentPadding = PaddingValues(Dimens.Medium),
+        contentPadding = PaddingValues(
+            start = Dimens.Medium,
+            end = Dimens.Medium,
+            top = Dimens.Medium,
+            bottom = Dimens.Large * 4,
+        ),
         verticalArrangement = Arrangement.spacedBy(Dimens.Medium),
         defaultEmptyListError = defaultEmptyListError,
         errorToShowInSnackbar = shoppingListViewModel.errorToShowInSnackbar,
