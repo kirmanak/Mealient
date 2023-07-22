@@ -121,11 +121,16 @@ internal class ShoppingListViewModel @Inject constructor(
                         isEditing = it.id in editingState.editingItemIds,
                     )
                 }
-                .sortedBy { it.item.checked }
+            val items = (existingItems + editingState.newItems).sortedWith(
+                compareBy(
+                    { it.checked },
+                    { it.position },
+                )
+            )
             ShoppingListScreenState(
                 name = data.shoppingList.name,
                 listId = data.shoppingList.id,
-                items = existingItems + editingState.newItems,
+                items = items,
                 foods = data.foods.sortedBy { it.name },
                 units = data.units.sortedBy { it.name },
             )
