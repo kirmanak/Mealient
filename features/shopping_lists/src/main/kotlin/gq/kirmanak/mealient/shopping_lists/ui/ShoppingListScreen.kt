@@ -362,20 +362,38 @@ private fun ShoppingListItemEditorFoodRow(
 }
 
 class ShoppingListEditorState(
-    state: ShoppingListItemState,
     val foods: List<FoodInfo>,
     val units: List<UnitInfo>,
+    note: String = "",
+    quantity: String = "1.0",
+    isFood: Boolean = false,
+    food: FoodInfo? = null,
+    unit: UnitInfo? = null,
 ) {
 
-    var note: String by mutableStateOf(state.item.note)
+    constructor(
+        state: ShoppingListItemState,
+        foods: List<FoodInfo>,
+        units: List<UnitInfo>,
+    ) : this(
+        foods = foods,
+        units = units,
+        note = state.item.note,
+        quantity = state.item.quantity.toString(),
+        isFood = state.item.isFood,
+        food = state.item.food,
+        unit = state.item.unit,
+    )
 
-    var quantity: String by mutableStateOf(state.item.quantity.toString())
+    var note: String by mutableStateOf(note)
 
-    var isFood: Boolean by mutableStateOf(state.item.isFood)
+    var quantity: String by mutableStateOf(quantity)
 
-    var food: FoodInfo? by mutableStateOf(state.item.food)
+    var isFood: Boolean by mutableStateOf(isFood)
 
-    var unit: UnitInfo? by mutableStateOf(state.item.unit)
+    var food: FoodInfo? by mutableStateOf(food)
+
+    var unit: UnitInfo? by mutableStateOf(unit)
 
     var foodsExpanded: Boolean by mutableStateOf(false)
 
