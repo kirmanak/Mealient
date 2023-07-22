@@ -133,8 +133,8 @@ internal class ShoppingListViewModel @Inject constructor(
             ShoppingListScreenState(
                 name = data.shoppingList.name,
                 items = items,
-                foods = data.foods,
-                units = data.units,
+                foods = data.foods.sortedBy { it.name },
+                units = data.units.sortedBy { it.name },
             )
         }
     }

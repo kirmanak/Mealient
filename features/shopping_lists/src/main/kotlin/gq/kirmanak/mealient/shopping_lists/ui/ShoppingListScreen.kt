@@ -294,25 +294,70 @@ private fun ShoppingListItemEditorFoodRow(
                             state.food = it
                             state.foodsExpanded = false
                         },
+                        trailingIcon = {
+                            if (it == state.food) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = stringResource(id = R.string.shopping_list_screen_editor_checked_unit_content_description),
+                                )
+                            }
+                        },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     )
                 }
             }
         }
 
-        OutlinedTextField(
-            value = state.unit?.name.orEmpty(),
-            onValueChange = { },
-            textStyle = MaterialTheme.typography.bodyMedium,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.shopping_list_screen_editor_unit_label),
-                    style = MaterialTheme.typography.labelMedium,
-                )
-            },
-            singleLine = true,
+        ExposedDropdownMenuBox(
+            expanded = state.unitsExpanded,
+            onExpandedChange = { state.unitsExpanded = it },
             modifier = Modifier.weight(1f),
-        )
+        ) {
+            OutlinedTextField(
+                value = state.unit?.name.orEmpty(),
+                onValueChange = { },
+                modifier = Modifier.menuAnchor(),
+                readOnly = true,
+                textStyle = MaterialTheme.typography.bodyMedium,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.shopping_list_screen_editor_unit_label),
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                },
+                singleLine = true,
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.unitsExpanded)
+                },
+                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            )
+
+            ExposedDropdownMenu(
+                expanded = state.unitsExpanded,
+                onDismissRequest = { state.unitsExpanded = false }
+            ) {
+                state.units.forEach {
+                    DropdownMenuItem(
+                        text = {
+                            Text(text = it.name, style = MaterialTheme.typography.bodyMedium)
+                        },
+                        onClick = {
+                            state.unit = it
+                            state.unitsExpanded = false
+                        },
+                        trailingIcon = {
+                            if (it == state.unit) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = stringResource(id = R.string.shopping_list_screen_editor_checked_unit_content_description),
+                                )
+                            }
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                }
+            }
+        }
     }
 }
 
