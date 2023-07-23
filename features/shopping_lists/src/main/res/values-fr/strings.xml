@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="shopping_lists_screen_cart_icon">Panier d\'achat</string>
-	<string name="shopping_list_screen_unknown_error">Erreur inconnue</string>
-	<string name="shopping_list_screen_empty_list">%1$s est vide</string>
-	<string name="shopping_list_screen_delete_icon_content_description">Supprimer</string>
-	<string name="shopping_lists_screen_empty">Aucune liste de courses n\'a été trouvée</string>
-	<string name="shopping_lists_screen_unauthorized_error">L\'authentification est requise</string>
-	<string name="shopping_lists_screen_no_connection">Pas de connexion au serveur</string>
-	<string name="shopping_lists_screen_unknown_error">Erreur inconnue</string>
-	<string name="shopping_lists_screen_empty_button_refresh">Réessayer</string>
+    <string name="shopping_lists_screen_cart_icon">Panier d\'achat</string>
+    <string name="shopping_list_screen_unknown_error">Erreur inconnue</string>
+    <string name="shopping_list_screen_empty_list">%1$s est vide</string>
+    <string name="shopping_list_screen_delete_icon_content_description">Supprimer</string>
+    <string name="shopping_list_screen_editor_quantity_label">Qté</string>
+    <string name="shopping_list_screen_editor_note_label">Note</string>
+    <string name="shopping_list_screen_editor_food_label">Alimentation</string>
+    <string name="shopping_list_screen_editor_unit_label">Unité</string>
+    <string name="shopping_list_screen_editor_save_button">Économiser</string>
+    <string name="shopping_list_screen_editor_not_food_button">Pas de nourriture</string>
+    <string name="shopping_list_screen_editor_food_button">Alimentation</string>
+    <string name="shopping_list_screen_editor_cancel_button">Annuler</string>
+    <string name="shopping_list_screen_edit_icon_content_description">Editer</string>
+    <string name="shopping_list_screen_editor_checked_unit_content_description">Unité sélectionnée</string>
+    <string name="shopping_list_screen_editor_checked_food_content_description">Aliments sélectionnés</string>
+    <string name="shopping_list_screen_add_icon_content_description">Ajouter un article</string>
+    <string name="shopping_lists_screen_empty">Aucune liste de courses n\'a été trouvée</string>
+    <string name="shopping_lists_screen_unauthorized_error">L\'authentification est requise</string>
+    <string name="shopping_lists_screen_no_connection">Pas de connexion au serveur</string>
+    <string name="shopping_lists_screen_unknown_error">Erreur inconnue</string>
+    <string name="shopping_lists_screen_empty_button_refresh">Réessayer</string>
 </resources>
