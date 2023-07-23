@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="shopping_lists_screen_cart_icon">Корзина для покупок</string>
-	<string name="shopping_list_screen_unknown_error">Неизвестная ошибка</string>
-	<string name="shopping_list_screen_empty_list">%1$s пуст</string>
-	<string name="shopping_lists_screen_empty">Списки покупок не найдены</string>
-	<string name="shopping_lists_screen_unauthorized_error">Требуется аутентификация</string>
-	<string name="shopping_lists_screen_no_connection">Нет соединения с сервером</string>
-	<string name="shopping_lists_screen_unknown_error">Неизвестная ошибка</string>
-	<string name="shopping_lists_screen_empty_button_refresh">Попробовать снова</string>
+    <string name="shopping_lists_screen_cart_icon">Корзина для покупок</string>
+    <string name="shopping_list_screen_unknown_error">Неизвестная ошибка</string>
+    <string name="shopping_list_screen_empty_list">%1$s пуст</string>
+    <string name="shopping_list_screen_delete_icon_content_description">Удалить</string>
+    <string name="shopping_list_screen_editor_quantity_label">Кол-во</string>
+    <string name="shopping_list_screen_editor_note_label">Примечание</string>
+    <string name="shopping_list_screen_editor_food_label">Еда</string>
+    <string name="shopping_list_screen_editor_unit_label">Единицы</string>
+    <string name="shopping_list_screen_editor_save_button">Сохранить</string>
+    <string name="shopping_list_screen_editor_not_food_button">Не еда</string>
+    <string name="shopping_list_screen_editor_food_button">Еда</string>
+    <string name="shopping_list_screen_editor_cancel_button">Отмена</string>
+    <string name="shopping_list_screen_edit_icon_content_description">Редактировать</string>
+    <string name="shopping_list_screen_editor_checked_unit_content_description">Выбранная единица</string>
+    <string name="shopping_list_screen_editor_checked_food_content_description">Выбранная еда</string>
+    <string name="shopping_list_screen_add_icon_content_description">Добавить предмет</string>
+    <string name="shopping_lists_screen_empty">Списки покупок не найдены</string>
+    <string name="shopping_lists_screen_unauthorized_error">Требуется аутентификация</string>
+    <string name="shopping_lists_screen_no_connection">Нет соединения с сервером</string>
+    <string name="shopping_lists_screen_unknown_error">Неизвестная ошибка</string>
+    <string name="shopping_lists_screen_empty_button_refresh">Попробовать снова</string>
 </resources>
