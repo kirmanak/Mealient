@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="shopping_lists_screen_cart_icon">Einkaufswagen</string>
-	<string name="shopping_list_screen_unknown_error">Unbekannter Fehler</string>
-	<string name="shopping_list_screen_empty_list">%1$s ist leer</string>
-	<string name="shopping_list_screen_delete_icon_content_description">Löschen</string>
-	<string name="shopping_lists_screen_empty">Keine Einkaufslisten gefunden</string>
-	<string name="shopping_lists_screen_unauthorized_error">Authentifizierung ist erforderlich</string>
-	<string name="shopping_lists_screen_no_connection">Keine Serververbindung</string>
-	<string name="shopping_lists_screen_unknown_error">Unbekannter Fehler</string>
-	<string name="shopping_lists_screen_empty_button_refresh">Erneut versuchen</string>
+    <string name="shopping_lists_screen_cart_icon">Einkaufswagen</string>
+    <string name="shopping_list_screen_unknown_error">Unbekannter Fehler</string>
+    <string name="shopping_list_screen_empty_list">%1$s ist leer</string>
+    <string name="shopping_list_screen_delete_icon_content_description">Löschen</string>
+    <string name="shopping_list_screen_editor_quantity_label">Menge</string>
+    <string name="shopping_list_screen_editor_note_label">Hinweis</string>
+    <string name="shopping_list_screen_editor_food_label">Lebensmittel</string>
+    <string name="shopping_list_screen_editor_unit_label">Einheit</string>
+    <string name="shopping_list_screen_editor_save_button">Speichern Sie</string>
+    <string name="shopping_list_screen_editor_not_food_button">Keine Lebensmittel</string>
+    <string name="shopping_list_screen_editor_food_button">Lebensmittel</string>
+    <string name="shopping_list_screen_editor_cancel_button">Abbrechen</string>
+    <string name="shopping_list_screen_edit_icon_content_description">bearbeiten</string>
+    <string name="shopping_list_screen_editor_checked_unit_content_description">Ausgewählte Einheit</string>
+    <string name="shopping_list_screen_editor_checked_food_content_description">Ausgewählte Lebensmittel</string>
+    <string name="shopping_list_screen_add_icon_content_description">Artikel hinzufügen</string>
+    <string name="shopping_lists_screen_empty">Keine Einkaufslisten gefunden</string>
+    <string name="shopping_lists_screen_unauthorized_error">Authentifizierung ist erforderlich</string>
+    <string name="shopping_lists_screen_no_connection">Keine Serververbindung</string>
+    <string name="shopping_lists_screen_unknown_error">Unbekannter Fehler</string>
+    <string name="shopping_lists_screen_empty_button_refresh">Erneut versuchen</string>
 </resources>
