@@ -1,0 +1,1 @@
+The app will keep screen on while viewing a recipe
