@@ -16,7 +16,6 @@ buildscript {
 
 plugins {
     alias(libs.plugins.sonarqube)
-    alias(libs.plugins.rootcoverage)
 }
 
 sonarqube {
@@ -34,15 +33,6 @@ subprojects {
                 "sonar.androidLint.reportPaths",
                 "${projectDir.path}/build/reports/lint-results-debug.xml"
             )
-            property(
-                "sonar.coverage.jacoco.xmlReportPaths",
-                "${projectDir.path}/build/reports/jacoco.xml"
-            )
         }
     }
-}
-
-rootCoverage {
-    generateXml = true
-    includeNoLocationClasses = true
 }

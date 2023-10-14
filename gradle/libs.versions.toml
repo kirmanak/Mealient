@@ -13,8 +13,6 @@ protobuf = "3.22.2"
 protobufPlugin = "0.9.1"
 # https://plugins.gradle.org/plugin/org.sonarqube
 sonarqube = "4.0.0.2929"
-# https://plugins.gradle.org/plugin/nl.neotech.plugin.rootcoverage
-rootCoverage = "1.6.0"
 # https://plugins.gradle.org/plugin/com.guardsquare.appsweep
 appsweep = "1.4.0"
 # https://github.com/material-components/material-components-android/releases
@@ -205,7 +203,6 @@ composeDestinations-ksp = { group = "io.github.raamcosta.compose-destinations", 
 
 [plugins]
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
-rootcoverage = { id = "nl.neotech.plugin.rootcoverage", version.ref = "rootCoverage" }
 appsweep = { id = "com.guardsquare.appsweep", version.ref = "appsweep" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspPlugin" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
