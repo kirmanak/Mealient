@@ -3,18 +3,11 @@ package gq.kirmanak.mealient
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import org.gradle.api.Action
-import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
-import org.gradle.api.artifacts.MinimalExternalModuleDependency
-import org.gradle.api.plugins.ExtensionAware
-import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.dependencies
-import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 internal fun Project.configureAndroidCompose(
-    commonExtension: CommonExtension<*, *, *, *>,
+    commonExtension: CommonExtension<*, *, *, *, *>,
 ) {
     val variants = when (commonExtension) {
         is BaseAppModuleExtension -> commonExtension.applicationVariants
@@ -59,16 +52,3 @@ internal fun Project.configureAndroidCompose(
         }
     }
 }
-
-private fun Project.library(name: String): Provider<MinimalExternalModuleDependency> {
-    return libs.findLibrary(name).get()
-}
-
-private val Project.kotlin: KotlinAndroidProjectExtension
-    get() = (this as ExtensionAware).extensions.getByName("kotlin") as KotlinAndroidProjectExtension
-
-private fun KotlinAndroidProjectExtension.sourceSets(configure: Action<NamedDomainObjectContainer<KotlinSourceSet>>): Unit =
-    (this as ExtensionAware).extensions.configure("sourceSets", configure)
-
-
-

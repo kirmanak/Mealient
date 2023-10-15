@@ -11,7 +11,7 @@ import org.robolectric.annotation.Config
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
-@Config(application = HiltTestApplication::class, manifest = Config.NONE)
+@Config(application = HiltTestApplication::class, manifest = Config.NONE, sdk = [Config.NEWEST_SDK])
 abstract class HiltRobolectricTest {
 
     @get:Rule
