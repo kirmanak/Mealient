@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-java@b6e674f4b717d7b0ae3baee0fbe79f498905dfde
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629

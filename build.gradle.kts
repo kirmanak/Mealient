@@ -16,6 +16,7 @@ buildscript {
 
 plugins {
     alias(libs.plugins.sonarqube)
+    alias(libs.plugins.ksp) apply false
 }
 
 sonarqube {

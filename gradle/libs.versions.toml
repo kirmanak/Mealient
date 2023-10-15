@@ -1,24 +1,24 @@
 [versions]
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-androidGradlePlugin = "7.4.2"
+androidGradlePlugin = "8.1.2"
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "1.8.22"
+kotlin = "1.9.10"
 # https://developer.android.com/jetpack/androidx/releases/navigation
-googleNavigation = "2.5.3"
+googleNavigation = "2.7.4"
 # https://dagger.dev/hilt/gradle-setup
-hilt = "2.45"
+hilt = "2.48.1"
 # https://github.com/protocolbuffers/protobuf/releases
-protobuf = "3.22.2"
+protobuf = "3.24.4"
 # https://github.com/google/protobuf-gradle-plugin/releases
-protobufPlugin = "0.9.1"
+protobufPlugin = "0.9.4"
 # https://plugins.gradle.org/plugin/org.sonarqube
-sonarqube = "4.0.0.2929"
+sonarqube = "4.4.1.3373"
 # https://plugins.gradle.org/plugin/com.guardsquare.appsweep
-appsweep = "1.4.0"
+appsweep = "1.5.2"
 # https://github.com/material-components/material-components-android/releases
-material = "1.8.0"
+material = "1.10.0"
 # https://developer.android.com/kotlin/ktx#core
-coreKtx = "1.9.0"
+coreKtx = "1.12.0"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 appcompat = "1.6.1"
 # https://developer.android.com/jetpack/androidx/releases/constraintlayout
@@ -26,27 +26,27 @@ contraintLayout = "2.1.4"
 # https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout
 swipeRefreshLayout = "1.1.0"
 # https://developer.android.com/jetpack/androidx/releases/core
-splashScreen = "1.0.0"
+splashScreen = "1.0.1"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
-lifecycle = "2.6.1"
+lifecycle = "2.6.2"
 # https://developer.android.com/jetpack/androidx/releases/arch-core
 coreTesting = "2.2.0"
 # https://github.com/square/retrofit/tags
 retrofit = "2.9.0"
 # https://github.com/JakeWharton/retrofit2-kotlinx-serialization-converter/tags
-retrofitKotlinxSerialization = "0.8.0"
+retrofitKotlinxSerialization = "1.0.0"
 # https://github.com/Kotlin/kotlinx.serialization/releases
-kotlinxSerialization = "1.5.0"
+kotlinxSerialization = "1.6.0"
 # https://github.com/square/okhttp/tags
-okhttp = "4.10.0"
+okhttp = "4.11.0"
 # https://developer.android.com/jetpack/androidx/releases/paging
-paging = "3.1.1"
+paging = "3.2.1"
 # https://developer.android.com/jetpack/androidx/releases/room
-room = "2.5.1"
+room = "2.5.2"
 # https://github.com/Kotlin/kotlinx-datetime/releases
-kotlinxDatetime = "0.4.0"
+kotlinxDatetime = "0.4.1"
 # https://github.com/bumptech/glide/releases
-glide = "4.15.1"
+glide = "4.16.0"
 # https://github.com/androidbroadcast/ViewBindingPropertyDelegate/releases
 viewBindingDelegate = "1.5.9"
 # https://developer.android.com/jetpack/androidx/releases/datastore
@@ -58,39 +58,40 @@ junit = "4.13.2"
 # https://developer.android.com/jetpack/androidx/releases/test
 junitKtx = "1.1.5"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
-coroutines = "1.6.4"
+coroutines = "1.7.3"
 # https://github.com/robolectric/robolectric/releases
-robolectric = "4.9.2"
+robolectric = "4.10.3"
 # https://mvnrepository.com/artifact/com.google.truth/truth
-truth = "1.1.3"
+truth = "1.1.5"
 # https://mockk.io/
-mockk = "1.13.4"
+mockk = "1.13.8"
 # https://github.com/square/leakcanary/releases
-leakcanary = "2.10"
+leakcanary = "2.12"
 # https://github.com/ChuckerTeam/chucker/releases
-chucker = "3.5.2"
+chucker = "4.0.0"
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
 desugar = "2.0.3"
 # https://github.com/google/ksp/releases
-kspPlugin = "1.8.22-1.0.11"
+kspPlugin = "1.9.10-1.0.13"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
 shareTarget = "1.2.0"
 # https://github.com/KasperskyLab/Kaspresso/releases
-kaspresso = "1.5.1"
+kaspresso = "1.5.3"
 # https://developer.android.com/jetpack/androidx/releases/test
-androidXTest = "1.5.0"
-# https://developer.android.com/jetpack/androidx/releases/test
+androidXTestCore = "1.5.0"
+androidXTestRules = "1.5.0"
+androidXTestRunner = "1.5.2"
 androidXTestOrchestrator = "1.4.2"
 # https://mvnrepository.com/artifact/androidx.compose/compose-bom
-composeBom = "2023.06.01"
+composeBom = "2023.09.02"
 # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-composeKotlinCompilerExtension = "1.4.8"
+composeKotlinCompilerExtension = "1.5.3"
 # https://google.github.io/accompanist/
-accompanistVersion = "0.30.1"
+accompanistVersion = "0.32.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
-materialCompose = "1.4.3"
-# https://composedestinations.rafaelcosta.xyz/setup
-composeDestinations = "1.8.42-beta"
+materialCompose = "1.5.3"
+# https://github.com/raamcosta/compose-destinations
+composeDestinations = "1.9.54"
 # https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
 hiltNavigationCompose = "1.0.0"
 
@@ -165,9 +166,9 @@ androidx-room-testing = { group = "androidx.room", name = "room-testing", versio
 androidx-test-junit = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security" }
 
-androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidXTest" }
-androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidXTest" }
-androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidXTest" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidXTestCore" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidXTestRules" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidXTestRunner" }
 androidx-test-orchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidXTestOrchestrator" }
 
 jakewharton-retrofitSerialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerialization" }
