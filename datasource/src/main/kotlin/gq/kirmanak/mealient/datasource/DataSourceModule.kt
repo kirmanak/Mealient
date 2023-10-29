@@ -1,6 +1,5 @@
 package gq.kirmanak.mealient.datasource
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -14,13 +13,9 @@ import gq.kirmanak.mealient.datasource.impl.MealieDataSourceImpl
 import gq.kirmanak.mealient.datasource.impl.MealieServiceKtor
 import gq.kirmanak.mealient.datasource.impl.NetworkRequestWrapperImpl
 import gq.kirmanak.mealient.datasource.impl.OkHttpBuilderImpl
-import gq.kirmanak.mealient.datasource.impl.RetrofitBuilder
 import gq.kirmanak.mealient.datasource.impl.TrustedCertificatesStoreImpl
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import retrofit2.Converter
-import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -39,21 +34,8 @@ internal interface DataSourceModule {
 
         @Provides
         @Singleton
-        fun provideConverterFactory(json: Json): Converter.Factory =
-            json.asConverterFactory("application/json".toMediaType())
-
-        @Provides
-        @Singleton
         fun provideOkHttp(okHttpBuilder: OkHttpBuilder): OkHttpClient =
             okHttpBuilder.buildOkHttp()
-
-        @Provides
-        @Singleton
-        fun provideRetrofit(retrofitBuilder: RetrofitBuilder): Retrofit {
-            // Fake base URL which will be replaced later by BaseUrlInterceptor
-            // Solution was suggested here https://github.com/square/retrofit/issues/2161#issuecomment-274204152
-            return retrofitBuilder.buildRetrofit("http://localhost/")
-        }
     }
 
     @Binds

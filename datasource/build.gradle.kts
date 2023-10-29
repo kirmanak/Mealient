@@ -25,10 +25,6 @@ dependencies {
 
     implementation(libs.jetbrains.kotlinx.serialization)
 
-    implementation(libs.squareup.retrofit)
-
-    implementation(libs.jakewharton.retrofitSerialization)
-
     implementation(platform(libs.okhttp3.bom))
     implementation(libs.okhttp3.okhttp)
     debugImplementation(libs.okhttp3.loggingInterceptor)

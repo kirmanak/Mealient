@@ -16,111 +16,49 @@ import gq.kirmanak.mealient.datasource.models.ParseRecipeURLRequest
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import gq.kirmanak.mealient.datasource.models.VersionResponse
 import kotlinx.serialization.json.JsonElement
-import retrofit2.http.*
 
 interface MealieService {
 
-    @FormUrlEncoded
-    @POST("/api/auth/token")
-    suspend fun getToken(
-        @Field("username") username: String,
-        @Field("password") password: String,
-    ): GetTokenResponse
+    suspend fun getToken(username: String, password: String): GetTokenResponse
 
-    @POST("/api/recipes")
-    suspend fun createRecipe(
-        @Body addRecipeRequest: CreateRecipeRequest,
-    ): String
+    suspend fun createRecipe(addRecipeRequest: CreateRecipeRequest): String
 
-    @PATCH("/api/recipes/{slug}")
     suspend fun updateRecipe(
-        @Body addRecipeRequest: UpdateRecipeRequest,
-        @Path("slug") slug: String,
+        addRecipeRequest: UpdateRecipeRequest,
+        slug: String,
     ): GetRecipeResponse
 
-    @GET("/api/app/about")
     suspend fun getVersion(): VersionResponse
 
-    @GET("/api/recipes")
-    suspend fun getRecipeSummary(
-        @Query("page") page: Int,
-        @Query("perPage") perPage: Int,
-    ): GetRecipesResponse
+    suspend fun getRecipeSummary(page: Int, perPage: Int): GetRecipesResponse
 
-    @GET("/api/recipes/{slug}")
-    suspend fun getRecipe(
-        @Path("slug") slug: String,
-    ): GetRecipeResponse
+    suspend fun getRecipe(slug: String): GetRecipeResponse
 
-    @POST("/api/recipes/create-url")
-    suspend fun createRecipeFromURL(
-        @Body request: ParseRecipeURLRequest,
-    ): String
+    suspend fun createRecipeFromURL(request: ParseRecipeURLRequest): String
 
-    @POST("/api/users/api-tokens")
-    suspend fun createApiToken(
-        @Body request: CreateApiTokenRequest,
-    ): CreateApiTokenResponse
+    suspend fun createApiToken(request: CreateApiTokenRequest): CreateApiTokenResponse
 
-    @GET("/api/users/self")
     suspend fun getUserSelfInfo(): GetUserInfoResponse
 
-    @DELETE("/api/users/{userId}/favorites/{recipeSlug}")
-    suspend fun removeFavoriteRecipe(
-        @Path("userId") userId: String,
-        @Path("recipeSlug") recipeSlug: String
-    )
+    suspend fun removeFavoriteRecipe(userId: String, recipeSlug: String)
 
-    @POST("/api/users/{userId}/favorites/{recipeSlug}")
-    suspend fun addFavoriteRecipe(
-        @Path("userId") userId: String,
-        @Path("recipeSlug") recipeSlug: String
-    )
+    suspend fun addFavoriteRecipe(userId: String, recipeSlug: String)
 
-    @DELETE("/api/recipes/{slug}")
-    suspend fun deleteRecipe(
-        @Path("slug") slug: String
-    )
+    suspend fun deleteRecipe(slug: String)
 
-    @GET("/api/groups/shopping/lists")
-    suspend fun getShoppingLists(
-        @Query("page") page: Int,
-        @Query("perPage") perPage: Int,
-    ): GetShoppingListsResponse
+    suspend fun getShoppingLists(page: Int, perPage: Int): GetShoppingListsResponse
 
-    @GET("/api/groups/shopping/lists/{id}")
-    suspend fun getShoppingList(
-        @Path("id") id: String,
-    ): GetShoppingListResponse
+    suspend fun getShoppingList(id: String): GetShoppingListResponse
 
-    @GET("/api/groups/shopping/items/{id}")
-    suspend fun getShoppingListItem(
-        @Path("id") id: String,
-    ): JsonElement
+    suspend fun getShoppingListItem(id: String): JsonElement
 
-    @PUT("/api/groups/shopping/items/{id}")
-    suspend fun updateShoppingListItem(
-        @Path("id") id: String,
-        @Body request: JsonElement,
-    )
+    suspend fun updateShoppingListItem(id: String, request: JsonElement)
 
-    @DELETE("/api/groups/shopping/items/{id}")
-    suspend fun deleteShoppingListItem(
-        @Path("id") id: String,
-    )
+    suspend fun deleteShoppingListItem(id: String)
 
-    @GET("/api/foods")
-    suspend fun getFoods(
-        @Query("perPage") perPage: Int,
-    ): GetFoodsResponse
+    suspend fun getFoods(perPage: Int): GetFoodsResponse
 
-    @GET("/api/units")
-    suspend fun getUnits(
-        @Query("perPage") perPage: Int,
-    ): GetUnitsResponse
+    suspend fun getUnits(perPage: Int): GetUnitsResponse
 
-    @POST("/api/groups/shopping/items")
-    suspend fun createShoppingListItem(
-        @Body request: CreateShoppingListItemRequest,
-    )
+    suspend fun createShoppingListItem(request: CreateShoppingListItemRequest)
 }
