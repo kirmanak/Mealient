@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.datasource.impl
 
 import gq.kirmanak.mealient.logging.Logger
-import okhttp3.TlsVersion
 import javax.inject.Inject
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
@@ -20,18 +19,18 @@ internal class SslSocketFactoryFactory @Inject constructor(
 
     private fun buildSSLContext(): SSLContext {
         return runCatching {
-            SSLContext.getInstance(TlsVersion.TLS_1_3.javaName)
+            SSLContext.getInstance("TLSv1.3")
         }.recoverCatching {
             logger.w { "TLSv1.3 is not supported in this device; falling through TLSv1.2" }
-            SSLContext.getInstance(TlsVersion.TLS_1_2.javaName)
+            SSLContext.getInstance("TLSv1.2")
         }.recoverCatching {
             logger.w { "TLSv1.2 is not supported in this device; falling through TLSv1.1" }
-            SSLContext.getInstance(TlsVersion.TLS_1_1.javaName)
+            SSLContext.getInstance("TLSv1.1")
         }.recoverCatching {
             logger.w { "TLSv1.1 is not supported in this device; falling through TLSv1.0" }
             // should be available in any device; see reference of supported protocols in
             // http://developer.android.com/reference/javax/net/ssl/SSLSocket.html
-            SSLContext.getInstance(TlsVersion.TLS_1_0.javaName)
+            SSLContext.getInstance("TLSv1")
         }.getOrThrow()
     }
 }

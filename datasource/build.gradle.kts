@@ -25,10 +25,6 @@ dependencies {
 
     implementation(libs.jetbrains.kotlinx.serialization)
 
-    implementation(platform(libs.okhttp3.bom))
-    implementation(libs.okhttp3.okhttp)
-    debugImplementation(libs.okhttp3.loggingInterceptor)
-
     implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
     testImplementation(libs.jetbrains.kotlinx.coroutinesTest)
 
@@ -45,6 +41,4 @@ dependencies {
     testImplementation(libs.google.truth)
 
     testImplementation(libs.io.mockk)
-
-    debugImplementation(libs.chuckerteam.chucker)
 }
