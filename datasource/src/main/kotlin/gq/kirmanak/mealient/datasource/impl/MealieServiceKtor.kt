@@ -121,13 +121,13 @@ class MealieServiceKtor @Inject constructor(
 
     override suspend fun removeFavoriteRecipe(userId: String, recipeSlug: String) {
         httpClient.delete {
-            endpoint("/api/users/$userId/favorite-recipes/$recipeSlug/remove")
+            endpoint("/api/users/$userId/favorites/$recipeSlug")
         }
     }
 
     override suspend fun addFavoriteRecipe(userId: String, recipeSlug: String) {
         httpClient.post {
-            endpoint("/api/users/$userId/favorite-recipes/$recipeSlug/add")
+            endpoint("/api/users/$userId/favorites/$recipeSlug")
         }
     }
 
