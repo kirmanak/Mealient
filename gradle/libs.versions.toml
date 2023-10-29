@@ -34,11 +34,11 @@ coreTesting = "2.2.0"
 # https://github.com/Kotlin/kotlinx.serialization/releases
 kotlinxSerialization = "1.6.0"
 # https://github.com/square/okhttp/tags
-okhttp = "4.11.0"
+okhttp = "4.12.0"
 # https://developer.android.com/jetpack/androidx/releases/paging
 paging = "3.2.1"
 # https://developer.android.com/jetpack/androidx/releases/room
-room = "2.5.2"
+room = "2.6.0"
 # https://github.com/Kotlin/kotlinx-datetime/releases
 kotlinxDatetime = "0.4.1"
 # https://github.com/bumptech/glide/releases
@@ -51,12 +51,10 @@ datastore = "1.0.0"
 security = "1.0.0"
 # https://github.com/junit-team/junit4/releases
 junit = "4.13.2"
-# https://developer.android.com/jetpack/androidx/releases/test
-junitKtx = "1.1.5"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 coroutines = "1.7.3"
 # https://github.com/robolectric/robolectric/releases
-robolectric = "4.10.3"
+robolectric = "4.11"
 # https://mvnrepository.com/artifact/com.google.truth/truth
 truth = "1.1.5"
 # https://mockk.io/
@@ -78,14 +76,15 @@ androidXTestCore = "1.5.0"
 androidXTestRules = "1.5.0"
 androidXTestRunner = "1.5.2"
 androidXTestOrchestrator = "1.4.2"
+junitKtx = "1.1.5"
 # https://mvnrepository.com/artifact/androidx.compose/compose-bom
-composeBom = "2023.09.02"
+composeBom = "2023.10.01"
 # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
 composeKotlinCompilerExtension = "1.5.3"
 # https://google.github.io/accompanist/
 accompanistVersion = "0.32.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
-materialCompose = "1.5.3"
+materialCompose = "1.5.4"
 # https://github.com/raamcosta/compose-destinations
 composeDestinations = "1.9.54"
 # https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
