@@ -45,10 +45,10 @@ internal interface DataSourceModule {
     fun bindOkHttpBuilder(okHttpBuilderImpl: OkHttpBuilderImpl): OkHttpBuilder
 
     @Binds
-    fun bindMealieDataSourceV1(mealientDataSourceImpl: MealieDataSourceImpl): MealieDataSource
+    fun bindMealieDataSource(mealientDataSourceImpl: MealieDataSourceImpl): MealieDataSource
 
     @Binds
-    fun bindMealieServiceV1(impl: MealieServiceKtor): MealieService
+    fun bindMealieService(impl: MealieServiceKtor): MealieService
 
     @Binds
     fun bindNetworkRequestWrapper(networkRequestWrapperImpl: NetworkRequestWrapperImpl): NetworkRequestWrapper

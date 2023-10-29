@@ -17,8 +17,8 @@ class MealieDataSourceWrapper @Inject constructor(
 ) : AddRecipeDataSource, RecipeDataSource, ParseRecipeDataSource {
 
     override suspend fun addRecipe(recipe: AddRecipeInfo): String {
-        val slug = dataSource.createRecipe(modelMapper.toV1CreateRequest(recipe))
-        dataSource.updateRecipe(slug, modelMapper.toV1UpdateRequest(recipe))
+        val slug = dataSource.createRecipe(modelMapper.toCreateRequest(recipe))
+        dataSource.updateRecipe(slug, modelMapper.toUpdateRequest(recipe))
         return slug
     }
 
@@ -36,7 +36,7 @@ class MealieDataSourceWrapper @Inject constructor(
     }
 
     override suspend fun parseRecipeFromURL(parseRecipeURLInfo: ParseRecipeURLInfo): String {
-        return dataSource.parseRecipeFromURL(modelMapper.toV1Request(parseRecipeURLInfo))
+        return dataSource.parseRecipeFromURL(modelMapper.toRequest(parseRecipeURLInfo))
     }
 
     override suspend fun getFavoriteRecipes(): List<String> {

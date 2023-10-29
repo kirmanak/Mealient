@@ -144,37 +144,37 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
             text = getRecipeInstructionResponse.text
         )
 
-    override fun toV1CreateRequest(addRecipeInfo: AddRecipeInfo) = CreateRecipeRequest(
+    override fun toCreateRequest(addRecipeInfo: AddRecipeInfo) = CreateRecipeRequest(
         name = addRecipeInfo.name,
     )
 
-    override fun toV1UpdateRequest(addRecipeInfo: AddRecipeInfo) = UpdateRecipeRequest(
+    override fun toUpdateRequest(addRecipeInfo: AddRecipeInfo) = UpdateRecipeRequest(
         description = addRecipeInfo.description,
         recipeYield = addRecipeInfo.recipeYield,
-        recipeIngredient = addRecipeInfo.recipeIngredient.map { toV1Ingredient(it) },
-        recipeInstructions = addRecipeInfo.recipeInstructions.map { toV1Instruction(it) },
-        settings = toV1Settings(addRecipeInfo.settings),
+        recipeIngredient = addRecipeInfo.recipeIngredient.map { toIngredient(it) },
+        recipeInstructions = addRecipeInfo.recipeInstructions.map { toInstruction(it) },
+        settings = toSettings(addRecipeInfo.settings),
     )
 
-    override fun toV1Settings(addRecipeSettingsInfo: AddRecipeSettingsInfo) = AddRecipeSettings(
+    override fun toSettings(addRecipeSettingsInfo: AddRecipeSettingsInfo) = AddRecipeSettings(
         disableComments = addRecipeSettingsInfo.disableComments,
         public = addRecipeSettingsInfo.public,
     )
 
-    override fun toV1Ingredient(addRecipeIngredientInfo: AddRecipeIngredientInfo) =
+    override fun toIngredient(addRecipeIngredientInfo: AddRecipeIngredientInfo) =
         AddRecipeIngredient(
             id = UUID.randomUUID().toString(),
             note = addRecipeIngredientInfo.note,
         )
 
-    override fun toV1Instruction(addRecipeInstructionInfo: AddRecipeInstructionInfo) =
+    override fun toInstruction(addRecipeInstructionInfo: AddRecipeInstructionInfo) =
         AddRecipeInstruction(
             id = UUID.randomUUID().toString(),
             text = addRecipeInstructionInfo.text,
             ingredientReferences = emptyList(),
         )
 
-    override fun toV1Request(parseRecipeURLInfo: ParseRecipeURLInfo) = ParseRecipeURLRequest(
+    override fun toRequest(parseRecipeURLInfo: ParseRecipeURLInfo) = ParseRecipeURLRequest(
         url = parseRecipeURLInfo.url,
         includeTags = parseRecipeURLInfo.includeTags,
     )
@@ -278,7 +278,7 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
         )
     }
 
-    override fun toV1CreateRequest(addRecipeInfo: NewShoppingListItemInfo): CreateShoppingListItemRequest {
+    override fun toCreateRequest(addRecipeInfo: NewShoppingListItemInfo): CreateShoppingListItemRequest {
         return CreateShoppingListItemRequest(
             shoppingListId = addRecipeInfo.shoppingListId,
             checked = false,

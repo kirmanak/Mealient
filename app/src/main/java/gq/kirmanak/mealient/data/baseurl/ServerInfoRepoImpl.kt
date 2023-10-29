@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.data.baseurl
 
 import gq.kirmanak.mealient.datasource.ServerUrlProvider
-import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import javax.inject.Inject
 
@@ -19,14 +18,16 @@ class ServerInfoRepoImpl @Inject constructor(
 
     override suspend fun tryBaseURL(baseURL: String): Result<Unit> {
         val oldBaseUrl = serverInfoStorage.getBaseURL()
+        serverInfoStorage.storeBaseURL(baseURL)
 
-        return runCatchingExceptCancel {
-            serverInfoStorage.storeBaseURL(baseURL)
+        try {
             versionDataSource.getVersionInfo()
-            Unit
-        }.onFailure {
+        } catch (e: Throwable) {
             serverInfoStorage.storeBaseURL(oldBaseUrl)
+            return Result.failure(e)
         }
+
+        return Result.success(Unit)
     }
 
 }

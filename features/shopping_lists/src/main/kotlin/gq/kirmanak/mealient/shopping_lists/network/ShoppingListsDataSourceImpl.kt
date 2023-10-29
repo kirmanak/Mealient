@@ -11,33 +11,33 @@ import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
 
 class ShoppingListsDataSourceImpl @Inject constructor(
-    private val v1Source: MealieDataSource,
+    private val dataSource: MealieDataSource,
     private val modelMapper: ModelMapper,
 ) : ShoppingListsDataSource {
 
     override suspend fun getAllShoppingLists(): List<ShoppingListInfo> {
-        val response = v1Source.getShoppingLists(1, -1)
+        val response = dataSource.getShoppingLists(1, -1)
         return response.items.map { modelMapper.toShoppingListInfo(it) }
     }
 
     override suspend fun getShoppingList(
         id: String
-    ): FullShoppingListInfo = modelMapper.toFullShoppingListInfo(v1Source.getShoppingList(id))
+    ): FullShoppingListInfo = modelMapper.toFullShoppingListInfo(dataSource.getShoppingList(id))
 
     override suspend fun deleteShoppingListItem(
         id: String
-    ) = v1Source.deleteShoppingListItem(id)
+    ) = dataSource.deleteShoppingListItem(id)
 
     override suspend fun updateShoppingListItem(
         item: ShoppingListItemInfo
-    ) = v1Source.updateShoppingListItem(item)
+    ) = dataSource.updateShoppingListItem(item)
 
-    override suspend fun getFoods(): List<FoodInfo> = modelMapper.toFoodInfo(v1Source.getFoods())
+    override suspend fun getFoods(): List<FoodInfo> = modelMapper.toFoodInfo(dataSource.getFoods())
 
-    override suspend fun getUnits(): List<UnitInfo> = modelMapper.toUnitInfo(v1Source.getUnits())
+    override suspend fun getUnits(): List<UnitInfo> = modelMapper.toUnitInfo(dataSource.getUnits())
 
     override suspend fun addShoppingListItem(
         item: NewShoppingListItemInfo
-    ) = v1Source.addShoppingListItem(modelMapper.toV1CreateRequest(item))
+    ) = dataSource.addShoppingListItem(modelMapper.toCreateRequest(item))
 }
 

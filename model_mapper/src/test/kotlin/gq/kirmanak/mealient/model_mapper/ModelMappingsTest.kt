@@ -69,32 +69,32 @@ class ModelMappingsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when recipe ingredient response v1 to info expect correct info`() {
+    fun `when recipe ingredient response to info expect correct info`() {
         val actual = subject.toRecipeIngredientInfo(MILK_RECIPE_INGREDIENT_RESPONSE)
         assertThat(actual).isEqualTo(MILK_RECIPE_INGREDIENT_INFO)
     }
 
     @Test
-    fun `when recipe instruction response v1 to info expect correct info`() {
+    fun `when recipe instruction response to info expect correct info`() {
         val actual = subject.toRecipeInstructionInfo(MIX_RECIPE_INSTRUCTION_RESPONSE)
         assertThat(actual).isEqualTo(MIX_RECIPE_INSTRUCTION_INFO)
     }
 
     @Test
-    fun `when recipe response v1 to info expect correct info`() {
+    fun `when recipe response to info expect correct info`() {
         val actual = subject.toFullRecipeInfo(PORRIDGE_RECIPE_RESPONSE)
         assertThat(actual).isEqualTo(PORRIDGE_FULL_RECIPE_INFO)
     }
 
     @Test
-    fun `when add recipe info to create request v1 expect correct request`() {
-        val actual = subject.toV1CreateRequest(PORRIDGE_ADD_RECIPE_INFO)
+    fun `when add recipe info to create request expect correct request`() {
+        val actual = subject.toCreateRequest(PORRIDGE_ADD_RECIPE_INFO)
         assertThat(actual).isEqualTo(PORRIDGE_CREATE_RECIPE_REQUEST)
     }
 
     @Test
-    fun `when add recipe info to update request v1 expect correct request`() {
-        val actual = subject.toV1UpdateRequest(PORRIDGE_ADD_RECIPE_INFO)
+    fun `when add recipe info to update request expect correct request`() {
+        val actual = subject.toUpdateRequest(PORRIDGE_ADD_RECIPE_INFO)
         assertThat(actual).isEqualTo(PORRIDGE_UPDATE_RECIPE_REQUEST)
     }
 }

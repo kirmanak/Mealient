@@ -73,17 +73,17 @@ interface ModelMapper {
 
     fun toRecipeInstructionInfo(getRecipeInstructionResponse: GetRecipeInstructionResponse): RecipeInstructionInfo
 
-    fun toV1CreateRequest(addRecipeInfo: AddRecipeInfo): CreateRecipeRequest
+    fun toCreateRequest(addRecipeInfo: AddRecipeInfo): CreateRecipeRequest
 
-    fun toV1UpdateRequest(addRecipeInfo: AddRecipeInfo): UpdateRecipeRequest
+    fun toUpdateRequest(addRecipeInfo: AddRecipeInfo): UpdateRecipeRequest
 
-    fun toV1Settings(addRecipeSettingsInfo: AddRecipeSettingsInfo): AddRecipeSettings
+    fun toSettings(addRecipeSettingsInfo: AddRecipeSettingsInfo): AddRecipeSettings
 
-    fun toV1Ingredient(addRecipeIngredientInfo: AddRecipeIngredientInfo): AddRecipeIngredient
+    fun toIngredient(addRecipeIngredientInfo: AddRecipeIngredientInfo): AddRecipeIngredient
 
-    fun toV1Instruction(addRecipeInstructionInfo: AddRecipeInstructionInfo): AddRecipeInstruction
+    fun toInstruction(addRecipeInstructionInfo: AddRecipeInstructionInfo): AddRecipeInstruction
 
-    fun toV1Request(parseRecipeURLInfo: ParseRecipeURLInfo): ParseRecipeURLRequest
+    fun toRequest(parseRecipeURLInfo: ParseRecipeURLInfo): ParseRecipeURLRequest
 
     fun toFullShoppingListInfo(getShoppingListResponse: GetShoppingListResponse): FullShoppingListInfo
 
@@ -108,5 +108,5 @@ interface ModelMapper {
 
     fun toUnitInfo(getUnitsResponse: GetUnitsResponse): List<UnitInfo>
 
-    fun toV1CreateRequest(addRecipeInfo: NewShoppingListItemInfo): CreateShoppingListItemRequest
+    fun toCreateRequest(addRecipeInfo: NewShoppingListItemInfo): CreateShoppingListItemRequest
 }
