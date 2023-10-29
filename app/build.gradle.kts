@@ -55,8 +55,9 @@ android {
 
     namespace = "gq.kirmanak.mealient"
 
-    packagingOptions {
+    packaging {
         resources.excludes += "DebugProbesKt.bin"
+        resources.excludes += "META-INF/versions/9/previous-compilation-data.bin"
     }
 
     testOptions {

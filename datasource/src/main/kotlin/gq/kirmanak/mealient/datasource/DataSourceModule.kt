@@ -20,6 +20,7 @@ import gq.kirmanak.mealient.datasource.v0.MealieServiceV0
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1Impl
 import gq.kirmanak.mealient.datasource.v1.MealieServiceV1
+import gq.kirmanak.mealient.datasource.v1.MealieServiceV1Ktor
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -66,11 +67,6 @@ internal interface DataSourceModule {
         @Singleton
         fun provideMealieService(retrofit: Retrofit): MealieServiceV0 =
             retrofit.create()
-
-        @Provides
-        @Singleton
-        fun provideMealieServiceV1(retrofit: Retrofit): MealieServiceV1 =
-            retrofit.create()
     }
 
     @Binds
@@ -84,6 +80,9 @@ internal interface DataSourceModule {
 
     @Binds
     fun bindMealieDataSourceV1(mealientDataSourceImpl: MealieDataSourceV1Impl): MealieDataSourceV1
+
+    @Binds
+    fun bindMealieServiceV1(impl: MealieServiceV1Ktor): MealieServiceV1
 
     @Binds
     fun bindNetworkRequestWrapper(networkRequestWrapperImpl: NetworkRequestWrapperImpl): NetworkRequestWrapper

@@ -11,5 +11,7 @@ interface AuthRepo : ShoppingListsAuthRepo {
 
     suspend fun getAuthHeader(): String?
 
+    suspend fun getAuthToken(): String?
+
     suspend fun logout()
 }

@@ -4,6 +4,7 @@ import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.datasource.AuthenticationProvider
+import gq.kirmanak.mealient.datasource.SignOutHandler
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,6 +14,7 @@ class AuthRepoImpl @Inject constructor(
     private val authStorage: AuthStorage,
     private val authDataSource: AuthDataSource,
     private val logger: Logger,
+    private val signOutHandler: SignOutHandler,
 ) : AuthRepo, AuthenticationProvider {
 
     override val isAuthorizedFlow: Flow<Boolean>
@@ -28,9 +30,15 @@ class AuthRepoImpl @Inject constructor(
 
     override suspend fun getAuthHeader(): String? = authStorage.getAuthHeader()
 
+    override suspend fun getAuthToken(): String? {
+        val authHeader = authStorage.getAuthHeader()
+        return authHeader?.replace("Bearer ", "")
+    }
+
     override suspend fun logout() {
         logger.v { "logout() called" }
         authStorage.setAuthHeader(null)
+        signOutHandler.signOut()
     }
 
     companion object {

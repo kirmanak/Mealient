@@ -42,7 +42,7 @@ class MealieDataSourceV1Impl @Inject constructor(
         block = { service.createRecipe(recipe) },
         logMethod = { "createRecipe" },
         logParameters = { "recipe = $recipe" }
-    )
+    ).trim('"')
 
     override suspend fun updateRecipe(
         slug: String,

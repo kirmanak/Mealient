@@ -7,7 +7,7 @@ plugins {
 
 android {
     defaultConfig {
-        buildConfigField("Boolean", "LOG_NETWORK", "false")
+        buildConfigField("Boolean", "LOG_NETWORK", "true")
     }
     namespace = "gq.kirmanak.mealient.datasource"
 }
@@ -35,6 +35,14 @@ dependencies {
 
     implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
     testImplementation(libs.jetbrains.kotlinx.coroutinesTest)
+
+    implementation(libs.ktor.core)
+    implementation(libs.ktor.android)
+    implementation(libs.ktor.auth)
+    implementation(libs.ktor.encoding)
+    implementation(libs.ktor.negotiation)
+    implementation(libs.ktor.json)
+    debugImplementation(libs.ktor.logging)
 
     testImplementation(libs.androidx.test.junit)
 
