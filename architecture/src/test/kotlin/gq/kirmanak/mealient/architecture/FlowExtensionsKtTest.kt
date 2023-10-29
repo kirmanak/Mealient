@@ -2,13 +2,11 @@ package gq.kirmanak.mealient.architecture
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.test.BaseUnitTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class FlowExtensionsKtTest : BaseUnitTest() {
 
     @Test

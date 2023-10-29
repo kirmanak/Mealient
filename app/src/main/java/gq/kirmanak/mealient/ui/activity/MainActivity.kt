@@ -109,7 +109,6 @@ class MainActivity : BaseActivity<MainActivityBinding>(
             when (itemId) {
                 R.id.logout -> menuItem.isVisible = uiState.canShowLogout
                 R.id.login -> menuItem.isVisible = uiState.canShowLogin
-                R.id.shopping_lists -> menuItem.isVisible = uiState.v1MenuItemsVisible
             }
             menuItem.isChecked = itemId == checkedMenuItem
         }

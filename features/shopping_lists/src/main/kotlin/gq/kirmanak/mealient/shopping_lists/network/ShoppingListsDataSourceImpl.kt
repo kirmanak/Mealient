@@ -1,17 +1,17 @@
 package gq.kirmanak.mealient.shopping_lists.network
 
+import gq.kirmanak.mealient.datasource.MealieDataSource
 import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.UnitInfo
-import gq.kirmanak.mealient.datasource.v1.MealieDataSourceV1
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
 
 class ShoppingListsDataSourceImpl @Inject constructor(
-    private val v1Source: MealieDataSourceV1,
+    private val v1Source: MealieDataSource,
     private val modelMapper: ModelMapper,
 ) : ShoppingListsDataSource {
 

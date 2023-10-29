@@ -7,12 +7,10 @@ import gq.kirmanak.mealient.database.FULL_CAKE_INFO_ENTITY
 import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class RecipeInfoViewModelTest : BaseUnitTest() {
 
     @MockK

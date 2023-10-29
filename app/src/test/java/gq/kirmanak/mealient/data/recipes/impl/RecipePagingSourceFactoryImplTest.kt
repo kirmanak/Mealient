@@ -9,13 +9,11 @@ import gq.kirmanak.mealient.database.TEST_RECIPE_SUMMARY_ENTITIES
 import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.test.HiltRobolectricTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-@OptIn(ExperimentalCoroutinesApi::class)
 class RecipePagingSourceFactoryImplTest : HiltRobolectricTest() {
 
     @Inject

@@ -5,14 +5,32 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
+import gq.kirmanak.mealient.datasource.models.AddRecipeIngredient
 import gq.kirmanak.mealient.datasource.models.AddRecipeIngredientInfo
+import gq.kirmanak.mealient.datasource.models.AddRecipeInstruction
 import gq.kirmanak.mealient.datasource.models.AddRecipeInstructionInfo
+import gq.kirmanak.mealient.datasource.models.AddRecipeSettings
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
+import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
 import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.GetFoodsResponse
+import gq.kirmanak.mealient.datasource.models.GetRecipeIngredientResponse
+import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionResponse
+import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
+import gq.kirmanak.mealient.datasource.models.GetRecipeSettingsResponse
+import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListItemRecipeReferenceFullResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListsResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
+import gq.kirmanak.mealient.datasource.models.GetUnitsResponse
 import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
+import gq.kirmanak.mealient.datasource.models.ParseRecipeURLRequest
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
@@ -22,37 +40,9 @@ import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListsInfo
 import gq.kirmanak.mealient.datasource.models.UnitInfo
+import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import gq.kirmanak.mealient.datasource.models.VersionInfo
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeIngredientV0
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeInstructionV0
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeRequestV0
-import gq.kirmanak.mealient.datasource.v0.models.AddRecipeSettingsV0
-import gq.kirmanak.mealient.datasource.v0.models.GetRecipeIngredientResponseV0
-import gq.kirmanak.mealient.datasource.v0.models.GetRecipeInstructionResponseV0
-import gq.kirmanak.mealient.datasource.v0.models.GetRecipeResponseV0
-import gq.kirmanak.mealient.datasource.v0.models.GetRecipeSummaryResponseV0
-import gq.kirmanak.mealient.datasource.v0.models.ParseRecipeURLRequestV0
-import gq.kirmanak.mealient.datasource.v0.models.VersionResponseV0
-import gq.kirmanak.mealient.datasource.v1.models.AddRecipeIngredientV1
-import gq.kirmanak.mealient.datasource.v1.models.AddRecipeInstructionV1
-import gq.kirmanak.mealient.datasource.v1.models.AddRecipeSettingsV1
-import gq.kirmanak.mealient.datasource.v1.models.CreateRecipeRequestV1
-import gq.kirmanak.mealient.datasource.v1.models.CreateShoppingListItemRequestV1
-import gq.kirmanak.mealient.datasource.v1.models.GetFoodsResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeIngredientResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeInstructionResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSettingsResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetRecipeSummaryResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListItemRecipeReferenceFullResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListItemResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetShoppingListsSummaryResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.GetUnitsResponseV1
-import gq.kirmanak.mealient.datasource.v1.models.ParseRecipeURLRequestV1
-import gq.kirmanak.mealient.datasource.v1.models.UpdateRecipeRequestV1
-import gq.kirmanak.mealient.datasource.v1.models.VersionResponseV1
+import gq.kirmanak.mealient.datasource.models.VersionResponse
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 
 interface ModelMapper {
@@ -75,68 +65,48 @@ interface ModelMapper {
 
     fun toDraft(addRecipeInfo: AddRecipeInfo): AddRecipeDraft
 
-    fun toVersionInfo(versionResponseV1: VersionResponseV1): VersionInfo
+    fun toFullRecipeInfo(getRecipeResponse: GetRecipeResponse): FullRecipeInfo
 
-    fun toFullRecipeInfo(getRecipeResponseV1: GetRecipeResponseV1): FullRecipeInfo
+    fun toRecipeSettingsInfo(getRecipeSettingsResponse: GetRecipeSettingsResponse?): RecipeSettingsInfo
 
-    fun toRecipeSettingsInfo(getRecipeSettingsResponseV1: GetRecipeSettingsResponseV1?): RecipeSettingsInfo
+    fun toRecipeIngredientInfo(getRecipeIngredientResponse: GetRecipeIngredientResponse): RecipeIngredientInfo
 
-    fun toRecipeIngredientInfo(getRecipeIngredientResponseV1: GetRecipeIngredientResponseV1): RecipeIngredientInfo
+    fun toRecipeInstructionInfo(getRecipeInstructionResponse: GetRecipeInstructionResponse): RecipeInstructionInfo
 
-    fun toRecipeInstructionInfo(getRecipeInstructionResponseV1: GetRecipeInstructionResponseV1): RecipeInstructionInfo
+    fun toV1CreateRequest(addRecipeInfo: AddRecipeInfo): CreateRecipeRequest
 
-    fun toV1CreateRequest(addRecipeInfo: AddRecipeInfo): CreateRecipeRequestV1
+    fun toV1UpdateRequest(addRecipeInfo: AddRecipeInfo): UpdateRecipeRequest
 
-    fun toV1UpdateRequest(addRecipeInfo: AddRecipeInfo): UpdateRecipeRequestV1
+    fun toV1Settings(addRecipeSettingsInfo: AddRecipeSettingsInfo): AddRecipeSettings
 
-    fun toV1Settings(addRecipeSettingsInfo: AddRecipeSettingsInfo): AddRecipeSettingsV1
+    fun toV1Ingredient(addRecipeIngredientInfo: AddRecipeIngredientInfo): AddRecipeIngredient
 
-    fun toV1Ingredient(addRecipeIngredientInfo: AddRecipeIngredientInfo): AddRecipeIngredientV1
+    fun toV1Instruction(addRecipeInstructionInfo: AddRecipeInstructionInfo): AddRecipeInstruction
 
-    fun toV1Instruction(addRecipeInstructionInfo: AddRecipeInstructionInfo): AddRecipeInstructionV1
+    fun toV1Request(parseRecipeURLInfo: ParseRecipeURLInfo): ParseRecipeURLRequest
 
-    fun toV1Request(parseRecipeURLInfo: ParseRecipeURLInfo): ParseRecipeURLRequestV1
-
-    fun toFullShoppingListInfo(getShoppingListResponseV1: GetShoppingListResponseV1): FullShoppingListInfo
+    fun toFullShoppingListInfo(getShoppingListResponse: GetShoppingListResponse): FullShoppingListInfo
 
     fun toShoppingListItemInfo(
-        getShoppingListItemResponseV1: GetShoppingListItemResponseV1,
-        recipes: Map<String, List<GetShoppingListItemRecipeReferenceFullResponseV1>>
+        getShoppingListItemResponse: GetShoppingListItemResponse,
+        recipes: Map<String, List<GetShoppingListItemRecipeReferenceFullResponse>>
     ): ShoppingListItemInfo
 
     fun toShoppingListItemRecipeReferenceInfo(
-        getShoppingListItemRecipeReferenceFullResponseV1: GetShoppingListItemRecipeReferenceFullResponseV1
+        getShoppingListItemRecipeReferenceFullResponse: GetShoppingListItemRecipeReferenceFullResponse
     ): ShoppingListItemRecipeReferenceInfo
 
-    fun toShoppingListsInfo(getShoppingListsResponseV1: GetShoppingListsResponseV1): ShoppingListsInfo
+    fun toShoppingListsInfo(getShoppingListsResponse: GetShoppingListsResponse): ShoppingListsInfo
 
-    fun toShoppingListInfo(getShoppingListsSummaryResponseV1: GetShoppingListsSummaryResponseV1): ShoppingListInfo
+    fun toVersionInfo(versionResponse: VersionResponse): VersionInfo
 
-    fun toRecipeSummaryInfo(getRecipeSummaryResponseV1: GetRecipeSummaryResponseV1): RecipeSummaryInfo
+    fun toShoppingListInfo(getShoppingListsSummaryResponse: GetShoppingListsSummaryResponse): ShoppingListInfo
 
-    fun toRecipeSummaryInfo(getRecipeSummaryResponseV0: GetRecipeSummaryResponseV0): RecipeSummaryInfo
+    fun toRecipeSummaryInfo(getRecipeSummaryResponse: GetRecipeSummaryResponse): RecipeSummaryInfo
 
-    fun toVersionInfo(versionResponseV0: VersionResponseV0): VersionInfo
+    fun toFoodInfo(getFoodsResponse: GetFoodsResponse): List<FoodInfo>
 
-    fun toFullRecipeInfo(getRecipeResponseV0: GetRecipeResponseV0): FullRecipeInfo
+    fun toUnitInfo(getUnitsResponse: GetUnitsResponse): List<UnitInfo>
 
-    fun toRecipeIngredientInfo(getRecipeIngredientResponseV0: GetRecipeIngredientResponseV0): RecipeIngredientInfo
-
-    fun toRecipeInstructionInfo(getRecipeInstructionResponseV0: GetRecipeInstructionResponseV0): RecipeInstructionInfo
-
-    fun toV0Request(addRecipeInfo: AddRecipeInfo): AddRecipeRequestV0
-
-    fun toV0Settings(addRecipeSettingsInfo: AddRecipeSettingsInfo): AddRecipeSettingsV0
-
-    fun toV0Ingredient(addRecipeIngredientInfo: AddRecipeIngredientInfo): AddRecipeIngredientV0
-
-    fun toV0Instruction(addRecipeInstructionInfo: AddRecipeInstructionInfo): AddRecipeInstructionV0
-
-    fun toV0Request(parseRecipeURLInfo: ParseRecipeURLInfo): ParseRecipeURLRequestV0
-
-    fun toFoodInfo(getFoodsResponseV1: GetFoodsResponseV1): List<FoodInfo>
-
-    fun toUnitInfo(getUnitsResponseV1: GetUnitsResponseV1): List<UnitInfo>
-
-    fun toV1CreateRequest(addRecipeInfo: NewShoppingListItemInfo): CreateShoppingListItemRequestV1
+    fun toV1CreateRequest(addRecipeInfo: NewShoppingListItemInfo): CreateShoppingListItemRequest
 }

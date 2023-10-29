@@ -3,12 +3,10 @@ package gq.kirmanak.mealient.data.disclaimer
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.test.HiltRobolectricTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltAndroidTest
 class DisclaimerStorageImplTest : HiltRobolectricTest() {
 
