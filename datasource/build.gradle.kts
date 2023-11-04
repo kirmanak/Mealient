@@ -28,17 +28,22 @@ dependencies {
     implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
     testImplementation(libs.jetbrains.kotlinx.coroutinesTest)
 
+    implementation(platform(libs.okhttp3.bom))
+    implementation(libs.okhttp3.okhttp)
+    debugImplementation(libs.okhttp3.loggingInterceptor)
+
     implementation(libs.ktor.core)
-    implementation(libs.ktor.android)
     implementation(libs.ktor.auth)
     implementation(libs.ktor.encoding)
     implementation(libs.ktor.negotiation)
     implementation(libs.ktor.json)
-    debugImplementation(libs.ktor.logging)
+    implementation(libs.ktor.okhttp)
 
     testImplementation(libs.androidx.test.junit)
 
     testImplementation(libs.google.truth)
 
     testImplementation(libs.io.mockk)
+
+    debugImplementation(libs.chuckerteam.chucker)
 }

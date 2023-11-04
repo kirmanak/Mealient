@@ -55,7 +55,7 @@ android {
 
     namespace = "gq.kirmanak.mealient"
 
-    packagingOptions {
+    packaging {
         resources.excludes += "DebugProbesKt.bin"
     }
 
@@ -124,6 +124,7 @@ dependencies {
     implementation(libs.jetbrains.kotlinx.datetime)
 
     implementation(libs.bumptech.glide.glide)
+    implementation(libs.bumptech.glide.okhttp3)
     implementation(libs.bumptech.glide.recyclerview) {
         // Excludes the support library because it's already included by Glide.
         isTransitive = false

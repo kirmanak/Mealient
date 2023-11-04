@@ -8,8 +8,10 @@ import dagger.hilt.components.SingletonComponent
 import gq.kirmanak.mealient.datasource.impl.MealieDataSourceImpl
 import gq.kirmanak.mealient.datasource.impl.MealieServiceKtor
 import gq.kirmanak.mealient.datasource.impl.NetworkRequestWrapperImpl
+import gq.kirmanak.mealient.datasource.impl.OkHttpBuilderImpl
 import gq.kirmanak.mealient.datasource.impl.TrustedCertificatesStoreImpl
 import kotlinx.serialization.json.Json
+import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Module
@@ -25,6 +27,12 @@ internal interface DataSourceModule {
             ignoreUnknownKeys = true
             encodeDefaults = true
         }
+
+        @Provides
+        @Singleton
+        fun provideOkHttp(okHttpBuilder: OkHttpBuilderImpl): OkHttpClient =
+            okHttpBuilder.buildOkHttp()
+
     }
 
     @Binds

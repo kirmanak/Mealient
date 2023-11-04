@@ -34,10 +34,6 @@ internal interface KtorModule {
     fun bindContentNegotiationConfiguration(impl: ContentNegotiationConfiguration) : KtorConfiguration
 
     @Binds
-    @IntoSet
-    fun bindCacheKtorConfiguration(impl: CacheKtorConfiguration) : KtorConfiguration
-
-    @Binds
     fun bindKtorClientBuilder(impl: KtorClientBuilderImpl) : KtorClientBuilder
 
     @Binds
