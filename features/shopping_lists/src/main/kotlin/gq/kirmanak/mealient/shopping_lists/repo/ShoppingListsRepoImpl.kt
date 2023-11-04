@@ -1,11 +1,11 @@
 package gq.kirmanak.mealient.shopping_lists.repo
 
 import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
-import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
-import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSource
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class ShoppingListsRepoImpl @Inject constructor(
         return dataSource.getAllShoppingLists()
     }
 
-    override suspend fun getShoppingList(id: String): FullShoppingListInfo {
+    override suspend fun getShoppingList(id: String): GetShoppingListResponse {
         logger.v { "getShoppingListItems() called with: id = $id" }
         return dataSource.getShoppingList(id)
     }
@@ -30,7 +30,7 @@ class ShoppingListsRepoImpl @Inject constructor(
         dataSource.deleteShoppingListItem(id)
     }
 
-    override suspend fun updateShoppingListItem(item: ShoppingListItemInfo) {
+    override suspend fun updateShoppingListItem(item: GetShoppingListItemResponse) {
         logger.v { "updateShoppingListItem() called with: item = $item" }
         dataSource.updateShoppingListItem(item)
     }

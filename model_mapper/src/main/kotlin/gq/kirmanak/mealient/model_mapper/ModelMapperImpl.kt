@@ -13,22 +13,16 @@ import gq.kirmanak.mealient.datasource.models.AddRecipeSettings
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
-import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.GetRecipeIngredientResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSettingsResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
-import gq.kirmanak.mealient.datasource.models.GetShoppingListItemRecipeReferenceFullResponse
-import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
-import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLRequest
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import java.util.UUID
@@ -159,42 +153,6 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
     override fun toRequest(parseRecipeURLInfo: ParseRecipeURLInfo) = ParseRecipeURLRequest(
         url = parseRecipeURLInfo.url,
         includeTags = parseRecipeURLInfo.includeTags,
-    )
-
-    override fun toFullShoppingListInfo(getShoppingListResponse: GetShoppingListResponse): FullShoppingListInfo {
-        val recipes = getShoppingListResponse.recipeReferences.groupBy { it.recipeId }
-        return FullShoppingListInfo(
-            id = getShoppingListResponse.id,
-            name = getShoppingListResponse.name,
-            items = getShoppingListResponse.listItems.map { toShoppingListItemInfo(it, recipes) },
-        )
-    }
-
-    override fun toShoppingListItemInfo(
-        getShoppingListItemResponse: GetShoppingListItemResponse,
-        recipes: Map<String, List<GetShoppingListItemRecipeReferenceFullResponse>>
-    ): ShoppingListItemInfo = ShoppingListItemInfo(
-        shoppingListId = getShoppingListItemResponse.shoppingListId,
-        id = getShoppingListItemResponse.id,
-        checked = getShoppingListItemResponse.checked,
-        position = getShoppingListItemResponse.position,
-        isFood = getShoppingListItemResponse.isFood,
-        note = getShoppingListItemResponse.note,
-        quantity = getShoppingListItemResponse.quantity,
-        unit = getShoppingListItemResponse.unit,
-        food = getShoppingListItemResponse.food,
-        recipeReferences = getShoppingListItemResponse.recipeReferences.map { it.recipeId }
-            .mapNotNull { recipes[it] }.flatten().map { toShoppingListItemRecipeReferenceInfo(it) },
-    )
-
-    override fun toShoppingListItemRecipeReferenceInfo(
-        getShoppingListItemRecipeReferenceFullResponse: GetShoppingListItemRecipeReferenceFullResponse
-    ) = ShoppingListItemRecipeReferenceInfo(
-        recipeId = getShoppingListItemRecipeReferenceFullResponse.recipeId,
-        recipeQuantity = getShoppingListItemRecipeReferenceFullResponse.recipeQuantity,
-        id = getShoppingListItemRecipeReferenceFullResponse.id,
-        shoppingListId = getShoppingListItemRecipeReferenceFullResponse.shoppingListId,
-        recipe = toFullRecipeInfo(getShoppingListItemRecipeReferenceFullResponse.recipe),
     )
 
 

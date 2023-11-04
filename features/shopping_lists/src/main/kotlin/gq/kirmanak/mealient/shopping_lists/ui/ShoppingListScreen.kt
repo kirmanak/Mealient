@@ -54,14 +54,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.AppTheme
 import gq.kirmanak.mealient.Dimens
-import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListItemRecipeReferenceResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
-import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
-import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
-import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.shopping_lists.util.data
@@ -624,40 +620,8 @@ fun PreviewShoppingListItemEditing() {
 }
 
 private object PreviewData {
-    val teaWithMilkRecipe = FullRecipeInfo(
-        remoteId = "1",
-        name = "Tea with milk",
-        recipeYield = "1 serving",
-        recipeIngredients = listOf(
-            RecipeIngredientInfo(
-                note = "Tea bag",
-                food = "",
-                unit = "",
-                quantity = 1.0,
-                title = "",
-            ),
-            RecipeIngredientInfo(
-                note = "",
-                food = "Milk",
-                unit = "ml",
-                quantity = 500.0,
-                title = "",
-            ),
-        ),
-        recipeInstructions = listOf(
-            RecipeInstructionInfo("Boil water"),
-            RecipeInstructionInfo("Put tea bag in a cup"),
-            RecipeInstructionInfo("Pour water into the cup"),
-            RecipeInstructionInfo("Wait for 5 minutes"),
-            RecipeInstructionInfo("Remove tea bag"),
-            RecipeInstructionInfo("Add milk"),
-        ),
-        settings = RecipeSettingsInfo(
-            disableAmounts = false
-        ),
-    )
 
-    val blackTeaBags = ShoppingListItemInfo(
+    val blackTeaBags = GetShoppingListItemResponse(
         id = "1",
         shoppingListId = "1",
         checked = false,
@@ -668,17 +632,14 @@ private object PreviewData {
         unit = null,
         food = null,
         recipeReferences = listOf(
-            ShoppingListItemRecipeReferenceInfo(
-                shoppingListId = "1",
-                id = "1",
+            GetShoppingListItemRecipeReferenceResponse(
                 recipeId = "1",
                 recipeQuantity = 1.0,
-                recipe = teaWithMilkRecipe,
             ),
         ),
     )
 
-    val milk = ShoppingListItemInfo(
+    val milk = GetShoppingListItemResponse(
         id = "2",
         shoppingListId = "1",
         checked = true,
@@ -689,12 +650,9 @@ private object PreviewData {
         unit = GetUnitResponse("ml", ""),
         food = GetFoodResponse("Milk", ""),
         recipeReferences = listOf(
-            ShoppingListItemRecipeReferenceInfo(
-                shoppingListId = "1",
-                id = "2",
+            GetShoppingListItemRecipeReferenceResponse(
                 recipeId = "1",
                 recipeQuantity = 500.0,
-                recipe = teaWithMilkRecipe,
             ),
         ),
     )
