@@ -7,7 +7,7 @@ plugins {
 
 android {
     defaultConfig {
-        buildConfigField("Boolean", "LOG_NETWORK", "true")
+        buildConfigField("Boolean", "LOG_NETWORK", "false")
     }
     namespace = "gq.kirmanak.mealient.datasource"
 }

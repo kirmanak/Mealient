@@ -6,9 +6,7 @@ import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.datasource.SignOutHandler
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
-import gq.kirmanak.mealient.test.AuthImplTestData.TEST_API_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_API_TOKEN
-import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_USERNAME
@@ -45,7 +43,7 @@ class AuthRepoImplTest : BaseUnitTest() {
 
     @Test
     fun `when isAuthorizedFlow then reads from storage`() = runTest {
-        every { storage.authHeaderFlow } returns flowOf("", null, "header")
+        every { storage.authTokenFlow } returns flowOf("", null, "header")
         assertThat(subject.isAuthorizedFlow.toList()).isEqualTo(listOf(true, false, true))
     }
 
@@ -56,9 +54,9 @@ class AuthRepoImplTest : BaseUnitTest() {
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD)
         coVerify {
             dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD))
-            storage.setAuthHeader(TEST_AUTH_HEADER)
+            storage.setAuthToken(TEST_TOKEN)
             dataSource.createApiToken(eq("Mealient"))
-            storage.setAuthHeader(TEST_API_AUTH_HEADER)
+            storage.setAuthToken(TEST_API_TOKEN)
         }
         confirmVerified(storage)
     }
@@ -73,7 +71,7 @@ class AuthRepoImplTest : BaseUnitTest() {
     @Test
     fun `when logout expect header removal`() = runTest {
         subject.logout()
-        coVerify { storage.setAuthHeader(null) }
+        coVerify { storage.setAuthToken(null) }
         confirmVerified(storage)
     }
 }

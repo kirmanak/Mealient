@@ -22,15 +22,15 @@ class AuthStorageImpl @Inject constructor(
     private val logger: Logger,
 ) : AuthStorage {
 
-    override val authHeaderFlow: Flow<String?>
+    override val authTokenFlow: Flow<String?>
         get() = sharedPreferences
-            .prefsChangeFlow(logger) { getString(AUTH_HEADER_KEY, null) }
+            .prefsChangeFlow(logger) { getString(AUTH_TOKEN_KEY, null) }
             .distinctUntilChanged()
     private val singleThreadDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
-    override suspend fun setAuthHeader(authHeader: String?) = putString(AUTH_HEADER_KEY, authHeader)
+    override suspend fun setAuthToken(authToken: String?) = putString(AUTH_TOKEN_KEY, authToken)
 
-    override suspend fun getAuthHeader(): String? = getString(AUTH_HEADER_KEY)
+    override suspend fun getAuthToken(): String? = getString(AUTH_TOKEN_KEY)
 
     private suspend fun putString(
         key: String,
@@ -48,6 +48,6 @@ class AuthStorageImpl @Inject constructor(
 
     companion object {
         @VisibleForTesting
-        const val AUTH_HEADER_KEY = "authHeader"
+        const val AUTH_TOKEN_KEY = "authToken"
     }
 }

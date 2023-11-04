@@ -13,7 +13,7 @@ import gq.kirmanak.mealient.datasource_test.RECIPE_SUMMARY_PORRIDGE
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import gq.kirmanak.mealient.model_mapper.ModelMapperImpl
 import gq.kirmanak.mealient.test.AuthImplTestData.FAVORITE_RECIPES_LIST
-import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.USER_INFO
 import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
@@ -48,7 +48,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     fun `when requestRecipeInfo expect a valid network call`() = runTest {
         val slug = "porridge"
         coEvery { dataSource.requestRecipeInfo(eq(slug)) } returns PORRIDGE_RECIPE_RESPONSE
-        coEvery { authRepo.getAuthHeader() } returns TEST_AUTH_HEADER
+        coEvery { authRepo.getAuthToken() } returns TEST_TOKEN
 
         val actual = subject.requestRecipeInfo(slug)
 
@@ -62,7 +62,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         coEvery {
             dataSource.requestRecipes(any(), any())
         } returns listOf(PORRIDGE_RECIPE_SUMMARY_RESPONSE)
-        coEvery { authRepo.getAuthHeader() } returns TEST_AUTH_HEADER
+        coEvery { authRepo.getAuthToken() } returns TEST_TOKEN
 
         val actual = subject.requestRecipes(40, 10)
 
@@ -78,7 +78,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     @Test(expected = IOException::class)
     fun `when request fails expect createRecipe to rethrow`() = runTest {
         coEvery { dataSource.createRecipe(any()) } throws IOException()
-        coEvery { authRepo.getAuthHeader() } returns TEST_AUTH_HEADER
+        coEvery { authRepo.getAuthToken() } returns TEST_TOKEN
         subject.addRecipe(PORRIDGE_ADD_RECIPE_INFO)
     }
 
@@ -90,7 +90,7 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         coEvery {
             dataSource.updateRecipe(any(), any())
         } returns PORRIDGE_RECIPE_RESPONSE
-        coEvery { authRepo.getAuthHeader() } returns TEST_AUTH_HEADER
+        coEvery { authRepo.getAuthToken() } returns TEST_TOKEN
 
         val actual = subject.addRecipe(PORRIDGE_ADD_RECIPE_INFO)
 

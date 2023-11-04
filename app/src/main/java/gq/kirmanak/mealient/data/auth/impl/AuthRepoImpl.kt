@@ -18,31 +18,25 @@ class AuthRepoImpl @Inject constructor(
 ) : AuthRepo, AuthenticationProvider {
 
     override val isAuthorizedFlow: Flow<Boolean>
-        get() = authStorage.authHeaderFlow.map { it != null }
+        get() = authStorage.authTokenFlow.map { it != null }
 
     override suspend fun authenticate(email: String, password: String) {
         logger.v { "authenticate() called with: email = $email, password = $password" }
         val token = authDataSource.authenticate(email, password)
-        authStorage.setAuthHeader(AUTH_HEADER_FORMAT.format(token))
+        authStorage.setAuthToken(token)
         val apiToken = authDataSource.createApiToken(API_TOKEN_NAME)
-        authStorage.setAuthHeader(AUTH_HEADER_FORMAT.format(apiToken))
+        authStorage.setAuthToken(apiToken)
     }
 
-    override suspend fun getAuthHeader(): String? = authStorage.getAuthHeader()
-
-    override suspend fun getAuthToken(): String? {
-        val authHeader = authStorage.getAuthHeader()
-        return authHeader?.replace("Bearer ", "")
-    }
+    override suspend fun getAuthToken(): String? = authStorage.getAuthToken()
 
     override suspend fun logout() {
         logger.v { "logout() called" }
-        authStorage.setAuthHeader(null)
+        authStorage.setAuthToken(null)
         signOutHandler.signOut()
     }
 
     companion object {
-        private const val AUTH_HEADER_FORMAT = "Bearer %s"
         private const val API_TOKEN_NAME = "Mealient"
     }
 }

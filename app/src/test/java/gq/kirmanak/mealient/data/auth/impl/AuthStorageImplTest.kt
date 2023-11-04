@@ -7,8 +7,8 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.data.auth.AuthStorage
-import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl.Companion.AUTH_HEADER_KEY
-import gq.kirmanak.mealient.test.AuthImplTestData.TEST_AUTH_HEADER
+import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl.Companion.AUTH_TOKEN_KEY
+import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.HiltRobolectricTest
 import io.mockk.MockKAnnotations
 import kotlinx.coroutines.flow.first
@@ -37,12 +37,12 @@ class AuthStorageImplTest : HiltRobolectricTest() {
 
     @Test
     fun `when authHeaderFlow is observed then sends value immediately`() = runTest {
-        sharedPreferences.edit(commit = true) { putString(AUTH_HEADER_KEY, TEST_AUTH_HEADER) }
-        assertThat(subject.authHeaderFlow.first()).isEqualTo(TEST_AUTH_HEADER)
+        sharedPreferences.edit(commit = true) { putString(AUTH_TOKEN_KEY, TEST_TOKEN) }
+        assertThat(subject.authTokenFlow.first()).isEqualTo(TEST_TOKEN)
     }
 
     @Test
     fun `when authHeader is observed then sends null if nothing saved`() = runTest {
-        assertThat(subject.authHeaderFlow.first()).isEqualTo(null)
+        assertThat(subject.authTokenFlow.first()).isEqualTo(null)
     }
 }
