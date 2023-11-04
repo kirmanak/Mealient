@@ -15,7 +15,9 @@ class RecipeImageUrlProviderImpl @Inject constructor(
         slug?.takeUnless { it.isBlank() } ?: return null
         val imagePath = IMAGE_PATH_FORMAT.format(slug)
         val baseUrl = serverInfoRepo.getUrl()?.takeUnless { it.isEmpty() }
-        val result = baseUrl?.let { Uri.parse(it) }
+        val result = baseUrl
+            ?.takeUnless { it.isBlank() }
+            ?.let { Uri.parse(it) }
             ?.buildUpon()
             ?.path(imagePath)
             ?.build()
