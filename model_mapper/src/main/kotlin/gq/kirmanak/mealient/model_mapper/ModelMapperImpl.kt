@@ -18,8 +18,6 @@ import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSettingsResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
-import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
-import gq.kirmanak.mealient.datasource.models.ParseRecipeURLRequest
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
@@ -149,11 +147,6 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
             text = addRecipeInstructionInfo.text,
             ingredientReferences = emptyList(),
         )
-
-    override fun toRequest(parseRecipeURLInfo: ParseRecipeURLInfo) = ParseRecipeURLRequest(
-        url = parseRecipeURLInfo.url,
-        includeTags = parseRecipeURLInfo.includeTags,
-    )
 
 
 }

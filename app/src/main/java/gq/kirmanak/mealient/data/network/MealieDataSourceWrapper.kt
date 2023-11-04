@@ -7,7 +7,7 @@ import gq.kirmanak.mealient.datasource.MealieDataSource
 import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
-import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
+import gq.kirmanak.mealient.datasource.models.ParseRecipeURLRequest
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
 
@@ -35,8 +35,8 @@ class MealieDataSourceWrapper @Inject constructor(
         return modelMapper.toFullRecipeInfo(dataSource.requestRecipeInfo(slug))
     }
 
-    override suspend fun parseRecipeFromURL(parseRecipeURLInfo: ParseRecipeURLInfo): String {
-        return dataSource.parseRecipeFromURL(modelMapper.toRequest(parseRecipeURLInfo))
+    override suspend fun parseRecipeFromURL(parseRecipeURLInfo: ParseRecipeURLRequest): String {
+        return dataSource.parseRecipeFromURL(parseRecipeURLInfo)
     }
 
     override suspend fun getFavoriteRecipes(): List<String> {
