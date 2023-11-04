@@ -37,7 +37,7 @@ import kotlinx.serialization.json.JsonElement
 import javax.inject.Inject
 import javax.inject.Provider
 
-class MealieServiceKtor @Inject constructor(
+internal class MealieServiceKtor @Inject constructor(
     private val httpClient: HttpClient,
     private val serverUrlProviderProvider: Provider<ServerUrlProvider>,
 ) : MealieService {

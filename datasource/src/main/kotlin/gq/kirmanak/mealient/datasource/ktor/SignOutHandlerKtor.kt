@@ -7,7 +7,7 @@ import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import io.ktor.client.plugins.plugin
 import javax.inject.Inject
 
-class SignOutHandlerKtor @Inject constructor(
+internal class SignOutHandlerKtor @Inject constructor(
     private val httpClient: HttpClient,
 ) : SignOutHandler {
 

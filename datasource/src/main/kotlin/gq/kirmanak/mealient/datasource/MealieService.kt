@@ -17,7 +17,7 @@ import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import gq.kirmanak.mealient.datasource.models.VersionResponse
 import kotlinx.serialization.json.JsonElement
 
-interface MealieService {
+internal interface MealieService {
 
     suspend fun getToken(username: String, password: String): GetTokenResponse
 

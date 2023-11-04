@@ -7,8 +7,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-class ContentNegotiationConfiguration @Inject constructor(
-    private  val json: Json,
+internal class ContentNegotiationConfiguration @Inject constructor(
+    private val json: Json,
 ) : KtorConfiguration {
 
     override fun <T : HttpClientEngineConfig> configure(config: HttpClientConfig<T>) {

@@ -31,7 +31,7 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
-class MealieDataSourceImpl @Inject constructor(
+internal class MealieDataSourceImpl @Inject constructor(
     private val networkRequestWrapper: NetworkRequestWrapper,
     private val service: MealieService,
 ) : MealieDataSource {
