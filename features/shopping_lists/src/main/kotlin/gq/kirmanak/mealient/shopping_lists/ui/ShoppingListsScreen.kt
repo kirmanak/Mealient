@@ -22,7 +22,7 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gq.kirmanak.mealient.AppTheme
 import gq.kirmanak.mealient.Dimens
-import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
+import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
@@ -46,7 +46,7 @@ fun ShoppingListsScreen(
         lazyColumnContent = { items ->
             items(items) { shoppingList ->
                 ShoppingListCard(
-                    shoppingListEntity = shoppingList,
+                    shoppingList = shoppingList,
                     onItemClick = { clickedEntity ->
                         val shoppingListId = clickedEntity.id
                         navigator.navigate(ShoppingListScreenDestination(shoppingListId))
@@ -61,21 +61,23 @@ fun ShoppingListsScreen(
 @Preview
 private fun PreviewShoppingListCard() {
     AppTheme {
-        ShoppingListCard(shoppingListEntity = ShoppingListInfo("1", "Weekend shopping"))
+        ShoppingListCard(
+            shoppingList = GetShoppingListsSummaryResponse("1", "Weekend shopping"),
+        )
     }
 }
 
 @Composable
 private fun ShoppingListCard(
-    shoppingListEntity: ShoppingListInfo?,
+    shoppingList: GetShoppingListsSummaryResponse?,
     modifier: Modifier = Modifier,
-    onItemClick: (ShoppingListInfo) -> Unit = {},
+    onItemClick: (GetShoppingListsSummaryResponse) -> Unit = {},
 ) {
     Card(
         modifier = modifier
             .padding(horizontal = Dimens.Medium, vertical = Dimens.Small)
             .fillMaxWidth()
-            .clickable { shoppingListEntity?.let { onItemClick(it) } },
+            .clickable { shoppingList?.let { onItemClick(it) } },
     ) {
         Row(
             modifier = Modifier.padding(Dimens.Medium),
@@ -87,7 +89,7 @@ private fun ShoppingListCard(
                 modifier = Modifier.height(Dimens.Large),
             )
             Text(
-                text = shoppingListEntity?.name.orEmpty(),
+                text = shoppingList?.name.orEmpty(),
                 modifier = Modifier.padding(start = Dimens.Medium),
             )
         }

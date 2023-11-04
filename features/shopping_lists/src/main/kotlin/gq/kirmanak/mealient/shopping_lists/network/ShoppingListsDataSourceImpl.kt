@@ -4,8 +4,8 @@ import gq.kirmanak.mealient.datasource.MealieDataSource
 import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
-import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
@@ -15,9 +15,9 @@ class ShoppingListsDataSourceImpl @Inject constructor(
     private val modelMapper: ModelMapper,
 ) : ShoppingListsDataSource {
 
-    override suspend fun getAllShoppingLists(): List<ShoppingListInfo> {
+    override suspend fun getAllShoppingLists(): List<GetShoppingListsSummaryResponse> {
         val response = dataSource.getShoppingLists(1, -1)
-        return response.items.map { modelMapper.toShoppingListInfo(it) }
+        return response.items
     }
 
     override suspend fun getShoppingList(

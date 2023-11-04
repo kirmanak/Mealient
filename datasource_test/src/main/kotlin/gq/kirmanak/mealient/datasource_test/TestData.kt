@@ -16,29 +16,26 @@ import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
-import gq.kirmanak.mealient.datasource.models.RecipeSummaryInfo
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
-val RECIPE_SUMMARY_CAKE = RecipeSummaryInfo(
+val RECIPE_SUMMARY_CAKE = GetRecipeSummaryResponse(
     remoteId = "1",
     name = "Cake",
     slug = "cake",
     description = "A tasty cake",
     dateAdded = LocalDate.parse("2021-11-13"),
     dateUpdated = LocalDateTime.parse("2021-11-13T15:30:13"),
-    imageId = "cake",
 )
 
-val RECIPE_SUMMARY_PORRIDGE = RecipeSummaryInfo(
+val RECIPE_SUMMARY_PORRIDGE = GetRecipeSummaryResponse(
     remoteId = "2",
     name = "Porridge",
     slug = "porridge",
     description = "A tasty porridge",
     dateAdded = LocalDate.parse("2021-11-12"),
     dateUpdated = LocalDateTime.parse("2021-10-13T17:35:23"),
-    imageId = "2",
 )
 
 val TEST_RECIPE_SUMMARIES = listOf(RECIPE_SUMMARY_CAKE, RECIPE_SUMMARY_PORRIDGE)

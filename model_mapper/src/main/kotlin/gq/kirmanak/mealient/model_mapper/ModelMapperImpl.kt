@@ -22,18 +22,13 @@ import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemRecipeReferenceFullResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
-import gq.kirmanak.mealient.datasource.models.GetShoppingListsResponse
-import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLRequest
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
-import gq.kirmanak.mealient.datasource.models.RecipeSummaryInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListsInfo
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import java.util.UUID
@@ -65,7 +60,10 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
         recipeId = remoteId, text = recipeInstructionInfo.text
     )
 
-    override fun toRecipeSummaryEntity(recipeSummaryInfo: RecipeSummaryInfo, isFavorite: Boolean) =
+    override fun toRecipeSummaryEntity(
+        recipeSummaryInfo: GetRecipeSummaryResponse,
+        isFavorite: Boolean
+    ) =
         RecipeSummaryEntity(
             remoteId = recipeSummaryInfo.remoteId,
             name = recipeSummaryInfo.name,
@@ -73,7 +71,7 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
             description = recipeSummaryInfo.description,
             dateAdded = recipeSummaryInfo.dateAdded,
             dateUpdated = recipeSummaryInfo.dateUpdated,
-            imageId = recipeSummaryInfo.imageId,
+            imageId = recipeSummaryInfo.remoteId,
             isFavorite = isFavorite,
         )
 
@@ -198,32 +196,6 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
         shoppingListId = getShoppingListItemRecipeReferenceFullResponse.shoppingListId,
         recipe = toFullRecipeInfo(getShoppingListItemRecipeReferenceFullResponse.recipe),
     )
-
-    override fun toShoppingListsInfo(getShoppingListsResponse: GetShoppingListsResponse) =
-        ShoppingListsInfo(
-            page = getShoppingListsResponse.page,
-            perPage = getShoppingListsResponse.perPage,
-            totalPages = getShoppingListsResponse.totalPages,
-            totalItems = getShoppingListsResponse.total,
-            items = getShoppingListsResponse.items.map { toShoppingListInfo(it) },
-        )
-
-    override fun toShoppingListInfo(getShoppingListsSummaryResponse: GetShoppingListsSummaryResponse) =
-        ShoppingListInfo(
-            name = getShoppingListsSummaryResponse.name.orEmpty(),
-            id = getShoppingListsSummaryResponse.id,
-        )
-
-    override fun toRecipeSummaryInfo(getRecipeSummaryResponse: GetRecipeSummaryResponse) =
-        RecipeSummaryInfo(
-            remoteId = getRecipeSummaryResponse.remoteId,
-            name = getRecipeSummaryResponse.name,
-            slug = getRecipeSummaryResponse.slug,
-            description = getRecipeSummaryResponse.description,
-            dateAdded = getRecipeSummaryResponse.dateAdded,
-            dateUpdated = getRecipeSummaryResponse.dateUpdated,
-            imageId = getRecipeSummaryResponse.remoteId,
-        )
 
 
 }

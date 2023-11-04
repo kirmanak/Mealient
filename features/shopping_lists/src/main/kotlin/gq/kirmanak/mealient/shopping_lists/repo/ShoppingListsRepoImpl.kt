@@ -3,8 +3,8 @@ package gq.kirmanak.mealient.shopping_lists.repo
 import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
-import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSource
@@ -15,7 +15,7 @@ class ShoppingListsRepoImpl @Inject constructor(
     private val logger: Logger,
 ) : ShoppingListsRepo {
 
-    override suspend fun getShoppingLists(): List<ShoppingListInfo> {
+    override suspend fun getShoppingLists(): List<GetShoppingListsSummaryResponse> {
         logger.v { "getShoppingLists() called" }
         return dataSource.getAllShoppingLists()
     }

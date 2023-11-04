@@ -22,18 +22,13 @@ import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemRecipeReferenceFullResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
-import gq.kirmanak.mealient.datasource.models.GetShoppingListsResponse
-import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLRequest
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
-import gq.kirmanak.mealient.datasource.models.RecipeSummaryInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListsInfo
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 
@@ -50,7 +45,7 @@ interface ModelMapper {
     ): RecipeInstructionEntity
 
     fun toRecipeSummaryEntity(
-        recipeSummaryInfo: RecipeSummaryInfo, isFavorite: Boolean
+        recipeSummaryInfo: GetRecipeSummaryResponse, isFavorite: Boolean
     ): RecipeSummaryEntity
 
     fun toAddRecipeInfo(addRecipeDraft: AddRecipeDraft): AddRecipeInfo
@@ -87,11 +82,5 @@ interface ModelMapper {
     fun toShoppingListItemRecipeReferenceInfo(
         getShoppingListItemRecipeReferenceFullResponse: GetShoppingListItemRecipeReferenceFullResponse
     ): ShoppingListItemRecipeReferenceInfo
-
-    fun toShoppingListsInfo(getShoppingListsResponse: GetShoppingListsResponse): ShoppingListsInfo
-
-    fun toShoppingListInfo(getShoppingListsSummaryResponse: GetShoppingListsSummaryResponse): ShoppingListInfo
-
-    fun toRecipeSummaryInfo(getRecipeSummaryResponse: GetRecipeSummaryResponse): RecipeSummaryInfo
 
 }

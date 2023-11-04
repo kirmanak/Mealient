@@ -6,8 +6,8 @@ import gq.kirmanak.mealient.data.share.ParseRecipeDataSource
 import gq.kirmanak.mealient.datasource.MealieDataSource
 import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
+import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
-import gq.kirmanak.mealient.datasource.models.RecipeSummaryInfo
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
 
@@ -25,10 +25,10 @@ class MealieDataSourceWrapper @Inject constructor(
     override suspend fun requestRecipes(
         start: Int,
         limit: Int,
-    ): List<RecipeSummaryInfo> {
+    ): List<GetRecipeSummaryResponse> {
         // Imagine start is 30 and limit is 15. It means that we already have page 1 and 2, now we need page 3
         val page = start / limit + 1
-        return dataSource.requestRecipes(page, limit).map { modelMapper.toRecipeSummaryInfo(it) }
+        return dataSource.requestRecipes(page, limit)
     }
 
     override suspend fun requestRecipeInfo(slug: String): FullRecipeInfo {

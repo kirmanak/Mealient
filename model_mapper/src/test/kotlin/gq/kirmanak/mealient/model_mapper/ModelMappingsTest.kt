@@ -14,9 +14,7 @@ import gq.kirmanak.mealient.datasource_test.PORRIDGE_ADD_RECIPE_INFO
 import gq.kirmanak.mealient.datasource_test.PORRIDGE_CREATE_RECIPE_REQUEST
 import gq.kirmanak.mealient.datasource_test.PORRIDGE_FULL_RECIPE_INFO
 import gq.kirmanak.mealient.datasource_test.PORRIDGE_RECIPE_RESPONSE
-import gq.kirmanak.mealient.datasource_test.PORRIDGE_RECIPE_SUMMARY_RESPONSE
 import gq.kirmanak.mealient.datasource_test.PORRIDGE_UPDATE_RECIPE_REQUEST
-import gq.kirmanak.mealient.datasource_test.RECIPE_SUMMARY_PORRIDGE
 import gq.kirmanak.mealient.datasource_test.SUGAR_INGREDIENT
 import gq.kirmanak.mealient.datastore_test.PORRIDGE_RECIPE_DRAFT
 import gq.kirmanak.mealient.test.BaseUnitTest
@@ -60,12 +58,6 @@ class ModelMappingsTest : BaseUnitTest() {
     fun `when instruction info to entity expect correct entity`() {
         val actual = subject.toRecipeInstructionEntity(MIX_INSTRUCTION, "1")
         assertThat(actual).isEqualTo(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY)
-    }
-
-    @Test
-    fun `when recipe summary to info expect correct info`() {
-        val actual = subject.toRecipeSummaryInfo(PORRIDGE_RECIPE_SUMMARY_RESPONSE)
-        assertThat(actual).isEqualTo(RECIPE_SUMMARY_PORRIDGE)
     }
 
     @Test

@@ -3,13 +3,13 @@ package gq.kirmanak.mealient.shopping_lists.network
 import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
-import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 
 interface ShoppingListsDataSource {
 
-    suspend fun getAllShoppingLists(): List<ShoppingListInfo>
+    suspend fun getAllShoppingLists(): List<GetShoppingListsSummaryResponse>
 
     suspend fun getShoppingList(id: String): FullShoppingListInfo
 
