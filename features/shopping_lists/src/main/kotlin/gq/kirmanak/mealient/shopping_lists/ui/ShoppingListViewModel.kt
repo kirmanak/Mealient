@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.architecture.valueUpdatesOnly
-import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
@@ -259,14 +259,15 @@ internal class ShoppingListViewModel @Inject constructor(
     ) {
         logger.v { "onAddConfirm() called with: state = $state" }
         val item = state.item
-        val newItem = NewShoppingListItemInfo(
+        val newItem = CreateShoppingListItemRequest(
             shoppingListId = item.listId,
             note = item.note,
             quantity = item.quantity.toDouble(),
             isFood = item.isFood,
-            unit = item.unit,
-            food = item.food,
+            unitId = item.unit?.id,
+            foodId = item.food?.id,
             position = item.position,
+            checked = false,
         )
         viewModelScope.launch {
             val result = runCatchingExceptCancel {

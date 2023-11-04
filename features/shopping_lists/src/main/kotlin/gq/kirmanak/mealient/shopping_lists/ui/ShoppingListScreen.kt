@@ -54,14 +54,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.AppTheme
 import gq.kirmanak.mealient.Dimens
-import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
+import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
 import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
-import gq.kirmanak.mealient.datasource.models.UnitInfo
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.shopping_lists.util.data
@@ -401,21 +401,21 @@ private fun ShoppingListItemEditorFoodRow(
 }
 
 class ShoppingListItemEditorState(
-    val foods: List<FoodInfo>,
-    val units: List<UnitInfo>,
+    val foods: List<GetFoodResponse>,
+    val units: List<GetUnitResponse>,
     val position: Int,
     val listId: String,
     note: String = "",
     quantity: String = "1.0",
     isFood: Boolean = false,
-    food: FoodInfo? = null,
-    unit: UnitInfo? = null,
+    food: GetFoodResponse? = null,
+    unit: GetUnitResponse? = null,
 ) {
 
     constructor(
         state: ShoppingListItemState.ExistingItem,
-        foods: List<FoodInfo>,
-        units: List<UnitInfo>,
+        foods: List<GetFoodResponse>,
+        units: List<GetUnitResponse>,
     ) : this(
         foods = foods,
         units = units,
@@ -434,9 +434,9 @@ class ShoppingListItemEditorState(
 
     var isFood: Boolean by mutableStateOf(isFood)
 
-    var food: FoodInfo? by mutableStateOf(food)
+    var food: GetFoodResponse? by mutableStateOf(food)
 
-    var unit: UnitInfo? by mutableStateOf(unit)
+    var unit: GetUnitResponse? by mutableStateOf(unit)
 
     var foodsExpanded: Boolean by mutableStateOf(false)
 
@@ -686,8 +686,8 @@ private object PreviewData {
         isFood = true,
         note = "Cold",
         quantity = 500.0,
-        unit = UnitInfo("ml", ""),
-        food = FoodInfo("Milk", ""),
+        unit = GetUnitResponse("ml", ""),
+        food = GetFoodResponse("Milk", ""),
         recipeReferences = listOf(
             ShoppingListItemRecipeReferenceInfo(
                 shoppingListId = "1",

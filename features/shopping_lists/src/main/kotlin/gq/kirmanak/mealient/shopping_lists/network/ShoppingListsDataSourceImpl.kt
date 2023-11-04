@@ -1,12 +1,12 @@
 package gq.kirmanak.mealient.shopping_lists.network
 
 import gq.kirmanak.mealient.datasource.MealieDataSource
-import gq.kirmanak.mealient.datasource.models.FoodInfo
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
-import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
+import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
-import gq.kirmanak.mealient.datasource.models.UnitInfo
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import javax.inject.Inject
 
@@ -32,12 +32,12 @@ class ShoppingListsDataSourceImpl @Inject constructor(
         item: ShoppingListItemInfo
     ) = dataSource.updateShoppingListItem(item)
 
-    override suspend fun getFoods(): List<FoodInfo> = modelMapper.toFoodInfo(dataSource.getFoods())
+    override suspend fun getFoods(): List<GetFoodResponse> = dataSource.getFoods().items
 
-    override suspend fun getUnits(): List<UnitInfo> = modelMapper.toUnitInfo(dataSource.getUnits())
+    override suspend fun getUnits(): List<GetUnitResponse> = dataSource.getUnits().items
 
     override suspend fun addShoppingListItem(
-        item: NewShoppingListItemInfo
-    ) = dataSource.addShoppingListItem(modelMapper.toCreateRequest(item))
+        item: CreateShoppingListItemRequest
+    ) = dataSource.addShoppingListItem(item)
 }
 

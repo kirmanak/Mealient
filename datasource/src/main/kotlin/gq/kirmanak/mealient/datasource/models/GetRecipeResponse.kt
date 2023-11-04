@@ -21,8 +21,8 @@ data class GetRecipeSettingsResponse(
 @Serializable
 data class GetRecipeIngredientResponse(
     @SerialName("note") val note: String = "",
-    @SerialName("unit") val unit: GetRecipeIngredientUnitResponse?,
-    @SerialName("food") val food: GetRecipeIngredientFoodResponse?,
+    @SerialName("unit") val unit: GetUnitResponse?,
+    @SerialName("food") val food: GetFoodResponse?,
     @SerialName("quantity") val quantity: Double?,
     @SerialName("title") val title: String?,
 )

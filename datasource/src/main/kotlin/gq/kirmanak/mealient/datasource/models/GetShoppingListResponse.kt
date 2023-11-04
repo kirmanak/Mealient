@@ -21,8 +21,8 @@ data class GetShoppingListItemResponse(
     @SerialName("isFood") val isFood: Boolean = false,
     @SerialName("note") val note: String = "",
     @SerialName("quantity") val quantity: Double = 0.0,
-    @SerialName("unit") val unit: GetRecipeIngredientUnitResponse? = null,
-    @SerialName("food") val food: GetRecipeIngredientFoodResponse? = null,
+    @SerialName("unit") val unit: GetUnitResponse? = null,
+    @SerialName("food") val food: GetFoodResponse? = null,
     @SerialName("recipeReferences") val recipeReferences: List<GetShoppingListItemRecipeReferenceResponse> = emptyList(),
 )
 

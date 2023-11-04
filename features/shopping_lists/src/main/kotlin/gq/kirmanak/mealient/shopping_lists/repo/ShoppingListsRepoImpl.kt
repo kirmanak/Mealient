@@ -1,11 +1,11 @@
 package gq.kirmanak.mealient.shopping_lists.repo
 
-import gq.kirmanak.mealient.datasource.models.FoodInfo
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
-import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
+import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
-import gq.kirmanak.mealient.datasource.models.UnitInfo
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSource
 import javax.inject.Inject
@@ -35,17 +35,17 @@ class ShoppingListsRepoImpl @Inject constructor(
         dataSource.updateShoppingListItem(item)
     }
 
-    override suspend fun getFoods(): List<FoodInfo> {
+    override suspend fun getFoods(): List<GetFoodResponse> {
         logger.v { "getFoods() called" }
         return dataSource.getFoods()
     }
 
-    override suspend fun getUnits(): List<UnitInfo> {
+    override suspend fun getUnits(): List<GetUnitResponse> {
         logger.v { "getUnits() called" }
         return dataSource.getUnits()
     }
 
-    override suspend fun addShoppingListItem(item: NewShoppingListItemInfo) {
+    override suspend fun addShoppingListItem(item: CreateShoppingListItemRequest) {
         logger.v { "addShoppingListItem() called with: item = $item" }
         dataSource.addShoppingListItem(item)
     }

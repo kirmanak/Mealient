@@ -12,11 +12,8 @@ import gq.kirmanak.mealient.datasource.models.AddRecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettings
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
-import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
-import gq.kirmanak.mealient.datasource.models.FoodInfo
 import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
-import gq.kirmanak.mealient.datasource.models.GetFoodsResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeIngredientResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
@@ -27,8 +24,6 @@ import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListsResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
-import gq.kirmanak.mealient.datasource.models.GetUnitsResponse
-import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLRequest
 import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
@@ -39,10 +34,7 @@ import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListItemRecipeReferenceInfo
 import gq.kirmanak.mealient.datasource.models.ShoppingListsInfo
-import gq.kirmanak.mealient.datasource.models.UnitInfo
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
-import gq.kirmanak.mealient.datasource.models.VersionInfo
-import gq.kirmanak.mealient.datasource.models.VersionResponse
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 
 interface ModelMapper {
@@ -98,15 +90,8 @@ interface ModelMapper {
 
     fun toShoppingListsInfo(getShoppingListsResponse: GetShoppingListsResponse): ShoppingListsInfo
 
-    fun toVersionInfo(versionResponse: VersionResponse): VersionInfo
-
     fun toShoppingListInfo(getShoppingListsSummaryResponse: GetShoppingListsSummaryResponse): ShoppingListInfo
 
     fun toRecipeSummaryInfo(getRecipeSummaryResponse: GetRecipeSummaryResponse): RecipeSummaryInfo
 
-    fun toFoodInfo(getFoodsResponse: GetFoodsResponse): List<FoodInfo>
-
-    fun toUnitInfo(getUnitsResponse: GetUnitsResponse): List<UnitInfo>
-
-    fun toCreateRequest(addRecipeInfo: NewShoppingListItemInfo): CreateShoppingListItemRequest
 }
