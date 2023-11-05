@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.database
 
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientToInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
@@ -34,13 +35,29 @@ val TEST_RECIPE_SUMMARY_ENTITIES =
     listOf(CAKE_RECIPE_SUMMARY_ENTITY, PORRIDGE_RECIPE_SUMMARY_ENTITY)
 
 val MIX_CAKE_RECIPE_INSTRUCTION_ENTITY = RecipeInstructionEntity(
+    id = "1",
     recipeId = "1",
     text = "Mix the ingredients",
+    title = "",
 )
 
 val BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY = RecipeInstructionEntity(
+    id = "2",
     recipeId = "1",
     text = "Bake the ingredients",
+    title = "",
+)
+
+val MIX_SUGAR_RECIPE_INGREDIENT_INSTRUCTION_ENTITY = RecipeIngredientToInstructionEntity(
+    recipeId = "1",
+    ingredientId = "1",
+    instructionId = "1",
+)
+
+val MIX_BREAD_RECIPE_INGREDIENT_INSTRUCTION_ENTITY = RecipeIngredientToInstructionEntity(
+    recipeId = "1",
+    ingredientId = "3",
+    instructionId = "1",
 )
 
 val CAKE_RECIPE_ENTITY = RecipeEntity(
@@ -50,21 +67,23 @@ val CAKE_RECIPE_ENTITY = RecipeEntity(
 )
 
 val CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
+    id = "1",
     recipeId = "1",
     note = "2 oz of white sugar",
     quantity = 1.0,
     unit = null,
     food = null,
-    title = null,
+    display = "2 oz of white sugar",
 )
 
 val CAKE_BREAD_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
+    id = "3",
     recipeId = "1",
     note = "2 oz of white bread",
     quantity = 1.0,
     unit = null,
     food = null,
-    title = null,
+    display = "2 oz of white bread",
 )
 
 val FULL_CAKE_INFO_ENTITY = RecipeWithSummaryAndIngredientsAndInstructions(
@@ -78,6 +97,10 @@ val FULL_CAKE_INFO_ENTITY = RecipeWithSummaryAndIngredientsAndInstructions(
         MIX_CAKE_RECIPE_INSTRUCTION_ENTITY,
         BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY,
     ),
+    recipeIngredientToInstructionEntity = listOf(
+        MIX_SUGAR_RECIPE_INGREDIENT_INSTRUCTION_ENTITY,
+        MIX_BREAD_RECIPE_INGREDIENT_INSTRUCTION_ENTITY
+    ),
 )
 
 val PORRIDGE_RECIPE_ENTITY_FULL = RecipeEntity(
@@ -87,31 +110,37 @@ val PORRIDGE_RECIPE_ENTITY_FULL = RecipeEntity(
 )
 
 val PORRIDGE_MILK_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
+    id = "1",
     recipeId = "2",
     note = "2 oz of white milk",
     quantity = 1.0,
     unit = null,
     food = null,
-    title = null,
+    display = "2 oz of white milk",
 )
 
 val PORRIDGE_SUGAR_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
+    id = "2",
     recipeId = "2",
     note = "2 oz of white sugar",
     quantity = 1.0,
     unit = null,
     food = null,
-    title = null,
+    display = "2 oz of white sugar",
 )
 
 val PORRIDGE_MIX_RECIPE_INSTRUCTION_ENTITY = RecipeInstructionEntity(
+    id = "1",
     recipeId = "2",
-    text = "Mix the ingredients"
+    text = "Mix the ingredients",
+    title = "",
 )
 
 val PORRIDGE_BOIL_RECIPE_INSTRUCTION_ENTITY = RecipeInstructionEntity(
+    id = "2",
     recipeId = "2",
-    text = "Boil the ingredients"
+    text = "Boil the ingredients",
+    title = "",
 )
 
 val FULL_PORRIDGE_INFO_ENTITY = RecipeWithSummaryAndIngredientsAndInstructions(
@@ -124,5 +153,6 @@ val FULL_PORRIDGE_INFO_ENTITY = RecipeWithSummaryAndIngredientsAndInstructions(
     recipeInstructions = listOf(
         PORRIDGE_MIX_RECIPE_INSTRUCTION_ENTITY,
         PORRIDGE_BOIL_RECIPE_INSTRUCTION_ENTITY,
-    )
+    ),
+    recipeIngredientToInstructionEntity = emptyList(),
 )

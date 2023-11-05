@@ -8,8 +8,8 @@ data class GetRecipeResponse(
     @SerialName("id") val remoteId: String,
     @SerialName("name") val name: String,
     @SerialName("recipeYield") val recipeYield: String = "",
-    @SerialName("recipeIngredient") val recipeIngredients: List<GetRecipeIngredientResponse> = emptyList(),
-    @SerialName("recipeInstructions") val recipeInstructions: List<GetRecipeInstructionResponse> = emptyList(),
+    @SerialName("recipeIngredient") val ingredients: List<GetRecipeIngredientResponse> = emptyList(),
+    @SerialName("recipeInstructions") val instructions: List<GetRecipeInstructionResponse> = emptyList(),
     @SerialName("settings") val settings: GetRecipeSettingsResponse? = null,
 )
 
@@ -24,10 +24,19 @@ data class GetRecipeIngredientResponse(
     @SerialName("unit") val unit: GetUnitResponse?,
     @SerialName("food") val food: GetFoodResponse?,
     @SerialName("quantity") val quantity: Double?,
-    @SerialName("title") val title: String?,
+    @SerialName("display") val display: String?,
+    @SerialName("referenceId") val referenceId: String,
 )
 
 @Serializable
 data class GetRecipeInstructionResponse(
+    @SerialName("id") val id: String,
+    @SerialName("title") val title: String = "",
     @SerialName("text") val text: String,
+    @SerialName("ingredientReferences") val ingredientReferences: List<GetRecipeInstructionIngredientReference> = emptyList(),
+)
+
+@Serializable
+data class GetRecipeInstructionIngredientReference(
+    @SerialName("referenceId") val referenceId: String,
 )

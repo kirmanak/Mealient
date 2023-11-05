@@ -9,6 +9,7 @@ import gq.kirmanak.mealient.datasource.models.AddRecipeSettings
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
 import gq.kirmanak.mealient.datasource.models.GetRecipeIngredientResponse
+import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionIngredientReference
 import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSettingsResponse
@@ -76,7 +77,8 @@ val MILK_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
     quantity = 1.0,
     unit = null,
     food = null,
-    title = null,
+    display = "2 oz of white milk",
+    referenceId = "1",
 )
 
 val SUGAR_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
@@ -84,7 +86,8 @@ val SUGAR_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
     quantity = 1.0,
     unit = null,
     food = null,
-    title = null,
+    display = "2 oz of white sugar",
+    referenceId = "1",
 )
 
 val BREAD_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
@@ -92,14 +95,33 @@ val BREAD_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
     quantity = 1.0,
     unit = null,
     food = null,
-    title = null,
+    display = "2 oz of white bread",
+    referenceId = "3",
 )
 
-val MIX_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse("Mix the ingredients")
+val MIX_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse(
+    id = "1",
+    title = "",
+    text = "Mix the ingredients",
+    ingredientReferences = listOf(
+        GetRecipeInstructionIngredientReference(referenceId = "1"),
+        GetRecipeInstructionIngredientReference(referenceId = "3"),
+    ),
+)
 
-val BAKE_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse("Bake the ingredients")
+val BAKE_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse(
+    id = "2",
+    title = "",
+    text = "Bake the ingredients",
+    ingredientReferences = emptyList()
+)
 
-val BOIL_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse("Boil the ingredients")
+val BOIL_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse(
+    id = "3",
+    title = "",
+    text = "Boil the ingredients",
+    ingredientReferences = emptyList()
+)
 
 val NO_AMOUNT_RECIPE_SETTINGS_RESPONSE = GetRecipeSettingsResponse(disableAmount = true)
 
@@ -107,8 +129,8 @@ val CAKE_RECIPE_RESPONSE = GetRecipeResponse(
     remoteId = "1",
     name = "Cake",
     recipeYield = "4 servings",
-    recipeIngredients = listOf(SUGAR_RECIPE_INGREDIENT_RESPONSE, BREAD_RECIPE_INGREDIENT_RESPONSE),
-    recipeInstructions = listOf(MIX_RECIPE_INSTRUCTION_RESPONSE, BAKE_RECIPE_INSTRUCTION_RESPONSE),
+    ingredients = listOf(SUGAR_RECIPE_INGREDIENT_RESPONSE, BREAD_RECIPE_INGREDIENT_RESPONSE),
+    instructions = listOf(MIX_RECIPE_INSTRUCTION_RESPONSE, BAKE_RECIPE_INSTRUCTION_RESPONSE),
     settings = NO_AMOUNT_RECIPE_SETTINGS_RESPONSE,
 )
 
@@ -116,11 +138,11 @@ val PORRIDGE_RECIPE_RESPONSE = GetRecipeResponse(
     remoteId = "2",
     recipeYield = "3 servings",
     name = "Porridge",
-    recipeIngredients = listOf(
+    ingredients = listOf(
         SUGAR_RECIPE_INGREDIENT_RESPONSE,
         MILK_RECIPE_INGREDIENT_RESPONSE,
     ),
-    recipeInstructions = listOf(
+    instructions = listOf(
         MIX_RECIPE_INSTRUCTION_RESPONSE,
         BOIL_RECIPE_INSTRUCTION_RESPONSE
     ),

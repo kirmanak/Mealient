@@ -25,6 +25,7 @@ class RecipeInfoViewModel @Inject constructor(
     private val _uiState = flow {
         logger.v { "Initializing UI state with args = $args" }
         val recipeInfo = recipeRepo.loadRecipeInfo(args.recipeId)
+        logger.v { "Loaded recipe info = $recipeInfo" }
         val slug = recipeInfo?.recipeSummaryEntity?.imageId
         val imageUrl = slug?.let { recipeImageUrlProvider.generateImageUrl(slug) }
         val state = recipeInfo?.let { entity ->

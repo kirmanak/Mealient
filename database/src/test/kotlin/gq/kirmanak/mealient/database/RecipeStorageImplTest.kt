@@ -50,7 +50,11 @@ internal class RecipeStorageImplTest : HiltRobolectricTest() {
         subject.saveRecipeInfo(
             CAKE_RECIPE_ENTITY,
             listOf(CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY, CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
-            listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY)
+            listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY),
+            listOf(
+                MIX_SUGAR_RECIPE_INGREDIENT_INSTRUCTION_ENTITY,
+                MIX_BREAD_RECIPE_INGREDIENT_INSTRUCTION_ENTITY
+            ),
         )
         val actual = recipeDao.queryFullRecipeInfo("1")
         assertThat(actual).isEqualTo(FULL_CAKE_INFO_ENTITY)
@@ -63,11 +67,16 @@ internal class RecipeStorageImplTest : HiltRobolectricTest() {
             CAKE_RECIPE_ENTITY,
             listOf(CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY, CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
             listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY),
+            listOf(
+                MIX_SUGAR_RECIPE_INGREDIENT_INSTRUCTION_ENTITY,
+                MIX_BREAD_RECIPE_INGREDIENT_INSTRUCTION_ENTITY
+            ),
         )
         subject.saveRecipeInfo(
             PORRIDGE_RECIPE_ENTITY_FULL,
             listOf(PORRIDGE_SUGAR_RECIPE_INGREDIENT_ENTITY, PORRIDGE_MILK_RECIPE_INGREDIENT_ENTITY),
             listOf(PORRIDGE_MIX_RECIPE_INSTRUCTION_ENTITY, PORRIDGE_BOIL_RECIPE_INSTRUCTION_ENTITY),
+            emptyList(),
         )
         val actual = recipeDao.queryFullRecipeInfo("2")
         assertThat(actual).isEqualTo(FULL_PORRIDGE_INFO_ENTITY)
@@ -80,14 +89,19 @@ internal class RecipeStorageImplTest : HiltRobolectricTest() {
             CAKE_RECIPE_ENTITY,
             listOf(CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY, CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
             listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY),
+            listOf(
+                MIX_SUGAR_RECIPE_INGREDIENT_INSTRUCTION_ENTITY,
+                MIX_BREAD_RECIPE_INGREDIENT_INSTRUCTION_ENTITY
+            ),
         )
         subject.saveRecipeInfo(
             CAKE_RECIPE_ENTITY,
             listOf(CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
             listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY),
+            emptyList(),
         )
         val actual = recipeDao.queryFullRecipeInfo("1")?.recipeIngredients
-        val expected = listOf(CAKE_BREAD_RECIPE_INGREDIENT_ENTITY.copy(localId = 3))
+        val expected = listOf(CAKE_BREAD_RECIPE_INGREDIENT_ENTITY)
         assertThat(actual).isEqualTo(expected)
     }
 
@@ -98,14 +112,19 @@ internal class RecipeStorageImplTest : HiltRobolectricTest() {
             CAKE_RECIPE_ENTITY,
             listOf(CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY, CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
             listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY),
+            listOf(
+                MIX_SUGAR_RECIPE_INGREDIENT_INSTRUCTION_ENTITY,
+                MIX_BREAD_RECIPE_INGREDIENT_INSTRUCTION_ENTITY
+            ),
         )
         subject.saveRecipeInfo(
             CAKE_RECIPE_ENTITY,
             listOf(CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY, CAKE_BREAD_RECIPE_INGREDIENT_ENTITY),
             listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY),
+            emptyList(),
         )
         val actual = recipeDao.queryFullRecipeInfo("1")?.recipeInstructions
-        val expected = listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY.copy(localId = 3))
+        val expected = listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY)
         assertThat(actual).isEqualTo(expected)
     }
 }

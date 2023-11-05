@@ -24,11 +24,11 @@ interface ModelMapper {
     fun toRecipeEntity(getRecipeResponse: GetRecipeResponse): RecipeEntity
 
     fun toRecipeIngredientEntity(
-        ingredientResponse: GetRecipeIngredientResponse, remoteId: String
+        ingredientResponse: GetRecipeIngredientResponse, recipeId: String
     ): RecipeIngredientEntity
 
     fun toRecipeInstructionEntity(
-        instructionResponse: GetRecipeInstructionResponse, remoteId: String
+        instructionResponse: GetRecipeInstructionResponse, recipeId: String
     ): RecipeInstructionEntity
 
     fun toRecipeSummaryEntity(
