@@ -1,22 +1,22 @@
 package gq.kirmanak.mealient.shopping_lists.ui
 
-import gq.kirmanak.mealient.datasource.models.FoodInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
-import gq.kirmanak.mealient.datasource.models.UnitInfo
+import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
+import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 import java.util.UUID
 
 internal data class ShoppingListScreenState(
     val name: String,
     val listId: String,
     val items: List<ShoppingListItemState>,
-    val foods: List<FoodInfo>,
-    val units: List<UnitInfo>,
+    val foods: List<GetFoodResponse>,
+    val units: List<GetUnitResponse>,
 )
 
 sealed class ShoppingListItemState {
 
     data class ExistingItem(
-        val item: ShoppingListItemInfo,
+        val item: GetShoppingListItemResponse,
         val isEditing: Boolean = false,
     ) : ShoppingListItemState()
 

@@ -15,7 +15,7 @@ val CAKE_RECIPE_SUMMARY_ENTITY = RecipeSummaryEntity(
     description = "A tasty cake",
     dateAdded = LocalDate.parse("2021-11-13"),
     dateUpdated = LocalDateTime.parse("2021-11-13T15:30:13"),
-    imageId = "cake",
+    imageId = "1",
     isFavorite = false,
 )
 
@@ -26,7 +26,7 @@ val PORRIDGE_RECIPE_SUMMARY_ENTITY = RecipeSummaryEntity(
     description = "A tasty porridge",
     dateAdded = LocalDate.parse("2021-11-12"),
     dateUpdated = LocalDateTime.parse("2021-10-13T17:35:23"),
-    imageId = "porridge",
+    imageId = "2",
     isFavorite = false,
 )
 

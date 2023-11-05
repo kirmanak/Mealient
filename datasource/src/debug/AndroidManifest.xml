@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<!-- Needed to display Chucker notification -->
-	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Needed to display Chucker notification -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
 </manifest>

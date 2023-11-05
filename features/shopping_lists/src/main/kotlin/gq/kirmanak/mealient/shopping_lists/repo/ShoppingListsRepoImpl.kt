@@ -1,11 +1,11 @@
 package gq.kirmanak.mealient.shopping_lists.repo
 
-import gq.kirmanak.mealient.datasource.models.FoodInfo
-import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
-import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
-import gq.kirmanak.mealient.datasource.models.UnitInfo
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
+import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
+import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSource
 import javax.inject.Inject
@@ -15,12 +15,12 @@ class ShoppingListsRepoImpl @Inject constructor(
     private val logger: Logger,
 ) : ShoppingListsRepo {
 
-    override suspend fun getShoppingLists(): List<ShoppingListInfo> {
+    override suspend fun getShoppingLists(): List<GetShoppingListsSummaryResponse> {
         logger.v { "getShoppingLists() called" }
         return dataSource.getAllShoppingLists()
     }
 
-    override suspend fun getShoppingList(id: String): FullShoppingListInfo {
+    override suspend fun getShoppingList(id: String): GetShoppingListResponse {
         logger.v { "getShoppingListItems() called with: id = $id" }
         return dataSource.getShoppingList(id)
     }
@@ -30,22 +30,22 @@ class ShoppingListsRepoImpl @Inject constructor(
         dataSource.deleteShoppingListItem(id)
     }
 
-    override suspend fun updateShoppingListItem(item: ShoppingListItemInfo) {
+    override suspend fun updateShoppingListItem(item: GetShoppingListItemResponse) {
         logger.v { "updateShoppingListItem() called with: item = $item" }
         dataSource.updateShoppingListItem(item)
     }
 
-    override suspend fun getFoods(): List<FoodInfo> {
+    override suspend fun getFoods(): List<GetFoodResponse> {
         logger.v { "getFoods() called" }
         return dataSource.getFoods()
     }
 
-    override suspend fun getUnits(): List<UnitInfo> {
+    override suspend fun getUnits(): List<GetUnitResponse> {
         logger.v { "getUnits() called" }
         return dataSource.getUnits()
     }
 
-    override suspend fun addShoppingListItem(item: NewShoppingListItemInfo) {
+    override suspend fun addShoppingListItem(item: CreateShoppingListItemRequest) {
         logger.v { "addShoppingListItem() called with: item = $item" }
         dataSource.addShoppingListItem(item)
     }

@@ -9,15 +9,16 @@ import gq.kirmanak.mealient.datastore_test.PORRIDGE_RECIPE_DRAFT
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import gq.kirmanak.mealient.model_mapper.ModelMapperImpl
 import gq.kirmanak.mealient.test.BaseUnitTest
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class AddRecipeRepoTest : BaseUnitTest() {
 
     @MockK(relaxUnitFun = true)

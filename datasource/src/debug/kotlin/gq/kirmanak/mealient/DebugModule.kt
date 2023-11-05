@@ -17,7 +17,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DebugModule {
+internal object DebugModule {
+
     @Provides
     @IntoSet
     fun provideLoggingInterceptor(logger: Logger): Interceptor {

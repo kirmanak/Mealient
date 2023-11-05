@@ -25,16 +25,19 @@ dependencies {
 
     implementation(libs.jetbrains.kotlinx.serialization)
 
-    implementation(libs.squareup.retrofit)
-
-    implementation(libs.jakewharton.retrofitSerialization)
+    implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
+    testImplementation(libs.jetbrains.kotlinx.coroutinesTest)
 
     implementation(platform(libs.okhttp3.bom))
     implementation(libs.okhttp3.okhttp)
     debugImplementation(libs.okhttp3.loggingInterceptor)
 
-    implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
-    testImplementation(libs.jetbrains.kotlinx.coroutinesTest)
+    implementation(libs.ktor.core)
+    implementation(libs.ktor.auth)
+    implementation(libs.ktor.encoding)
+    implementation(libs.ktor.negotiation)
+    implementation(libs.ktor.json)
+    implementation(libs.ktor.okhttp)
 
     testImplementation(libs.androidx.test.junit)
 

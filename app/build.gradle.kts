@@ -16,8 +16,8 @@ plugins {
 android {
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
-        versionCode = 30
-        versionName = "0.4.1"
+        versionCode = 31
+        versionName = "0.4.2"
         testInstrumentationRunner = "gq.kirmanak.mealient.MealientTestRunner"
         testInstrumentationRunnerArguments += mapOf("clearPackageData" to "true")
         resourceConfigurations += listOf("en", "es", "ru", "fr", "nl", "pt", "de")
@@ -55,7 +55,7 @@ android {
 
     namespace = "gq.kirmanak.mealient"
 
-    packagingOptions {
+    packaging {
         resources.excludes += "DebugProbesKt.bin"
     }
 

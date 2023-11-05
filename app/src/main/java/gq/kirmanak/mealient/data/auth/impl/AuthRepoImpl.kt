@@ -4,6 +4,7 @@ import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.datasource.AuthenticationProvider
+import gq.kirmanak.mealient.datasource.SignOutHandler
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,28 +14,29 @@ class AuthRepoImpl @Inject constructor(
     private val authStorage: AuthStorage,
     private val authDataSource: AuthDataSource,
     private val logger: Logger,
+    private val signOutHandler: SignOutHandler,
 ) : AuthRepo, AuthenticationProvider {
 
     override val isAuthorizedFlow: Flow<Boolean>
-        get() = authStorage.authHeaderFlow.map { it != null }
+        get() = authStorage.authTokenFlow.map { it != null }
 
     override suspend fun authenticate(email: String, password: String) {
         logger.v { "authenticate() called with: email = $email, password = $password" }
         val token = authDataSource.authenticate(email, password)
-        authStorage.setAuthHeader(AUTH_HEADER_FORMAT.format(token))
+        authStorage.setAuthToken(token)
         val apiToken = authDataSource.createApiToken(API_TOKEN_NAME)
-        authStorage.setAuthHeader(AUTH_HEADER_FORMAT.format(apiToken))
+        authStorage.setAuthToken(apiToken)
     }
 
-    override suspend fun getAuthHeader(): String? = authStorage.getAuthHeader()
+    override suspend fun getAuthToken(): String? = authStorage.getAuthToken()
 
     override suspend fun logout() {
         logger.v { "logout() called" }
-        authStorage.setAuthHeader(null)
+        authStorage.setAuthToken(null)
+        signOutHandler.signOut()
     }
 
     companion object {
-        private const val AUTH_HEADER_FORMAT = "Bearer %s"
         private const val API_TOKEN_NAME = "Mealient"
     }
 }

@@ -31,20 +31,16 @@ splashScreen = "1.0.1"
 lifecycle = "2.6.2"
 # https://developer.android.com/jetpack/androidx/releases/arch-core
 coreTesting = "2.2.0"
-# https://github.com/square/retrofit/tags
-retrofit = "2.9.0"
-# https://github.com/JakeWharton/retrofit2-kotlinx-serialization-converter/tags
-retrofitKotlinxSerialization = "1.0.0"
 # https://github.com/Kotlin/kotlinx.serialization/releases
 kotlinxSerialization = "1.6.0"
 # https://github.com/square/okhttp/tags
-okhttp = "4.11.0"
+okhttp = "4.12.0"
 # https://developer.android.com/jetpack/androidx/releases/paging
 paging = "3.2.1"
 # https://developer.android.com/jetpack/androidx/releases/room
-room = "2.5.2"
+room = "2.6.0"
 # https://github.com/Kotlin/kotlinx-datetime/releases
-kotlinxDatetime = "0.4.1"
+kotlinxDatetime = "0.4.0"
 # https://github.com/bumptech/glide/releases
 glide = "4.16.0"
 # https://github.com/androidbroadcast/ViewBindingPropertyDelegate/releases
@@ -55,12 +51,10 @@ datastore = "1.0.0"
 security = "1.0.0"
 # https://github.com/junit-team/junit4/releases
 junit = "4.13.2"
-# https://developer.android.com/jetpack/androidx/releases/test
-junitKtx = "1.1.5"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 coroutines = "1.7.3"
 # https://github.com/robolectric/robolectric/releases
-robolectric = "4.10.3"
+robolectric = "4.11"
 # https://mvnrepository.com/artifact/com.google.truth/truth
 truth = "1.1.5"
 # https://mockk.io/
@@ -82,18 +76,21 @@ androidXTestCore = "1.5.0"
 androidXTestRules = "1.5.0"
 androidXTestRunner = "1.5.2"
 androidXTestOrchestrator = "1.4.2"
+junitKtx = "1.1.5"
 # https://mvnrepository.com/artifact/androidx.compose/compose-bom
-composeBom = "2023.09.02"
+composeBom = "2023.10.01"
 # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
 composeKotlinCompilerExtension = "1.5.3"
 # https://google.github.io/accompanist/
 accompanistVersion = "0.32.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
-materialCompose = "1.5.3"
+materialCompose = "1.5.4"
 # https://github.com/raamcosta/compose-destinations
 composeDestinations = "1.9.54"
 # https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
 hiltNavigationCompose = "1.0.0"
+# https://github.com/ktorio/ktor/releases
+ktor = "2.3.5"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -171,10 +168,6 @@ androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidXTestRunner" }
 androidx-test-orchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidXTestOrchestrator" }
 
-jakewharton-retrofitSerialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerialization" }
-
-squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-
 squareup-leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
 
 okhttp3-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
@@ -201,6 +194,13 @@ kaspersky-kaspresso = { group = "com.kaspersky.android-components", name = "kasp
 
 composeDestinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "composeDestinations" }
 composeDestinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "composeDestinations" }
+
+ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-encoding = { group = "io.ktor", name = "ktor-client-encoding", version.ref = "ktor" }
+ktor-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 [plugins]
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }

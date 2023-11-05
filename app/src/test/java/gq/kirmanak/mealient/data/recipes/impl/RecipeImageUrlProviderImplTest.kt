@@ -1,27 +1,26 @@
 package gq.kirmanak.mealient.data.recipes.impl
 
 import com.google.common.truth.Truth.assertThat
-import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
-import gq.kirmanak.mealient.test.BaseUnitTest
-import io.mockk.coEvery
-import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import dagger.hilt.android.testing.HiltAndroidTest
+import gq.kirmanak.mealient.data.baseurl.ServerInfoStorage
+import gq.kirmanak.mealient.test.HiltRobolectricTest
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class RecipeImageUrlProviderImplTest : BaseUnitTest() {
+@HiltAndroidTest
+class RecipeImageUrlProviderImplTest : HiltRobolectricTest() {
 
+    @Inject
     lateinit var subject: RecipeImageUrlProvider
 
-    @MockK
-    lateinit var serverInfoRepo: ServerInfoRepo
+    @Inject
+    lateinit var serverInfoStorage: ServerInfoStorage
 
     @Before
-    override fun setUp() {
-        super.setUp()
-        subject = RecipeImageUrlProviderImpl(serverInfoRepo, logger)
+    fun setUp() {
         prepareBaseURL("https://google.com/")
     }
 
@@ -76,7 +75,7 @@ class RecipeImageUrlProviderImplTest : BaseUnitTest() {
         assertThat(actual).isNull()
     }
 
-    private fun prepareBaseURL(baseURL: String?) {
-        coEvery { serverInfoRepo.getUrl() } returns baseURL
+    private fun prepareBaseURL(baseURL: String?) = runBlocking {
+        serverInfoStorage.storeBaseURL(baseURL)
     }
 }

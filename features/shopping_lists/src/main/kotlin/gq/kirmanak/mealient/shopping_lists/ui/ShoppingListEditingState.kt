@@ -1,10 +1,10 @@
 package gq.kirmanak.mealient.shopping_lists.ui
 
-import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
+import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 
 data class ShoppingListEditingState(
     val deletedItemIds: Set<String> = emptySet(),
     val editingItemIds: Set<String> = emptySet(),
-    val modifiedItems: Map<String, ShoppingListItemInfo> = emptyMap(),
+    val modifiedItems: Map<String, GetShoppingListItemResponse> = emptyMap(),
     val newItems: List<ShoppingListItemState.NewItem> = emptyList(),
 )

@@ -4,9 +4,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthStorage {
 
-    val authHeaderFlow: Flow<String?>
+    val authTokenFlow: Flow<String?>
 
-    suspend fun setAuthHeader(authHeader: String?)
+    suspend fun setAuthToken(authToken: String?)
 
-    suspend fun getAuthHeader(): String?
+    suspend fun getAuthToken(): String?
 }

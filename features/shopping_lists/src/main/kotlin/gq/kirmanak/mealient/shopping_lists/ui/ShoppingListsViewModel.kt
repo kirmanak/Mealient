@@ -7,10 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.architecture.valueUpdatesOnly
+import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsAuthRepo
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
+import gq.kirmanak.mealient.shopping_lists.util.LoadingHelper
 import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactory
+import gq.kirmanak.mealient.shopping_lists.util.LoadingState
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,10 +26,11 @@ class ShoppingListsViewModel @Inject constructor(
     loadingHelperFactory: LoadingHelperFactory,
 ) : ViewModel() {
 
-    private val loadingHelper = loadingHelperFactory.create(viewModelScope) {
-        shoppingListsRepo.getShoppingLists()
-    }
-    val loadingState = loadingHelper.loadingState
+    private val loadingHelper: LoadingHelper<List<GetShoppingListsSummaryResponse>> =
+        loadingHelperFactory.create(viewModelScope) { shoppingListsRepo.getShoppingLists() }
+
+    val loadingState: StateFlow<LoadingState<List<GetShoppingListsSummaryResponse>>> =
+        loadingHelper.loadingState
 
     private var _errorToShowInSnackbar by mutableStateOf<Throwable?>(null)
     val errorToShowInSnackBar: Throwable? get() = _errorToShowInSnackbar

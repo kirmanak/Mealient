@@ -1,8 +1,8 @@
 package gq.kirmanak.mealient.data.baseurl
 
-import gq.kirmanak.mealient.datasource.models.VersionInfo
+import gq.kirmanak.mealient.datasource.models.VersionResponse
 
 interface VersionDataSource {
 
-    suspend fun getVersionInfo(): VersionInfo
+    suspend fun requestVersion(): VersionResponse
 }

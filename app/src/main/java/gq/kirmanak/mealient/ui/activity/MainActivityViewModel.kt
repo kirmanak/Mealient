@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
-import gq.kirmanak.mealient.data.baseurl.ServerVersion
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.logging.Logger
@@ -45,10 +44,6 @@ class MainActivityViewModel @Inject constructor(
     init {
         authRepo.isAuthorizedFlow
             .onEach { isAuthorized -> updateUiState { it.copy(isAuthorized = isAuthorized) } }
-            .launchIn(viewModelScope)
-
-        serverInfoRepo.versionUpdates()
-            .onEach { version -> updateUiState { it.copy(v1MenuItemsVisible = version == ServerVersion.V1) } }
             .launchIn(viewModelScope)
 
         viewModelScope.launch {

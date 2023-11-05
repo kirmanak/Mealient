@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.architecture.valueUpdatesOnly
-import gq.kirmanak.mealient.datasource.models.NewShoppingListItemInfo
-import gq.kirmanak.mealient.datasource.models.ShoppingListItemInfo
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
+import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsAuthRepo
@@ -113,7 +113,7 @@ internal class ShoppingListViewModel @Inject constructor(
     ): LoadingState<ShoppingListScreenState> {
         logger.v { "buildLoadingState() called with: loadingState = $loadingState, editingState = $editingState" }
         return loadingState.map { data ->
-            val existingItems = data.shoppingList.items
+            val existingItems = data.shoppingList.listItems
                 .filter { it.id !in editingState.deletedItemIds }
                 .map {
                     ShoppingListItemState.ExistingItem(
@@ -208,7 +208,7 @@ internal class ShoppingListViewModel @Inject constructor(
         updateItemInformation(updatedItem)
     }
 
-    private fun updateItemInformation(updatedItem: ShoppingListItemInfo) {
+    private fun updateItemInformation(updatedItem: GetShoppingListItemResponse) {
         logger.v { "updateItemInformation() called with: updatedItem = $updatedItem" }
         val id = updatedItem.id
         viewModelScope.launch {
@@ -259,14 +259,15 @@ internal class ShoppingListViewModel @Inject constructor(
     ) {
         logger.v { "onAddConfirm() called with: state = $state" }
         val item = state.item
-        val newItem = NewShoppingListItemInfo(
+        val newItem = CreateShoppingListItemRequest(
             shoppingListId = item.listId,
             note = item.note,
             quantity = item.quantity.toDouble(),
             isFood = item.isFood,
-            unit = item.unit,
-            food = item.food,
+            unitId = item.unit?.id,
+            foodId = item.food?.id,
             position = item.position,
+            checked = false,
         )
         viewModelScope.launch {
             val result = runCatchingExceptCancel {

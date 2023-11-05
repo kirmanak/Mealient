@@ -7,8 +7,6 @@ interface PreferencesStorage {
 
     val baseUrlKey: Preferences.Key<String>
 
-    val serverVersionKey: Preferences.Key<String>
-
     val isDisclaimerAcceptedKey: Preferences.Key<Boolean>
 
     val lastExecutedMigrationVersionKey: Preferences.Key<Int>

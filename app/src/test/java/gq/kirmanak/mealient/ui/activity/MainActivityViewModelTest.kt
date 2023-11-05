@@ -45,7 +45,6 @@ class MainActivityViewModelTest : BaseUnitTest() {
         every { activityUiStateController.getUiStateFlow() } returns MutableStateFlow(
             ActivityUiState()
         )
-        coEvery { serverInfoRepo.versionUpdates() } returns emptyFlow()
         subject = MainActivityViewModel(
             authRepo = authRepo,
             logger = logger,

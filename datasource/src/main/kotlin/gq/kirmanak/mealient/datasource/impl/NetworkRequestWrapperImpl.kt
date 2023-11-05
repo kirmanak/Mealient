@@ -4,7 +4,7 @@ import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.NetworkRequestWrapper
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
-import retrofit2.HttpException
+import io.ktor.client.plugins.ResponseException
 import javax.inject.Inject
 
 internal class NetworkRequestWrapperImpl @Inject constructor(
@@ -49,7 +49,8 @@ internal class NetworkRequestWrapperImpl @Inject constructor(
         logMethod: () -> String,
         logParameters: (() -> String)?
     ): T = makeCall(block, logMethod, logParameters).getOrElse {
-        throw if (it is HttpException && it.code() in listOf(401, 403)) {
+        val code = (it as? ResponseException)?.response?.status?.value
+        throw if (code in listOf(401, 403)) {
             NetworkError.Unauthorized(it)
         } else {
             it

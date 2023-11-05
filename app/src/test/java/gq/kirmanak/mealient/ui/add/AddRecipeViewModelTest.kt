@@ -7,7 +7,6 @@ import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOf
@@ -16,7 +15,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class AddRecipeViewModelTest : BaseUnitTest() {
 
     @MockK(relaxUnitFun = true)

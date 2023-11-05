@@ -5,13 +5,11 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.RecipeStorageImpl
 import gq.kirmanak.mealient.test.HiltRobolectricTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class RecipeStorageImplTest : HiltRobolectricTest() {
 
     @Inject

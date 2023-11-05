@@ -1,11 +1,11 @@
 package gq.kirmanak.mealient.shopping_lists.ui
 
-import gq.kirmanak.mealient.datasource.models.FoodInfo
-import gq.kirmanak.mealient.datasource.models.FullShoppingListInfo
-import gq.kirmanak.mealient.datasource.models.UnitInfo
+import gq.kirmanak.mealient.datasource.models.GetFoodResponse
+import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
+import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 
 data class ShoppingListData(
-    val foods: List<FoodInfo>,
-    val units: List<UnitInfo>,
-    val shoppingList: FullShoppingListInfo,
+    val foods: List<GetFoodResponse>,
+    val units: List<GetUnitResponse>,
+    val shoppingList: GetShoppingListResponse,
 )

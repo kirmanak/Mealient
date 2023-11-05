@@ -1,8 +1,8 @@
 package gq.kirmanak.mealient.data.share
 
-import gq.kirmanak.mealient.datasource.models.ParseRecipeURLInfo
+import gq.kirmanak.mealient.datasource.models.ParseRecipeURLRequest
 
 interface ParseRecipeDataSource {
 
-    suspend fun parseRecipeFromURL(parseRecipeURLInfo: ParseRecipeURLInfo): String
+    suspend fun parseRecipeFromURL(parseRecipeURLInfo: ParseRecipeURLRequest): String
 }
