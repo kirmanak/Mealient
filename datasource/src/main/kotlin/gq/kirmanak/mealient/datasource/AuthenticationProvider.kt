@@ -4,4 +4,5 @@ interface AuthenticationProvider {
 
     suspend fun getAuthToken(): String?
 
+    suspend fun logout()
 }
