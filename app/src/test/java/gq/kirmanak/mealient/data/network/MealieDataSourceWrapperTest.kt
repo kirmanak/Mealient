@@ -5,7 +5,6 @@ import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.datasource.MealieDataSource
 import gq.kirmanak.mealient.datasource_test.PORRIDGE_ADD_RECIPE_INFO
 import gq.kirmanak.mealient.datasource_test.PORRIDGE_CREATE_RECIPE_REQUEST
-import gq.kirmanak.mealient.datasource_test.PORRIDGE_FULL_RECIPE_INFO
 import gq.kirmanak.mealient.datasource_test.PORRIDGE_RECIPE_RESPONSE
 import gq.kirmanak.mealient.datasource_test.PORRIDGE_RECIPE_SUMMARY_RESPONSE
 import gq.kirmanak.mealient.datasource_test.PORRIDGE_UPDATE_RECIPE_REQUEST
@@ -50,11 +49,11 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         coEvery { dataSource.requestRecipeInfo(eq(slug)) } returns PORRIDGE_RECIPE_RESPONSE
         coEvery { authRepo.getAuthToken() } returns TEST_TOKEN
 
-        val actual = subject.requestRecipeInfo(slug)
+        val actual = subject.requestRecipe(slug)
 
         coVerify { dataSource.requestRecipeInfo(eq(slug)) }
 
-        assertThat(actual).isEqualTo(PORRIDGE_FULL_RECIPE_INFO)
+        assertThat(actual).isEqualTo(PORRIDGE_RECIPE_RESPONSE)
     }
 
     @Test

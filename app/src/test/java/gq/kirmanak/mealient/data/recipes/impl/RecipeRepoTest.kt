@@ -13,7 +13,7 @@ import gq.kirmanak.mealient.database.FULL_CAKE_INFO_ENTITY
 import gq.kirmanak.mealient.database.MIX_CAKE_RECIPE_INSTRUCTION_ENTITY
 import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.datasource.NetworkError.Unauthorized
-import gq.kirmanak.mealient.datasource_test.CAKE_FULL_RECIPE_INFO
+import gq.kirmanak.mealient.datasource_test.CAKE_RECIPE_RESPONSE
 import gq.kirmanak.mealient.model_mapper.ModelMapper
 import gq.kirmanak.mealient.model_mapper.ModelMapperImpl
 import gq.kirmanak.mealient.test.BaseUnitTest
@@ -67,7 +67,7 @@ class RecipeRepoTest : BaseUnitTest() {
 
     @Test
     fun `when refreshRecipeInfo expect call to storage`() = runTest {
-        coEvery { dataSource.requestRecipeInfo(eq("cake")) } returns CAKE_FULL_RECIPE_INFO
+        coEvery { dataSource.requestRecipe(eq("cake")) } returns CAKE_RECIPE_RESPONSE
         subject.refreshRecipeInfo("cake")
         coVerify {
             storage.saveRecipeInfo(

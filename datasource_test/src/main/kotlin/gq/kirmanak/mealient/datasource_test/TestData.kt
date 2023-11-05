@@ -8,14 +8,11 @@ import gq.kirmanak.mealient.datasource.models.AddRecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettings
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
-import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.GetRecipeIngredientResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
+import gq.kirmanak.mealient.datasource.models.GetRecipeSettingsResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
-import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
-import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
-import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -39,60 +36,6 @@ val RECIPE_SUMMARY_PORRIDGE = GetRecipeSummaryResponse(
 )
 
 val TEST_RECIPE_SUMMARIES = listOf(RECIPE_SUMMARY_CAKE, RECIPE_SUMMARY_PORRIDGE)
-
-val SUGAR_INGREDIENT = RecipeIngredientInfo(
-    note = "2 oz of white sugar",
-    quantity = 1.0,
-    unit = null,
-    food = null,
-    title = null,
-)
-
-val BREAD_INGREDIENT = RecipeIngredientInfo(
-    note = "2 oz of white bread",
-    quantity = 1.0,
-    unit = null,
-    food = null,
-    title = null,
-)
-
-private val MILK_INGREDIENT = RecipeIngredientInfo(
-    note = "2 oz of white milk",
-    quantity = 1.0,
-    unit = null,
-    food = null,
-    title = null,
-)
-
-val MIX_INSTRUCTION = RecipeInstructionInfo(
-    text = "Mix the ingredients"
-)
-
-private val BAKE_INSTRUCTION = RecipeInstructionInfo(
-    text = "Bake the ingredients"
-)
-
-private val BOIL_INSTRUCTION = RecipeInstructionInfo(
-    text = "Boil the ingredients"
-)
-
-val CAKE_FULL_RECIPE_INFO = FullRecipeInfo(
-    remoteId = "1",
-    name = "Cake",
-    recipeYield = "4 servings",
-    recipeIngredients = listOf(SUGAR_INGREDIENT, BREAD_INGREDIENT),
-    recipeInstructions = listOf(MIX_INSTRUCTION, BAKE_INSTRUCTION),
-    settings = RecipeSettingsInfo(disableAmounts = true)
-)
-
-val PORRIDGE_FULL_RECIPE_INFO = FullRecipeInfo(
-    remoteId = "2",
-    name = "Porridge",
-    recipeYield = "3 servings",
-    recipeIngredients = listOf(SUGAR_INGREDIENT, MILK_INGREDIENT),
-    recipeInstructions = listOf(MIX_INSTRUCTION, BOIL_INSTRUCTION),
-    settings = RecipeSettingsInfo(disableAmounts = true)
-)
 
 val SUGAR_ADD_RECIPE_INGREDIENT_INFO = AddRecipeIngredientInfo("2 oz of white sugar")
 
@@ -144,8 +87,8 @@ val SUGAR_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
     title = null,
 )
 
-val MILK_RECIPE_INGREDIENT_INFO = RecipeIngredientInfo(
-    note = "2 oz of white milk",
+val BREAD_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
+    note = "2 oz of white bread",
     quantity = 1.0,
     unit = null,
     food = null,
@@ -154,9 +97,20 @@ val MILK_RECIPE_INGREDIENT_INFO = RecipeIngredientInfo(
 
 val MIX_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse("Mix the ingredients")
 
+val BAKE_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse("Bake the ingredients")
+
 val BOIL_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse("Boil the ingredients")
 
-val MIX_RECIPE_INSTRUCTION_INFO = RecipeInstructionInfo("Mix the ingredients")
+val NO_AMOUNT_RECIPE_SETTINGS_RESPONSE = GetRecipeSettingsResponse(disableAmount = true)
+
+val CAKE_RECIPE_RESPONSE = GetRecipeResponse(
+    remoteId = "1",
+    name = "Cake",
+    recipeYield = "4 servings",
+    recipeIngredients = listOf(SUGAR_RECIPE_INGREDIENT_RESPONSE, BREAD_RECIPE_INGREDIENT_RESPONSE),
+    recipeInstructions = listOf(MIX_RECIPE_INSTRUCTION_RESPONSE, BAKE_RECIPE_INSTRUCTION_RESPONSE),
+    settings = NO_AMOUNT_RECIPE_SETTINGS_RESPONSE,
+)
 
 val PORRIDGE_RECIPE_RESPONSE = GetRecipeResponse(
     remoteId = "2",

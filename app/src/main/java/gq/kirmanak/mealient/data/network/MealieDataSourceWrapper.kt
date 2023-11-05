@@ -5,7 +5,7 @@ import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.data.share.ParseRecipeDataSource
 import gq.kirmanak.mealient.datasource.MealieDataSource
 import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
-import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
+import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.datasource.models.ParseRecipeURLRequest
 import gq.kirmanak.mealient.model_mapper.ModelMapper
@@ -31,8 +31,8 @@ class MealieDataSourceWrapper @Inject constructor(
         return dataSource.requestRecipes(page, limit)
     }
 
-    override suspend fun requestRecipeInfo(slug: String): FullRecipeInfo {
-        return modelMapper.toFullRecipeInfo(dataSource.requestRecipeInfo(slug))
+    override suspend fun requestRecipe(slug: String): GetRecipeResponse {
+        return dataSource.requestRecipeInfo(slug)
     }
 
     override suspend fun parseRecipeFromURL(parseRecipeURLInfo: ParseRecipeURLRequest): String {

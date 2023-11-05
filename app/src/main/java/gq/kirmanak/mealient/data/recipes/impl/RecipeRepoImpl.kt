@@ -45,7 +45,7 @@ class RecipeRepoImpl @Inject constructor(
     override suspend fun refreshRecipeInfo(recipeSlug: String): Result<Unit> {
         logger.v { "refreshRecipeInfo() called with: recipeSlug = $recipeSlug" }
         return runCatchingExceptCancel {
-            val info = dataSource.requestRecipeInfo(recipeSlug)
+            val info = dataSource.requestRecipe(recipeSlug)
             val entity = modelMapper.toRecipeEntity(info)
             val ingredients = info.recipeIngredients.map {
                 modelMapper.toRecipeIngredientEntity(it, entity.remoteId)

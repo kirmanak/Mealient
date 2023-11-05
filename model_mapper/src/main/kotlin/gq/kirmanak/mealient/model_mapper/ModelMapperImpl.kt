@@ -12,15 +12,10 @@ import gq.kirmanak.mealient.datasource.models.AddRecipeInstructionInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettings
 import gq.kirmanak.mealient.datasource.models.AddRecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
-import gq.kirmanak.mealient.datasource.models.FullRecipeInfo
 import gq.kirmanak.mealient.datasource.models.GetRecipeIngredientResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
-import gq.kirmanak.mealient.datasource.models.GetRecipeSettingsResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
-import gq.kirmanak.mealient.datasource.models.RecipeIngredientInfo
-import gq.kirmanak.mealient.datasource.models.RecipeInstructionInfo
-import gq.kirmanak.mealient.datasource.models.RecipeSettingsInfo
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 import java.util.UUID
@@ -29,27 +24,30 @@ import javax.inject.Inject
 class ModelMapperImpl @Inject constructor() : ModelMapper {
 
 
-    override fun toRecipeEntity(fullRecipeInfo: FullRecipeInfo) = RecipeEntity(
-        remoteId = fullRecipeInfo.remoteId,
-        recipeYield = fullRecipeInfo.recipeYield,
-        disableAmounts = fullRecipeInfo.settings.disableAmounts,
+    override fun toRecipeEntity(getRecipeResponse: GetRecipeResponse) = RecipeEntity(
+        remoteId = getRecipeResponse.remoteId,
+        recipeYield = getRecipeResponse.recipeYield,
+        disableAmounts = getRecipeResponse.settings?.disableAmount ?: true,
     )
 
     override fun toRecipeIngredientEntity(
-        recipeIngredientInfo: RecipeIngredientInfo, remoteId: String
+        ingredientResponse: GetRecipeIngredientResponse,
+        remoteId: String
     ) = RecipeIngredientEntity(
         recipeId = remoteId,
-        note = recipeIngredientInfo.note,
-        unit = recipeIngredientInfo.unit,
-        food = recipeIngredientInfo.food,
-        quantity = recipeIngredientInfo.quantity,
-        title = recipeIngredientInfo.title,
+        note = ingredientResponse.note,
+        unit = ingredientResponse.unit?.name,
+        food = ingredientResponse.food?.name,
+        quantity = ingredientResponse.quantity,
+        title = ingredientResponse.title,
     )
 
     override fun toRecipeInstructionEntity(
-        recipeInstructionInfo: RecipeInstructionInfo, remoteId: String
+        instructionResponse: GetRecipeInstructionResponse,
+        remoteId: String
     ) = RecipeInstructionEntity(
-        recipeId = remoteId, text = recipeInstructionInfo.text
+        recipeId = remoteId,
+        text = instructionResponse.text,
     )
 
     override fun toRecipeSummaryEntity(
@@ -89,34 +87,6 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
         areCommentsDisabled = addRecipeInfo.settings.disableComments,
     )
 
-
-    override fun toFullRecipeInfo(getRecipeResponse: GetRecipeResponse) = FullRecipeInfo(
-        remoteId = getRecipeResponse.remoteId,
-        name = getRecipeResponse.name,
-        recipeYield = getRecipeResponse.recipeYield,
-        recipeIngredients = getRecipeResponse.recipeIngredients.map { toRecipeIngredientInfo(it) },
-        recipeInstructions = getRecipeResponse.recipeInstructions.map { toRecipeInstructionInfo(it) },
-        settings = toRecipeSettingsInfo(getRecipeResponse.settings),
-    )
-
-    override fun toRecipeSettingsInfo(getRecipeSettingsResponse: GetRecipeSettingsResponse?) =
-        RecipeSettingsInfo(
-            disableAmounts = getRecipeSettingsResponse?.disableAmount ?: true,
-        )
-
-    override fun toRecipeIngredientInfo(getRecipeIngredientResponse: GetRecipeIngredientResponse) =
-        RecipeIngredientInfo(
-            note = getRecipeIngredientResponse.note,
-            unit = getRecipeIngredientResponse.unit?.name,
-            food = getRecipeIngredientResponse.food?.name,
-            quantity = getRecipeIngredientResponse.quantity,
-            title = getRecipeIngredientResponse.title,
-        )
-
-    override fun toRecipeInstructionInfo(getRecipeInstructionResponse: GetRecipeInstructionResponse) =
-        RecipeInstructionInfo(
-            text = getRecipeInstructionResponse.text
-        )
 
     override fun toCreateRequest(addRecipeInfo: AddRecipeInfo) = CreateRecipeRequest(
         name = addRecipeInfo.name,
