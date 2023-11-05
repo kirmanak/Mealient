@@ -1,5 +1,7 @@
 plugins {
     id("gq.kirmanak.mealient.library")
+    alias(libs.plugins.ksp)
+    id("gq.kirmanak.mealient.compose")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
 }
@@ -13,6 +15,8 @@ dependencies {
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
+
+    implementation(libs.android.material.material)
 
     testImplementation(libs.androidx.test.junit)
 

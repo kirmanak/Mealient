@@ -8,8 +8,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
-import gq.kirmanak.mealient.AppTheme
 import gq.kirmanak.mealient.ui.ActivityUiStateController
+import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.CheckableMenuItem
 import javax.inject.Inject
 

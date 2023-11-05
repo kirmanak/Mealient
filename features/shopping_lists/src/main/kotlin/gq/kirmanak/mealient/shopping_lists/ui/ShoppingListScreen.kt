@@ -52,8 +52,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
-import gq.kirmanak.mealient.AppTheme
-import gq.kirmanak.mealient.Dimens
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemRecipeReferenceResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
@@ -62,6 +60,8 @@ import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.shopping_lists.util.data
 import gq.kirmanak.mealient.shopping_lists.util.map
+import gq.kirmanak.mealient.ui.AppTheme
+import gq.kirmanak.mealient.ui.Dimens
 import kotlinx.coroutines.android.awaitFrame
 import java.text.DecimalFormat
 

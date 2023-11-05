@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient
+package gq.kirmanak.mealient.ui
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
