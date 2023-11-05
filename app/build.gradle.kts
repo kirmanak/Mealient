@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
         versionCode = 31
-        versionName = "0.4.1"
+        versionName = "0.4.2"
         testInstrumentationRunner = "gq.kirmanak.mealient.MealientTestRunner"
         testInstrumentationRunnerArguments += mapOf("clearPackageData" to "true")
         resourceConfigurations += listOf("en", "es", "ru", "fr", "nl", "pt", "de")
