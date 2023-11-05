@@ -11,6 +11,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.ksp)
     alias(libs.plugins.appsweep)
+    id("gq.kirmanak.mealient.compose.app")
 }
 
 android {
