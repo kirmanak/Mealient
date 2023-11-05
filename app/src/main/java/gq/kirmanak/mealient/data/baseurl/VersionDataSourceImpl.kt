@@ -8,7 +8,7 @@ class VersionDataSourceImpl @Inject constructor(
     private val dataSource: MealieDataSource,
 ) : VersionDataSource {
 
-    override suspend fun getVersionInfo(): VersionResponse {
+    override suspend fun requestVersion(): VersionResponse {
         return dataSource.getVersionInfo()
     }
 }

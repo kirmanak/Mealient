@@ -21,7 +21,7 @@ class ServerInfoRepoImpl @Inject constructor(
         serverInfoStorage.storeBaseURL(baseURL)
 
         try {
-            versionDataSource.getVersionInfo()
+            versionDataSource.requestVersion()
         } catch (e: Throwable) {
             serverInfoStorage.storeBaseURL(oldBaseUrl)
             return Result.failure(e)
