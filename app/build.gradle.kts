@@ -136,6 +136,9 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
 
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
+
     testImplementation(libs.junit)
 
     implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
