@@ -55,7 +55,6 @@ fun RecipeScreen(
         if (uiState.showIngredients) {
             IngredientsSection(
                 ingredients = uiState.recipeIngredients,
-                disableAmounts = uiState.disableAmounts,
             )
         }
 
@@ -129,7 +128,6 @@ private fun InstructionsSection(
 @Composable
 private fun IngredientsSection(
     ingredients: List<RecipeIngredientEntity>,
-    disableAmounts: Boolean,
 ) {
     Text(
         modifier = Modifier
@@ -152,7 +150,6 @@ private fun IngredientsSection(
             ingredients.forEach { item ->
                 IngredientListItem(
                     item = item,
-                    disableAmounts = disableAmounts,
                 )
             }
         }
@@ -193,7 +190,6 @@ private fun InstructionListItem(
 @Composable
 private fun IngredientListItem(
     item: RecipeIngredientEntity,
-    disableAmounts: Boolean,
     modifier: Modifier = Modifier,
 ) {
     var isChecked by rememberSaveable { mutableStateOf(false) }
@@ -209,24 +205,9 @@ private fun IngredientListItem(
         )
 
         Text(
-            text = item.getText(disableAmounts),
+            text = item.display.orEmpty(),
             style = MaterialTheme.typography.bodyLarge,
         )
-    }
-}
-
-private fun RecipeIngredientEntity.getText(
-    disableAmounts: Boolean,
-): String {
-    return if (disableAmounts) {
-        note.trim()
-    } else {
-        val builder = StringBuilder()
-        quantity?.let { builder.append("${it.formatUsingMediantMethod()} ") }
-        unit?.let { builder.append("$it ") }
-        food?.let { builder.append("$it ") }
-        builder.append(note)
-        builder.toString().trim()
     }
 }
 
@@ -284,7 +265,6 @@ private fun RecipeScreenPreview() {
                 ),
                 title = "Recipe title",
                 description = "Recipe description",
-                disableAmounts = false,
             )
         )
 

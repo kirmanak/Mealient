@@ -37,7 +37,6 @@ class RecipeInfoViewModel @Inject constructor(
                 recipeInstructions = entity.recipeInstructions,
                 title = entity.recipeSummaryEntity.name,
                 description = entity.recipeSummaryEntity.description,
-                disableAmounts = entity.recipeEntity.disableAmounts,
                 imageUrl = imageUrl,
             )
         } ?: RecipeInfoUiState()
