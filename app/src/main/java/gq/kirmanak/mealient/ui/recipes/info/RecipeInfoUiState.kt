@@ -13,4 +13,5 @@ data class RecipeInfoUiState(
     val title: String? = null,
     val description: String? = null,
     val disableAmounts: Boolean = true,
+    val imageUrl: String? = null,
 )

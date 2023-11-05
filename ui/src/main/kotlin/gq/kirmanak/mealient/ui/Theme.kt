@@ -40,6 +40,8 @@ object Dimens {
 
     val Small = 8.dp
 
+    val Intermediate = 12.dp
+
     val Medium = 16.dp
 
     val Large = 24.dp

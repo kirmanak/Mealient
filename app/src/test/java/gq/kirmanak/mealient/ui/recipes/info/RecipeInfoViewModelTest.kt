@@ -1,8 +1,8 @@
 package gq.kirmanak.mealient.ui.recipes.info
 
-import androidx.lifecycle.asFlow
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
 import gq.kirmanak.mealient.database.FULL_CAKE_INFO_ENTITY
 import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
@@ -16,10 +16,13 @@ class RecipeInfoViewModelTest : BaseUnitTest() {
     @MockK
     lateinit var recipeRepo: RecipeRepo
 
+    @MockK
+    lateinit var recipeImageUrlProvider: RecipeImageUrlProvider
+
     @Test
     fun `when recipe isn't found then UI state is empty`() = runTest {
         coEvery { recipeRepo.loadRecipeInfo(eq(RECIPE_ID)) } returns null
-        val uiState = createSubject().uiState.asFlow().first()
+        val uiState = createSubject().uiState.first()
         assertThat(uiState).isEqualTo(RecipeInfoUiState())
     }
 
@@ -29,6 +32,7 @@ class RecipeInfoViewModelTest : BaseUnitTest() {
             recipeIngredients = FULL_CAKE_INFO_ENTITY.recipeIngredients
         )
         coEvery { recipeRepo.loadRecipeInfo(eq(RECIPE_ID)) } returns returnedEntity
+        coEvery { recipeImageUrlProvider.generateImageUrl(eq("1")) } returns "imageUrl"
         val expected = RecipeInfoUiState(
             showIngredients = true,
             showInstructions = true,
@@ -37,14 +41,15 @@ class RecipeInfoViewModelTest : BaseUnitTest() {
             recipeInstructions = FULL_CAKE_INFO_ENTITY.recipeInstructions,
             title = FULL_CAKE_INFO_ENTITY.recipeSummaryEntity.name,
             description = FULL_CAKE_INFO_ENTITY.recipeSummaryEntity.description,
+            imageUrl = "imageUrl",
         )
-        val actual = createSubject().uiState.asFlow().first()
+        val actual = createSubject().uiState.first()
         assertThat(actual).isEqualTo(expected)
     }
 
     private fun createSubject(): RecipeInfoViewModel {
         val argument = RecipeInfoFragmentArgs(RECIPE_ID).toSavedStateHandle()
-        return RecipeInfoViewModel(recipeRepo, logger, argument)
+        return RecipeInfoViewModel(recipeRepo, logger, recipeImageUrlProvider, argument)
     }
 
     companion object {
