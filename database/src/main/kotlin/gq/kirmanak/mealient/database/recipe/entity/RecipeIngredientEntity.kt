@@ -23,5 +23,5 @@ data class RecipeIngredientEntity(
     @ColumnInfo(name = "recipe_ingredient_food") val food: String?,
     @ColumnInfo(name = "recipe_ingredient_unit") val unit: String?,
     @ColumnInfo(name = "recipe_ingredient_quantity") val quantity: Double?,
-    @ColumnInfo(name = "recipe_ingredient_display") val display: String?,
+    @ColumnInfo(name = "recipe_ingredient_display") val display: String,
 )

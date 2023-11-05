@@ -6,6 +6,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +37,7 @@ class RecipeInfoViewModel @Inject constructor(
                 showInstructions = entity.recipeInstructions.isNotEmpty(),
                 summaryEntity = entity.recipeSummaryEntity,
                 recipeIngredients = entity.recipeIngredients,
-                recipeInstructions = entity.recipeInstructions,
+                recipeInstructions = associateInstructionsToIngredients(entity),
                 title = entity.recipeSummaryEntity.name,
                 description = entity.recipeSummaryEntity.description,
                 imageUrl = imageUrl,
@@ -43,6 +46,21 @@ class RecipeInfoViewModel @Inject constructor(
         emit(state)
     }.stateIn(viewModelScope, SharingStarted.Eagerly, RecipeInfoUiState())
 
+
     val uiState: StateFlow<RecipeInfoUiState> = _uiState
 
+}
+
+private fun associateInstructionsToIngredients(
+    recipe: RecipeWithSummaryAndIngredientsAndInstructions,
+): Map<RecipeInstructionEntity, List<RecipeIngredientEntity>> {
+    return recipe.recipeInstructions.associateWith { instruction ->
+        recipe.recipeIngredientToInstructionEntity
+            .filter { it.instructionId == instruction.id }
+            .flatMap { mapping ->
+                recipe.recipeIngredients.filter { ingredient ->
+                    ingredient.id == mapping.ingredientId
+                }
+            }
+    }
 }

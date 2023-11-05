@@ -24,7 +24,7 @@ data class GetRecipeIngredientResponse(
     @SerialName("unit") val unit: GetUnitResponse?,
     @SerialName("food") val food: GetFoodResponse?,
     @SerialName("quantity") val quantity: Double?,
-    @SerialName("display") val display: String?,
+    @SerialName("display") val display: String,
     @SerialName("referenceId") val referenceId: String,
 )
 

@@ -3,7 +3,11 @@ package gq.kirmanak.mealient.ui.recipes.info
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
+import gq.kirmanak.mealient.database.BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY
+import gq.kirmanak.mealient.database.CAKE_BREAD_RECIPE_INGREDIENT_ENTITY
+import gq.kirmanak.mealient.database.CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY
 import gq.kirmanak.mealient.database.FULL_CAKE_INFO_ENTITY
+import gq.kirmanak.mealient.database.MIX_CAKE_RECIPE_INSTRUCTION_ENTITY
 import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -38,7 +42,13 @@ class RecipeInfoViewModelTest : BaseUnitTest() {
             showInstructions = true,
             summaryEntity = FULL_CAKE_INFO_ENTITY.recipeSummaryEntity,
             recipeIngredients = FULL_CAKE_INFO_ENTITY.recipeIngredients,
-            recipeInstructions = FULL_CAKE_INFO_ENTITY.recipeInstructions,
+            recipeInstructions = mapOf(
+                MIX_CAKE_RECIPE_INSTRUCTION_ENTITY to listOf(
+                    CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY,
+                    CAKE_BREAD_RECIPE_INGREDIENT_ENTITY,
+                ),
+                BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY to emptyList(),
+            ),
             title = FULL_CAKE_INFO_ENTITY.recipeSummaryEntity.name,
             description = FULL_CAKE_INFO_ENTITY.recipeSummaryEntity.description,
             imageUrl = "imageUrl",

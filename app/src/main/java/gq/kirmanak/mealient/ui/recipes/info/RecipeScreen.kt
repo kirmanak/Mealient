@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,7 +60,9 @@ fun RecipeScreen(
         }
 
         if (uiState.showInstructions) {
-            InstructionsSection(uiState.recipeInstructions)
+            InstructionsSection(
+                instructions = uiState.recipeInstructions,
+            )
         }
     }
 }
@@ -106,7 +109,7 @@ private fun HeaderSection(
 
 @Composable
 private fun InstructionsSection(
-    instructions: List<RecipeInstructionEntity>,
+    instructions: Map<RecipeInstructionEntity, List<RecipeIngredientEntity>>,
 ) {
     Text(
         modifier = Modifier
@@ -115,12 +118,14 @@ private fun InstructionsSection(
         style = MaterialTheme.typography.titleLarge,
     )
 
-    instructions.forEachIndexed { index, item ->
+    var stepCount = 0
+    instructions.forEach { (instruction, ingredients) ->
         InstructionListItem(
             modifier = Modifier
                 .padding(horizontal = Dimens.Small),
-            item = item,
-            index = index,
+            item = instruction,
+            ingredients = ingredients,
+            index = stepCount++,
         )
     }
 }
@@ -160,6 +165,7 @@ private fun IngredientsSection(
 private fun InstructionListItem(
     item: RecipeInstructionEntity,
     index: Int,
+    ingredients: List<RecipeIngredientEntity>,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -183,6 +189,16 @@ private fun InstructionListItem(
                 text = item.text.trim(),
                 style = MaterialTheme.typography.bodyLarge,
             )
+
+            if (ingredients.isNotEmpty()) {
+                Divider()
+                ingredients.forEach { ingredient ->
+                    Text(
+                        text = ingredient.display,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+            }
         }
     }
 }
@@ -205,7 +221,7 @@ private fun IngredientListItem(
         )
 
         Text(
-            text = item.display.orEmpty(),
+            text = item.display,
             style = MaterialTheme.typography.bodyLarge,
         )
     }
@@ -215,6 +231,15 @@ private fun IngredientListItem(
 @Composable
 private fun RecipeScreenPreview() {
     AppTheme {
+        val ingredient = RecipeIngredientEntity(
+            id = "2",
+            recipeId = "1",
+            note = "Recipe ingredient note",
+            food = "Recipe ingredient food",
+            unit = "Recipe ingredient unit",
+            display = "Recipe ingredient display",
+            quantity = 1.0,
+        )
         RecipeScreen(
             uiState = RecipeInfoUiState(
                 showIngredients = true,
@@ -239,29 +264,21 @@ private fun RecipeScreenPreview() {
                         display = "Recipe ingredient display",
                         quantity = 1.0,
                     ),
-                    RecipeIngredientEntity(
-                        id = "2",
-                        recipeId = "1",
-                        note = "Recipe ingredient note",
-                        food = "Recipe ingredient food",
-                        unit = "Recipe ingredient unit",
-                        display = "Recipe ingredient display",
-                        quantity = 1.0,
-                    ),
+                    ingredient,
                 ),
-                recipeInstructions = listOf(
+                recipeInstructions = mapOf(
                     RecipeInstructionEntity(
                         id = "1",
                         recipeId = "1",
                         text = "Recipe instruction",
                         title = "",
-                    ),
+                    ) to emptyList(),
                     RecipeInstructionEntity(
                         id = "2",
                         recipeId = "1",
                         text = "Recipe instruction",
                         title = "",
-                    ),
+                    ) to listOf(ingredient),
                 ),
                 title = "Recipe title",
                 description = "Recipe description",
