@@ -1,5 +1,7 @@
 package gq.kirmanak.mealient.ui.recipes.info
 
+import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
@@ -79,7 +82,14 @@ private fun HeaderSection(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(2f) // 2:1
-            .clip(RoundedCornerShape(Dimens.Intermediate)),
+            .clip(
+                RoundedCornerShape(
+                    topEnd = 0.dp,
+                    topStart = 0.dp,
+                    bottomEnd = Dimens.Intermediate,
+                    bottomStart = Dimens.Intermediate,
+                )
+            ),
         model = imageUrl,
         contentDescription = stringResource(id = R.string.content_description_fragment_recipe_info_image),
         placeholder = imageFallback,
@@ -94,6 +104,7 @@ private fun HeaderSection(
                 .padding(horizontal = Dimens.Small),
             text = title,
             style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 
@@ -103,6 +114,7 @@ private fun HeaderSection(
                 .padding(horizontal = Dimens.Small),
             text = description,
             style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }
@@ -116,6 +128,7 @@ private fun InstructionsSection(
             .padding(horizontal = Dimens.Large),
         text = stringResource(id = R.string.fragment_recipe_info_instructions_header),
         style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.onSurface,
     )
 
     var stepCount = 0
@@ -139,6 +152,7 @@ private fun IngredientsSection(
             .padding(horizontal = Dimens.Large),
         text = stringResource(id = R.string.fragment_recipe_info_ingredients_header),
         style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.onSurface,
     )
 
     Card(
@@ -183,19 +197,24 @@ private fun InstructionListItem(
                     index + 1
                 ),
                 style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Text(
                 text = item.text.trim(),
                 style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             if (ingredients.isNotEmpty()) {
-                Divider()
+                Divider(
+                    color = MaterialTheme.colorScheme.outline,
+                )
                 ingredients.forEach { ingredient ->
                     Text(
                         text = ingredient.display,
                         style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }
@@ -223,6 +242,7 @@ private fun IngredientListItem(
         Text(
             text = item.display,
             style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }
@@ -231,60 +251,74 @@ private fun IngredientListItem(
 @Composable
 private fun RecipeScreenPreview() {
     AppTheme {
-        val ingredient = RecipeIngredientEntity(
-            id = "2",
-            recipeId = "1",
-            note = "Recipe ingredient note",
-            food = "Recipe ingredient food",
-            unit = "Recipe ingredient unit",
-            display = "Recipe ingredient display",
-            quantity = 1.0,
-        )
         RecipeScreen(
-            uiState = RecipeInfoUiState(
-                showIngredients = true,
-                showInstructions = true,
-                summaryEntity = RecipeSummaryEntity(
-                    remoteId = "1",
-                    name = "Recipe name",
-                    slug = "recipe-name",
-                    description = "Recipe description",
-                    dateAdded = LocalDate(2021, 1, 1),
-                    dateUpdated = LocalDateTime(2021, 1, 1, 1, 1, 1),
-                    imageId = null,
-                    isFavorite = false,
-                ),
-                recipeIngredients = listOf(
-                    RecipeIngredientEntity(
-                        id = "1",
-                        recipeId = "1",
-                        note = "Recipe ingredient note",
-                        food = "Recipe ingredient food",
-                        unit = "Recipe ingredient unit",
-                        display = "Recipe ingredient display",
-                        quantity = 1.0,
-                    ),
-                    ingredient,
-                ),
-                recipeInstructions = mapOf(
-                    RecipeInstructionEntity(
-                        id = "1",
-                        recipeId = "1",
-                        text = "Recipe instruction",
-                        title = "",
-                    ) to emptyList(),
-                    RecipeInstructionEntity(
-                        id = "2",
-                        recipeId = "1",
-                        text = "Recipe instruction",
-                        title = "",
-                    ) to listOf(ingredient),
-                ),
-                title = "Recipe title",
-                description = "Recipe description",
-            )
+            uiState = previewUiState()
         )
-
     }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_MASK and UI_MODE_NIGHT_YES)
+@Composable
+private fun RecipeScreenNightPreview() {
+    AppTheme {
+        RecipeScreen(
+            uiState = previewUiState()
+        )
+    }
+}
+
+private fun previewUiState(): RecipeInfoUiState {
+    val ingredient = RecipeIngredientEntity(
+        id = "2",
+        recipeId = "1",
+        note = "Recipe ingredient note",
+        food = "Recipe ingredient food",
+        unit = "Recipe ingredient unit",
+        display = "Recipe ingredient display that is very long and should be wrapped",
+        quantity = 1.0,
+    )
+    val uiState = RecipeInfoUiState(
+        showIngredients = true,
+        showInstructions = true,
+        summaryEntity = RecipeSummaryEntity(
+            remoteId = "1",
+            name = "Recipe name",
+            slug = "recipe-name",
+            description = "Recipe description",
+            dateAdded = LocalDate(2021, 1, 1),
+            dateUpdated = LocalDateTime(2021, 1, 1, 1, 1, 1),
+            imageId = null,
+            isFavorite = false,
+        ),
+        recipeIngredients = listOf(
+            RecipeIngredientEntity(
+                id = "1",
+                recipeId = "1",
+                note = "Recipe ingredient note",
+                food = "Recipe ingredient food",
+                unit = "Recipe ingredient unit",
+                display = "Recipe ingredient display that is very long and should be wrapped",
+                quantity = 1.0,
+            ),
+            ingredient,
+        ),
+        recipeInstructions = mapOf(
+            RecipeInstructionEntity(
+                id = "1",
+                recipeId = "1",
+                text = "Recipe instruction",
+                title = "",
+            ) to emptyList(),
+            RecipeInstructionEntity(
+                id = "2",
+                recipeId = "1",
+                text = "Recipe instruction",
+                title = "",
+            ) to listOf(ingredient),
+        ),
+        title = "Recipe title",
+        description = "Recipe description",
+    )
+    return uiState
 }
 
