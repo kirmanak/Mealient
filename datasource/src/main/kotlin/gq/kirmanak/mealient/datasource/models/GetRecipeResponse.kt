@@ -26,6 +26,7 @@ data class GetRecipeIngredientResponse(
     @SerialName("quantity") val quantity: Double?,
     @SerialName("display") val display: String,
     @SerialName("referenceId") val referenceId: String,
+    @SerialName("title") val title: String?,
 )
 
 @Serializable

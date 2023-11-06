@@ -242,6 +242,21 @@ private fun IngredientListItem(
 ) {
     var isChecked by rememberSaveable { mutableStateOf(false) }
 
+    val title = item.title
+    if (!title.isNullOrBlank()) {
+        Text(
+            modifier = modifier
+                .padding(horizontal = Dimens.Medium),
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+
+        Divider(
+            color = MaterialTheme.colorScheme.outline,
+        )
+    }
+
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(Dimens.Small, Alignment.Start),
@@ -289,6 +304,7 @@ private fun previewUiState(): RecipeInfoUiState {
         unit = "Recipe ingredient unit",
         display = "Recipe ingredient display that is very long and should be wrapped",
         quantity = 1.0,
+        title = null,
     )
     val uiState = RecipeInfoUiState(
         showIngredients = true,
@@ -312,6 +328,7 @@ private fun previewUiState(): RecipeInfoUiState {
                 unit = "Recipe ingredient unit",
                 display = "Recipe ingredient display that is very long and should be wrapped",
                 quantity = 1.0,
+                title = "Recipe ingredient section title",
             ),
             ingredient,
         ),

@@ -74,6 +74,7 @@ val CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
     unit = null,
     food = null,
     display = "2 oz of white sugar",
+    title = "Sugar",
 )
 
 val CAKE_BREAD_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
@@ -84,6 +85,7 @@ val CAKE_BREAD_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
     unit = null,
     food = null,
     display = "2 oz of white bread",
+    title = null,
 )
 
 val FULL_CAKE_INFO_ENTITY = RecipeWithSummaryAndIngredientsAndInstructions(
@@ -117,6 +119,7 @@ val PORRIDGE_MILK_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
     unit = null,
     food = null,
     display = "2 oz of white milk",
+    title = null,
 )
 
 val PORRIDGE_SUGAR_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
@@ -127,6 +130,7 @@ val PORRIDGE_SUGAR_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
     unit = null,
     food = null,
     display = "2 oz of white sugar",
+    title = "Sugar",
 )
 
 val PORRIDGE_MIX_RECIPE_INSTRUCTION_ENTITY = RecipeInstructionEntity(

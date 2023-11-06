@@ -79,6 +79,7 @@ val MILK_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
     food = null,
     display = "2 oz of white milk",
     referenceId = "1",
+    title = null,
 )
 
 val SUGAR_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
@@ -88,6 +89,7 @@ val SUGAR_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
     food = null,
     display = "2 oz of white sugar",
     referenceId = "1",
+    title = "Sugar",
 )
 
 val BREAD_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
@@ -97,6 +99,7 @@ val BREAD_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
     food = null,
     display = "2 oz of white bread",
     referenceId = "3",
+    title = null,
 )
 
 val MIX_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse(

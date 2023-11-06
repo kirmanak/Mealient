@@ -41,6 +41,7 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
         food = ingredientResponse.food?.name,
         quantity = ingredientResponse.quantity,
         display = ingredientResponse.display,
+        title = ingredientResponse.title,
     )
 
     override fun toRecipeInstructionEntity(
