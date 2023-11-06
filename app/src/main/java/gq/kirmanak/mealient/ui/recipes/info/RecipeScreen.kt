@@ -182,6 +182,19 @@ private fun InstructionListItem(
     ingredients: List<RecipeIngredientEntity>,
     modifier: Modifier = Modifier,
 ) {
+    val title = item.title
+
+    if (!title.isNullOrBlank()) {
+        Text(
+            modifier = modifier
+                .padding(horizontal = Dimens.Medium),
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+
+    }
+
     Card(
         modifier = modifier
             .fillMaxWidth(),
@@ -196,13 +209,13 @@ private fun InstructionListItem(
                     R.string.view_holder_recipe_instructions_step,
                     index + 1
                 ),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
             Text(
                 text = item.text.trim(),
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
@@ -213,7 +226,7 @@ private fun InstructionListItem(
                 ingredients.forEach { ingredient ->
                     Text(
                         text = ingredient.display,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
@@ -241,7 +254,7 @@ private fun IngredientListItem(
 
         Text(
             text = item.display,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
         )
     }
@@ -307,7 +320,7 @@ private fun previewUiState(): RecipeInfoUiState {
                 id = "1",
                 recipeId = "1",
                 text = "Recipe instruction",
-                title = "",
+                title = "Section title",
             ) to emptyList(),
             RecipeInstructionEntity(
                 id = "2",
