@@ -7,17 +7,21 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.ui.AppTheme
+import gq.kirmanak.mealient.ui.CheckableMenuItem
+import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RecipeInfoFragment : BottomSheetDialogFragment() {
+class RecipeInfoFragment : Fragment() {
 
     private val viewModel by viewModels<RecipeInfoViewModel>()
+    private val activityViewModel by activityViewModels<MainActivityViewModel>()
 
     @Inject
     lateinit var logger: Logger
@@ -28,17 +32,24 @@ class RecipeInfoFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         logger.v { "onCreateView() called" }
-        return ComposeView(requireContext())
+        return ComposeView(requireContext()).apply {
+            setContent {
+                val uiState by viewModel.uiState.collectAsState()
+                AppTheme {
+                    RecipeScreen(uiState = uiState)
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        logger.v { "onViewCreated() called" }
-        (view as ComposeView).setContent {
-            val uiState by viewModel.uiState.collectAsState()
-            AppTheme {
-                RecipeScreen(uiState = uiState)
-            }
+        activityViewModel.updateUiState {
+            it.copy(
+                navigationVisible = false,
+                searchVisible = false,
+                checkedMenuItem = CheckableMenuItem.RecipesList,
+            )
         }
     }
 }
