@@ -43,8 +43,9 @@ internal interface RecipeDao {
     @Query(
         "SELECT * FROM recipe " +
                 "JOIN recipe_summaries USING(recipe_id) " +
-                "JOIN recipe_ingredient USING(recipe_id) " +
-                "JOIN recipe_instruction USING(recipe_id) " +
+                "LEFT JOIN recipe_ingredient USING(recipe_id) " +
+                "LEFT JOIN recipe_instruction USING(recipe_id) " +
+                "LEFT JOIN recipe_ingredient_to_instruction USING(recipe_id) " +
                 "WHERE recipe.recipe_id = :recipeId"
     )
     suspend fun queryFullRecipeInfo(recipeId: String): RecipeWithSummaryAndIngredientsAndInstructions?
