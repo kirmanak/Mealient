@@ -149,7 +149,7 @@ private fun IngredientsSection(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = Dimens.Small),
+                .padding(Dimens.Small),
             verticalArrangement = Arrangement.spacedBy(Dimens.Small, Alignment.Top),
         ) {
             ingredients.forEach { item ->
