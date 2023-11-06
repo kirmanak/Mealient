@@ -82,6 +82,7 @@ class RecipesListFragment : Fragment(R.layout.fragment_recipes_list) {
     private fun navigateToRecipeInfo(id: String) {
         logger.v { "navigateToRecipeInfo() called with: id = $id" }
         val directions = actionRecipesFragmentToRecipeInfoFragment(id)
+        binding.root.hideKeyboard()
         findNavController().navigate(directions)
     }
 
