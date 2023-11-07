@@ -35,13 +35,17 @@ internal interface RecipeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecipeIngredients(ingredients: List<RecipeIngredientEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertIngredientToInstructionEntities(entities: List<RecipeIngredientToInstructionEntity>)
+
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH) // The lint is wrong, the columns are actually used
     @Query(
         "SELECT * FROM recipe " +
                 "JOIN recipe_summaries USING(recipe_id) " +
-                "JOIN recipe_ingredient USING(recipe_id) " +
-                "JOIN recipe_instruction USING(recipe_id) " +
+                "LEFT JOIN recipe_ingredient USING(recipe_id) " +
+                "LEFT JOIN recipe_instruction USING(recipe_id) " +
+                "LEFT JOIN recipe_ingredient_to_instruction USING(recipe_id) " +
                 "WHERE recipe.recipe_id = :recipeId"
     )
     suspend fun queryFullRecipeInfo(recipeId: String): RecipeWithSummaryAndIngredientsAndInstructions?
@@ -51,6 +55,9 @@ internal interface RecipeDao {
 
     @Query("DELETE FROM recipe_instruction WHERE recipe_id IN (:recipeIds)")
     suspend fun deleteRecipeInstructions(vararg recipeIds: String)
+
+    @Query("DELETE FROM recipe_ingredient_to_instruction WHERE recipe_id IN (:recipeIds)")
+    suspend fun deleteRecipeIngredientToInstructions(vararg recipeIds: String)
 
     @Query("UPDATE recipe_summaries SET recipe_summaries_is_favorite = 1 WHERE recipe_summaries_slug IN (:favorites)")
     suspend fun setFavorite(favorites: List<String>)

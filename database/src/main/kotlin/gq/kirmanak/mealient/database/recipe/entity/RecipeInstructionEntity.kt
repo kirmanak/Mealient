@@ -17,25 +17,8 @@ import androidx.room.PrimaryKey
     ]
 )
 data class RecipeInstructionEntity(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "recipe_instruction_local_id") val localId: Long = 0,
+    @PrimaryKey @ColumnInfo(name = "recipe_instruction_id") val id: String,
     @ColumnInfo(name = "recipe_id", index = true) val recipeId: String,
     @ColumnInfo(name = "recipe_instruction_text") val text: String,
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as RecipeInstructionEntity
-
-        if (recipeId != other.recipeId) return false
-        if (text != other.text) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = recipeId.hashCode()
-        result = 31 * result + text.hashCode()
-        return result
-    }
-}
+    @ColumnInfo(name = "recipe_instruction_title") val title: String?,
+)

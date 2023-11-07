@@ -32,22 +32,26 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
 
     override fun toRecipeIngredientEntity(
         ingredientResponse: GetRecipeIngredientResponse,
-        remoteId: String
+        recipeId: String
     ) = RecipeIngredientEntity(
-        recipeId = remoteId,
+        id = ingredientResponse.referenceId,
+        recipeId = recipeId,
         note = ingredientResponse.note,
         unit = ingredientResponse.unit?.name,
         food = ingredientResponse.food?.name,
         quantity = ingredientResponse.quantity,
+        display = ingredientResponse.display,
         title = ingredientResponse.title,
     )
 
     override fun toRecipeInstructionEntity(
         instructionResponse: GetRecipeInstructionResponse,
-        remoteId: String
+        recipeId: String
     ) = RecipeInstructionEntity(
-        recipeId = remoteId,
+        id = instructionResponse.id,
+        recipeId = recipeId,
         text = instructionResponse.text,
+        title = instructionResponse.title,
     )
 
     override fun toRecipeSummaryEntity(

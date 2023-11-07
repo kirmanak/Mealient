@@ -9,8 +9,9 @@ data class RecipeInfoUiState(
     val showInstructions: Boolean = false,
     val summaryEntity: RecipeSummaryEntity? = null,
     val recipeIngredients: List<RecipeIngredientEntity> = emptyList(),
-    val recipeInstructions: List<RecipeInstructionEntity> = emptyList(),
+    val recipeInstructions: Map<RecipeInstructionEntity, List<RecipeIngredientEntity>> = emptyMap(),
     val title: String? = null,
     val description: String? = null,
     val disableAmounts: Boolean = true,
+    val imageUrl: String? = null,
 )

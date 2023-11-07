@@ -6,6 +6,7 @@ import androidx.paging.PagingConfig
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.network.RecipeDataSource
 import gq.kirmanak.mealient.database.recipe.RecipeStorage
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientToInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
@@ -45,15 +46,24 @@ class RecipeRepoImpl @Inject constructor(
     override suspend fun refreshRecipeInfo(recipeSlug: String): Result<Unit> {
         logger.v { "refreshRecipeInfo() called with: recipeSlug = $recipeSlug" }
         return runCatchingExceptCancel {
-            val info = dataSource.requestRecipe(recipeSlug)
-            val entity = modelMapper.toRecipeEntity(info)
-            val ingredients = info.recipeIngredients.map {
+            val recipe = dataSource.requestRecipe(recipeSlug)
+            val entity = modelMapper.toRecipeEntity(recipe)
+            val ingredients = recipe.ingredients.map {
                 modelMapper.toRecipeIngredientEntity(it, entity.remoteId)
             }
-            val instructions = info.recipeInstructions.map {
+            val instructions = recipe.instructions.map {
                 modelMapper.toRecipeInstructionEntity(it, entity.remoteId)
             }
-            storage.saveRecipeInfo(entity, ingredients, instructions)
+            val ingredientToInstruction = recipe.instructions.flatMap { instruction ->
+                instruction.ingredientReferences.map { ingredientReference ->
+                    RecipeIngredientToInstructionEntity(
+                        recipeId = entity.remoteId,
+                        ingredientId = ingredientReference.referenceId,
+                        instructionId = instruction.id,
+                    )
+                }
+            }
+            storage.saveRecipeInfo(entity, ingredients, instructions, ingredientToInstruction)
         }.onFailure {
             logger.e(it) { "loadRecipeInfo: can't update full recipe info" }
         }

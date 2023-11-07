@@ -5,6 +5,7 @@ import androidx.room.withTransaction
 import gq.kirmanak.mealient.database.AppDb
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientToInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
@@ -44,9 +45,10 @@ internal class RecipeStorageImpl @Inject constructor(
     override suspend fun saveRecipeInfo(
         recipe: RecipeEntity,
         ingredients: List<RecipeIngredientEntity>,
-        instructions: List<RecipeInstructionEntity>
+        instructions: List<RecipeInstructionEntity>,
+        ingredientToInstruction: List<RecipeIngredientToInstructionEntity>,
     ) {
-        logger.v { "saveRecipeInfo() called with: recipe = $recipe" }
+        logger.v { "saveRecipeInfo() called with: recipe = $recipe, ingredients = $ingredients, instructions = $instructions, ingredientToInstructions = $ingredientToInstruction" }
         db.withTransaction {
             recipeDao.insertRecipe(recipe)
 
@@ -55,6 +57,9 @@ internal class RecipeStorageImpl @Inject constructor(
 
             recipeDao.deleteRecipeInstructions(recipe.remoteId)
             recipeDao.insertRecipeInstructions(instructions)
+
+            recipeDao.deleteRecipeIngredientToInstructions(recipe.remoteId)
+            recipeDao.insertIngredientToInstructionEntities(ingredientToInstruction)
         }
     }
 

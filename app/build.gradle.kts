@@ -11,6 +11,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.ksp)
     alias(libs.plugins.appsweep)
+    id("gq.kirmanak.mealient.compose.app")
 }
 
 android {
@@ -134,6 +135,9 @@ dependencies {
     implementation(libs.kirich1409.viewBinding)
 
     implementation(libs.androidx.datastore.preferences)
+
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
 

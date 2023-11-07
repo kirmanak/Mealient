@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.database.recipe
 import androidx.paging.PagingSource
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientToInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
@@ -19,7 +20,8 @@ interface RecipeStorage {
     suspend fun saveRecipeInfo(
         recipe: RecipeEntity,
         ingredients: List<RecipeIngredientEntity>,
-        instructions: List<RecipeInstructionEntity>
+        instructions: List<RecipeInstructionEntity>,
+        ingredientToInstruction: List<RecipeIngredientToInstructionEntity>,
     )
 
     suspend fun queryRecipeInfo(recipeId: String): RecipeWithSummaryAndIngredientsAndInstructions?

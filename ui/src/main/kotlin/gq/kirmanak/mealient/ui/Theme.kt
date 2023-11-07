@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient
+package gq.kirmanak.mealient.ui
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -39,6 +39,8 @@ fun AppTheme(
 object Dimens {
 
     val Small = 8.dp
+
+    val Intermediate = 12.dp
 
     val Medium = 16.dp
 

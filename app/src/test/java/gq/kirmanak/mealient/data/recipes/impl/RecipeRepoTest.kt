@@ -10,7 +10,9 @@ import gq.kirmanak.mealient.database.CAKE_RECIPE_ENTITY
 import gq.kirmanak.mealient.database.CAKE_RECIPE_SUMMARY_ENTITY
 import gq.kirmanak.mealient.database.CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY
 import gq.kirmanak.mealient.database.FULL_CAKE_INFO_ENTITY
+import gq.kirmanak.mealient.database.MIX_BREAD_RECIPE_INGREDIENT_INSTRUCTION_ENTITY
 import gq.kirmanak.mealient.database.MIX_CAKE_RECIPE_INSTRUCTION_ENTITY
+import gq.kirmanak.mealient.database.MIX_SUGAR_RECIPE_INGREDIENT_INSTRUCTION_ENTITY
 import gq.kirmanak.mealient.database.recipe.RecipeStorage
 import gq.kirmanak.mealient.datasource.NetworkError.Unauthorized
 import gq.kirmanak.mealient.datasource_test.CAKE_RECIPE_RESPONSE
@@ -78,7 +80,13 @@ class RecipeRepoTest : BaseUnitTest() {
                         CAKE_BREAD_RECIPE_INGREDIENT_ENTITY
                     )
                 ),
-                eq(listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY))
+                eq(listOf(MIX_CAKE_RECIPE_INSTRUCTION_ENTITY, BAKE_CAKE_RECIPE_INSTRUCTION_ENTITY)),
+                eq(
+                    listOf(
+                        MIX_SUGAR_RECIPE_INGREDIENT_INSTRUCTION_ENTITY,
+                        MIX_BREAD_RECIPE_INGREDIENT_INSTRUCTION_ENTITY
+                    )
+                ),
             )
         }
     }

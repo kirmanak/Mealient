@@ -20,12 +20,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import gq.kirmanak.mealient.AppTheme
-import gq.kirmanak.mealient.Dimens
 import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
+import gq.kirmanak.mealient.ui.AppTheme
+import gq.kirmanak.mealient.ui.Dimens
 
 @RootNavGraph(start = true)
 @Destination(start = true)

@@ -1,6 +1,8 @@
 package gq.kirmanak.mealient
 
 import android.app.Application
+import coil.Coil
+import coil.ImageLoader
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import gq.kirmanak.mealient.architecture.configuration.BuildConfiguration
@@ -24,6 +26,9 @@ class App : Application() {
     @Inject
     lateinit var migrationDetector: MigrationDetector
 
+    @Inject
+    lateinit var imageLoader: ImageLoader
+
     private val appCoroutineScope = CoroutineScope(Dispatchers.Main + Job())
 
     override fun onCreate() {
@@ -31,5 +36,6 @@ class App : Application() {
         logger.v { "onCreate() called" }
         DynamicColors.applyToActivitiesIfAvailable(this)
         appCoroutineScope.launch { migrationDetector.executeMigrations() }
+        Coil.setImageLoader(imageLoader)
     }
 }

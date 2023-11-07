@@ -20,4 +20,9 @@ data class RecipeWithSummaryAndIngredientsAndInstructions(
         entityColumn = "recipe_id"
     )
     val recipeInstructions: List<RecipeInstructionEntity>,
+    @Relation(
+        parentColumn = "recipe_id",
+        entityColumn = "recipe_id"
+    )
+    val recipeIngredientToInstructionEntity: List<RecipeIngredientToInstructionEntity>,
 )

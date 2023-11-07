@@ -5,12 +5,13 @@ import gq.kirmanak.mealient.database.recipe.RecipeDao
 import gq.kirmanak.mealient.database.recipe.entity.*
 
 @Database(
-    version = 10,
+    version = 11,
     entities = [
         RecipeSummaryEntity::class,
         RecipeEntity::class,
         RecipeIngredientEntity::class,
         RecipeInstructionEntity::class,
+        RecipeIngredientToInstructionEntity::class,
     ]
 )
 @TypeConverters(RoomTypeConverters::class)

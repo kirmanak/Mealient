@@ -10,10 +10,10 @@ class RecipeImageUrlProviderImpl @Inject constructor(
     private val logger: Logger,
 ) : RecipeImageUrlProvider {
 
-    override suspend fun generateImageUrl(slug: String?): String? {
-        logger.v { "generateImageUrl() called with: slug = $slug" }
-        slug?.takeUnless { it.isBlank() } ?: return null
-        val imagePath = IMAGE_PATH_FORMAT.format(slug)
+    override suspend fun generateImageUrl(imageId: String?): String? {
+        logger.v { "generateImageUrl() called with: slug = $imageId" }
+        imageId?.takeUnless { it.isBlank() } ?: return null
+        val imagePath = IMAGE_PATH_FORMAT.format(imageId)
         val baseUrl = serverInfoRepo.getUrl()?.takeUnless { it.isEmpty() }
         val result = baseUrl
             ?.takeUnless { it.isBlank() }

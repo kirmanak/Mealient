@@ -23,5 +23,9 @@ gradlePlugin {
             id = "gq.kirmanak.mealient.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
+        register("appCompose") {
+            id = "gq.kirmanak.mealient.compose.app"
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
     }
 }
