@@ -17,6 +17,8 @@ import gq.kirmanak.mealient.ui.Dimens
 fun RecipeScreen(
     uiState: RecipeInfoUiState,
 ) {
+    KeepScreenOn()
+
     Column(
         modifier = Modifier
             .verticalScroll(
