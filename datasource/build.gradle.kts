@@ -8,6 +8,7 @@ plugins {
 android {
     defaultConfig {
         buildConfigField("Boolean", "LOG_NETWORK", "false")
+        consumerProguardFiles("consumer-proguard-rules.pro")
     }
     namespace = "gq.kirmanak.mealient.datasource"
 }
