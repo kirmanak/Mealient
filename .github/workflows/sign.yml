@@ -32,6 +32,9 @@ jobs:
           MEALIENT_KEY_PASSWORD: ${{ secrets.MEALIENT_KEY_PASSWORD }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           APPSWEEP_API_KEY: ${{ secrets.APPSWEEP_API_KEY }}
+          ACRA_HOST: ${{ secrets.ACRA_HOST }}
+          ACRA_LOGIN: ${{ secrets.ACRA_LOGIN }}
+          ACRA_PASSWORD: ${{ secrets.ACRA_PASSWORD }}
         run: |
           echo "$MEALIENT_KEY_STORE" | base64 -d > app/keystore.jks
           echo "storeFile=keystore.jks" > keystore.properties
