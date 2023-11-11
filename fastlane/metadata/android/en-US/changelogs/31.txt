@@ -1,0 +1,1 @@
+Ingredients that are linked to a specific recipe step are shown under that step.

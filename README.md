@@ -30,7 +30,7 @@ information about each of the recipes. Moreover, you can create a recipe from th
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/24299495/203381442-0359cee1-e8a6-4d1f-bdff-eceb1dc31917.png" width="236" height="500" /> <img src="https://user-images.githubusercontent.com/24299495/203381431-51cb57aa-7a2b-4ada-8265-9d382bfae078.png" width="236" height="500" /> <img src="https://user-images.githubusercontent.com/24299495/203381424-358ec3b2-28d9-4237-985d-49be05ef3c7e.png" width="236" height="500" /> <img src="https://user-images.githubusercontent.com/24299495/202909845-d857259f-90f9-4988-beff-038cd784215d.png" width="236" height="500" />
+<img src="https://github.com/kirmanak/Mealient/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png?raw=true" width="236" height="500" /> <img src="https://github.com/kirmanak/Mealient/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png?raw=true" width="236" height="500" /> <img src="https://github.com/kirmanak/Mealient/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png?raw=true" width="236" height="500" /> <img src="https://github.com/kirmanak/Mealient/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png?raw=true" width="236" height="500" /> <img src="https://github.com/kirmanak/Mealient/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/5.png?raw=true" width="236" height="500" /> <img src="https://github.com/kirmanak/Mealient/blob/master/fastlane/metadata/android/en-US/images/phoneScreenshots/6.png?raw=true" width="236" height="500" />
 
 ## How to install
 
