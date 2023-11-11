@@ -22,6 +22,19 @@ android {
         testInstrumentationRunner = "gq.kirmanak.mealient.MealientTestRunner"
         testInstrumentationRunnerArguments += mapOf("clearPackageData" to "true")
         resourceConfigurations += listOf("en", "es", "ru", "fr", "nl", "pt", "de")
+
+        buildConfigField(
+            "String",
+            "ACRA_HOST",
+            System.getenv("ACRA_HOST")?.let { "\"$it\"" } ?: "\"\"")
+        buildConfigField(
+            "String",
+            "ACRA_LOGIN",
+            System.getenv("ACRA_LOGIN")?.let { "\"$it\"" } ?: "\"\"")
+        buildConfigField(
+            "String",
+            "ACRA_PASSWORD",
+            System.getenv("ACRA_PASSWORD")?.let { "\"$it\"" } ?: "\"\"")
     }
 
     signingConfigs {
@@ -138,6 +151,9 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.coil.compose)
+
+    implementation(libs.acra.http)
+    implementation(libs.acra.scheduler)
 
     testImplementation(libs.junit)
 
