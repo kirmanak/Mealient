@@ -41,7 +41,7 @@ class ShareRecipeViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when repo returns result expect saveResult to show progress before result`() = runTest {
-        val deferredActual = async(Dispatchers.Default) {
+        val deferredActual = async(Dispatchers.Unconfined) {
             subject.saveResult.asFlow().take(3).toList(mutableListOf())
         }
         coEvery { shareRecipeRepo.saveRecipeByURL(any()) } returns "result"
