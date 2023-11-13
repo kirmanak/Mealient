@@ -25,8 +25,9 @@ recipe data is stored locally and can be accessed without the Internet connectio
 ## Status
 
 Current version is a very early alpha which supports a small subset of the Mealie capabilities.
-It supports both API of older Mealie 0.5.6 and newer 1.0.0. Displays the list of recipes,
-information about each of the recipes. Moreover, you can create a recipe from the app!
+Displays the list of recipes, some information about each of the recipes, even recipe creation is
+available!
+The list of shopping lists is also available, each shopping list can be viewed and modified.
 
 ## Screenshots
 
@@ -37,7 +38,7 @@ information about each of the recipes. Moreover, you can create a recipe from th
 There are three ways:
 1. Install it with Google Play using the badge above.
 2. Install it with F-droid using the badge above.
-3. Download the latest apk from the releases page
+3. Download the latest apk from the releases page.
 
 ## Contribution
 
