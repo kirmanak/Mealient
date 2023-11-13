@@ -1,0 +1,1 @@
+Display notes under each recipe ingredient.

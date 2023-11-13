@@ -92,11 +92,21 @@ private fun IngredientListItem(
             onCheckedChange = { isChecked = it },
         )
 
-        Text(
-            text = item.display,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
+        Column {
+            Text(
+                text = item.display,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+
+            if (item.note.isNotBlank()) {
+                Text(
+                    text = item.note,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
     }
 }
 
