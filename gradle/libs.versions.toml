@@ -93,8 +93,6 @@ hiltNavigationCompose = "1.0.0"
 ktor = "2.3.5"
 # https://github.com/coil-kt/coil/releases
 coil = "2.5.0"
-# https://github.com/ACRA/acra/releases
-acra = "5.11.3"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -208,9 +206,6 @@ ktor-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", versi
 
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-
-acra-http = { group = "ch.acra", name = "acra-http", version.ref = "acra" }
-acra-scheduler = { group = "ch.acra", name = "acra-advanced-scheduler", version.ref = "acra" }
 
 [plugins]
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
