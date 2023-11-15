@@ -1,14 +1,12 @@
 package gq.kirmanak.mealient
 
 import android.app.Application
-import android.content.Context
 import coil.Coil
 import coil.ImageLoader
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import gq.kirmanak.mealient.architecture.configuration.BuildConfiguration
 import gq.kirmanak.mealient.data.migration.MigrationDetector
-import gq.kirmanak.mealient.extensions.setupCrashReporting
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,11 +30,6 @@ class App : Application() {
     lateinit var imageLoader: ImageLoader
 
     private val appCoroutineScope = CoroutineScope(Dispatchers.Main + Job())
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-        setupCrashReporting()
-    }
 
     override fun onCreate() {
         super.onCreate()
