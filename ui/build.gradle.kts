@@ -21,6 +21,8 @@ dependencies {
     implementation(libs.android.material.material)
     implementation(libs.androidx.compose.material)
 
+    implementation(libs.androidx.paging.compose)
+
     testImplementation(libs.androidx.test.junit)
 
     testImplementation(libs.google.truth)
