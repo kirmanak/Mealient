@@ -21,8 +21,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -39,18 +39,20 @@ class RecipesListViewModel @Inject constructor(
     val pagingData: Flow<PagingData<RecipeSummaryEntity>> = recipeRepo.createPager().flow
         .cachedIn(viewModelScope)
 
-    val pagingDataRecipeState: Flow<PagingData<RecipeListItemState>> = pagingData.map { data ->
-        data.map { item ->
-            val imageUrl = recipeImageUrlProvider.generateImageUrl(item.imageId)
-            RecipeListItemState(
-                imageUrl = imageUrl,
-                entity = item,
-            )
-        }
-    }
-
     val showFavoriteIcon: StateFlow<Boolean> = authRepo.isAuthorizedFlow
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    val pagingDataRecipeState: Flow<PagingData<RecipeListItemState>> =
+        pagingData.combine(showFavoriteIcon) { data, showFavorite ->
+            data.map { item ->
+                val imageUrl = recipeImageUrlProvider.generateImageUrl(item.imageId)
+                RecipeListItemState(
+                    imageUrl = imageUrl,
+                    showFavoriteIcon = showFavorite,
+                    entity = item,
+                )
+            }
+        }
 
     private val _deleteRecipeResult = MutableSharedFlow<Result<Unit>>(
         replay = 0,

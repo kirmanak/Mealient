@@ -4,5 +4,6 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 
 data class RecipeListItemState(
     val imageUrl: String?,
+    val showFavoriteIcon: Boolean,
     val entity: RecipeSummaryEntity,
 )
