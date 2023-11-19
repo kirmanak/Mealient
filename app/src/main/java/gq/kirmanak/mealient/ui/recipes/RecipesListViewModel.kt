@@ -6,12 +6,15 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.architecture.valueUpdatesOnly
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.ui.recipes.list.RecipeListItemState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,6 +22,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -27,12 +31,23 @@ import javax.inject.Inject
 @HiltViewModel
 class RecipesListViewModel @Inject constructor(
     private val recipeRepo: RecipeRepo,
-    authRepo: AuthRepo,
     private val logger: Logger,
+    private val recipeImageUrlProvider: RecipeImageUrlProvider,
+    authRepo: AuthRepo,
 ) : ViewModel() {
 
     val pagingData: Flow<PagingData<RecipeSummaryEntity>> = recipeRepo.createPager().flow
         .cachedIn(viewModelScope)
+
+    val pagingDataRecipeState: Flow<PagingData<RecipeListItemState>> = pagingData.map { data ->
+        data.map { item ->
+            val imageUrl = recipeImageUrlProvider.generateImageUrl(item.imageId)
+            RecipeListItemState(
+                imageUrl = imageUrl,
+                entity = item,
+            )
+        }
+    }
 
     val showFavoriteIcon: StateFlow<Boolean> = authRepo.isAuthorizedFlow
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
