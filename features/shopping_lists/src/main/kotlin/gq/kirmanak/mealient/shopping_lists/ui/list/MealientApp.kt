@@ -1,8 +1,9 @@
-package gq.kirmanak.mealient.shopping_lists.ui
+package gq.kirmanak.mealient.shopping_lists.ui.list
 
 import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.rememberNavHostEngine
+import gq.kirmanak.mealient.shopping_lists.ui.NavGraphs
 
 @Composable
 fun MealientApp() {

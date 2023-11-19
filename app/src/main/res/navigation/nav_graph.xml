@@ -69,7 +69,7 @@
 
     <fragment
         android:id="@+id/shoppingListsFragment"
-        android:name="gq.kirmanak.mealient.shopping_lists.ui.ShoppingListsFragment" />
+        android:name="gq.kirmanak.mealient.shopping_lists.ui.list.ShoppingListsFragment" />
 
     <action
         android:id="@+id/action_global_authenticationFragment"

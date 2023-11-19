@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.ui
+package gq.kirmanak.mealient.shopping_lists.ui.details
 
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse

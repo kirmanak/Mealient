@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.ui
+package gq.kirmanak.mealient.shopping_lists.ui.details
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background

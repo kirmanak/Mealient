@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.ui
+package gq.kirmanak.mealient.shopping_lists.ui.list
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
