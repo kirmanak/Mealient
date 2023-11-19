@@ -87,8 +87,8 @@ accompanistVersion = "0.32.0"
 materialCompose = "1.5.4"
 # https://github.com/raamcosta/compose-destinations
 composeDestinations = "1.9.54"
-# https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
-hiltNavigationCompose = "1.0.0"
+# https://developer.android.com/jetpack/androidx/releases/hilt
+androidxHilt = "1.1.0"
 # https://github.com/ktorio/ktor/releases
 ktor = "2.3.5"
 # https://github.com/coil-kt/coil/releases
@@ -118,7 +118,7 @@ google-dagger-hiltCompiler = { group = "com.google.dagger", name = "hilt-compile
 google-dagger-hiltAndroidCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 google-dagger-hiltAndroidTesting = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 
-androidx-hilt-navigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+androidx-hilt-navigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHilt" }
 
 google-protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
 google-protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
@@ -148,6 +148,7 @@ androidx-shareTarget = { group = "androidx.sharetarget", name = "sharetarget", v
 
 androidx-paging-runtimeKtx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 androidx-paging-commonKtx = { group = "androidx.paging", name = "paging-common-ktx", version.ref = "paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 androidx-lifecycle-livedataKtx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }

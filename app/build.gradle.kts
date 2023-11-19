@@ -120,6 +120,7 @@ dependencies {
     androidTestImplementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.androidx.paging.runtimeKtx)
+    implementation(libs.androidx.paging.compose)
     testImplementation(libs.androidx.paging.commonKtx)
 
     implementation(libs.jetbrains.kotlinx.datetime)
