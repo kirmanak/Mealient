@@ -15,9 +15,9 @@ import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 @Composable
 fun EmptyListError(
     text: String,
-    retryButtonText: String,
-    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
+    onRetry: () -> Unit = {},
+    retryButtonText: String? = null,
 ) {
     Box(
         modifier = modifier,
@@ -30,11 +30,13 @@ fun EmptyListError(
                 modifier = Modifier.padding(top = Dimens.Medium),
                 text = text,
             )
-            Button(
-                modifier = Modifier.padding(top = Dimens.Medium),
-                onClick = onRetry,
-            ) {
-                Text(text = retryButtonText)
+            if (!retryButtonText.isNullOrBlank()) {
+                Button(
+                    modifier = Modifier.padding(top = Dimens.Medium),
+                    onClick = onRetry,
+                ) {
+                    Text(text = retryButtonText)
+                }
             }
         }
     }
