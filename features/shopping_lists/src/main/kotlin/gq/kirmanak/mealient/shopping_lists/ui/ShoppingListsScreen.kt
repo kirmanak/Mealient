@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -26,6 +25,7 @@ import gq.kirmanak.mealient.shopping_lists.ui.composables.LazyColumnWithLoadingS
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
 @RootNavGraph(start = true)
 @Destination(start = true)
@@ -58,7 +58,7 @@ fun ShoppingListsScreen(
 }
 
 @Composable
-@Preview
+@ColorSchemePreview
 private fun PreviewShoppingListCard() {
     AppTheme {
         ShoppingListCard(

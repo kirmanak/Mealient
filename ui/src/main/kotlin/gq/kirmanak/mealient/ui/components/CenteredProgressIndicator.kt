@@ -6,8 +6,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import gq.kirmanak.mealient.ui.AppTheme
+import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
 @Composable
 fun CenteredProgressIndicator(
@@ -21,7 +21,7 @@ fun CenteredProgressIndicator(
     }
 }
 
-@Preview
+@ColorSchemePreview
 @Composable
 fun PreviewCenteredProgressIndicator() {
     AppTheme {

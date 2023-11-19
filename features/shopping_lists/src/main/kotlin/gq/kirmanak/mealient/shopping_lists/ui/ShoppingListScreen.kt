@@ -49,7 +49,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
@@ -62,6 +61,7 @@ import gq.kirmanak.mealient.shopping_lists.util.data
 import gq.kirmanak.mealient.shopping_lists.util.map
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 import kotlinx.coroutines.android.awaitFrame
 import java.text.DecimalFormat
 
@@ -439,7 +439,7 @@ class ShoppingListItemEditorState(
     var unitsExpanded: Boolean by mutableStateOf(false)
 }
 
-@Preview
+@ColorSchemePreview
 @Composable
 fun ShoppingListItemEditorPreview() {
     AppTheme {
@@ -453,7 +453,7 @@ fun ShoppingListItemEditorPreview() {
     }
 }
 
-@Preview
+@ColorSchemePreview
 @Composable
 fun ShoppingListItemEditorNonFoodPreview() {
     AppTheme {
@@ -567,7 +567,7 @@ fun ShoppingListItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
+@ColorSchemePreview
 fun PreviewShoppingListItemChecked() {
     AppTheme {
         ShoppingListItem(
@@ -579,7 +579,7 @@ fun PreviewShoppingListItemChecked() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
+@ColorSchemePreview
 fun PreviewShoppingListItemUnchecked() {
     AppTheme {
         ShoppingListItem(
@@ -591,7 +591,7 @@ fun PreviewShoppingListItemUnchecked() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
+@ColorSchemePreview
 fun PreviewShoppingListItemDismissed() {
     AppTheme {
         ShoppingListItem(
@@ -606,7 +606,7 @@ fun PreviewShoppingListItemDismissed() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
+@ColorSchemePreview
 fun PreviewShoppingListItemEditing() {
     AppTheme {
         ShoppingListItem(

@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
 @Composable
 fun EmptyListError(
@@ -44,7 +44,7 @@ fun EmptyListError(
 }
 
 @Composable
-@Preview
+@ColorSchemePreview
 fun PreviewEmptyListError() {
     AppTheme {
         EmptyListError(

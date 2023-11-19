@@ -18,11 +18,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
 @Composable
 internal fun IngredientsSection(
@@ -110,7 +110,7 @@ private fun IngredientListItem(
     }
 }
 
-@Preview
+@ColorSchemePreview
 @Composable
 private fun IngredientsSectionPreview() {
     AppTheme {
