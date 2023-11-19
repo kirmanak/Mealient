@@ -21,6 +21,7 @@ import gq.kirmanak.mealient.shopping_lists.util.data
 import gq.kirmanak.mealient.shopping_lists.util.error
 import gq.kirmanak.mealient.shopping_lists.util.isLoading
 import gq.kirmanak.mealient.shopping_lists.util.isRefreshing
+import gq.kirmanak.mealient.ui.components.CenteredProgressIndicator
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
