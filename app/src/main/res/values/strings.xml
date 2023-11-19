@@ -45,7 +45,7 @@
 	<string name="fragment_add_recipe_save_success">Saved recipe successfully</string>
 	<string name="fragment_add_recipe_clear_button">Clear</string>
 	<string name="fragment_base_url_url_input_helper_text">Example: demo.mealie.io</string>
-	<string name="fragment_authentication_email_input_helper_text">Example: changeme@email.com</string>
+	<string name="fragment_authentication_email_input_helper_text">Example: changeme@example.com</string>
 	<string name="fragment_authentication_password_input_helper_text">Example: demo</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Last page loaded</string>
 	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load error: unauthorized.">Load error: %1$s.</string>
