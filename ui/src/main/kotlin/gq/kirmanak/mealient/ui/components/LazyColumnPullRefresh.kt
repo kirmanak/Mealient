@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.ui.composables
+package gq.kirmanak.mealient.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

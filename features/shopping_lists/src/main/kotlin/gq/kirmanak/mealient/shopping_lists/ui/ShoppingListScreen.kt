@@ -56,11 +56,13 @@ import gq.kirmanak.mealient.datasource.models.GetShoppingListItemRecipeReference
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 import gq.kirmanak.mealient.shopping_list.R
-import gq.kirmanak.mealient.shopping_lists.ui.composables.LazyColumnWithLoadingState
+import gq.kirmanak.mealient.shopping_lists.ui.composables.getErrorMessage
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 import gq.kirmanak.mealient.ui.util.data
+import gq.kirmanak.mealient.ui.util.error
 import gq.kirmanak.mealient.ui.util.map
 import kotlinx.coroutines.android.awaitFrame
 import java.text.DecimalFormat
@@ -77,7 +79,7 @@ data class ShoppingListNavArgs(
 internal fun ShoppingListScreen(
     shoppingListViewModel: ShoppingListViewModel = hiltViewModel(),
 ) {
-    val loadingState = shoppingListViewModel.loadingState.collectAsState().value
+    val loadingState by shoppingListViewModel.loadingState.collectAsState()
     val defaultEmptyListError = stringResource(
         R.string.shopping_list_screen_empty_list,
         loadingState.data?.name.orEmpty()
@@ -85,6 +87,8 @@ internal fun ShoppingListScreen(
 
     LazyColumnWithLoadingState(
         loadingState = loadingState.map { it.items },
+        emptyListError = loadingState.error?.let { getErrorMessage(it) } ?: defaultEmptyListError,
+        retryButtonText = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh),
         contentPadding = PaddingValues(
             start = Dimens.Medium,
             end = Dimens.Medium,
@@ -92,10 +96,9 @@ internal fun ShoppingListScreen(
             bottom = Dimens.Large * 4,
         ),
         verticalArrangement = Arrangement.spacedBy(Dimens.Medium),
-        defaultEmptyListError = defaultEmptyListError,
-        errorToShowInSnackbar = shoppingListViewModel.errorToShowInSnackbar,
-        onRefresh = shoppingListViewModel::refreshShoppingList,
+        snackbarText = shoppingListViewModel.errorToShowInSnackbar?.let { getErrorMessage(error = it) },
         onSnackbarShown = shoppingListViewModel::onSnackbarShown,
+        onRefresh = shoppingListViewModel::refreshShoppingList,
         floatingActionButton = {
             FloatingActionButton(onClick = shoppingListViewModel::onAddItemClicked) {
                 Icon(
@@ -120,7 +123,12 @@ internal fun ShoppingListScreen(
                     ShoppingListItemEditor(
                         state = state,
                         onEditCancelled = { shoppingListViewModel.onEditCancel(itemState) },
-                        onEditConfirmed = { shoppingListViewModel.onEditConfirm(itemState, state) }
+                        onEditConfirmed = {
+                            shoppingListViewModel.onEditConfirm(
+                                itemState,
+                                state
+                            )
+                        }
                     )
                 } else {
                     ShoppingListItem(

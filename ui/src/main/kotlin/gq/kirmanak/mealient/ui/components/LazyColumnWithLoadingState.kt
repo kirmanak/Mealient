@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.ui.composables
+package gq.kirmanak.mealient.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,11 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import gq.kirmanak.mealient.ui.components.CenteredProgressIndicator
 import gq.kirmanak.mealient.ui.util.LoadingState
 import gq.kirmanak.mealient.ui.util.LoadingStateNoData
 import gq.kirmanak.mealient.ui.util.data
-import gq.kirmanak.mealient.ui.util.error
 import gq.kirmanak.mealient.ui.util.isLoading
 import gq.kirmanak.mealient.ui.util.isRefreshing
 
@@ -27,11 +25,12 @@ import gq.kirmanak.mealient.ui.util.isRefreshing
 @Composable
 fun <T> LazyColumnWithLoadingState(
     loadingState: LoadingState<List<T>>,
-    defaultEmptyListError: String,
+    emptyListError: String,
+    retryButtonText: String,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-    errorToShowInSnackbar: Throwable? = null,
+    snackbarText: String?,
     onSnackbarShown: () -> Unit = {},
     onRefresh: () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
@@ -63,9 +62,9 @@ fun <T> LazyColumnWithLoadingState(
 
             !loadingState.isLoading && list.isEmpty() -> {
                 EmptyListError(
-                    loadError = loadingState.error,
+                    text = emptyListError,
+                    retryButtonText = retryButtonText,
                     onRetry = onRefresh,
-                    defaultError = defaultEmptyListError,
                     modifier = innerModifier,
                 )
             }
@@ -81,7 +80,7 @@ fun <T> LazyColumnWithLoadingState(
                 )
 
                 ErrorSnackbar(
-                    error = errorToShowInSnackbar,
+                    text = snackbarText,
                     snackbarHostState = snackbarHostState,
                     onSnackbarShown = onSnackbarShown,
                 )

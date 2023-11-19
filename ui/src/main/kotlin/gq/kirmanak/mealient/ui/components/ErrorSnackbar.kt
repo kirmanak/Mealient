@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.ui.composables
+package gq.kirmanak.mealient.ui.components
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -8,16 +8,15 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ErrorSnackbar(
-    error: Throwable?,
+    text: String?,
     snackbarHostState: SnackbarHostState,
     onSnackbarShown: () -> Unit,
 ) {
-    if (error == null) {
+    if (text.isNullOrBlank()) {
         snackbarHostState.currentSnackbarData?.dismiss()
         return
     }
 
-    val text = getErrorMessage(error = error)
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(snackbarHostState) {

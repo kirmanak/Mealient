@@ -19,6 +19,7 @@ dependencies {
     testImplementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.android.material.material)
+    implementation(libs.androidx.compose.material)
 
     testImplementation(libs.androidx.test.junit)
 
