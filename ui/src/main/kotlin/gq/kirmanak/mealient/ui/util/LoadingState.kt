@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.util
+package gq.kirmanak.mealient.ui.util
 
 sealed class LoadingState<out T>
 

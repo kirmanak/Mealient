@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.shopping_lists.util
+package gq.kirmanak.mealient.ui.util
 
 import kotlinx.coroutines.flow.StateFlow
 

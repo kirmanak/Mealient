@@ -15,11 +15,11 @@ import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsAuthRepo
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
-import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactory
-import gq.kirmanak.mealient.shopping_lists.util.LoadingState
-import gq.kirmanak.mealient.shopping_lists.util.LoadingStateNoData
-import gq.kirmanak.mealient.shopping_lists.util.data
-import gq.kirmanak.mealient.shopping_lists.util.map
+import gq.kirmanak.mealient.ui.util.LoadingHelperFactory
+import gq.kirmanak.mealient.ui.util.LoadingState
+import gq.kirmanak.mealient.ui.util.LoadingStateNoData
+import gq.kirmanak.mealient.ui.util.data
+import gq.kirmanak.mealient.ui.util.map
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -79,7 +79,7 @@ internal class ShoppingListViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadShoppingListData(): ShoppingListData = coroutineScope {
+    private suspend fun loadShoppingListData(): Result<ShoppingListData> = coroutineScope {
         val foodsDeferred = async {
             runCatchingExceptCancel {
                 shoppingListsRepo.getFoods()
@@ -93,14 +93,18 @@ internal class ShoppingListViewModel @Inject constructor(
         }
 
         val shoppingListDeferred = async {
-            shoppingListsRepo.getShoppingList(args.shoppingListId)
+            runCatchingExceptCancel {
+                shoppingListsRepo.getShoppingList(args.shoppingListId)
+            }
         }
 
-        ShoppingListData(
-            foods = foodsDeferred.await(),
-            units = unitsDeferred.await(),
-            shoppingList = shoppingListDeferred.await(),
-        )
+        shoppingListDeferred.await().map {
+            ShoppingListData(
+                foods = foodsDeferred.await(),
+                units = unitsDeferred.await(),
+                shoppingList = it
+            )
+        }
     }
 
     private suspend fun doRefresh() {

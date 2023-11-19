@@ -15,13 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import gq.kirmanak.mealient.shopping_lists.util.LoadingState
-import gq.kirmanak.mealient.shopping_lists.util.LoadingStateNoData
-import gq.kirmanak.mealient.shopping_lists.util.data
-import gq.kirmanak.mealient.shopping_lists.util.error
-import gq.kirmanak.mealient.shopping_lists.util.isLoading
-import gq.kirmanak.mealient.shopping_lists.util.isRefreshing
 import gq.kirmanak.mealient.ui.components.CenteredProgressIndicator
+import gq.kirmanak.mealient.ui.util.LoadingState
+import gq.kirmanak.mealient.ui.util.LoadingStateNoData
+import gq.kirmanak.mealient.ui.util.data
+import gq.kirmanak.mealient.ui.util.error
+import gq.kirmanak.mealient.ui.util.isLoading
+import gq.kirmanak.mealient.ui.util.isRefreshing
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

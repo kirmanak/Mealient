@@ -8,8 +8,6 @@ import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSource
 import gq.kirmanak.mealient.shopping_lists.network.ShoppingListsDataSourceImpl
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepoImpl
-import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactory
-import gq.kirmanak.mealient.shopping_lists.util.LoadingHelperFactoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -20,7 +18,4 @@ interface ShoppingListsModule {
 
     @Binds
     fun bindShoppingListsRepo(impl: ShoppingListsRepoImpl): ShoppingListsRepo
-
-    @Binds
-    fun bindLoadingHelperFactory(impl: LoadingHelperFactoryImpl): LoadingHelperFactory
 }

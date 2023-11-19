@@ -1,14 +1,13 @@
-package gq.kirmanak.mealient.shopping_lists.util
+package gq.kirmanak.mealient.ui.util
 
-import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-class LoadingHelperImpl<T>(
+internal class LoadingHelperImpl<T>(
     private val logger: Logger,
-    private val fetch: suspend () -> T,
+    private val fetch: suspend () -> Result<T>,
 ) : LoadingHelper<T> {
 
     private val _loadingState = MutableStateFlow<LoadingState<T>>(LoadingStateNoData.InitialLoad)
@@ -22,7 +21,7 @@ class LoadingHelperImpl<T>(
                 is LoadingStateNoData -> LoadingStateNoData.InitialLoad
             }
         }
-        val result = runCatchingExceptCancel { fetch() }
+        val result = fetch()
         _loadingState.update { currentState ->
             result.fold(
                 onSuccess = { data ->

@@ -57,11 +57,11 @@ import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.LazyColumnWithLoadingState
-import gq.kirmanak.mealient.shopping_lists.util.data
-import gq.kirmanak.mealient.shopping_lists.util.map
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
+import gq.kirmanak.mealient.ui.util.data
+import gq.kirmanak.mealient.ui.util.map
 import kotlinx.coroutines.android.awaitFrame
 import java.text.DecimalFormat
 

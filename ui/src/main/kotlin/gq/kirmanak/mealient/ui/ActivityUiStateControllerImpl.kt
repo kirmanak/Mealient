@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ActivityUiStateControllerImpl @Inject constructor() : ActivityUiStateController {
+internal class ActivityUiStateControllerImpl @Inject constructor() : ActivityUiStateController {
     private val uiState = MutableStateFlow(ActivityUiState())
 
     override fun updateUiState(update: (ActivityUiState) -> ActivityUiState) {
