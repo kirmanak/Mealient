@@ -13,7 +13,6 @@ import gq.kirmanak.mealient.extensions.hideKeyboard
 import gq.kirmanak.mealient.ui.BaseComposeFragment
 import gq.kirmanak.mealient.ui.CheckableMenuItem
 import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
-import gq.kirmanak.mealient.ui.recipes.RecipesListViewModel
 
 @AndroidEntryPoint
 internal class RecipesListFragment : BaseComposeFragment() {

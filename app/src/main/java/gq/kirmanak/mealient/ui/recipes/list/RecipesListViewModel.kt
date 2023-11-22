@@ -1,4 +1,4 @@
-package gq.kirmanak.mealient.ui.recipes
+package gq.kirmanak.mealient.ui.recipes.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -14,8 +14,6 @@ import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.ui.recipes.list.RecipeListItemState
-import gq.kirmanak.mealient.ui.recipes.list.RecipeListSnackbar
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -7,6 +7,7 @@ import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
 import gq.kirmanak.mealient.database.CAKE_RECIPE_SUMMARY_ENTITY
 import gq.kirmanak.mealient.test.BaseUnitTest
+import gq.kirmanak.mealient.ui.recipes.list.RecipesListViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
