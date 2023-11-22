@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.ui.recipes
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -8,6 +9,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.architecture.valueUpdatesOnly
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
@@ -18,9 +20,11 @@ import gq.kirmanak.mealient.ui.recipes.list.RecipeListItemState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -30,6 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipesListViewModel @Inject constructor(
+    private val application: Application,
     private val recipeRepo: RecipeRepo,
     private val logger: Logger,
     private val recipeImageUrlProvider: RecipeImageUrlProvider,
@@ -61,6 +66,9 @@ class RecipesListViewModel @Inject constructor(
     )
     val deleteRecipeResult: SharedFlow<Result<Unit>> get() = _deleteRecipeResult
 
+    private val _snackbarMessageState = MutableStateFlow<String?>(null)
+    val snackbarMessageState get() = _snackbarMessageState.asStateFlow()
+
     init {
         authRepo.isAuthorizedFlow.valueUpdatesOnly().onEach { hasAuthorized ->
             logger.v { "Authorization state changed to $hasAuthorized" }
@@ -77,12 +85,27 @@ class RecipesListViewModel @Inject constructor(
         }
     }
 
-    fun onFavoriteIconClick(recipeSummaryEntity: RecipeSummaryEntity) = liveData {
+    fun onFavoriteIconClick(recipeSummaryEntity: RecipeSummaryEntity) {
         logger.v { "onFavoriteIconClick() called with: recipeSummaryEntity = $recipeSummaryEntity" }
-        recipeRepo.updateIsRecipeFavorite(
-            recipeSlug = recipeSummaryEntity.slug,
-            isFavorite = recipeSummaryEntity.isFavorite.not(),
-        ).also { emit(it) }
+        viewModelScope.launch {
+            val result = recipeRepo.updateIsRecipeFavorite(
+                recipeSlug = recipeSummaryEntity.slug,
+                isFavorite = recipeSummaryEntity.isFavorite.not(),
+            )
+            _snackbarMessageState.value = result.fold(
+                onSuccess = { isFavorite ->
+                    val name = recipeSummaryEntity.name
+                    if (isFavorite) {
+                        application.getString(R.string.fragment_recipes_favorite_added, name)
+                    } else {
+                        application.getString(R.string.fragment_recipes_favorite_removed, name)
+                    }
+                },
+                onFailure = {
+                    application.getString(R.string.fragment_recipes_favorite_update_failed)
+                }
+            )
+        }
     }
 
     fun onDeleteConfirm(recipeSummaryEntity: RecipeSummaryEntity) {
@@ -91,6 +114,18 @@ class RecipesListViewModel @Inject constructor(
             val result = recipeRepo.deleteRecipe(recipeSummaryEntity)
             logger.d { "onDeleteConfirm: delete result is $result" }
             _deleteRecipeResult.emit(result)
+            _snackbarMessageState.value = result.fold(
+                onSuccess = {
+                    null
+                },
+                onFailure = {
+                    application.getString(R.string.fragment_recipes_delete_recipe_failed)
+                }
+            )
         }
+    }
+
+    fun onSnackbarShown() {
+        _snackbarMessageState.value = null
     }
 }
