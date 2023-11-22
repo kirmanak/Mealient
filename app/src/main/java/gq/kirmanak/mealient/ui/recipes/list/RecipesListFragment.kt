@@ -16,7 +16,7 @@ import gq.kirmanak.mealient.ui.activity.MainActivityViewModel
 import gq.kirmanak.mealient.ui.recipes.RecipesListViewModel
 
 @AndroidEntryPoint
-class RecipesListFragment : BaseComposeFragment() {
+internal class RecipesListFragment : BaseComposeFragment() {
 
     private val viewModel by viewModels<RecipesListViewModel>()
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
@@ -39,7 +39,7 @@ class RecipesListFragment : BaseComposeFragment() {
         onFavoriteClick = { onFavoriteButtonClicked(it.entity) },
         onItemClick = { onRecipeClicked(it.entity) },
         onSnackbarShown = { viewModel.onSnackbarShown() },
-        snackbarMessageState = viewModel.snackbarMessageState,
+        snackbarMessageState = viewModel.snackbarState,
     )
 
     private fun onFavoriteButtonClicked(recipe: RecipeSummaryEntity) {

@@ -18,12 +18,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.components.CenteredProgressIndicator
 import gq.kirmanak.mealient.ui.components.LazyPagingColumnPullRefresh
@@ -38,17 +40,17 @@ internal fun RecipesList(
     onFavoriteClick: (RecipeListItemState) -> Unit,
     onItemClick: (RecipeListItemState) -> Unit,
     onSnackbarShown: () -> Unit,
-    snackbarMessageState: StateFlow<String?>,
+    snackbarMessageState: StateFlow<RecipeListSnackbar?>,
 ) {
     val recipes: LazyPagingItems<RecipeListItemState> = recipesFlow.collectAsLazyPagingItems()
     val isRefreshing = recipes.loadState.refresh is LoadState.Loading
     var itemToDelete: RecipeListItemState? by remember { mutableStateOf(null) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val snackbarMessage: String? by snackbarMessageState.collectAsState()
+    val snackbar: RecipeListSnackbar? by snackbarMessageState.collectAsState()
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
-        snackbarMessage?.let { message ->
+        snackbar?.message?.let { message ->
             LaunchedEffect(message) {
                 snackbarHostState.showSnackbar(message)
                 onSnackbarShown()
@@ -97,6 +99,26 @@ internal fun RecipesList(
         }
     }
 }
+
+private val RecipeListSnackbar.message: String
+    @Composable
+    get() = when (this) {
+        is RecipeListSnackbar.FavoriteAdded -> {
+            stringResource(id = R.string.fragment_recipes_favorite_added, name)
+        }
+
+        is RecipeListSnackbar.FavoriteRemoved -> {
+            stringResource(id = R.string.fragment_recipes_favorite_removed, name)
+        }
+
+        is RecipeListSnackbar.FavoriteUpdateFailed -> {
+            stringResource(id = R.string.fragment_recipes_favorite_update_failed)
+        }
+
+        is RecipeListSnackbar.DeleteFailed -> {
+            stringResource(id = R.string.fragment_recipes_delete_recipe_failed)
+        }
+    }
 
 @Composable
 private fun RecipesListData(
