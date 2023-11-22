@@ -8,6 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
@@ -27,7 +29,9 @@ fun EmptyListError(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                modifier = Modifier.padding(top = Dimens.Medium),
+                modifier = Modifier
+                    .padding(top = Dimens.Medium)
+                    .semantics { testTag = "empty-list-error-text" },
                 text = text,
             )
             if (!retryButtonText.isNullOrBlank()) {

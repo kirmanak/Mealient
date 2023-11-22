@@ -194,6 +194,7 @@ io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 chuckerteam-chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
 
 kaspersky-kaspresso = { group = "com.kaspersky.android-components", name = "kaspresso", version.ref = "kaspresso" }
+kaspersky-kaspresso-compose = { group = "com.kaspersky.android-components", name = "kaspresso-compose-support", version.ref = "kaspresso" }
 
 composeDestinations-core = { group = "io.github.raamcosta.compose-destinations", name = "core", version.ref = "composeDestinations" }
 composeDestinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "composeDestinations" }

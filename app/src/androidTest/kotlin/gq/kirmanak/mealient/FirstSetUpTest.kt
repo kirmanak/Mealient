@@ -4,6 +4,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.screen.BaseUrlScreen
 import gq.kirmanak.mealient.screen.DisclaimerScreen
 import gq.kirmanak.mealient.screen.RecipesListScreen
+import io.github.kakaocup.kakao.common.utilities.getResourceString
 import org.junit.Before
 import org.junit.Test
 
@@ -65,10 +66,10 @@ class FirstSetUpTest : BaseTestCase() {
         }
 
         step("Check that empty list of recipes is shown") {
-            RecipesListScreen {
-                emptyListText {
-                    isVisible()
-                    hasText(R.string.fragment_recipes_list_no_recipes)
+            RecipesListScreen(mainActivityRule).apply {
+                errorText {
+                    assertIsDisplayed()
+                    assertTextEquals(getResourceString(R.string.fragment_recipes_load_failure_toast_no_reason))
                 }
             }
         }

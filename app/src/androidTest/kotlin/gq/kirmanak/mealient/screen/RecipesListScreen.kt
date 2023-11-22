@@ -1,13 +1,20 @@
 package gq.kirmanak.mealient.screen
 
-import com.kaspersky.kaspresso.screens.KScreen
-import gq.kirmanak.mealient.R
-import gq.kirmanak.mealient.ui.recipes.RecipesListFragment
-import io.github.kakaocup.kakao.text.KTextView
+import androidx.activity.ComponentActivity
+import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.printToLog
+import io.github.kakaocup.compose.node.element.ComposeScreen
+import io.github.kakaocup.compose.node.element.KNode
+import org.junit.rules.TestRule
 
-object RecipesListScreen : KScreen<RecipesListScreen>() {
-    override val layoutId: Int = R.layout.fragment_recipes_list
-    override val viewClass: Class<*> = RecipesListFragment::class.java
+class RecipesListScreen<R : TestRule, A : ComponentActivity>(
+    semanticsProvider: AndroidComposeTestRule<R, A>,
+) : ComposeScreen<RecipesListScreen<R, A>>(semanticsProvider) {
 
-    val emptyListText = KTextView { withId(R.id.empty_list_text) }
+    init {
+        semanticsProvider.onRoot(useUnmergedTree = true).printToLog("RecipesListScreen")
+    }
+
+    val errorText: KNode = child { hasTestTag("empty-list-error-text") }
 }

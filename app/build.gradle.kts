@@ -151,6 +151,7 @@ dependencies {
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.kaspersky.kaspresso)
+    androidTestImplementation(libs.kaspersky.kaspresso.compose)
     androidTestImplementation(libs.okhttp3.mockwebserver)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.rules)

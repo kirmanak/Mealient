@@ -41,7 +41,7 @@ private fun getErrorMessage(state: LoadState.Error): String {
         is NetworkError.Unauthorized -> stringResource(R.string.fragment_recipes_load_failure_toast_unauthorized)
         is NetworkError.NoServerConnection -> stringResource(R.string.fragment_recipes_load_failure_toast_no_connection)
         is NetworkError.NotMealie, is NetworkError.MalformedUrl -> stringResource(id = R.string.fragment_recipes_load_failure_toast_unexpected_response)
-        else -> state.error.message
+        else -> null
     }
     return if (reason == null) {
         stringResource(R.string.fragment_recipes_load_failure_toast_no_reason)
