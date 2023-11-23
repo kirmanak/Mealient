@@ -4,8 +4,10 @@ import androidx.lifecycle.asFlow
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
+import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
 import gq.kirmanak.mealient.database.CAKE_RECIPE_SUMMARY_ENTITY
 import gq.kirmanak.mealient.test.BaseUnitTest
+import gq.kirmanak.mealient.ui.recipes.list.RecipesListViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -31,6 +33,9 @@ class RecipesListViewModelTest : BaseUnitTest() {
 
     @MockK(relaxed = true)
     lateinit var recipeRepo: RecipeRepo
+
+    @MockK(relaxed = true)
+    lateinit var recipeImageUrlProvider: RecipeImageUrlProvider
 
     @Before
     override fun setUp() {
@@ -116,5 +121,10 @@ class RecipesListViewModelTest : BaseUnitTest() {
         return results
     }
 
-    private fun createSubject() = RecipesListViewModel(recipeRepo, authRepo, logger)
+    private fun createSubject() = RecipesListViewModel(
+        recipeRepo = recipeRepo,
+        logger = logger,
+        recipeImageUrlProvider = recipeImageUrlProvider,
+        authRepo = authRepo,
+    )
 }

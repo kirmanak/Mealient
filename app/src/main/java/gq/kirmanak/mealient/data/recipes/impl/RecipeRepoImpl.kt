@@ -28,7 +28,7 @@ class RecipeRepoImpl @Inject constructor(
         logger.v { "createPager() called" }
         val pagingConfig = PagingConfig(
             pageSize = LOAD_PAGE_SIZE,
-            enablePlaceholders = true,
+            enablePlaceholders = false,
             initialLoadSize = INITIAL_LOAD_PAGE_SIZE,
         )
         return Pager(

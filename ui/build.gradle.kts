@@ -11,12 +11,17 @@ android {
 }
 
 dependencies {
+    implementation(project(":logging"))
+
     implementation(libs.google.dagger.hiltAndroid)
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.android.material.material)
+    implementation(libs.androidx.compose.material)
+
+    implementation(libs.androidx.paging.compose)
 
     testImplementation(libs.androidx.test.junit)
 

@@ -4,11 +4,16 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import gq.kirmanak.mealient.ui.util.LoadingHelperFactory
+import gq.kirmanak.mealient.ui.util.LoadingHelperFactoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface UiModule {
+internal interface UiModule {
 
     @Binds
     fun bindActivityUiStateController(impl: ActivityUiStateControllerImpl): ActivityUiStateController
+
+    @Binds
+    fun bindLoadingHelperFactory(impl: LoadingHelperFactoryImpl): LoadingHelperFactory
 }

@@ -13,9 +13,7 @@
 
     <fragment
         android:id="@+id/recipesListFragment"
-        android:name="gq.kirmanak.mealient.ui.recipes.RecipesListFragment"
-        android:label="fragment_recipes"
-        tools:layout="@layout/fragment_recipes_list">
+        android:name="gq.kirmanak.mealient.ui.recipes.list.RecipesListFragment">
         <action
             android:id="@+id/action_recipesFragment_to_recipeInfoFragment"
             app:destination="@id/recipeInfoFragment"
@@ -69,7 +67,7 @@
 
     <fragment
         android:id="@+id/shoppingListsFragment"
-        android:name="gq.kirmanak.mealient.shopping_lists.ui.ShoppingListsFragment" />
+        android:name="gq.kirmanak.mealient.shopping_lists.ui.list.ShoppingListsFragment" />
 
     <action
         android:id="@+id/action_global_authenticationFragment"

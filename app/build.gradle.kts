@@ -120,17 +120,10 @@ dependencies {
     androidTestImplementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.androidx.paging.runtimeKtx)
+    implementation(libs.androidx.paging.compose)
     testImplementation(libs.androidx.paging.commonKtx)
 
     implementation(libs.jetbrains.kotlinx.datetime)
-
-    implementation(libs.bumptech.glide.glide)
-    implementation(libs.bumptech.glide.okhttp3)
-    implementation(libs.bumptech.glide.recyclerview) {
-        // Excludes the support library because it's already included by Glide.
-        isTransitive = false
-    }
-    ksp(libs.bumptech.glide.ksp)
 
     implementation(libs.kirich1409.viewBinding)
 
@@ -158,6 +151,7 @@ dependencies {
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.kaspersky.kaspresso)
+    androidTestImplementation(libs.kaspersky.kaspresso.compose)
     androidTestImplementation(libs.okhttp3.mockwebserver)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.rules)

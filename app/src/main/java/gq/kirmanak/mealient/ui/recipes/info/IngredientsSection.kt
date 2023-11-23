@@ -18,10 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
-import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
 
 @Composable
@@ -36,7 +34,6 @@ internal fun IngredientsSection(
                 .padding(horizontal = Dimens.Large),
             text = stringResource(id = R.string.fragment_recipe_info_ingredients_header),
             style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface,
         )
 
         Card(
@@ -74,12 +71,9 @@ private fun IngredientListItem(
                 .padding(horizontal = Dimens.Medium),
             text = title,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
         )
 
-        Divider(
-            color = MaterialTheme.colorScheme.outline,
-        )
+        Divider()
     }
 
     Row(
@@ -96,26 +90,14 @@ private fun IngredientListItem(
             Text(
                 text = item.display,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
             )
 
             if (item.note.isNotBlank()) {
                 Text(
                     text = item.note,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun IngredientsSectionPreview() {
-    AppTheme {
-        IngredientsSection(
-            ingredients = INGREDIENTS,
-        )
     }
 }
