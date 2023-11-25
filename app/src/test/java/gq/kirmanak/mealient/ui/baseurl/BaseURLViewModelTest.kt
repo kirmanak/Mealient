@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.ui.baseurl
 
+import android.app.Application
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
@@ -9,10 +10,10 @@ import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.TrustedCertificatesStore
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
 import gq.kirmanak.mealient.test.BaseUnitTest
-import gq.kirmanak.mealient.ui.OperationUiState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,7 +26,7 @@ import java.io.IOException
 import javax.net.ssl.SSLHandshakeException
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class BaseURLViewModelTest : BaseUnitTest() {
+internal class BaseURLViewModelTest : BaseUnitTest() {
 
     @MockK(relaxUnitFun = true)
     lateinit var serverInfoRepo: ServerInfoRepo
@@ -42,12 +43,17 @@ class BaseURLViewModelTest : BaseUnitTest() {
     @RelaxedMockK
     lateinit var baseUrlLogRedactor: BaseUrlLogRedactor
 
+    @MockK(relaxUnitFun = true)
+    lateinit var application: Application
+
     lateinit var subject: BaseURLViewModel
 
     @Before
     override fun setUp() {
         super.setUp()
+        every { application.getString(any()) } returns ""
         subject = BaseURLViewModel(
+            application = application,
             serverInfoRepo = serverInfoRepo,
             authRepo = authRepo,
             recipeRepo = recipeRepo,
@@ -119,7 +125,7 @@ class BaseURLViewModelTest : BaseUnitTest() {
         coEvery { serverInfoRepo.tryBaseURL(any()) } returns Result.failure(IOException())
         subject.saveBaseUrl(TEST_BASE_URL)
         advanceUntilIdle()
-        assertThat(subject.uiState.value).isInstanceOf(OperationUiState.Failure::class.java)
+        assertThat(subject.screenState.value.errorText).isNotNull()
     }
 
     @Test
