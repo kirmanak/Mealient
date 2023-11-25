@@ -4,6 +4,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.screen.BaseUrlScreen
 import gq.kirmanak.mealient.screen.DisclaimerScreen
 import gq.kirmanak.mealient.screen.RecipesListScreen
+import io.github.kakaocup.compose.node.element.ComposeScreen.Companion.onComposeScreen
 import io.github.kakaocup.kakao.common.utilities.getResourceString
 import org.junit.Before
 import org.junit.Test
@@ -21,27 +22,35 @@ class FirstSetUpTest : BaseTestCase() {
     @Test
     fun test() = run {
         step("Ensure button is disabled") {
-            DisclaimerScreen {
+            onComposeScreen<DisclaimerScreen>(mainActivityRule) {
+                okayButtonText {
+                    assertIsDisplayed()
+                    assertTextContains(getResourceString(R.string.fragment_disclaimer_button_okay))
+                }
+
                 okayButton {
-                    isVisible()
-                    isDisabled()
-                    hasAnyText()
+                    assertIsDisplayed()
+                    assertIsNotEnabled()
                 }
 
                 disclaimerText {
-                    isVisible()
-                    hasText(R.string.fragment_disclaimer_main_text)
+                    assertIsDisplayed()
+                    assertTextEquals(getResourceString(R.string.fragment_disclaimer_main_text))
                 }
             }
         }
 
         step("Close disclaimer screen") {
-            DisclaimerScreen {
+            onComposeScreen<DisclaimerScreen>(mainActivityRule) {
+                okayButtonText {
+                    assertIsDisplayed()
+                    assertTextEquals(getResourceString(R.string.fragment_disclaimer_button_okay))
+                }
+
                 okayButton {
-                    isVisible()
-                    isEnabled()
-                    hasText(R.string.fragment_disclaimer_button_okay)
-                    click()
+                    assertIsDisplayed()
+                    assertIsEnabled()
+                    performClick()
                 }
             }
         }
@@ -66,7 +75,7 @@ class FirstSetUpTest : BaseTestCase() {
         }
 
         step("Check that empty list of recipes is shown") {
-            RecipesListScreen(mainActivityRule).apply {
+            onComposeScreen<RecipesListScreen>(mainActivityRule) {
                 errorText {
                     assertIsDisplayed()
                     assertTextEquals(getResourceString(R.string.fragment_recipes_load_failure_toast_no_reason))

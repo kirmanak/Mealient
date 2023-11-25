@@ -1,19 +1,19 @@
 package gq.kirmanak.mealient.screen
 
-import androidx.activity.ComponentActivity
-import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.SemanticsNodeInteractionsProvider
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.printToLog
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.github.kakaocup.compose.node.element.KNode
-import org.junit.rules.TestRule
 
-class RecipesListScreen<R : TestRule, A : ComponentActivity>(
-    semanticsProvider: AndroidComposeTestRule<R, A>,
-) : ComposeScreen<RecipesListScreen<R, A>>(semanticsProvider) {
+internal class RecipesListScreen(
+    semanticsProvider: SemanticsNodeInteractionsProvider,
+) : ComposeScreen<RecipesListScreen>(semanticsProvider) {
 
     init {
-        semanticsProvider.onRoot(useUnmergedTree = true).printToLog("RecipesListScreen")
+        semanticsProvider
+            .onRoot(useUnmergedTree = true)
+            .printToLog("DisclaimerScreen")
     }
 
     val errorText: KNode = child { hasTestTag("empty-list-error-text") }
