@@ -112,6 +112,8 @@ dependencies {
 
     implementation(libs.androidx.shareTarget)
 
+    implementation(libs.androidx.compose.materialIconsExtended)
+
     implementation(libs.google.dagger.hiltAndroid)
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
