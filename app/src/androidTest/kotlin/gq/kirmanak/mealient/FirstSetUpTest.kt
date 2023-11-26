@@ -56,20 +56,26 @@ class FirstSetUpTest : BaseTestCase() {
         }
 
         step("Enter mock server address and click proceed") {
-            BaseUrlScreen {
+            onComposeScreen<BaseUrlScreen>(mainActivityRule) {
                 progressBar {
-                    isGone()
+                    assertIsNotDisplayed()
                 }
                 urlInput {
-                    isVisible()
-                    edit.replaceText(mockWebServer.url("/").toString())
-                    hasHint(R.string.fragment_authentication_input_hint_url)
+                    assertIsDisplayed()
+                    performTextInput(mockWebServer.url("/").toString())
+                }
+                urlInputLabel {
+                    assertIsDisplayed()
+                    assertTextEquals(getResourceString(R.string.fragment_authentication_input_hint_url))
+                }
+                proceedButtonText {
+                    assertIsDisplayed()
+                    assertTextEquals(getResourceString(R.string.fragment_base_url_save))
                 }
                 proceedButton {
-                    isVisible()
-                    isEnabled()
-                    hasText(R.string.fragment_base_url_save)
-                    click()
+                    assertIsDisplayed()
+                    assertIsEnabled()
+                    performClick()
                 }
             }
         }

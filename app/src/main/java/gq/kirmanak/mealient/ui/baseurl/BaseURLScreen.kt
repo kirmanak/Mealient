@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.ui.baseurl
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,9 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.components.TopProgressIndicator
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -40,83 +41,85 @@ internal fun BaseURLScreen(
     }
 
     Scaffold { containerPadding ->
-        Box(
+        TopProgressIndicator(
             modifier = Modifier
                 .padding(containerPadding)
                 .consumeWindowInsets(containerPadding),
+            isLoading = state.isLoading,
         ) {
-            if (state.isLoading) {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.TopCenter),
-                )
-            }
-
-            BaseURLScreenContent(
+            Column(
                 modifier = Modifier
-                    .fillMaxSize(),
-                state = state,
-                onEvent = onEvent,
-            )
+                    .fillMaxSize()
+                    .padding(Dimens.Large),
+                verticalArrangement = Arrangement.spacedBy(Dimens.Large),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.weight(3f))
+
+                UrlInputField(
+                    input = state.userInput,
+                    errorText = state.errorText,
+                    onEvent = onEvent,
+                    isError = state.errorText != null,
+                )
+
+                Button(
+                    modifier = Modifier
+                        .semantics { testTag = "proceed-button" },
+                    onClick = { onEvent(BaseURLScreenEvent.OnProceedClick) },
+                    enabled = state.isButtonEnabled,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .semantics { testTag = "proceed-button-text" },
+                        text = stringResource(id = R.string.fragment_base_url_save),
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(7f))
+            }
         }
     }
 }
 
 @Composable
-private fun BaseURLScreenContent(
-    state: BaseURLScreenState,
+private fun UrlInputField(
+    input: String,
+    errorText: String?,
     onEvent: (BaseURLScreenEvent) -> Unit,
-    modifier: Modifier = Modifier,
+    isError: Boolean
 ) {
-    Column(
-        modifier = modifier
-            .padding(Dimens.Large),
-        verticalArrangement = Arrangement.spacedBy(Dimens.Large),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Spacer(modifier = Modifier.weight(3f))
-
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
-            value = state.userInput,
-            isError = state.errorText != null,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.fragment_authentication_input_hint_url),
-                )
-            },
-            supportingText = {
-                Text(
-                    text = state.errorText
-                        ?: stringResource(id = R.string.fragment_base_url_url_input_helper_text),
-                )
-            },
-            onValueChange = {
-                onEvent(BaseURLScreenEvent.OnUserInput(it))
-            },
-            trailingIcon = {
-                if (state.errorText != null) {
-                    Icon(
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = null,
-                    )
-                }
-            }
-        )
-
-        Button(
-            onClick = { onEvent(BaseURLScreenEvent.OnProceedClick) },
-            enabled = state.isButtonEnabled,
-        ) {
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { testTag = "url-input-field" },
+        value = input,
+        isError = isError,
+        label = {
             Text(
-                text = stringResource(id = R.string.fragment_base_url_save),
+                modifier = Modifier
+                    .semantics { testTag = "url-input-label" },
+                text = stringResource(id = R.string.fragment_authentication_input_hint_url),
             )
+        },
+        supportingText = {
+            Text(
+                text = errorText
+                    ?: stringResource(id = R.string.fragment_base_url_url_input_helper_text),
+            )
+        },
+        onValueChange = {
+            onEvent(BaseURLScreenEvent.OnUserInput(it))
+        },
+        trailingIcon = {
+            if (isError) {
+                Icon(
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = null,
+                )
+            }
         }
-
-        Spacer(modifier = Modifier.weight(7f))
-    }
+    )
 }
 
 @ColorSchemePreview
