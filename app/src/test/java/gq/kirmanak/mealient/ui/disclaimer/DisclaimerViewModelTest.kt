@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
 import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.currentTime
@@ -13,7 +14,7 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DisclaimerViewModelTest : BaseUnitTest() {
+internal class DisclaimerViewModelTest : BaseUnitTest() {
 
     @MockK(relaxUnitFun = true)
     lateinit var storage: DisclaimerStorage
@@ -23,7 +24,11 @@ class DisclaimerViewModelTest : BaseUnitTest() {
     @Before
     override fun setUp() {
         super.setUp()
-        subject = DisclaimerViewModel(storage, logger)
+        subject = DisclaimerViewModel(
+            mockk(),
+            storage,
+            logger,
+        )
     }
 
     @Test
