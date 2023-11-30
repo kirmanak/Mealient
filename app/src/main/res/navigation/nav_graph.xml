@@ -58,9 +58,7 @@
 
     <fragment
         android:id="@+id/addRecipeFragment"
-        android:name="gq.kirmanak.mealient.ui.add.AddRecipeFragment"
-        android:label="fragment_add_recipe"
-        tools:layout="@layout/fragment_add_recipe" />
+        android:name="gq.kirmanak.mealient.ui.add.AddRecipeFragment" />
 
 
     <fragment
