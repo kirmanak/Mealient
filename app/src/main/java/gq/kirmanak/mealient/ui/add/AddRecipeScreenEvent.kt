@@ -37,4 +37,12 @@ internal sealed interface AddRecipeScreenEvent {
     data object ClearInputClick : AddRecipeScreenEvent
 
     data object SnackbarShown : AddRecipeScreenEvent
+
+    data class RemoveIngredientClick(
+        val ingredientIndex: Int,
+    ) : AddRecipeScreenEvent
+
+    data class RemoveInstructionClick(
+        val instructionIndex: Int,
+    ) : AddRecipeScreenEvent
 }

@@ -11,7 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -20,10 +24,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -109,12 +110,10 @@ private fun AddRecipeScreenContent(
                 input = ingredient,
                 label = stringResource(id = R.string.fragment_add_recipe_ingredient_hint),
                 onValueChange = {
-                    onEvent(
-                        AddRecipeScreenEvent.IngredientInput(
-                            index,
-                            it
-                        )
-                    )
+                    onEvent(AddRecipeScreenEvent.IngredientInput(index, it))
+                },
+                onRemoveClick = {
+                    onEvent(AddRecipeScreenEvent.RemoveIngredientClick(index))
                 },
             )
         }
@@ -139,6 +138,9 @@ private fun AddRecipeScreenContent(
                     onEvent(
                         AddRecipeScreenEvent.InstructionInput(index, it)
                     )
+                },
+                onRemoveClick = {
+                    onEvent(AddRecipeScreenEvent.RemoveInstructionClick(index))
                 },
             )
         }
@@ -245,6 +247,7 @@ private fun AddRecipeInputField(
     input: String,
     label: String,
     onValueChange: (String) -> Unit,
+    onRemoveClick: (() -> Unit)? = null,
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -254,6 +257,16 @@ private fun AddRecipeInputField(
         label = {
             Text(text = label)
         },
+        trailingIcon = {
+            if (onRemoveClick != null) {
+                IconButton(onClick = onRemoveClick) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = null,
+                    )
+                }
+            }
+        },
     )
 }
 
@@ -261,75 +274,9 @@ private fun AddRecipeInputField(
 @Composable
 private fun AddRecipeScreenPreview() {
     AppTheme {
-        var state by remember { mutableStateOf(AddRecipeScreenState()) }
         AddRecipeScreen(
             state = AddRecipeScreenState(),
-            onEvent = {
-                when (it) {
-                    is AddRecipeScreenEvent.RecipeNameInput -> {
-                        state = state.copy(recipeNameInput = it.input)
-                    }
-
-                    is AddRecipeScreenEvent.RecipeDescriptionInput -> {
-                        state = state.copy(recipeDescriptionInput = it.input)
-                    }
-
-                    is AddRecipeScreenEvent.RecipeYieldInput -> {
-                        state = state.copy(recipeYieldInput = it.input)
-                    }
-
-                    is AddRecipeScreenEvent.PublicRecipeToggle -> {
-                        state = state.copy(isPublicRecipe = !state.isPublicRecipe)
-                    }
-
-                    is AddRecipeScreenEvent.DisableCommentsToggle -> {
-                        state = state.copy(disableComments = !state.disableComments)
-                    }
-
-                    is AddRecipeScreenEvent.AddIngredientClick -> {
-                        state = state.copy(ingredients = state.ingredients + "")
-                    }
-
-                    is AddRecipeScreenEvent.AddInstructionClick -> {
-                        state = state.copy(instructions = state.instructions + "")
-                    }
-
-                    is AddRecipeScreenEvent.SaveRecipeClick -> {
-                        state = state.copy(isLoading = true)
-                    }
-
-                    is AddRecipeScreenEvent.IngredientInput -> {
-                        state = state.copy(
-                            ingredients = state.ingredients.toMutableList().apply {
-                                set(it.ingredientIndex, it.input)
-                            }
-                        )
-                    }
-
-                    is AddRecipeScreenEvent.InstructionInput -> {
-                        state = state.copy(
-                            instructions = state.instructions.toMutableList().apply {
-                                set(it.instructionIndex, it.input)
-                            }
-                        )
-                    }
-
-                    is AddRecipeScreenEvent.ClearInputClick -> {
-                        state = state.copy(
-                            recipeNameInput = "",
-                            recipeDescriptionInput = "",
-                            recipeYieldInput = "",
-                            ingredients = emptyList(),
-                            instructions = emptyList(),
-                            isPublicRecipe = false,
-                            disableComments = false,
-                            saveButtonEnabled = false,
-                        )
-                    }
-
-                    is AddRecipeScreenEvent.SnackbarShown -> Unit
-                }
-            },
+            onEvent = {},
         )
     }
 }

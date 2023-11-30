@@ -140,6 +140,24 @@ internal class AddRecipeViewModel @Inject constructor(
                     it.copy(snackbarMessage = null)
                 }
             }
+
+            is AddRecipeScreenEvent.RemoveIngredientClick -> {
+                _screenState.update {
+                    val mutableIngredientsList = it.ingredients.toMutableList()
+                    mutableIngredientsList.removeAt(event.ingredientIndex)
+                    it.copy(ingredients = mutableIngredientsList)
+                }
+                preserve()
+            }
+
+            is AddRecipeScreenEvent.RemoveInstructionClick -> {
+                _screenState.update {
+                    val mutableInstructionsList = it.instructions.toMutableList()
+                    mutableInstructionsList.removeAt(event.instructionIndex)
+                    it.copy(instructions = mutableInstructionsList)
+                }
+                preserve()
+            }
         }
     }
 
