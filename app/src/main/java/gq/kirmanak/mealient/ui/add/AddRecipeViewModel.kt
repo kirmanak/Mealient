@@ -132,25 +132,39 @@ internal class AddRecipeViewModel @Inject constructor(
             }
 
             is AddRecipeScreenEvent.SaveRecipeClick -> {
-                _screenState.update {
-                    it.copy(
-                        isLoading = true,
-                        saveButtonEnabled = false,
-                        clearButtonEnabled = false,
-                    )
-                }
-                logger.v { "saveRecipe() called" }
-                viewModelScope.launch {
-                    val isSuccessful = runCatchingExceptCancel { addRecipeRepo.saveRecipe() }
-                        .fold(onSuccess = { true }, onFailure = { false })
-                    logger.d { "saveRecipe: isSuccessful = $isSuccessful" }
-                }
+                saveRecipe()
             }
 
             is AddRecipeScreenEvent.SnackbarShown -> {
                 _screenState.update {
                     it.copy(snackbarMessage = null)
                 }
+            }
+        }
+    }
+
+    private fun saveRecipe() {
+        logger.v { "saveRecipe() called" }
+        _screenState.update {
+            it.copy(
+                isLoading = true,
+                saveButtonEnabled = false,
+                clearButtonEnabled = false,
+            )
+        }
+        viewModelScope.launch {
+            val isSuccessful = runCatchingExceptCancel { addRecipeRepo.saveRecipe() }.isSuccess
+            _screenState.update {
+                it.copy(
+                    isLoading = false,
+                    saveButtonEnabled = true,
+                    clearButtonEnabled = true,
+                    snackbarMessage = if (isSuccessful) {
+                        AddRecipeSnackbarMessage.Success
+                    } else {
+                        AddRecipeSnackbarMessage.Error
+                    }
+                )
             }
         }
     }
