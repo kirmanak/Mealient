@@ -107,7 +107,11 @@ class MainActivity : BaseActivity<MainActivityBinding>(
     }
 
     private fun emailLogs() {
-        val logFileUri = FileProvider.getUriForFile(this, "$packageName.provider", getLogFile())
+        val logFileUri = try {
+            FileProvider.getUriForFile(this, "$packageName.provider", getLogFile())
+        } catch (e: Exception) {
+            return
+        }
         val emailIntent = buildIntent(logFileUri)
         val chooserIntent = Intent.createChooser(emailIntent, null)
         startActivity(chooserIntent)
