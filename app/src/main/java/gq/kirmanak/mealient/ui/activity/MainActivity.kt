@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAddRecipeFragment
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAuthenticationFragment
@@ -107,6 +108,15 @@ class MainActivity : BaseActivity<MainActivityBinding>(
     }
 
     private fun emailLogs() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.activity_main_email_logs_confirmation_message)
+            .setTitle(R.string.activity_main_email_logs_confirmation_title)
+            .setPositiveButton(R.string.activity_main_email_logs_confirmation_positive) { _, _ -> doEmailLogs() }
+            .setNegativeButton(R.string.activity_main_email_logs_confirmation_negative, null)
+            .show()
+    }
+
+    private fun doEmailLogs() {
         val logFileUri = try {
             FileProvider.getUriForFile(this, "$packageName.provider", getLogFile())
         } catch (e: Exception) {
