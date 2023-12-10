@@ -75,5 +75,4 @@
 	<string name="menu_navigation_drawer_shopping_lists">Shopping lists</string>
 	<string name="menu_navigation_drawer_email_logs">Email logs</string>
 	<string name="activity_main_email_logs_subject">Mealient logs</string>
-	<string name="activity_main_email_logs_chooser_title">Send Mealient logs via…</string>
 </resources>
