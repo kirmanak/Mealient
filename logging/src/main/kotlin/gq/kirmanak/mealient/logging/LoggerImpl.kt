@@ -6,6 +6,7 @@ import javax.inject.Inject
 
 class LoggerImpl @Inject constructor(
     private val appenders: Set<@JvmSuppressWildcards Appender>,
+    private val redactors: Set<@JvmSuppressWildcards LogRedactor>,
 ) : Logger {
 
     override fun v(throwable: Throwable?, tag: String?, messageSupplier: MessageSupplier) {
@@ -45,10 +46,21 @@ class LoggerImpl @Inject constructor(
 
             if (appender.isLoggable(logLevel, logTag).not()) continue
 
-            message = message ?: (messageSupplier() + createStackTrace(t))
+            message = message ?: buildLogMessage(messageSupplier, t)
 
             appender.log(logLevel, logTag, message)
         }
+    }
+
+    private fun buildLogMessage(
+        messageSupplier: MessageSupplier,
+        t: Throwable?
+    ): String {
+        var message = messageSupplier() + createStackTrace(t)
+        for (redactor in redactors) {
+            message = redactor.redact(message)
+        }
+        return message
     }
 
     private fun createStackTrace(throwable: Throwable?): String =
