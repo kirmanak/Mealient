@@ -33,12 +33,21 @@ class AuthRepoImplTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var signOutHandler: SignOutHandler
 
+    @MockK(relaxUnitFun = true)
+    lateinit var credentialsLogRedactor: CredentialsLogRedactor
+
     lateinit var subject: AuthRepo
 
     @Before
     override fun setUp() {
         super.setUp()
-        subject = AuthRepoImpl(storage, dataSource, logger, signOutHandler)
+        subject = AuthRepoImpl(
+            authStorage = storage,
+            authDataSource = dataSource,
+            logger = logger,
+            signOutHandler = signOutHandler,
+            credentialsLogRedactor = credentialsLogRedactor,
+        )
     }
 
     @Test

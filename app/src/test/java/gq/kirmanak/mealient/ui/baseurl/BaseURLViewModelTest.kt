@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.ui.baseurl
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
+import gq.kirmanak.mealient.data.baseurl.impl.BaseUrlLogRedactor
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.TrustedCertificatesStore
@@ -14,7 +15,9 @@ import io.mockk.coVerify
 import io.mockk.coVerifyOrder
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
@@ -35,6 +38,9 @@ class BaseURLViewModelTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var trustedCertificatesStore: TrustedCertificatesStore
 
+    @MockK
+    lateinit var baseUrlLogRedactor: BaseUrlLogRedactor
+
     lateinit var subject: BaseURLViewModel
 
     @Before
@@ -46,6 +52,7 @@ class BaseURLViewModelTest : BaseUnitTest() {
             recipeRepo = recipeRepo,
             logger = logger,
             trustedCertificatesStore = trustedCertificatesStore,
+            baseUrlLogRedactor = baseUrlLogRedactor,
         )
     }
 
