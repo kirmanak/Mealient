@@ -14,6 +14,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -38,7 +39,7 @@ class BaseURLViewModelTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var trustedCertificatesStore: TrustedCertificatesStore
 
-    @MockK
+    @RelaxedMockK
     lateinit var baseUrlLogRedactor: BaseUrlLogRedactor
 
     lateinit var subject: BaseURLViewModel
