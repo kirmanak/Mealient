@@ -73,4 +73,10 @@
 	<string name="fragment_recipes_favorite_added">Added %1$s to favorites</string>
 	<string name="fragment_recipes_favorite_removed">Removed %1$s from favorites</string>
 	<string name="menu_navigation_drawer_shopping_lists">Shopping lists</string>
+	<string name="menu_navigation_drawer_email_logs">Email logs</string>
+	<string name="activity_main_email_logs_subject">Mealient logs</string>
+	<string name="activity_main_email_logs_confirmation_message">The logs contain sensitive data such as API token, shopping lists, and recipes. API tokens can be revoked using web client. The file can be viewed and edited if you send it to yourself instead.</string>
+	<string name="activity_main_email_logs_confirmation_title">Sending sensitive data</string>
+	<string name="activity_main_email_logs_confirmation_positive">Choose how to send</string>
+	<string name="activity_main_email_logs_confirmation_negative">Cancel</string>
 </resources>

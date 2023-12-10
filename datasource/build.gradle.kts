@@ -7,7 +7,7 @@ plugins {
 
 android {
     defaultConfig {
-        buildConfigField("Boolean", "LOG_NETWORK", "false")
+        buildConfigField("Boolean", "LOG_NETWORK", "true")
         consumerProguardFiles("consumer-proguard-rules.pro")
     }
     namespace = "gq.kirmanak.mealient.datasource"
@@ -31,7 +31,7 @@ dependencies {
 
     implementation(platform(libs.okhttp3.bom))
     implementation(libs.okhttp3.okhttp)
-    debugImplementation(libs.okhttp3.loggingInterceptor)
+    implementation(libs.okhttp3.loggingInterceptor)
 
     implementation(libs.ktor.core)
     implementation(libs.ktor.auth)

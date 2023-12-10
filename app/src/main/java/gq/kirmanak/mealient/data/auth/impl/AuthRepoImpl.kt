@@ -15,17 +15,20 @@ class AuthRepoImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val logger: Logger,
     private val signOutHandler: SignOutHandler,
+    private val credentialsLogRedactor: CredentialsLogRedactor,
 ) : AuthRepo, AuthenticationProvider {
 
     override val isAuthorizedFlow: Flow<Boolean>
         get() = authStorage.authTokenFlow.map { it != null }
 
     override suspend fun authenticate(email: String, password: String) {
-        logger.v { "authenticate() called with: email = $email, password = $password" }
+        logger.v { "authenticate() called" }
+        credentialsLogRedactor.set(email, password)
         val token = authDataSource.authenticate(email, password)
         authStorage.setAuthToken(token)
         val apiToken = authDataSource.createApiToken(API_TOKEN_NAME)
         authStorage.setAuthToken(apiToken)
+        credentialsLogRedactor.clear()
     }
 
     override suspend fun getAuthToken(): String? = authStorage.getAuthToken()

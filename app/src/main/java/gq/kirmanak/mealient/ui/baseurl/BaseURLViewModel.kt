@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
+import gq.kirmanak.mealient.data.baseurl.impl.BaseUrlLogRedactor
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.datasource.CertificateCombinedException
 import gq.kirmanak.mealient.datasource.NetworkError
@@ -27,6 +28,7 @@ class BaseURLViewModel @Inject constructor(
     private val recipeRepo: RecipeRepo,
     private val logger: Logger,
     private val trustedCertificatesStore: TrustedCertificatesStore,
+    private val baseUrlLogRedactor: BaseUrlLogRedactor,
 ) : ViewModel() {
 
     private val _uiState = MutableLiveData<OperationUiState<Unit>>(OperationUiState.Initial())
@@ -36,17 +38,19 @@ class BaseURLViewModel @Inject constructor(
     val invalidCertificatesFlow = invalidCertificatesChannel.receiveAsFlow()
 
     fun saveBaseUrl(baseURL: String) {
-        logger.v { "saveBaseUrl() called with: baseURL = $baseURL" }
+        logger.v { "saveBaseUrl() called" }
         _uiState.value = OperationUiState.Progress()
         viewModelScope.launch { checkBaseURL(baseURL) }
     }
 
     private suspend fun checkBaseURL(baseURL: String) {
-        logger.v { "checkBaseURL() called with: baseURL = $baseURL" }
+        logger.v { "checkBaseURL() called" }
 
         val hasPrefix = listOf("http://", "https://").any { baseURL.startsWith(it) }
         val urlWithPrefix = baseURL.takeIf { hasPrefix } ?: "https://%s".format(baseURL)
         val url = urlWithPrefix.trimEnd { it == '/' }
+
+        baseUrlLogRedactor.set(baseUrl = url)
 
         logger.d { "checkBaseURL: Created URL = \"$url\", with prefix = \"$urlWithPrefix\"" }
         if (url == serverInfoRepo.getUrl()) {

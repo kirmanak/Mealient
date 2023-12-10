@@ -1,8 +1,11 @@
 package gq.kirmanak.mealient.ui.activity
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.core.content.FileProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
@@ -10,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAddRecipeFragment
 import gq.kirmanak.mealient.NavGraphDirections.Companion.actionGlobalAuthenticationFragment
@@ -20,9 +24,12 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
 import gq.kirmanak.mealient.extensions.collectWhenResumed
 import gq.kirmanak.mealient.extensions.observeOnce
+import gq.kirmanak.mealient.logging.getLogFile
 import gq.kirmanak.mealient.ui.ActivityUiState
 import gq.kirmanak.mealient.ui.BaseActivity
 import gq.kirmanak.mealient.ui.CheckableMenuItem
+
+private const val EMAIL_FOR_LOGS = "mealient@gmail.com"
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<MainActivityBinding>(
@@ -87,11 +94,50 @@ class MainActivity : BaseActivity<MainActivityBinding>(
                 viewModel.logout()
                 return true
             }
+
+            R.id.email_logs -> {
+                emailLogs()
+                return true
+            }
+
             else -> throw IllegalArgumentException("Unknown menu item id: ${menuItem.itemId}")
         }
         menuItem.isChecked = true
         navigateTo(directions)
         return true
+    }
+
+    private fun emailLogs() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.activity_main_email_logs_confirmation_message)
+            .setTitle(R.string.activity_main_email_logs_confirmation_title)
+            .setPositiveButton(R.string.activity_main_email_logs_confirmation_positive) { _, _ -> doEmailLogs() }
+            .setNegativeButton(R.string.activity_main_email_logs_confirmation_negative, null)
+            .show()
+    }
+
+    private fun doEmailLogs() {
+        val logFileUri = try {
+            FileProvider.getUriForFile(this, "$packageName.provider", getLogFile())
+        } catch (e: Exception) {
+            return
+        }
+        val emailIntent = buildIntent(logFileUri)
+        val chooserIntent = Intent.createChooser(emailIntent, null)
+        startActivity(chooserIntent)
+    }
+
+    private fun buildIntent(logFileUri: Uri?): Intent {
+        val emailIntent = Intent(Intent.ACTION_SEND)
+        val to = arrayOf(EMAIL_FOR_LOGS)
+        emailIntent.setType("text/plain")
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, to)
+        emailIntent.putExtra(Intent.EXTRA_STREAM, logFileUri)
+        emailIntent.putExtra(
+            Intent.EXTRA_SUBJECT,
+            getString(R.string.activity_main_email_logs_subject)
+        )
+        return emailIntent
     }
 
     private fun onUiStateChange(uiState: ActivityUiState) {

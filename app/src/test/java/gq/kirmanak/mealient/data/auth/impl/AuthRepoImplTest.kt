@@ -16,6 +16,7 @@ import io.mockk.coVerify
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
@@ -33,12 +34,21 @@ class AuthRepoImplTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var signOutHandler: SignOutHandler
 
+    @RelaxedMockK
+    lateinit var credentialsLogRedactor: CredentialsLogRedactor
+
     lateinit var subject: AuthRepo
 
     @Before
     override fun setUp() {
         super.setUp()
-        subject = AuthRepoImpl(storage, dataSource, logger, signOutHandler)
+        subject = AuthRepoImpl(
+            authStorage = storage,
+            authDataSource = dataSource,
+            logger = logger,
+            signOutHandler = signOutHandler,
+            credentialsLogRedactor = credentialsLogRedactor,
+        )
     }
 
     @Test

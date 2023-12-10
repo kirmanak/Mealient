@@ -73,7 +73,6 @@ fun EditText.checkIfInputIsEmpty(
 ): String? {
     val input = if (trim) text?.trim() else text
     val text = input?.toString().orEmpty()
-    logger.d { "Input text is \"$text\"" }
     return text.ifEmpty {
         inputLayout.error = resources.getString(stringId)
         val textChangesLiveData = textChangesLiveData(logger)

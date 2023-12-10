@@ -22,7 +22,7 @@ class AuthenticationViewModel @Inject constructor(
     val uiState: LiveData<OperationUiState<Unit>> get() = _uiState
 
     fun authenticate(email: String, password: String) {
-        logger.v { "authenticate() called with: email = $email, password = $password" }
+        logger.v { "authenticate() called" }
         _uiState.value = OperationUiState.Progress()
         viewModelScope.launch {
             val result = runCatchingExceptCancel { authRepo.authenticate(email, password) }

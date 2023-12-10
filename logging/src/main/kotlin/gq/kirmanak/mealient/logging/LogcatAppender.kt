@@ -4,7 +4,7 @@ import android.util.Log
 import gq.kirmanak.mealient.architecture.configuration.BuildConfiguration
 import javax.inject.Inject
 
-class LogcatAppender @Inject constructor(
+internal class LogcatAppender @Inject constructor(
     private val buildConfiguration: BuildConfiguration,
 ) : Appender {
 
