@@ -4,9 +4,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoSet
 import gq.kirmanak.mealient.data.baseurl.*
+import gq.kirmanak.mealient.data.baseurl.impl.BaseUrlLogRedactor
 import gq.kirmanak.mealient.data.baseurl.impl.ServerInfoStorageImpl
 import gq.kirmanak.mealient.datasource.ServerUrlProvider
+import gq.kirmanak.mealient.logging.LogRedactor
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -23,4 +26,8 @@ interface BaseURLModule {
 
     @Binds
     fun bindServerUrlProvider(serverInfoRepoImpl: ServerInfoRepoImpl): ServerUrlProvider
+
+    @Binds
+    @IntoSet
+    fun bindBaseUrlLogRedactor(impl: BaseUrlLogRedactor): LogRedactor
 }
