@@ -5,14 +5,14 @@ import dagger.Module
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.logging.LoggingModule
+import gq.kirmanak.mealient.logging.LoggerModule
 
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [LoggingModule::class]
+    replaces = [LoggerModule::class]
 )
-interface FakeLoggingModule {
+interface FakeLoggerModule {
 
     @Binds
     fun bindFakeLogger(impl: FakeLogger): Logger

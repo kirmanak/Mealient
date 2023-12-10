@@ -8,12 +8,13 @@ import dagger.multibindings.IntoSet
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface LoggingModule {
-
-    @Binds
-    fun bindLogger(loggerImpl: LoggerImpl): Logger
+internal interface AppenderModule {
 
     @Binds
     @IntoSet
     fun bindLogcatAppender(logcatAppender: LogcatAppender): Appender
+
+    @Binds
+    @IntoSet
+    fun bindFileAppender(fileAppender: FileAppender): Appender
 }

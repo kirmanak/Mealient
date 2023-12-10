@@ -2,6 +2,8 @@ package gq.kirmanak.mealient.logging
 
 typealias MessageSupplier = () -> String
 
+const val LOG_FILE_NAME = "log.txt"
+
 interface Logger {
 
     fun v(throwable: Throwable? = null, tag: String? = null, messageSupplier: MessageSupplier)
