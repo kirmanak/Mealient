@@ -73,4 +73,7 @@
 	<string name="fragment_recipes_favorite_added">Added %1$s to favorites</string>
 	<string name="fragment_recipes_favorite_removed">Removed %1$s from favorites</string>
 	<string name="menu_navigation_drawer_shopping_lists">Shopping lists</string>
+	<string name="menu_navigation_drawer_email_logs">Email logs</string>
+	<string name="activity_main_email_logs_subject">Mealient logs</string>
+	<string name="activity_main_email_logs_chooser_title">Send Mealient logs via…</string>
 </resources>

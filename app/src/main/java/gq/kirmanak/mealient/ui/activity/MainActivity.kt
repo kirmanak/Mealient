@@ -1,8 +1,11 @@
 package gq.kirmanak.mealient.ui.activity
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.core.content.FileProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
@@ -20,9 +23,12 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.databinding.MainActivityBinding
 import gq.kirmanak.mealient.extensions.collectWhenResumed
 import gq.kirmanak.mealient.extensions.observeOnce
+import gq.kirmanak.mealient.logging.getLogFile
 import gq.kirmanak.mealient.ui.ActivityUiState
 import gq.kirmanak.mealient.ui.BaseActivity
 import gq.kirmanak.mealient.ui.CheckableMenuItem
+
+private const val EMAIL_FOR_LOGS = "mealient@gmail.com"
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<MainActivityBinding>(
@@ -87,11 +93,40 @@ class MainActivity : BaseActivity<MainActivityBinding>(
                 viewModel.logout()
                 return true
             }
+
+            R.id.email_logs -> {
+                emailLogs()
+                return true
+            }
+
             else -> throw IllegalArgumentException("Unknown menu item id: ${menuItem.itemId}")
         }
         menuItem.isChecked = true
         navigateTo(directions)
         return true
+    }
+
+    private fun emailLogs() {
+        val logFileUri = FileProvider.getUriForFile(this, "$packageName.provider", getLogFile())
+        val emailIntent = buildIntent(logFileUri)
+        val chooserIntent = Intent.createChooser(
+            emailIntent,
+            getString(R.string.activity_main_email_logs_chooser_title)
+        )
+        startActivity(chooserIntent)
+    }
+
+    private fun buildIntent(logFileUri: Uri?): Intent {
+        val emailIntent = Intent(Intent.ACTION_SEND)
+        val to = arrayOf(EMAIL_FOR_LOGS)
+        emailIntent.setType("text/plain")
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, to)
+        emailIntent.putExtra(Intent.EXTRA_STREAM, logFileUri)
+        emailIntent.putExtra(
+            Intent.EXTRA_SUBJECT,
+            getString(R.string.activity_main_email_logs_subject)
+        )
+        return emailIntent
     }
 
     private fun onUiStateChange(uiState: ActivityUiState) {

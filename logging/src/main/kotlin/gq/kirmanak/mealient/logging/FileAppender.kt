@@ -1,7 +1,6 @@
 package gq.kirmanak.mealient.logging
 
 import android.app.Application
-import android.content.Context
 import gq.kirmanak.mealient.architecture.configuration.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -10,7 +9,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import java.io.BufferedWriter
-import java.io.OutputStreamWriter
+import java.io.FileWriter
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -30,9 +29,7 @@ internal class FileAppender @Inject constructor(
         val message: String,
     )
 
-    private val fileWriter: BufferedWriter = BufferedWriter(
-        OutputStreamWriter(application.openFileOutput(LOG_FILE_NAME, Context.MODE_PRIVATE))
-    )
+    private val fileWriter: BufferedWriter = BufferedWriter(FileWriter(application.getLogFile()))
 
     private val logChannel = Channel<LogInfo>(
         capacity = 100,
