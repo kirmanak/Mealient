@@ -13,7 +13,6 @@ import java.io.FileWriter
 import java.io.IOException
 import java.io.Writer
 import java.time.Instant
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,9 +41,6 @@ internal class FileAppender @Inject constructor(
 
     private val coroutineScope = CoroutineScope(dispatchers.io + SupervisorJob())
 
-    private val dateTimeFormatter =
-        DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault())
-
     init {
         startLogWriter()
     }
@@ -70,8 +66,10 @@ internal class FileAppender @Inject constructor(
         }
 
         coroutineScope.launch {
+            fileWriter.appendLine("Session started at ${Instant.now().formatted()}")
+
             for (logInfo in logChannel) {
-                val time = dateTimeFormatter.format(logInfo.logTime)
+                val time = logInfo.logTime.formatted()
                 val level = logInfo.logLevel.name.first()
                 logInfo.message.lines().forEach {
                     try {
@@ -83,6 +81,8 @@ internal class FileAppender @Inject constructor(
             }
         }
     }
+
+    private fun Instant.formatted(): String = DateTimeFormatter.ISO_INSTANT.format(this)
 
     override fun isLoggable(logLevel: LogLevel): Boolean = true
 
