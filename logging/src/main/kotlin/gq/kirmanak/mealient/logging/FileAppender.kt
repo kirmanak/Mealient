@@ -1,6 +1,9 @@
 package gq.kirmanak.mealient.logging
 
+import android.app.Activity
 import android.app.Application
+import android.app.Application.ActivityLifecycleCallbacks
+import android.os.Bundle
 import gq.kirmanak.mealient.architecture.configuration.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -13,7 +16,6 @@ import java.io.FileWriter
 import java.io.IOException
 import java.io.Writer
 import java.time.Instant
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,11 +44,24 @@ internal class FileAppender @Inject constructor(
 
     private val coroutineScope = CoroutineScope(dispatchers.io + SupervisorJob())
 
-    private val dateTimeFormatter =
-        DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.systemDefault())
-
     init {
         startLogWriter()
+        startLifecycleObserver()
+    }
+
+    private fun startLifecycleObserver() {
+        val observer = object : DefaultActivityLifecycleCallbacks() {
+            override fun onActivityPaused(activity: Activity) {
+                super.onActivityPaused(activity)
+                try {
+                    fileWriter?.flush()
+                } catch (e: IOException) {
+                    // Ignore
+                }
+            }
+        }
+
+        application.registerActivityLifecycleCallbacks(observer)
     }
 
     private fun createFileWriter(): Writer? {
@@ -70,8 +85,10 @@ internal class FileAppender @Inject constructor(
         }
 
         coroutineScope.launch {
+            fileWriter.appendLine("Session started at ${Instant.now().formatted()}")
+
             for (logInfo in logChannel) {
-                val time = dateTimeFormatter.format(logInfo.logTime)
+                val time = logInfo.logTime.formatted()
                 val level = logInfo.logLevel.name.first()
                 logInfo.message.lines().forEach {
                     try {
@@ -83,6 +100,8 @@ internal class FileAppender @Inject constructor(
             }
         }
     }
+
+    private fun Instant.formatted(): String = DateTimeFormatter.ISO_INSTANT.format(this)
 
     override fun isLoggable(logLevel: LogLevel): Boolean = true
 
@@ -106,4 +125,22 @@ internal class FileAppender @Inject constructor(
             // Ignore
         }
     }
+}
+
+private open class DefaultActivityLifecycleCallbacks : ActivityLifecycleCallbacks {
+
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+
+    override fun onActivityStarted(activity: Activity) = Unit
+
+    override fun onActivityResumed(activity: Activity) = Unit
+
+    override fun onActivityPaused(activity: Activity) = Unit
+
+    override fun onActivityStopped(activity: Activity) = Unit
+
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+
+    override fun onActivityDestroyed(activity: Activity) = Unit
+
 }
