@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
@@ -85,6 +87,7 @@ private fun AddRecipeScreenContent(
             AddRecipeInputField(
                 input = state.recipeNameInput,
                 label = stringResource(id = R.string.fragment_add_recipe_recipe_name),
+                isLast = false,
                 onValueChange = { onEvent(AddRecipeScreenEvent.RecipeNameInput(it)) },
             )
         }
@@ -93,6 +96,7 @@ private fun AddRecipeScreenContent(
             AddRecipeInputField(
                 input = state.recipeDescriptionInput,
                 label = stringResource(id = R.string.fragment_add_recipe_recipe_description),
+                isLast = false,
                 onValueChange = { onEvent(AddRecipeScreenEvent.RecipeDescriptionInput(it)) },
             )
         }
@@ -101,6 +105,7 @@ private fun AddRecipeScreenContent(
             AddRecipeInputField(
                 input = state.recipeYieldInput,
                 label = stringResource(id = R.string.fragment_add_recipe_recipe_yield),
+                isLast = state.ingredients.isEmpty() && state.instructions.isEmpty(),
                 onValueChange = { onEvent(AddRecipeScreenEvent.RecipeYieldInput(it)) },
             )
         }
@@ -109,6 +114,7 @@ private fun AddRecipeScreenContent(
             AddRecipeInputField(
                 input = ingredient,
                 label = stringResource(id = R.string.fragment_add_recipe_ingredient_hint),
+                isLast = state.ingredients.lastIndex == index && state.instructions.isEmpty(),
                 onValueChange = {
                     onEvent(AddRecipeScreenEvent.IngredientInput(index, it))
                 },
@@ -134,6 +140,7 @@ private fun AddRecipeScreenContent(
             AddRecipeInputField(
                 input = instruction,
                 label = stringResource(id = R.string.fragment_add_recipe_instruction_hint),
+                isLast = state.instructions.lastIndex == index,
                 onValueChange = {
                     onEvent(
                         AddRecipeScreenEvent.InstructionInput(index, it)
@@ -246,6 +253,7 @@ private fun AddRecipeSwitch(
 private fun AddRecipeInputField(
     input: String,
     label: String,
+    isLast: Boolean,
     onValueChange: (String) -> Unit,
     onRemoveClick: (() -> Unit)? = null,
 ) {
@@ -267,6 +275,9 @@ private fun AddRecipeInputField(
                 }
             }
         },
+        keyboardOptions = KeyboardOptions(
+            imeAction = if (isLast) ImeAction.Done else ImeAction.Next,
+        )
     )
 }
 
