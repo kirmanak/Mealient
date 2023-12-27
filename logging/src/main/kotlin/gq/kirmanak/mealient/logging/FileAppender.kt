@@ -1,6 +1,9 @@
 package gq.kirmanak.mealient.logging
 
+import android.app.Activity
 import android.app.Application
+import android.app.Application.ActivityLifecycleCallbacks
+import android.os.Bundle
 import gq.kirmanak.mealient.architecture.configuration.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -43,6 +46,22 @@ internal class FileAppender @Inject constructor(
 
     init {
         startLogWriter()
+        startLifecycleObserver()
+    }
+
+    private fun startLifecycleObserver() {
+        val observer = object : DefaultActivityLifecycleCallbacks() {
+            override fun onActivityPaused(activity: Activity) {
+                super.onActivityPaused(activity)
+                try {
+                    fileWriter?.flush()
+                } catch (e: IOException) {
+                    // Ignore
+                }
+            }
+        }
+
+        application.registerActivityLifecycleCallbacks(observer)
     }
 
     private fun createFileWriter(): Writer? {
@@ -106,4 +125,22 @@ internal class FileAppender @Inject constructor(
             // Ignore
         }
     }
+}
+
+private open class DefaultActivityLifecycleCallbacks : ActivityLifecycleCallbacks {
+
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+
+    override fun onActivityStarted(activity: Activity) = Unit
+
+    override fun onActivityResumed(activity: Activity) = Unit
+
+    override fun onActivityPaused(activity: Activity) = Unit
+
+    override fun onActivityStopped(activity: Activity) = Unit
+
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+
+    override fun onActivityDestroyed(activity: Activity) = Unit
+
 }
