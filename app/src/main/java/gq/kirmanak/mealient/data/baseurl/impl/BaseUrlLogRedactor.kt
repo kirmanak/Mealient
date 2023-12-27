@@ -2,7 +2,7 @@ package gq.kirmanak.mealient.data.baseurl.impl
 
 import androidx.core.net.toUri
 import gq.kirmanak.mealient.architecture.configuration.AppDispatchers
-import gq.kirmanak.mealient.data.baseurl.ServerInfoStorage
+import gq.kirmanak.mealient.data.storage.PreferencesStorage
 import gq.kirmanak.mealient.logging.LogRedactor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -14,11 +14,13 @@ import javax.inject.Singleton
 
 @Singleton
 class BaseUrlLogRedactor @Inject constructor(
-    private val serverInfoStorageProvider: Provider<ServerInfoStorage>,
+    private val preferencesStorageProvider: Provider<PreferencesStorage>,
     private val dispatchers: AppDispatchers,
 ) : LogRedactor {
 
     private val hostState = MutableStateFlow<String?>(null)
+    private val preferencesStorage: PreferencesStorage
+        get() = preferencesStorageProvider.get()
 
     init {
         setInitialBaseUrl()
@@ -27,10 +29,9 @@ class BaseUrlLogRedactor @Inject constructor(
     private fun setInitialBaseUrl() {
         val scope = CoroutineScope(dispatchers.default + SupervisorJob())
         scope.launch {
-            val serverInfoStorage = serverInfoStorageProvider.get()
             hostState.compareAndSet(
                 expect = null,
-                update = serverInfoStorage.getBaseURL()?.extractHost(),
+                update = preferencesStorage.getValue(preferencesStorage.baseUrlKey)
             )
         }
     }
@@ -41,8 +42,12 @@ class BaseUrlLogRedactor @Inject constructor(
 
 
     override fun redact(message: String): String {
-        val host = hostState.value ?: return message
-        return message.replace(host, "<host>")
+        val host = hostState.value
+        return when {
+            host == null && message.contains(preferencesStorage.baseUrlKey.name) -> "<redacted>"
+            host == null -> message
+            else -> message.replace(host, "<host>")
+        }
     }
 }
 
