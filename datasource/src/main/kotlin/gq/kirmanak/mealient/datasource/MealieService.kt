@@ -28,7 +28,7 @@ internal interface MealieService {
         slug: String,
     ): GetRecipeResponse
 
-    suspend fun getVersion(): VersionResponse
+    suspend fun getVersion(baseURL: String): VersionResponse
 
     suspend fun getRecipeSummary(page: Int, perPage: Int): GetRecipesResponse
 

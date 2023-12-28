@@ -76,9 +76,9 @@ internal class MealieServiceKtor @Inject constructor(
         }.body()
     }
 
-    override suspend fun getVersion(): VersionResponse {
+    override suspend fun getVersion(baseURL: String): VersionResponse {
         return httpClient.get {
-            endpoint("/api/app/about")
+            endpoint(baseURL, "/api/app/about")
         }.body()
     }
 
@@ -198,9 +198,21 @@ internal class MealieServiceKtor @Inject constructor(
 
     private suspend fun HttpRequestBuilder.endpoint(
         path: String,
-        block: URLBuilder.() -> Unit = {}
+        block: URLBuilder.() -> Unit = {},
     ) {
         val baseUrl = checkNotNull(serverUrlProvider.getUrl()) { "Server URL is not set" }
+        endpoint(
+            baseUrl = baseUrl,
+            path = path,
+            block = block
+        )
+    }
+
+    private fun HttpRequestBuilder.endpoint(
+        baseUrl: String,
+        path: String,
+        block: URLBuilder.() -> Unit = {},
+    ) {
         url {
             takeFrom(baseUrl)
             path(path)

@@ -4,5 +4,5 @@ import gq.kirmanak.mealient.datasource.models.VersionResponse
 
 interface VersionDataSource {
 
-    suspend fun requestVersion(): VersionResponse
+    suspend fun requestVersion(baseURL: String): VersionResponse
 }

@@ -9,6 +9,7 @@ import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.datasource.NetworkError
 import gq.kirmanak.mealient.datasource.TrustedCertificatesStore
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
+import gq.kirmanak.mealient.test.AuthImplTestData.VERSION_RESPONSE
 import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -91,7 +92,7 @@ internal class BaseURLViewModelTest : BaseUnitTest() {
 
     private fun TestScope.setupSaveBaseUrlWithOldUrl() {
         coEvery { serverInfoRepo.getUrl() } returns TEST_BASE_URL
-        coEvery { serverInfoRepo.tryBaseURL(any()) } returns Result.success(Unit)
+        coEvery { serverInfoRepo.tryBaseURL(any()) } returns Result.success(VERSION_RESPONSE)
         subject.saveBaseUrl(TEST_BASE_URL)
         advanceUntilIdle()
     }
@@ -116,7 +117,7 @@ internal class BaseURLViewModelTest : BaseUnitTest() {
 
     private fun TestScope.setupSaveBaseUrlWithNewUrl() {
         coEvery { serverInfoRepo.getUrl() } returns null
-        coEvery { serverInfoRepo.tryBaseURL(any()) } returns Result.success(Unit)
+        coEvery { serverInfoRepo.tryBaseURL(any()) } returns Result.success(VERSION_RESPONSE)
         subject.saveBaseUrl(TEST_BASE_URL)
         advanceUntilIdle()
     }
@@ -135,7 +136,7 @@ internal class BaseURLViewModelTest : BaseUnitTest() {
         coEvery { serverInfoRepo.getUrl() } returns null
         val err = NetworkError.MalformedUrl(SSLHandshakeException("test"))
         coEvery { serverInfoRepo.tryBaseURL("https://test") } returns Result.failure(err)
-        coEvery { serverInfoRepo.tryBaseURL("http://test") } returns Result.success(Unit)
+        coEvery { serverInfoRepo.tryBaseURL("http://test") } returns Result.success(VERSION_RESPONSE)
         subject.saveBaseUrl("test")
         coVerifyOrder {
             serverInfoRepo.tryBaseURL("https://test")

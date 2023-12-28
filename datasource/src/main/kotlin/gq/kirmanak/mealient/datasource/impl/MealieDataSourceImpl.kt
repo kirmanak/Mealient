@@ -65,16 +65,18 @@ internal class MealieDataSourceImpl @Inject constructor(
         throw if (errorDetail.detail == "Unauthorized") NetworkError.Unauthorized(it) else it
     }
 
-    override suspend fun getVersionInfo(): VersionResponse = networkRequestWrapper.makeCall(
-        block = { service.getVersion() },
-        logMethod = { "getVersionInfo" },
-    ).getOrElse {
-        throw when (it) {
-            is ResponseException, is NoTransformationFoundException -> NetworkError.NotMealie(it)
-            is SocketTimeoutException, is SocketException -> NetworkError.NoServerConnection(it)
-            else -> NetworkError.MalformedUrl(it)
+    override suspend fun getVersionInfo(baseURL: String): VersionResponse =
+        networkRequestWrapper.makeCall(
+            block = { service.getVersion(baseURL) },
+            logMethod = { "getVersionInfo" },
+            logParameters = { "baseURL = $baseURL" }
+        ).getOrElse {
+            throw when (it) {
+                is ResponseException, is NoTransformationFoundException -> NetworkError.NotMealie(it)
+                is SocketTimeoutException, is SocketException -> NetworkError.NoServerConnection(it)
+                else -> NetworkError.MalformedUrl(it)
+            }
         }
-    }
 
     override suspend fun requestRecipes(
         page: Int,
