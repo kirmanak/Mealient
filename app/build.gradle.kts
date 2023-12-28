@@ -2,7 +2,7 @@
 
 import com.android.build.api.dsl.ManagedVirtualDevice
 import java.io.FileInputStream
-import java.util.*
+import java.util.Properties
 
 plugins {
     id("gq.kirmanak.mealient.application")
@@ -17,8 +17,8 @@ plugins {
 android {
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
-        versionCode = 33
-        versionName = "0.4.4"
+        versionCode = 34
+        versionName = "0.4.5"
         testInstrumentationRunner = "gq.kirmanak.mealient.MealientTestRunner"
         testInstrumentationRunnerArguments += mapOf("clearPackageData" to "true")
         resourceConfigurations += listOf("en", "es", "ru", "fr", "nl", "pt", "de")

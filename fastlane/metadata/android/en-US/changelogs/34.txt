@@ -1,0 +1,2 @@
+Fix authentication issues with some Mealie instances.
+Allow sending logs to the developer.
