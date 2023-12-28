@@ -1,10 +1,12 @@
 package gq.kirmanak.mealient.ui.activity
 
+import android.content.Intent
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -13,6 +15,8 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -22,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -69,6 +74,11 @@ private fun MealientApp(
         controller = controller
     )
 
+    IntentLaunchEffect(
+        intent = state.intentToLaunch,
+        onEvent = onEvent,
+    )
+
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
@@ -78,6 +88,13 @@ private fun MealientApp(
     )
 
     AppTheme {
+        if (state.dialogState != null) {
+            MealientDialog(
+                dialogState = state.dialogState,
+                onEvent = onEvent,
+            )
+        }
+
         ModalNavigationDrawer(
             drawerContent = {
                 DrawerContent(
@@ -85,7 +102,10 @@ private fun MealientApp(
                     onNavigation = {
                         coroutineScope.launch {
                             drawerState.close()
-                            controller.navigate(it) { launchSingleTop = true }
+                            controller.navigate(it) {
+                                launchSingleTop = true
+                                popUpTo(NavGraphs.root)
+                            }
                         }
                     },
                     onEvent = {
@@ -110,6 +130,60 @@ private fun MealientApp(
             )
         }
     }
+}
+
+@Composable
+private fun IntentLaunchEffect(
+    intent: Intent?,
+    onEvent: (AppEvent) -> Unit
+) {
+    val context = LocalContext.current
+    LaunchedEffect(intent) {
+        if (intent != null) {
+            context.startActivity(intent)
+            onEvent(AppEvent.LaunchedIntent)
+        }
+    }
+}
+
+@Composable
+private fun MealientDialog(
+    dialogState: DialogState,
+    onEvent: (AppEvent) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = {
+            onEvent(dialogState.onDismiss)
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onEvent(dialogState.onPositiveClick) },
+            ) {
+                Text(
+                    text = stringResource(id = dialogState.positiveButton),
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { onEvent(dialogState.onNegativeClick) },
+            ) {
+                Text(
+                    text = stringResource(id = dialogState.negativeButton),
+                )
+            }
+        },
+        title = {
+            Text(
+                text = stringResource(id = dialogState.title),
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(id = dialogState.message),
+            )
+        },
+    )
 }
 
 @Composable

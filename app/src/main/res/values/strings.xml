@@ -79,4 +79,8 @@
 	<string name="activity_main_email_logs_confirmation_title">Sending sensitive data</string>
 	<string name="activity_main_email_logs_confirmation_positive">Choose how to send</string>
 	<string name="activity_main_email_logs_confirmation_negative">Cancel</string>
+	<string name="activity_main_logout_confirmation_title">Logging out</string>
+	<string name="activity_main_logout_confirmation_message">Are you sure you want to log yourself out?</string>
+	<string name="activity_main_logout_confirmation_positive">Log out</string>
+	<string name="activity_main_logout_confirmation_negative">Cancel</string>
 </resources>
