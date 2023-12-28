@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.edit
 import gq.kirmanak.mealient.data.auth.AuthStorage
+import gq.kirmanak.mealient.datasource.TokenChangeListener
 import gq.kirmanak.mealient.datastore.DataStoreModule.Companion.ENCRYPTED
 import gq.kirmanak.mealient.extensions.prefsChangeFlow
 import gq.kirmanak.mealient.logging.Logger
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 @Singleton
 class AuthStorageImpl @Inject constructor(
     @Named(ENCRYPTED) private val sharedPreferences: SharedPreferences,
+    private val tokenChangeListener: TokenChangeListener,
     private val logger: Logger,
 ) : AuthStorage {
 
@@ -28,7 +30,11 @@ class AuthStorageImpl @Inject constructor(
             .distinctUntilChanged()
     private val singleThreadDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
-    override suspend fun setAuthToken(authToken: String?) = putString(AUTH_TOKEN_KEY, authToken)
+    override suspend fun setAuthToken(authToken: String?) {
+        logger.v { "setAuthToken() called with: authToken = $authToken" }
+        tokenChangeListener.onTokenChange()
+        putString(AUTH_TOKEN_KEY, authToken)
+    }
 
     override suspend fun getAuthToken(): String? = getString(AUTH_TOKEN_KEY)
 

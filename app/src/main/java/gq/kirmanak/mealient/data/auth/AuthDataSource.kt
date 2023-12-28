@@ -6,5 +6,5 @@ interface AuthDataSource {
      */
     suspend fun authenticate(username: String, password: String): String
 
-    suspend fun createApiToken(name: String): String
+    suspend fun createApiToken(loginToken: String, name: String): String
 }

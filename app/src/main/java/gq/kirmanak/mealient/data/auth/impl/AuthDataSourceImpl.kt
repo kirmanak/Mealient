@@ -13,7 +13,7 @@ class AuthDataSourceImpl @Inject constructor(
         return dataSource.authenticate(username, password)
     }
 
-    override suspend fun createApiToken(name: String): String {
-        return dataSource.createApiToken(CreateApiTokenRequest(name)).token
+    override suspend fun createApiToken(loginToken: String, name: String): String {
+        return dataSource.createApiToken(loginToken, CreateApiTokenRequest(name)).token
     }
 }

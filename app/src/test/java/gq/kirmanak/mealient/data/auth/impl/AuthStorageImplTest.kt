@@ -8,9 +8,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.data.auth.AuthStorage
 import gq.kirmanak.mealient.data.auth.impl.AuthStorageImpl.Companion.AUTH_TOKEN_KEY
+import gq.kirmanak.mealient.datasource.TokenChangeListener
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_TOKEN
 import gq.kirmanak.mealient.test.HiltRobolectricTest
 import io.mockk.MockKAnnotations
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -28,11 +30,14 @@ class AuthStorageImplTest : HiltRobolectricTest() {
 
     lateinit var sharedPreferences: SharedPreferences
 
+    @MockK
+    lateinit var tokenChangeListener: TokenChangeListener
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         sharedPreferences = context.getSharedPreferences("test", Context.MODE_PRIVATE)
-        subject = AuthStorageImpl(sharedPreferences, logger)
+        subject = AuthStorageImpl(sharedPreferences, tokenChangeListener, logger)
     }
 
     @Test

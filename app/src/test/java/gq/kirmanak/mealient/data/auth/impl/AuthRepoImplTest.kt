@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthDataSource
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.auth.AuthStorage
-import gq.kirmanak.mealient.datasource.SignOutHandler
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_API_TOKEN
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_PASSWORD
@@ -31,9 +30,6 @@ class AuthRepoImplTest : BaseUnitTest() {
     @MockK(relaxUnitFun = true)
     lateinit var storage: AuthStorage
 
-    @MockK(relaxUnitFun = true)
-    lateinit var signOutHandler: SignOutHandler
-
     @RelaxedMockK
     lateinit var credentialsLogRedactor: CredentialsLogRedactor
 
@@ -46,7 +42,6 @@ class AuthRepoImplTest : BaseUnitTest() {
             authStorage = storage,
             authDataSource = dataSource,
             logger = logger,
-            signOutHandler = signOutHandler,
             credentialsLogRedactor = credentialsLogRedactor,
         )
     }
@@ -60,12 +55,11 @@ class AuthRepoImplTest : BaseUnitTest() {
     @Test
     fun `when authenticate successfully then saves to storage`() = runTest {
         coEvery { dataSource.authenticate(any(), any()) } returns TEST_TOKEN
-        coEvery { dataSource.createApiToken(any()) } returns TEST_API_TOKEN
+        coEvery { dataSource.createApiToken(any(), any()) } returns TEST_API_TOKEN
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD)
         coVerify {
             dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD))
-            storage.setAuthToken(TEST_TOKEN)
-            dataSource.createApiToken(eq("Mealient"))
+            dataSource.createApiToken(TEST_TOKEN, eq("Mealient"))
             storage.setAuthToken(TEST_API_TOKEN)
         }
         confirmVerified(storage)

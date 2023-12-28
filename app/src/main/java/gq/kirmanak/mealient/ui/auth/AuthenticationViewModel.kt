@@ -26,6 +26,7 @@ class AuthenticationViewModel @Inject constructor(
         _uiState.value = OperationUiState.Progress()
         viewModelScope.launch {
             val result = runCatchingExceptCancel { authRepo.authenticate(email, password) }
+            logger.d { "Authentication result = $result" }
             _uiState.value = OperationUiState.fromResult(result)
         }
     }

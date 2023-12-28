@@ -51,6 +51,7 @@ interface MealieDataSource {
     ): String
 
     suspend fun createApiToken(
+        loginToken: String,
         request: CreateApiTokenRequest,
     ): CreateApiTokenResponse
 

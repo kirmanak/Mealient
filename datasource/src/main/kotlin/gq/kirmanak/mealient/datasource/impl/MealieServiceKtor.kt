@@ -23,6 +23,7 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
 import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -105,11 +106,15 @@ internal class MealieServiceKtor @Inject constructor(
         }.body()
     }
 
-    override suspend fun createApiToken(request: CreateApiTokenRequest): CreateApiTokenResponse {
+    override suspend fun createApiToken(
+        loginToken: String,
+        request: CreateApiTokenRequest
+    ): CreateApiTokenResponse {
         return httpClient.post {
             endpoint("/api/users/api-tokens")
             contentType(ContentType.Application.Json)
             setBody(request)
+            header("Authorization", "Bearer $loginToken")
         }.body()
     }
 

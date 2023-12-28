@@ -102,11 +102,12 @@ internal class MealieDataSourceImpl @Inject constructor(
     )
 
     override suspend fun createApiToken(
-        request: CreateApiTokenRequest
+        loginToken: String,
+        request: CreateApiTokenRequest,
     ): CreateApiTokenResponse = networkRequestWrapper.makeCallAndHandleUnauthorized(
-        block = { service.createApiToken(request) },
+        block = { service.createApiToken(loginToken, request) },
         logMethod = { "createApiToken" },
-        logParameters = { "request = $request" }
+        logParameters = { "loginToken = $loginToken, request = $request" }
     )
 
     override suspend fun requestUserInfo(): GetUserInfoResponse {

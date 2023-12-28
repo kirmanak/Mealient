@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
-import gq.kirmanak.mealient.datasource.SignOutHandler
+import gq.kirmanak.mealient.datasource.TokenChangeListener
 import io.ktor.client.HttpClient
 import javax.inject.Singleton
 
@@ -37,5 +37,5 @@ internal interface KtorModule {
     fun bindKtorClientBuilder(impl: KtorClientBuilderImpl) : KtorClientBuilder
 
     @Binds
-    fun bindSignOutHandler(impl: SignOutHandlerKtor) : SignOutHandler
+    fun bindSignOutHandler(impl: TokenChangeListenerKtor): TokenChangeListener
 }
