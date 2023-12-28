@@ -25,8 +25,9 @@ class AuthRepoImpl @Inject constructor(
         credentialsLogRedactor.set(email, password)
         val token = authDataSource.authenticate(email, password)
         credentialsLogRedactor.clear()
+        authStorage.setAuthToken(token)
 
-        val apiToken = authDataSource.createApiToken(token, API_TOKEN_NAME)
+        val apiToken = authDataSource.createApiToken(API_TOKEN_NAME)
         authStorage.setAuthToken(apiToken)
     }
 

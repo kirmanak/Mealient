@@ -55,11 +55,12 @@ class AuthRepoImplTest : BaseUnitTest() {
     @Test
     fun `when authenticate successfully then saves to storage`() = runTest {
         coEvery { dataSource.authenticate(any(), any()) } returns TEST_TOKEN
-        coEvery { dataSource.createApiToken(any(), any()) } returns TEST_API_TOKEN
+        coEvery { dataSource.createApiToken(any()) } returns TEST_API_TOKEN
         subject.authenticate(TEST_USERNAME, TEST_PASSWORD)
         coVerify {
             dataSource.authenticate(eq(TEST_USERNAME), eq(TEST_PASSWORD))
-            dataSource.createApiToken(TEST_TOKEN, eq("Mealient"))
+            storage.setAuthToken(TEST_TOKEN)
+            dataSource.createApiToken(eq("Mealient"))
             storage.setAuthToken(TEST_API_TOKEN)
         }
         confirmVerified(storage)

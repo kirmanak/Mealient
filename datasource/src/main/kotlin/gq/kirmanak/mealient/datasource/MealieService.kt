@@ -36,10 +36,7 @@ internal interface MealieService {
 
     suspend fun createRecipeFromURL(request: ParseRecipeURLRequest): String
 
-    suspend fun createApiToken(
-        loginToken: String,
-        request: CreateApiTokenRequest
-    ): CreateApiTokenResponse
+    suspend fun createApiToken(request: CreateApiTokenRequest): CreateApiTokenResponse
 
     suspend fun getUserSelfInfo(): GetUserInfoResponse
 
