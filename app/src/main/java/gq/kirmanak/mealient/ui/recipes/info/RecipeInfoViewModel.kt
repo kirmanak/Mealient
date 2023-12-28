@@ -10,6 +10,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.ui.navArgs
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
@@ -17,14 +18,15 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class RecipeInfoViewModel @Inject constructor(
+internal class RecipeInfoViewModel @Inject constructor(
     private val recipeRepo: RecipeRepo,
     private val logger: Logger,
     private val recipeImageUrlProvider: RecipeImageUrlProvider,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val args = RecipeInfoFragmentArgs.fromSavedStateHandle(savedStateHandle)
+    private val args = savedStateHandle.navArgs<RecipeScreenArgs>()
+
     private val _uiState = flow {
         logger.v { "Initializing UI state with args = $args" }
         val recipeInfo = recipeRepo.loadRecipeInfo(args.recipeId)

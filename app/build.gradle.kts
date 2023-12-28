@@ -77,6 +77,10 @@ android {
     }
 }
 
+ksp {
+    arg("compose-destinations.generateNavGraphs", "false")
+}
+
 dependencies {
 
     implementation(project(":architecture"))
@@ -133,6 +137,8 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.coil.compose)
+
+    implementation(libs.androidx.hilt.navigationCompose)
 
     testImplementation(libs.junit)
 

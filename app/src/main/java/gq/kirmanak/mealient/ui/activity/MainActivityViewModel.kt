@@ -1,82 +1,114 @@
 package gq.kirmanak.mealient.ui.activity
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.logging.Logger
-import gq.kirmanak.mealient.ui.ActivityUiState
-import gq.kirmanak.mealient.ui.ActivityUiStateController
-import gq.kirmanak.mealient.ui.baseurl.BaseURLFragmentArgs
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
+import gq.kirmanak.mealient.ui.destinations.AuthenticationScreenDestination
+import gq.kirmanak.mealient.ui.destinations.BaseURLScreenDestination
+import gq.kirmanak.mealient.ui.destinations.DirectionDestination
+import gq.kirmanak.mealient.ui.destinations.DisclaimerScreenDestination
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel @Inject constructor(
+internal class MainActivityViewModel @Inject constructor(
     private val authRepo: AuthRepo,
     private val logger: Logger,
     private val disclaimerStorage: DisclaimerStorage,
     private val serverInfoRepo: ServerInfoRepo,
     private val recipeRepo: RecipeRepo,
-    private val activityUiStateController: ActivityUiStateController,
 ) : ViewModel() {
 
-    val uiState: StateFlow<ActivityUiState> = activityUiStateController.getUiStateFlow()
-
-    private val _startDestination = MutableLiveData<StartDestinationInfo>()
-    val startDestination: LiveData<StartDestinationInfo> = _startDestination
-
-    private val _clearSearchViewFocusChannel = Channel<Unit>()
-    val clearSearchViewFocus: Flow<Unit> = _clearSearchViewFocusChannel.receiveAsFlow()
+    private val _appState = MutableStateFlow(MealientAppState())
+    val appState: StateFlow<MealientAppState> get() = _appState.asStateFlow()
 
     init {
-        authRepo.isAuthorizedFlow
-            .onEach { isAuthorized -> updateUiState { it.copy(isAuthorized = isAuthorized) } }
-            .launchIn(viewModelScope)
+        checkForcedDestination()
+    }
+
+    private fun checkForcedDestination() {
+        val baseUrlSetState = serverInfoRepo.baseUrlFlow.map { it != null }
+        val tokenExistsState = authRepo.isAuthorizedFlow
+        val disclaimerAcceptedState = disclaimerStorage.isDisclaimerAcceptedFlow
 
         viewModelScope.launch {
-            _startDestination.value = when {
-                !disclaimerStorage.isDisclaimerAccepted() -> {
-                    StartDestinationInfo(R.id.disclaimerFragment)
+            combine(
+                baseUrlSetState,
+                tokenExistsState,
+                disclaimerAcceptedState,
+            ) { baseUrlSet, tokenExists, disclaimerAccepted ->
+                when {
+                    !disclaimerAccepted -> ForcedDestination.Destination(DisclaimerScreenDestination)
+                    !baseUrlSet -> ForcedDestination.Destination(BaseURLScreenDestination)
+                    !tokenExists -> ForcedDestination.Destination(AuthenticationScreenDestination)
+                    else -> ForcedDestination.None
                 }
-                serverInfoRepo.getUrl() == null -> {
-                    StartDestinationInfo(R.id.baseURLFragment, BaseURLFragmentArgs(true).toBundle())
-                }
-                else -> {
-                    StartDestinationInfo(R.id.recipesListFragment)
-                }
+            }.collect { destination ->
+                _appState.update { it.copy(forcedRoute = destination) }
             }
         }
     }
 
-    fun updateUiState(updater: (ActivityUiState) -> ActivityUiState) {
-        activityUiStateController.updateUiState(updater)
-    }
+    fun onEvent(event: AppEvent) {
+        logger.v { "onEvent() called with: event = $event" }
+        when (event) {
+            is AppEvent.Logout -> {
+                viewModelScope.launch { authRepo.logout() }
+            }
 
-    fun logout() {
-        logger.v { "logout() called" }
-        viewModelScope.launch { authRepo.logout() }
-    }
+            is AppEvent.EmailLogs -> {
+                // TODO
+            }
 
-    fun onSearchQuery(query: String?) {
-        logger.v { "onSearchQuery() called with: query = $query" }
-        recipeRepo.updateNameQuery(query)
+            is AppEvent.SearchQueryChanged -> {
+                _appState.update { it.copy(searchQuery = event.query) }
+                recipeRepo.updateNameQuery(event.query)
+            }
+        }
     }
+}
 
-    fun clearSearchViewFocus() {
-        logger.v { "clearSearchViewFocus() called" }
-        _clearSearchViewFocusChannel.trySend(Unit)
-    }
+internal data class MealientAppState(
+    val forcedRoute: ForcedDestination = ForcedDestination.Undefined,
+    val searchQuery: String = "",
+)
+
+internal sealed interface ForcedDestination {
+
+    /**
+     * Force navigation is required
+     */
+    data class Destination(
+        val route: DirectionDestination,
+    ) : ForcedDestination
+
+    /**
+     * The conditions were checked, no force navigation required
+     */
+    data object None : ForcedDestination
+
+    /**
+     * The conditions were not checked yet
+     */
+    data object Undefined : ForcedDestination
+}
+
+internal sealed interface AppEvent {
+
+    data object Logout : AppEvent
+
+    data object EmailLogs : AppEvent
+
+    data class SearchQueryChanged(val query: String) : AppEvent
 }

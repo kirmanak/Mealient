@@ -19,41 +19,62 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.navigate
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.components.CenteredProgressIndicator
 import gq.kirmanak.mealient.ui.components.LazyPagingColumnPullRefresh
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
+import gq.kirmanak.mealient.ui.destinations.RecipeScreenDestination
+
+
+@Destination
+@Composable
+internal fun RecipesList(
+    navController: NavController,
+    viewModel: RecipesListViewModel = hiltViewModel()
+) {
+    val state = viewModel.screenState.collectAsState()
+    val stateValue = state.value
+
+    LaunchedEffect(stateValue.recipeIdToOpen) {
+        if (stateValue.recipeIdToOpen != null) {
+            navController.navigate(RecipeScreenDestination(stateValue.recipeIdToOpen))
+            viewModel.onEvent(RecipeListEvent.RecipeOpened)
+        }
+    }
+
+    RecipesList(
+        state = stateValue,
+        onEvent = viewModel::onEvent,
+    )
+}
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun RecipesList(
-    recipesFlow: Flow<PagingData<RecipeListItemState>>,
-    onDeleteClick: (RecipeListItemState) -> Unit,
-    onFavoriteClick: (RecipeListItemState) -> Unit,
-    onItemClick: (RecipeListItemState) -> Unit,
-    onSnackbarShown: () -> Unit,
-    snackbarMessageState: StateFlow<RecipeListSnackbar?>,
+    state: RecipeListState,
+    onEvent: (RecipeListEvent) -> Unit,
 ) {
-    val recipes: LazyPagingItems<RecipeListItemState> = recipesFlow.collectAsLazyPagingItems()
+    val recipes: LazyPagingItems<RecipeListItemState> =
+        state.pagingDataRecipeState.collectAsLazyPagingItems()
     val isRefreshing = recipes.loadState.refresh is LoadState.Loading
     var itemToDelete: RecipeListItemState? by remember { mutableStateOf(null) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val snackbar: RecipeListSnackbar? by snackbarMessageState.collectAsState()
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
-        snackbar?.message?.let { message ->
+        state.snackbarState?.message?.let { message ->
             LaunchedEffect(message) {
                 snackbarHostState.showSnackbar(message)
-                onSnackbarShown()
+                onEvent(RecipeListEvent.SnackbarShown)
             }
         } ?: run {
             snackbarHostState.currentSnackbarData?.dismiss()
@@ -63,7 +84,7 @@ internal fun RecipesList(
             ConfirmDeleteDialog(
                 onDismissRequest = { itemToDelete = null },
                 onConfirm = {
-                    onDeleteClick(item)
+                    onEvent(RecipeListEvent.DeleteConfirmed(item))
                     itemToDelete = null
                 },
                 item = item,
@@ -79,8 +100,8 @@ internal fun RecipesList(
                     modifier = innerModifier,
                     recipes = recipes,
                     onDeleteClick = { itemToDelete = it },
-                    onFavoriteClick = onFavoriteClick,
-                    onItemClick = onItemClick
+                    onFavoriteClick = { onEvent(RecipeListEvent.FavoriteClick(it)) },
+                    onItemClick = { onEvent(RecipeListEvent.RecipeClick(it)) },
                 )
             }
 

@@ -30,8 +30,7 @@ import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 import gq.kirmanak.mealient.ui.util.error
 
-@RootNavGraph(start = true)
-@Destination(start = true)
+@Destination
 @Composable
 fun ShoppingListsScreen(
     navigator: DestinationsNavigator,

@@ -12,8 +12,5 @@ import gq.kirmanak.mealient.ui.util.LoadingHelperFactoryImpl
 internal interface UiModule {
 
     @Binds
-    fun bindActivityUiStateController(impl: ActivityUiStateControllerImpl): ActivityUiStateController
-
-    @Binds
     fun bindLoadingHelperFactory(impl: LoadingHelperFactoryImpl): LoadingHelperFactory
 }

@@ -9,16 +9,38 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
+data class RecipeScreenArgs(
+    val recipeId: String,
+)
+
+@Destination(
+    navArgsDelegate = RecipeScreenArgs::class,
+)
+@Composable
+internal fun RecipeScreen(
+    viewModel: RecipeInfoViewModel = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    RecipeScreen(
+        state = state,
+    )
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RecipeScreen(
-    uiState: RecipeInfoUiState,
+    state: RecipeInfoUiState,
 ) {
     KeepScreenOn()
 
@@ -33,20 +55,20 @@ fun RecipeScreen(
             verticalArrangement = Arrangement.spacedBy(Dimens.Small, Alignment.Top),
         ) {
             HeaderSection(
-                imageUrl = uiState.imageUrl,
-                title = uiState.title,
-                description = uiState.description,
+                imageUrl = state.imageUrl,
+                title = state.title,
+                description = state.description,
             )
 
-            if (uiState.showIngredients) {
+            if (state.showIngredients) {
                 IngredientsSection(
-                    ingredients = uiState.recipeIngredients,
+                    ingredients = state.recipeIngredients,
                 )
             }
 
-            if (uiState.showInstructions) {
+            if (state.showInstructions) {
                 InstructionsSection(
-                    instructions = uiState.recipeInstructions,
+                    instructions = state.recipeInstructions,
                 )
             }
         }
@@ -58,7 +80,7 @@ fun RecipeScreen(
 private fun RecipeScreenPreview() {
     AppTheme {
         RecipeScreen(
-            uiState = RecipeInfoUiState(
+            state = RecipeInfoUiState(
                 showIngredients = true,
                 showInstructions = true,
                 summaryEntity = SUMMARY_ENTITY,
