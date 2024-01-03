@@ -110,6 +110,8 @@ androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name =
 
 androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "materialCompose" }
 
+androidx-compose-animation = { group = "androidx.compose.animation", name = "animation-graphics" }
+
 google-accompanist-themeadapter-material3 = { group = "com.google.accompanist", name = "accompanist-themeadapter-material3", version.ref = "accompanistVersion" }
 
 google-dagger-hiltPlugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt" }

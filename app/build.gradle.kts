@@ -138,6 +138,8 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.coil.compose)
 
+    implementation(libs.androidx.compose.animation)
+
     implementation(libs.androidx.hilt.navigationCompose)
 
     testImplementation(libs.junit)

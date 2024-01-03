@@ -30,8 +30,7 @@ sealed class OperationUiState<T> {
     class Initial<T> : OperationUiState<T>() {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-            return true
+            return javaClass == other?.javaClass
         }
 
         override fun hashCode(): Int {
@@ -42,8 +41,7 @@ sealed class OperationUiState<T> {
     class Progress<T> : OperationUiState<T>() {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-            return true
+            return javaClass == other?.javaClass
         }
 
         override fun hashCode(): Int {
