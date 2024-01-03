@@ -15,7 +15,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -101,19 +103,25 @@ internal fun AuthenticationScreen(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun EmailInput(
     input: String,
     onEvent: (AuthenticationScreenEvent) -> Unit,
 ) {
+    val onValueChange: (String) -> Unit = {
+        onEvent(AuthenticationScreenEvent.OnEmailInput(it))
+    }
     OutlinedTextField(
         modifier = Modifier
             .semantics { testTag = "email-input" }
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .autofill(
+                autofillTypes = listOf(AutofillType.EmailAddress),
+                onFill = onValueChange,
+            ),
         value = input,
-        onValueChange = {
-            onEvent(AuthenticationScreenEvent.OnEmailInput(it))
-        },
+        onValueChange = onValueChange,
         label = {
             Text(
                 text = stringResource(id = R.string.fragment_authentication_input_hint_email),

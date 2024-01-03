@@ -12,7 +12,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -21,23 +23,28 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import gq.kirmanak.mealient.R
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun PasswordInput(
     input: String,
     errorText: String?,
     isPasswordVisible: Boolean,
-    onEvent: (AuthenticationScreenEvent) -> Unit
+    onEvent: (AuthenticationScreenEvent) -> Unit,
 ) {
     val isError = errorText != null
-
+    val onValueChange: (String) -> Unit = {
+        onEvent(AuthenticationScreenEvent.OnPasswordInput(it))
+    }
     OutlinedTextField(
         modifier = Modifier
             .semantics { testTag = "password-input" }
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .autofill(
+                autofillTypes = listOf(AutofillType.Password),
+                onFill = onValueChange,
+            ),
         value = input,
-        onValueChange = {
-            onEvent(AuthenticationScreenEvent.OnPasswordInput(it))
-        },
+        onValueChange = onValueChange,
         label = {
             Text(
                 text = stringResource(id = R.string.fragment_authentication_input_hint_password),
@@ -78,7 +85,7 @@ internal fun PasswordInput(
 private fun PasswordTrailingIcon(
     isError: Boolean,
     isPasswordVisible: Boolean,
-    onEvent: (AuthenticationScreenEvent) -> Unit
+    onEvent: (AuthenticationScreenEvent) -> Unit,
 ) {
     val image = if (isError) {
         Icons.Default.Warning
