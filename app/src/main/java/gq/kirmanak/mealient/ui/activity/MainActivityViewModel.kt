@@ -43,6 +43,7 @@ internal class MainActivityViewModel @Inject constructor(
     }
 
     private fun checkForcedDestination() {
+        logger.v { "checkForcedDestination() called" }
         val baseUrlSetState = serverInfoRepo.baseUrlFlow.map { it != null }
         val tokenExistsState = authRepo.isAuthorizedFlow
         val disclaimerAcceptedState = disclaimerStorage.isDisclaimerAcceptedFlow
@@ -53,6 +54,7 @@ internal class MainActivityViewModel @Inject constructor(
                 tokenExistsState,
                 disclaimerAcceptedState,
             ) { baseUrlSet, tokenExists, disclaimerAccepted ->
+                logger.d { "baseUrlSet = $baseUrlSet, tokenExists = $tokenExists, disclaimerAccepted = $disclaimerAccepted" }
                 when {
                     !disclaimerAccepted -> ForcedDestination.Destination(DisclaimerScreenDestination)
                     !baseUrlSet -> ForcedDestination.Destination(BaseURLScreenDestination)
@@ -60,6 +62,7 @@ internal class MainActivityViewModel @Inject constructor(
                     else -> ForcedDestination.None
                 }
             }.collect { destination ->
+                logger.v { "destination = $destination" }
                 _appState.update { it.copy(forcedRoute = destination) }
             }
         }
@@ -112,8 +115,16 @@ internal class MainActivityViewModel @Inject constructor(
                 /* file = */ application.getLogFile(),
             )
         } catch (e: IllegalArgumentException) {
+            logger.e(e) { "Failed to get log file URI" }
             return null
         }
+
+        if (logFileUri == null) {
+            logger.e { "logFileUri is null" }
+            return null
+        }
+
+        logger.v { "logFileUri = $logFileUri" }
 
         val emailIntent = Intent(Intent.ACTION_SEND).apply {
             val subject = application.getString(R.string.activity_main_email_logs_subject)

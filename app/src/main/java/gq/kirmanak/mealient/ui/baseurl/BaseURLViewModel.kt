@@ -40,8 +40,10 @@ internal class BaseURLViewModel @Inject constructor(
     }
 
     private fun checkIfNavigationIsAllowed() {
+        logger.v { "checkIfNavigationIsAllowed() called" }
         viewModelScope.launch {
             val allowed = serverInfoRepo.getUrl() != null
+            logger.d { "checkIfNavigationIsAllowed: allowed = $allowed" }
             _screenState.update { it.copy(isNavigationEnabled = allowed) }
         }
     }

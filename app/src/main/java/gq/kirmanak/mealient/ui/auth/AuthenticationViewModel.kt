@@ -26,26 +26,6 @@ internal class AuthenticationViewModel @Inject constructor(
     private val _screenState = MutableStateFlow(AuthenticationScreenState())
     val screenState = _screenState.asStateFlow()
 
-    private fun displayAuthenticationResult(result: Result<Unit>) {
-        val errorText = result.fold(
-            onSuccess = { null },
-            onFailure = {
-                when (it) {
-                    is NetworkError.Unauthorized -> application.getString(R.string.fragment_authentication_credentials_incorrect)
-                    else -> it.message
-                }
-            }
-        )
-        _screenState.update {
-            it.copy(
-                isLoading = false,
-                isSuccessful = result.isSuccess,
-                errorText = errorText,
-                buttonEnabled = true,
-            )
-        }
-    }
-
     fun onEvent(event: AuthenticationScreenEvent) {
         logger.v { "onEvent() called with: event = $event" }
         when (event) {
@@ -106,8 +86,25 @@ internal class AuthenticationViewModel @Inject constructor(
                     password = screenState.passwordInput
                 )
             }
-            logger.d { "Authentication result = $result" }
-            displayAuthenticationResult(result)
+            logger.d { "onLoginClick: result = $result" }
+            val errorText = result.fold(
+                onSuccess = { null },
+                onFailure = {
+                    when (it) {
+                        is NetworkError.Unauthorized -> application.getString(R.string.fragment_authentication_credentials_incorrect)
+                        else -> it.message
+                    }
+                }
+            )
+            _screenState.update {
+                it.copy(
+                    isLoading = false,
+                    isSuccessful = result.isSuccess,
+                    errorText = errorText,
+                    buttonEnabled = true,
+                )
+            }
         }
     }
+
 }

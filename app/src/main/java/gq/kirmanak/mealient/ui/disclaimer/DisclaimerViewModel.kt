@@ -47,6 +47,7 @@ internal class DisclaimerViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     private fun countDownToScreenState(countDown: Int): DisclaimerScreenState {
+        logger.v { "countDownToScreenState() called with: countDown = $countDown" }
         val isCountDownOver = countDown == 0
         return DisclaimerScreenState(
             buttonText = if (isCountDownOver) {

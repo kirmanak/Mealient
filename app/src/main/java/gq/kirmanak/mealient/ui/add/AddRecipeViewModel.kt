@@ -29,7 +29,6 @@ internal class AddRecipeViewModel @Inject constructor(
     val screenState: StateFlow<AddRecipeScreenState> get() = _screenState.asStateFlow()
 
     init {
-        logger.v { "init() called" }
         viewModelScope.launch { doLoadPreservedRequest() }
     }
 
