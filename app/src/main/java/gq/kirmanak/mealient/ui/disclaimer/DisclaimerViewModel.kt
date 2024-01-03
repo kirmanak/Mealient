@@ -1,11 +1,9 @@
 package gq.kirmanak.mealient.ui.disclaimer
 
-import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
 import gq.kirmanak.mealient.logging.Logger
 import kotlinx.coroutines.delay
@@ -24,7 +22,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class DisclaimerViewModel @Inject constructor(
-    private val application: Application,
     private val disclaimerStorage: DisclaimerStorage,
     private val logger: Logger,
 ) : ViewModel() {
@@ -48,18 +45,9 @@ internal class DisclaimerViewModel @Inject constructor(
 
     private fun countDownToScreenState(countDown: Int): DisclaimerScreenState {
         logger.v { "countDownToScreenState() called with: countDown = $countDown" }
-        val isCountDownOver = countDown == 0
         return DisclaimerScreenState(
-            buttonText = if (isCountDownOver) {
-                application.getString(R.string.fragment_disclaimer_button_okay)
-            } else {
-                application.resources.getQuantityString(
-                    R.plurals.fragment_disclaimer_button_okay_timer,
-                    countDown,
-                    countDown,
-                )
-            },
-            buttonEnabled = isCountDownOver,
+            isCountDownOver = countDown == 0,
+            countDown = countDown,
         )
     }
 

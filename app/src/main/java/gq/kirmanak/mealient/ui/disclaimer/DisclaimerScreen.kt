@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -79,12 +80,21 @@ internal fun DisclaimerScreen(
             modifier = Modifier
                 .semantics { testTag = "okay-button" },
             onClick = onButtonClick,
-            enabled = state.buttonEnabled,
+            enabled = state.isCountDownOver,
         ) {
+            val text = if (state.isCountDownOver) {
+                stringResource(R.string.fragment_disclaimer_button_okay)
+            } else {
+                pluralStringResource(
+                    R.plurals.fragment_disclaimer_button_okay_timer,
+                    state.countDown,
+                    state.countDown,
+                )
+            }
             Text(
                 modifier = Modifier
                     .semantics { testTag = "okay-button-text" },
-                text = state.buttonText,
+                text = text,
             )
         }
     }
@@ -96,8 +106,8 @@ private fun DisclaimerScreenPreview() {
     AppTheme {
         DisclaimerScreen(
             state = DisclaimerScreenState(
-                buttonText = "Okay (5 seconds)",
-                buttonEnabled = false,
+                isCountDownOver = false,
+                countDown = 5,
             ),
             onButtonClick = {},
         )

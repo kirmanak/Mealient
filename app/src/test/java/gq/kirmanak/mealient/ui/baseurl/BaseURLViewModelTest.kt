@@ -52,6 +52,8 @@ internal class BaseURLViewModelTest : BaseUnitTest() {
     override fun setUp() {
         super.setUp()
         every { application.getString(any()) } returns ""
+        every { application.getString(any(), any()) } returns ""
+        coEvery { serverInfoRepo.getUrl() } returns null
         subject = BaseURLViewModel(
             application = application,
             serverInfoRepo = serverInfoRepo,

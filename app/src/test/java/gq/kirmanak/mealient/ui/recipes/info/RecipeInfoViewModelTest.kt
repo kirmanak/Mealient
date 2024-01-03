@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.ui.recipes.info
 
+import androidx.lifecycle.SavedStateHandle
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
@@ -58,8 +59,11 @@ class RecipeInfoViewModelTest : BaseUnitTest() {
     }
 
     private fun createSubject(): RecipeInfoViewModel {
-        val argument = RecipeInfoFragmentArgs(RECIPE_ID).toSavedStateHandle()
-        return RecipeInfoViewModel(recipeRepo, logger, recipeImageUrlProvider, argument)
+        val savedStateHandle = SavedStateHandle(
+            mapOf("recipeId" to RECIPE_ID)
+
+        )
+        return RecipeInfoViewModel(recipeRepo, logger, recipeImageUrlProvider, savedStateHandle)
     }
 
     companion object {
