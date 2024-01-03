@@ -23,10 +23,7 @@ internal class DisclaimerViewModelTest : BaseUnitTest() {
     @Before
     override fun setUp() {
         super.setUp()
-        subject = DisclaimerViewModel(
-            storage,
-            logger,
-        )
+        subject = DisclaimerViewModel(storage, logger)
     }
 
     @Test
