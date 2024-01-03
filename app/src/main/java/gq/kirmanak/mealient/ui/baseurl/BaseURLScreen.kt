@@ -30,13 +30,18 @@ import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.components.BaseScreen
+import gq.kirmanak.mealient.ui.components.BaseScreenState
+import gq.kirmanak.mealient.ui.components.BaseScreenWithNavigation
 import gq.kirmanak.mealient.ui.components.TopProgressIndicator
+import gq.kirmanak.mealient.ui.components.previewBaseScreenState
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
 @Destination
 @Composable
 internal fun BaseURLScreen(
     navController: NavController,
+    baseScreenState: BaseScreenState,
     viewModel: BaseURLViewModel = hiltViewModel(),
 ) {
     val screenState by viewModel.screenState.collectAsState()
@@ -49,13 +54,41 @@ internal fun BaseURLScreen(
 
     BaseURLScreen(
         state = screenState,
+        baseScreenState = baseScreenState,
         onEvent = viewModel::onEvent,
     )
 }
 
 @Composable
-internal fun BaseURLScreen(
+private fun BaseURLScreen(
     state: BaseURLScreenState,
+    baseScreenState: BaseScreenState,
+    onEvent: (BaseURLScreenEvent) -> Unit,
+) {
+    val content: @Composable (Modifier) -> Unit = {
+        BaseURLScreen(
+            modifier = it,
+            state = state,
+            onEvent = onEvent,
+        )
+    }
+
+    if (state.isNavigationEnabled) {
+        BaseScreenWithNavigation(
+            baseScreenState = baseScreenState,
+            content = content,
+        )
+    } else {
+        BaseScreen(
+            content = content,
+        )
+    }
+}
+
+@Composable
+private fun BaseURLScreen(
+    state: BaseURLScreenState,
+    modifier: Modifier = Modifier,
     onEvent: (BaseURLScreenEvent) -> Unit,
 ) {
     if (state.invalidCertificateDialogState != null) {
@@ -66,6 +99,7 @@ internal fun BaseURLScreen(
     }
 
     TopProgressIndicator(
+        modifier = modifier,
         isLoading = state.isLoading,
     ) {
         Column(
@@ -107,7 +141,7 @@ private fun UrlInputField(
     input: String,
     errorText: String?,
     onEvent: (BaseURLScreenEvent) -> Unit,
-    isError: Boolean
+    isError: Boolean,
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -161,7 +195,9 @@ private fun BaseURLScreenPreview() {
                 errorText = null,
                 isButtonEnabled = true,
                 isLoading = true,
+                isNavigationEnabled = false,
             ),
+            baseScreenState = previewBaseScreenState(),
             onEvent = {},
         )
     }

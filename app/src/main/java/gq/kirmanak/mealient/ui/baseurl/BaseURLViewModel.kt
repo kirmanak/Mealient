@@ -35,6 +35,17 @@ internal class BaseURLViewModel @Inject constructor(
     private val _screenState = MutableStateFlow(BaseURLScreenState())
     val screenState = _screenState.asStateFlow()
 
+    init {
+        checkIfNavigationIsAllowed()
+    }
+
+    private fun checkIfNavigationIsAllowed() {
+        viewModelScope.launch {
+            val allowed = serverInfoRepo.getUrl() != null
+            _screenState.update { it.copy(isNavigationEnabled = allowed) }
+        }
+    }
+
     fun saveBaseUrl(baseURL: String) {
         logger.v { "saveBaseUrl() called" }
         _screenState.update {

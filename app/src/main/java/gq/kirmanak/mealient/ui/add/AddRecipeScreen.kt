@@ -32,19 +32,22 @@ import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.components.BaseScreenState
+import gq.kirmanak.mealient.ui.components.BaseScreenWithNavigation
 import gq.kirmanak.mealient.ui.components.TopProgressIndicator
+import gq.kirmanak.mealient.ui.components.previewBaseScreenState
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
 @Destination
 @Composable
 internal fun AddRecipeScreen(
-    snackbarHostState: SnackbarHostState,
+    baseScreenState: BaseScreenState,
     viewModel: AddRecipeViewModel = hiltViewModel()
 ) {
     val screenState by viewModel.screenState.collectAsState()
 
     AddRecipeScreen(
-        snackbarHostState = snackbarHostState,
+        baseScreenState = baseScreenState,
         state = screenState,
         onEvent = viewModel::onEvent,
     )
@@ -52,10 +55,12 @@ internal fun AddRecipeScreen(
 
 @Composable
 internal fun AddRecipeScreen(
-    snackbarHostState: SnackbarHostState,
+    baseScreenState: BaseScreenState,
     state: AddRecipeScreenState,
     onEvent: (AddRecipeScreenEvent) -> Unit,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     state.snackbarMessage?.let {
         val message = when (it) {
             is AddRecipeSnackbarMessage.Error -> stringResource(id = R.string.fragment_add_recipe_save_error)
@@ -68,13 +73,20 @@ internal fun AddRecipeScreen(
     } ?: run {
         snackbarHostState.currentSnackbarData?.dismiss()
     }
-    TopProgressIndicator(
-        isLoading = state.isLoading,
-    ) {
-        AddRecipeScreenContent(
-            state = state,
-            onEvent = onEvent,
-        )
+
+    BaseScreenWithNavigation(
+        baseScreenState = baseScreenState,
+        snackbarHostState = snackbarHostState,
+    ) { modifier ->
+        TopProgressIndicator(
+            modifier = modifier,
+            isLoading = state.isLoading,
+        ) {
+            AddRecipeScreenContent(
+                state = state,
+                onEvent = onEvent,
+            )
+        }
     }
 }
 
@@ -291,9 +303,8 @@ private fun AddRecipeInputField(
 @Composable
 private fun AddRecipeScreenPreview() {
     AppTheme {
-        val snackbarHostState = remember { SnackbarHostState() }
         AddRecipeScreen(
-            snackbarHostState = snackbarHostState,
+            baseScreenState = previewBaseScreenState(),
             state = AddRecipeScreenState(),
             onEvent = {},
         )

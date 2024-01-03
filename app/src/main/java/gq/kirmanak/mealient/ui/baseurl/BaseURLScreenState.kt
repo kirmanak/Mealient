@@ -7,6 +7,7 @@ internal data class BaseURLScreenState(
     val isButtonEnabled: Boolean = false,
     val isLoading: Boolean = false,
     val invalidCertificateDialogState: InvalidCertificateDialogState? = null,
+    val isNavigationEnabled: Boolean = true,
 ) {
 
     data class InvalidCertificateDialogState(

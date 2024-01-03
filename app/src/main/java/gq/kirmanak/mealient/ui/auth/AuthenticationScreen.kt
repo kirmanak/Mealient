@@ -24,6 +24,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.components.BaseScreen
 import gq.kirmanak.mealient.ui.components.TopProgressIndicator
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
@@ -41,18 +42,23 @@ internal fun AuthenticationScreen(
         }
     }
 
-    AuthenticationScreen(
-        state = screenState,
-        onEvent = viewModel::onEvent,
-    )
+    BaseScreen { modifier ->
+        AuthenticationScreen(
+            modifier = modifier,
+            state = screenState,
+            onEvent = viewModel::onEvent,
+        )
+    }
 }
 
 @Composable
 internal fun AuthenticationScreen(
     state: AuthenticationScreenState,
+    modifier: Modifier = Modifier,
     onEvent: (AuthenticationScreenEvent) -> Unit,
 ) {
     TopProgressIndicator(
+        modifier = modifier,
         isLoading = state.isLoading,
     ) {
         Column(
@@ -93,7 +99,7 @@ internal fun AuthenticationScreen(
 @Composable
 private fun EmailInput(
     input: String,
-    onEvent: (AuthenticationScreenEvent) -> Unit
+    onEvent: (AuthenticationScreenEvent) -> Unit,
 ) {
     OutlinedTextField(
         modifier = Modifier

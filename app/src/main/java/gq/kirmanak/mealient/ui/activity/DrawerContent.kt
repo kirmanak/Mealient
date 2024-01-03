@@ -1,6 +1,6 @@
 package gq.kirmanak.mealient.ui.activity
 
-import androidx.compose.foundation.layout.padding
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Email
@@ -8,137 +8,119 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.SyncAlt
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Text
+import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popUpTo
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.Direction
 import com.ramcosta.composedestinations.spec.NavGraphSpec
 import com.ramcosta.composedestinations.utils.contains
+import com.ramcosta.composedestinations.utils.currentDestinationAsState
 import gq.kirmanak.mealient.R
-import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListsScreenDestination
-import gq.kirmanak.mealient.ui.AppTheme
-import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.NavGraphs
+import gq.kirmanak.mealient.ui.components.DrawerItem
 import gq.kirmanak.mealient.ui.destinations.AddRecipeScreenDestination
 import gq.kirmanak.mealient.ui.destinations.BaseURLScreenDestination
 import gq.kirmanak.mealient.ui.destinations.RecipesListDestination
-import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
+import kotlinx.coroutines.launch
 
 @Composable
-internal fun DrawerContent(
-    currentDestination: DestinationSpec<*>?,
-    onNavigation: (Direction) -> Unit,
-    onEvent: (AppEvent) -> Unit,
-) {
-    ModalDrawerSheet {
-        Text(
-            modifier = Modifier
-                .padding(Dimens.Medium),
-            text = stringResource(id = R.string.app_name),
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary,
-        )
+internal fun createDrawerItems(
+    navController: NavController,
+    onEvent: (AppEvent) -> Unit
+): List<DrawerItem> {
+    val coroutineScope = rememberCoroutineScope()
 
-        NavigationDrawerItem(
-            menuName = R.string.menu_navigation_drawer_recipes_list,
-            currentDestination = currentDestination,
-            destination = RecipesListDestination,
-            icon = Icons.Default.List,
-            onNavigation = onNavigation,
-        )
-
-        NavigationDrawerItem(
-            menuName = R.string.menu_navigation_drawer_add_recipe,
-            currentDestination = currentDestination,
-            destination = AddRecipeScreenDestination,
-            icon = Icons.Default.Add,
-            onNavigation = onNavigation,
-        )
-
-        NavigationDrawerItem(
-            menuName = R.string.menu_navigation_drawer_shopping_lists,
-            currentDestination = currentDestination,
-            destination = NavGraphs.shoppingLists,
-            icon = Icons.Default.ShoppingCart,
-            onNavigation = onNavigation,
-        )
-
-        NavigationDrawerItem(
-            menuName = R.string.menu_navigation_drawer_change_url,
-            currentDestination = currentDestination,
-            destination = BaseURLScreenDestination,
-            icon = Icons.Default.SyncAlt,
-            onNavigation = onNavigation,
-        )
-
-        NavigationDrawerItem(
-            menuName = R.string.menu_navigation_drawer_logout,
-            selected = false,
-            icon = Icons.Default.Logout,
-            onClick = { onEvent(AppEvent.Logout) },
-        )
-
-        NavigationDrawerItem(
-            menuName = R.string.menu_navigation_drawer_email_logs,
-            selected = false,
-            icon = Icons.Default.Email,
-            onClick = { onEvent(AppEvent.EmailLogs) },
-        )
-    }
-}
-
-@Composable
-private fun NavigationDrawerItem(
-    menuName: Int,
-    currentDestination: DestinationSpec<*>?,
-    destination: Direction,
-    icon: ImageVector,
-    onNavigation: (Direction) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val selected = isDestinationSelected(currentDestination, destination)
-    val onClick = { onNavigation(destination) }
-    NavigationDrawerItem(
-        modifier = modifier,
-        menuName = menuName,
-        selected = selected,
+    fun createNavigationItem(
+        @StringRes nameRes: Int,
+        icon: ImageVector,
+        direction: Direction,
+    ): DrawerItem = DrawerItemImpl(
+        nameRes = nameRes,
         icon = icon,
-        onClick = onClick
+        isSelected = {
+            val currentDestination by navController.currentDestinationAsState()
+            isDestinationSelected(currentDestination, direction)
+        },
+        onClick = { drawerState ->
+            coroutineScope.launch {
+                drawerState.close()
+                navController.navigate(direction) {
+                    launchSingleTop = true
+                    popUpTo(NavGraphs.root)
+                }
+            }
+        },
+    )
+
+    fun createActionItem(
+        @StringRes nameRes: Int,
+        icon: ImageVector,
+        appEvent: AppEvent,
+    ): DrawerItem = DrawerItemImpl(
+        nameRes = nameRes,
+        icon = icon,
+        isSelected = { false },
+        onClick = { drawerState ->
+            coroutineScope.launch {
+                drawerState.close()
+                onEvent(appEvent)
+            }
+        },
+    )
+
+    return listOf(
+        createNavigationItem(
+            nameRes = R.string.menu_navigation_drawer_recipes_list,
+            icon = Icons.Default.List,
+            direction = RecipesListDestination,
+        ),
+        createNavigationItem(
+            nameRes = R.string.menu_navigation_drawer_add_recipe,
+            icon = Icons.Default.Add,
+            direction = AddRecipeScreenDestination,
+        ),
+        createNavigationItem(
+            nameRes = R.string.menu_navigation_drawer_shopping_lists,
+            icon = Icons.Default.ShoppingCart,
+            direction = NavGraphs.shoppingLists,
+        ),
+        createNavigationItem(
+            nameRes = R.string.menu_navigation_drawer_change_url,
+            icon = Icons.Default.SyncAlt,
+            direction = BaseURLScreenDestination,
+        ),
+        createActionItem(
+            nameRes = R.string.menu_navigation_drawer_logout,
+            icon = Icons.Default.Logout,
+            appEvent = AppEvent.Logout,
+        ),
+        createActionItem(
+            nameRes = R.string.menu_navigation_drawer_email_logs,
+            icon = Icons.Default.Email,
+            appEvent = AppEvent.EmailLogs,
+        )
     )
 }
 
-@Composable
-private fun NavigationDrawerItem(
-    menuName: Int,
-    selected: Boolean,
-    icon: ImageVector,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    NavigationDrawerItem(
-        modifier = modifier
-            .padding(horizontal = Dimens.Medium),
-        label = {
-            Text(
-                text = stringResource(id = menuName),
-            )
-        },
-        selected = selected,
-        icon = {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-            )
-        },
-        onClick = onClick,
-    )
+internal class DrawerItemImpl(
+    @StringRes private val nameRes: Int,
+    private val isSelected: @Composable () -> Boolean,
+    override val icon: ImageVector,
+    override val onClick: (DrawerState) -> Unit,
+) : DrawerItem {
+
+    @Composable
+    override fun getName(): String = stringResource(id = nameRes)
+
+    @Composable
+    override fun isSelected(): Boolean = isSelected.invoke()
 }
 
 private fun isDestinationSelected(
@@ -149,16 +131,4 @@ private fun isDestinationSelected(
     currentDestination == direction -> true
     direction is NavGraphSpec && direction.contains(currentDestination) -> true
     else -> false
-}
-
-@ColorSchemePreview
-@Composable
-private fun DrawerContentPreview() {
-    AppTheme {
-        DrawerContent(
-            currentDestination = ShoppingListsScreenDestination,
-            onNavigation = { },
-            onEvent = { },
-        )
-    }
 }

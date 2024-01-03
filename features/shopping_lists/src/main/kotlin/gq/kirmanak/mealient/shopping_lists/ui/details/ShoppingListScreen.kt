@@ -59,8 +59,10 @@ import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.getErrorMessage
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.components.BaseScreen
 import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
+import gq.kirmanak.mealient.ui.util.LoadingState
 import gq.kirmanak.mealient.ui.util.data
 import gq.kirmanak.mealient.ui.util.error
 import gq.kirmanak.mealient.ui.util.map
@@ -71,7 +73,6 @@ data class ShoppingListNavArgs(
     val shoppingListId: String,
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Destination(
     navArgsDelegate = ShoppingListNavArgs::class,
 )
@@ -80,12 +81,50 @@ internal fun ShoppingListScreen(
     shoppingListViewModel: ShoppingListViewModel = hiltViewModel(),
 ) {
     val loadingState by shoppingListViewModel.loadingState.collectAsState()
+
+    BaseScreen { modifier ->
+        ShoppingListScreen(
+            modifier = modifier,
+            loadingState = loadingState,
+            errorToShowInSnackbar = shoppingListViewModel.errorToShowInSnackbar,
+            onSnackbarShown = shoppingListViewModel::onSnackbarShown,
+            onRefreshRequest = shoppingListViewModel::refreshShoppingList,
+            onAddItemClicked = shoppingListViewModel::onAddItemClicked,
+            onEditCancel = shoppingListViewModel::onEditCancel,
+            onEditConfirm = shoppingListViewModel::onEditConfirm,
+            onItemCheckedChange = shoppingListViewModel::onItemCheckedChange,
+            onDeleteItem = shoppingListViewModel::deleteShoppingListItem,
+            onEditStart = shoppingListViewModel::onEditStart,
+            onAddCancel = shoppingListViewModel::onAddCancel,
+            onAddConfirm = shoppingListViewModel::onAddConfirm,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ShoppingListScreen(
+    loadingState: LoadingState<ShoppingListScreenState>,
+    errorToShowInSnackbar: Throwable?,
+    onSnackbarShown: () -> Unit,
+    onRefreshRequest: () -> Unit,
+    onAddItemClicked: () -> Unit,
+    onEditCancel: (ShoppingListItemState.ExistingItem) -> Unit,
+    onEditConfirm: (ShoppingListItemState.ExistingItem, ShoppingListItemEditorState) -> Unit,
+    onItemCheckedChange: (ShoppingListItemState.ExistingItem, Boolean) -> Unit,
+    onDeleteItem: (ShoppingListItemState.ExistingItem) -> Unit,
+    onEditStart: (ShoppingListItemState.ExistingItem) -> Unit,
+    onAddCancel: (ShoppingListItemState.NewItem) -> Unit,
+    onAddConfirm: (ShoppingListItemState.NewItem) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val defaultEmptyListError = stringResource(
         R.string.shopping_list_screen_empty_list,
         loadingState.data?.name.orEmpty()
     )
 
     LazyColumnWithLoadingState(
+        modifier = modifier,
         loadingState = loadingState.map { it.items },
         emptyListError = loadingState.error?.let { getErrorMessage(it) } ?: defaultEmptyListError,
         retryButtonText = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh),
@@ -96,11 +135,11 @@ internal fun ShoppingListScreen(
             bottom = Dimens.Large * 4,
         ),
         verticalArrangement = Arrangement.spacedBy(Dimens.Medium),
-        snackbarText = shoppingListViewModel.errorToShowInSnackbar?.let { getErrorMessage(error = it) },
-        onSnackbarShown = shoppingListViewModel::onSnackbarShown,
-        onRefresh = shoppingListViewModel::refreshShoppingList,
+        snackbarText = errorToShowInSnackbar?.let { getErrorMessage(error = it) },
+        onSnackbarShown = onSnackbarShown,
+        onRefresh = onRefreshRequest,
         floatingActionButton = {
-            FloatingActionButton(onClick = shoppingListViewModel::onAddItemClicked) {
+            FloatingActionButton(onClick = onAddItemClicked) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(id = R.string.shopping_list_screen_add_icon_content_description),
@@ -122,31 +161,24 @@ internal fun ShoppingListScreen(
                     }
                     ShoppingListItemEditor(
                         state = state,
-                        onEditCancelled = { shoppingListViewModel.onEditCancel(itemState) },
-                        onEditConfirmed = {
-                            shoppingListViewModel.onEditConfirm(
-                                itemState,
-                                state
-                            )
-                        }
+                        onEditCancelled = { onEditCancel(itemState) },
+                        onEditConfirmed = { onEditConfirm(itemState, state) },
                     )
                 } else {
                     ShoppingListItem(
                         itemState = itemState,
                         showDivider = index == firstCheckedItemIndex && index != 0,
                         modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-                        onCheckedChange = {
-                            shoppingListViewModel.onItemCheckedChange(itemState, it)
-                        },
-                        onDismissed = { shoppingListViewModel.deleteShoppingListItem(itemState) },
-                        onEditStart = { shoppingListViewModel.onEditStart(itemState) },
+                        onCheckedChange = { onItemCheckedChange(itemState, it) },
+                        onDismissed = { onDeleteItem(itemState) },
+                        onEditStart = { onEditStart(itemState) },
                     )
                 }
             } else if (itemState is ShoppingListItemState.NewItem) {
                 ShoppingListItemEditor(
                     state = itemState.item,
-                    onEditCancelled = { shoppingListViewModel.onAddCancel(itemState) },
-                    onEditConfirmed = { shoppingListViewModel.onAddConfirm(itemState) }
+                    onEditCancelled = { onAddCancel(itemState) },
+                    onEditConfirmed = { onAddConfirm(itemState) }
                 )
             }
         }
@@ -493,7 +525,7 @@ fun ShoppingListItem(
             }
             true
         }
-    )
+    ),
 ) {
     val shoppingListItem = itemState.item
     SwipeToDismiss(

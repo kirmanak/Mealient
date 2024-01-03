@@ -119,14 +119,21 @@ internal class RecipesListViewModel @Inject constructor(
     }
 
     fun onEvent(event: RecipeListEvent) {
+        logger.v { "onEvent() called with: event = $event" }
         when (event) {
             is RecipeListEvent.DeleteConfirmed -> onDeleteConfirm(event.recipe.entity)
             is RecipeListEvent.FavoriteClick -> onFavoriteIconClick(event.recipe.entity)
             is RecipeListEvent.RecipeClick -> onRecipeClicked(event.recipe.entity)
             is RecipeListEvent.SnackbarShown -> onSnackbarShown()
             is RecipeListEvent.RecipeOpened -> onRecipeOpen()
+            is RecipeListEvent.SearchQueryChanged -> onSearchQueryChanged(event)
         }
+    }
 
+    private fun onSearchQueryChanged(event: RecipeListEvent.SearchQueryChanged) {
+        logger.v { "onSearchQueryChanged() called with: event = $event" }
+        _screenState.update { it.copy(searchQuery = event.query) }
+        recipeRepo.updateNameQuery(event.query)
     }
 }
 
@@ -134,6 +141,7 @@ internal data class RecipeListState(
     val pagingDataRecipeState: Flow<PagingData<RecipeListItemState>>,
     val snackbarState: RecipeListSnackbar? = null,
     val recipeIdToOpen: String? = null,
+    val searchQuery: String = "",
 )
 
 internal sealed interface RecipeListEvent {
@@ -148,4 +156,5 @@ internal sealed interface RecipeListEvent {
 
     data object SnackbarShown : RecipeListEvent
 
+    data class SearchQueryChanged(val query: String) : RecipeListEvent
 }

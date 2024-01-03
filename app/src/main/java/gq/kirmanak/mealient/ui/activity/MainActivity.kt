@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import dagger.hilt.android.AndroidEntryPoint
 import gq.kirmanak.mealient.extensions.isDarkThemeOn
 import gq.kirmanak.mealient.logging.Logger
+import gq.kirmanak.mealient.ui.AppTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -32,7 +33,9 @@ class MainActivity : ComponentActivity() {
             viewModel.appState.value.forcedRoute == ForcedDestination.Undefined
         }
         setContent {
-            MealientApp(viewModel)
+            AppTheme {
+                MealientApp(viewModel)
+            }
         }
     }
 

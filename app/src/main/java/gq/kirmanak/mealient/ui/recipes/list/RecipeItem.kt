@@ -116,15 +116,17 @@ private fun RecipeHeader(
             IconButton(
                 onClick = onFavoriteClick,
             ) {
-                val icon = if (recipe.entity.isFavorite) {
-                    Icons.Default.Favorite
-                } else {
-                    Icons.Default.FavoriteBorder
-                }
-
                 Icon(
-                    imageVector = icon,
-                    contentDescription = stringResource(id = R.string.view_holder_recipe_favorite_content_description),
+                    imageVector = if (recipe.entity.isFavorite) {
+                        Icons.Default.Favorite
+                    } else {
+                        Icons.Default.FavoriteBorder
+                    },
+                    contentDescription = if (recipe.entity.isFavorite) {
+                        stringResource(id = R.string.view_holder_recipe_favorite_content_description)
+                    } else {
+                        stringResource(id = R.string.view_holder_recipe_non_favorite_content_description)
+                    },
                 )
             }
         }

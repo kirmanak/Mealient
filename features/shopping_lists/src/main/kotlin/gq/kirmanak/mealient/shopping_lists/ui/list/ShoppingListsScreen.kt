@@ -17,15 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigate
 import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.getErrorMessage
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.components.BaseScreenState
+import gq.kirmanak.mealient.ui.components.BaseScreenWithNavigation
 import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 import gq.kirmanak.mealient.ui.util.error
@@ -33,29 +35,35 @@ import gq.kirmanak.mealient.ui.util.error
 @Destination
 @Composable
 fun ShoppingListsScreen(
-    navigator: DestinationsNavigator,
+    navController: NavController,
+    baseScreenState: BaseScreenState,
     shoppingListsViewModel: ShoppingListsViewModel = hiltViewModel(),
 ) {
     val loadingState by shoppingListsViewModel.loadingState.collectAsState()
     val errorToShowInSnackbar = shoppingListsViewModel.errorToShowInSnackBar
 
-    LazyColumnWithLoadingState(
-        loadingState = loadingState,
-        emptyListError = loadingState.error?.let { getErrorMessage(it) }
-            ?: stringResource(R.string.shopping_lists_screen_empty),
-        retryButtonText = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh),
-        snackbarText = errorToShowInSnackbar?.let { getErrorMessage(error = it) },
-        onSnackbarShown = shoppingListsViewModel::onSnackbarShown,
-        onRefresh = shoppingListsViewModel::refresh
-    ) { items ->
-        items(items) { shoppingList ->
-            ShoppingListCard(
-                shoppingList = shoppingList,
-                onItemClick = { clickedEntity ->
-                    val shoppingListId = clickedEntity.id
-                    navigator.navigate(ShoppingListScreenDestination(shoppingListId))
-                }
-            )
+    BaseScreenWithNavigation(
+        baseScreenState = baseScreenState,
+    ) { modifier ->
+        LazyColumnWithLoadingState(
+            modifier = modifier,
+            loadingState = loadingState,
+            emptyListError = loadingState.error?.let { getErrorMessage(it) }
+                ?: stringResource(R.string.shopping_lists_screen_empty),
+            retryButtonText = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh),
+            snackbarText = errorToShowInSnackbar?.let { getErrorMessage(error = it) },
+            onSnackbarShown = shoppingListsViewModel::onSnackbarShown,
+            onRefresh = shoppingListsViewModel::refresh
+        ) { items ->
+            items(items) { shoppingList ->
+                ShoppingListCard(
+                    shoppingList = shoppingList,
+                    onItemClick = { clickedEntity ->
+                        val shoppingListId = clickedEntity.id
+                        navController.navigate(ShoppingListScreenDestination(shoppingListId))
+                    }
+                )
+            }
         }
     }
 }

@@ -22,13 +22,14 @@ import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.components.BaseScreen
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
 @Destination
 @Composable
 internal fun DisclaimerScreen(
     navController: NavController,
-    viewModel: DisclaimerViewModel = hiltViewModel()
+    viewModel: DisclaimerViewModel = hiltViewModel(),
 ) {
     val screenState by viewModel.screenState.collectAsState()
     val isAccepted by viewModel.isAcceptedState.collectAsState()
@@ -43,19 +44,23 @@ internal fun DisclaimerScreen(
         viewModel.startCountDown()
     }
 
-    DisclaimerScreen(
-        state = screenState,
-        onButtonClick = viewModel::acceptDisclaimer,
-    )
+    BaseScreen { modifier ->
+        DisclaimerScreen(
+            modifier = modifier,
+            state = screenState,
+            onButtonClick = viewModel::acceptDisclaimer,
+        )
+    }
 }
 
 @Composable
 internal fun DisclaimerScreen(
     state: DisclaimerScreenState,
+    modifier: Modifier = Modifier,
     onButtonClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(Dimens.Large),
         verticalArrangement = Arrangement.spacedBy(Dimens.Large),
         horizontalAlignment = Alignment.CenterHorizontally,

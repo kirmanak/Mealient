@@ -11,7 +11,6 @@ import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.baseurl.ServerInfoRepo
 import gq.kirmanak.mealient.data.disclaimer.DisclaimerStorage
-import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.logging.getLogFile
 import gq.kirmanak.mealient.ui.destinations.AuthenticationScreenDestination
@@ -34,7 +33,6 @@ internal class MainActivityViewModel @Inject constructor(
     private val logger: Logger,
     private val disclaimerStorage: DisclaimerStorage,
     private val serverInfoRepo: ServerInfoRepo,
-    private val recipeRepo: RecipeRepo,
 ) : ViewModel() {
 
     private val _appState = MutableStateFlow(MealientAppState())
@@ -98,11 +96,6 @@ internal class MainActivityViewModel @Inject constructor(
 
             is AppEvent.DismissDialog -> {
                 _appState.update { it.copy(dialogState = null) }
-            }
-
-            is AppEvent.SearchQueryChanged -> {
-                _appState.update { it.copy(searchQuery = event.query) }
-                recipeRepo.updateNameQuery(event.query)
             }
 
             is AppEvent.LaunchedIntent -> {
@@ -197,8 +190,6 @@ internal sealed interface AppEvent {
     data object Logout : AppEvent
 
     data object EmailLogs : AppEvent
-
-    data class SearchQueryChanged(val query: String) : AppEvent
 
     data object DismissDialog : AppEvent
 
