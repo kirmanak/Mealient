@@ -99,7 +99,8 @@ private fun BaseURLScreen(
     }
 
     TopProgressIndicator(
-        modifier = modifier,
+        modifier = modifier
+            .semantics { testTag = "base-url-screen" },
         isLoading = state.isLoading,
     ) {
         Column(

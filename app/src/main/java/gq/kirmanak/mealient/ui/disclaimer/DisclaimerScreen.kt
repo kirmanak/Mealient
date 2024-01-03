@@ -62,7 +62,8 @@ internal fun DisclaimerScreen(
 ) {
     Column(
         modifier = modifier
-            .padding(Dimens.Large),
+            .padding(Dimens.Large)
+            .semantics { testTag = "disclaimer-screen" },
         verticalArrangement = Arrangement.spacedBy(Dimens.Large),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

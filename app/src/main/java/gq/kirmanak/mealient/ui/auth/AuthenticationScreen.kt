@@ -17,6 +17,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -58,7 +60,8 @@ internal fun AuthenticationScreen(
     onEvent: (AuthenticationScreenEvent) -> Unit,
 ) {
     TopProgressIndicator(
-        modifier = modifier,
+        modifier = modifier
+            .semantics { testTag = "authentication-screen" },
         isLoading = state.isLoading,
     ) {
         Column(
@@ -83,6 +86,8 @@ internal fun AuthenticationScreen(
             )
 
             Button(
+                modifier = Modifier
+                    .semantics { testTag = "login-button" },
                 enabled = state.buttonEnabled,
                 onClick = { onEvent(AuthenticationScreenEvent.OnLoginClick) },
             ) {
@@ -103,6 +108,7 @@ private fun EmailInput(
 ) {
     OutlinedTextField(
         modifier = Modifier
+            .semantics { testTag = "email-input" }
             .fillMaxWidth(),
         value = input,
         onValueChange = {
