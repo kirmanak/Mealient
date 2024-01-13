@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -14,49 +16,55 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigate
 import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.getErrorMessage
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.components.BaseScreenState
+import gq.kirmanak.mealient.ui.components.BaseScreenWithNavigation
 import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 import gq.kirmanak.mealient.ui.util.error
 
-@RootNavGraph(start = true)
-@Destination(start = true)
+@Destination
 @Composable
 fun ShoppingListsScreen(
-    navigator: DestinationsNavigator,
+    navController: NavController,
+    baseScreenState: BaseScreenState,
     shoppingListsViewModel: ShoppingListsViewModel = hiltViewModel(),
 ) {
     val loadingState by shoppingListsViewModel.loadingState.collectAsState()
     val errorToShowInSnackbar = shoppingListsViewModel.errorToShowInSnackBar
 
-    LazyColumnWithLoadingState(
-        loadingState = loadingState,
-        emptyListError = loadingState.error?.let { getErrorMessage(it) }
-            ?: stringResource(R.string.shopping_lists_screen_empty),
-        retryButtonText = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh),
-        snackbarText = errorToShowInSnackbar?.let { getErrorMessage(error = it) },
-        onSnackbarShown = shoppingListsViewModel::onSnackbarShown,
-        onRefresh = shoppingListsViewModel::refresh
-    ) { items ->
-        items(items) { shoppingList ->
-            ShoppingListCard(
-                shoppingList = shoppingList,
-                onItemClick = { clickedEntity ->
-                    val shoppingListId = clickedEntity.id
-                    navigator.navigate(ShoppingListScreenDestination(shoppingListId))
-                }
-            )
+    BaseScreenWithNavigation(
+        baseScreenState = baseScreenState,
+    ) { modifier ->
+        LazyColumnWithLoadingState(
+            modifier = modifier,
+            loadingState = loadingState,
+            emptyListError = loadingState.error?.let { getErrorMessage(it) }
+                ?: stringResource(R.string.shopping_lists_screen_empty),
+            retryButtonText = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh),
+            snackbarText = errorToShowInSnackbar?.let { getErrorMessage(error = it) },
+            onSnackbarShown = shoppingListsViewModel::onSnackbarShown,
+            onRefresh = shoppingListsViewModel::refresh
+        ) { items ->
+            items(items) { shoppingList ->
+                ShoppingListCard(
+                    shoppingList = shoppingList,
+                    onItemClick = { clickedEntity ->
+                        val shoppingListId = clickedEntity.id
+                        navController.navigate(ShoppingListScreenDestination(shoppingListId))
+                    }
+                )
+            }
         }
     }
 }
@@ -88,7 +96,7 @@ private fun ShoppingListCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_shopping_cart),
+                imageVector = Icons.Default.ShoppingCart,
                 contentDescription = stringResource(id = R.string.shopping_lists_screen_cart_icon),
                 modifier = Modifier.height(Dimens.Large),
             )

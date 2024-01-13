@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -103,7 +107,7 @@ private fun RecipeHeader(
             onClick = onDeleteClick,
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_delete),
+                imageVector = Icons.Default.Delete,
                 contentDescription = stringResource(id = R.string.view_holder_recipe_delete_content_description),
             )
         }
@@ -112,15 +116,17 @@ private fun RecipeHeader(
             IconButton(
                 onClick = onFavoriteClick,
             ) {
-                val resource = if (recipe.entity.isFavorite) {
-                    R.drawable.ic_favorite_filled
-                } else {
-                    R.drawable.ic_favorite_unfilled
-                }
-
                 Icon(
-                    painter = painterResource(id = resource),
-                    contentDescription = stringResource(id = R.string.view_holder_recipe_favorite_content_description),
+                    imageVector = if (recipe.entity.isFavorite) {
+                        Icons.Default.Favorite
+                    } else {
+                        Icons.Default.FavoriteBorder
+                    },
+                    contentDescription = if (recipe.entity.isFavorite) {
+                        stringResource(id = R.string.view_holder_recipe_favorite_content_description)
+                    } else {
+                        stringResource(id = R.string.view_holder_recipe_non_favorite_content_description)
+                    },
                 )
             }
         }

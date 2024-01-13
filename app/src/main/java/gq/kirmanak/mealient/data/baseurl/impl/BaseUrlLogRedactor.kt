@@ -29,9 +29,10 @@ class BaseUrlLogRedactor @Inject constructor(
     private fun setInitialBaseUrl() {
         val scope = CoroutineScope(dispatchers.default + SupervisorJob())
         scope.launch {
+            val baseUrl = preferencesStorage.getValue(preferencesStorage.baseUrlKey)
             hostState.compareAndSet(
                 expect = null,
-                update = preferencesStorage.getValue(preferencesStorage.baseUrlKey)
+                update = baseUrl?.extractHost()
             )
         }
     }
@@ -39,7 +40,6 @@ class BaseUrlLogRedactor @Inject constructor(
     fun set(baseUrl: String) {
         hostState.value = baseUrl.extractHost()
     }
-
 
     override fun redact(message: String): String {
         val host = hostState.value

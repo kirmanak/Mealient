@@ -1,32 +1,27 @@
 package gq.kirmanak.mealient.ui.recipes
 
-import androidx.lifecycle.asFlow
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.data.auth.AuthRepo
 import gq.kirmanak.mealient.data.recipes.RecipeRepo
 import gq.kirmanak.mealient.data.recipes.impl.RecipeImageUrlProvider
 import gq.kirmanak.mealient.database.CAKE_RECIPE_SUMMARY_ENTITY
 import gq.kirmanak.mealient.test.BaseUnitTest
+import gq.kirmanak.mealient.ui.recipes.list.RecipeListEvent
+import gq.kirmanak.mealient.ui.recipes.list.RecipeListItemState
+import gq.kirmanak.mealient.ui.recipes.list.RecipeListSnackbar
 import gq.kirmanak.mealient.ui.recipes.list.RecipesListViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class RecipesListViewModelTest : BaseUnitTest() {
+internal class RecipesListViewModelTest : BaseUnitTest() {
 
     @MockK
     lateinit var authRepo: AuthRepo
@@ -64,61 +59,63 @@ class RecipesListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when refreshRecipeInfo succeeds expect successful result`() = runTest {
-        val slug = "cake"
-        coEvery { recipeRepo.refreshRecipeInfo(eq(slug)) } returns Result.success(Unit)
-        val actual = createSubject().refreshRecipeInfo(slug).asFlow().first()
-        assertThat(actual).isEqualTo(Result.success(Unit))
+    fun `when SearchQueryChanged happens with query expect call to recipe repo`() {
+        val subject = createSubject()
+        subject.onEvent(RecipeListEvent.SearchQueryChanged("query"))
+        verify { recipeRepo.updateNameQuery("query") }
     }
 
     @Test
-    fun `when refreshRecipeInfo succeeds expect call to repo`() = runTest {
-        val slug = "cake"
-        coEvery { recipeRepo.refreshRecipeInfo(eq(slug)) } returns Result.success(Unit)
-        createSubject().refreshRecipeInfo(slug).asFlow().first()
-        coVerify { recipeRepo.refreshRecipeInfo(slug) }
+    fun `when recipe is clicked expect call to repo`() = runTest {
+        coEvery { recipeRepo.refreshRecipeInfo(eq("cake")) } returns Result.success(Unit)
+        val subject = createSubject()
+        val recipe = RecipeListItemState(
+            imageUrl = null,
+            showFavoriteIcon = true,
+            entity = CAKE_RECIPE_SUMMARY_ENTITY,
+        )
+        subject.onEvent(RecipeListEvent.RecipeClick(recipe))
+        coVerify { recipeRepo.refreshRecipeInfo("cake") }
     }
 
     @Test
-    fun `when refreshRecipeInfo fails expect result with error`() = runTest {
-        val slug = "cake"
-        val result = Result.failure<Unit>(RuntimeException())
-        coEvery { recipeRepo.refreshRecipeInfo(eq(slug)) } returns result
-        val actual = createSubject().refreshRecipeInfo(slug).asFlow().first()
-        assertThat(actual).isEqualTo(result)
+    fun `when recipe is clicked and refresh succeeds expect id to open`() = runTest {
+        coEvery { recipeRepo.refreshRecipeInfo(eq("cake")) } returns Result.success(Unit)
+        val subject = createSubject()
+        val recipe = RecipeListItemState(
+            imageUrl = null,
+            showFavoriteIcon = true,
+            entity = CAKE_RECIPE_SUMMARY_ENTITY,
+        )
+        subject.onEvent(RecipeListEvent.RecipeClick(recipe))
+        assertThat(subject.screenState.value.recipeIdToOpen).isEqualTo("1")
     }
+
+    @Test
+    fun `when recipe is clicked and refresh fails expect id to open`() = runTest {
+        coEvery { recipeRepo.refreshRecipeInfo(eq("cake")) } returns Result.failure(IOException())
+        val subject = createSubject()
+        val recipe = RecipeListItemState(
+            imageUrl = null,
+            showFavoriteIcon = true,
+            entity = CAKE_RECIPE_SUMMARY_ENTITY,
+        )
+        subject.onEvent(RecipeListEvent.RecipeClick(recipe))
+        assertThat(subject.screenState.value.recipeIdToOpen).isEqualTo("1")
+    }
+
 
     @Test
     fun `when delete recipe expect successful result in flow`() = runTest {
-        coEvery { recipeRepo.deleteRecipe(any()) } returns Result.success(Unit)
-        val subject = createSubject()
-        val results = runTestAndCollectFlow(subject.deleteRecipeResult) {
-            subject.onDeleteConfirm(CAKE_RECIPE_SUMMARY_ENTITY)
-        }
-        assertThat(results.single().isSuccess).isTrue()
-    }
-
-    @Test
-    fun `when delete recipe expect failed result in flow`() = runTest {
         coEvery { recipeRepo.deleteRecipe(any()) } returns Result.failure(IOException())
         val subject = createSubject()
-        val results = runTestAndCollectFlow(subject.deleteRecipeResult) {
-            subject.onDeleteConfirm(CAKE_RECIPE_SUMMARY_ENTITY)
-        }
-        assertThat(results.single().isFailure).isTrue()
-    }
-
-    private inline fun <T> TestScope.runTestAndCollectFlow(
-        flow: Flow<T>,
-        block: () -> Unit,
-    ): List<T> {
-        val results = mutableListOf<T>()
-        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
-            flow.toList(results)
-        }
-        block()
-        collectJob.cancel()
-        return results
+        val recipe = RecipeListItemState(
+            imageUrl = null,
+            showFavoriteIcon = true,
+            entity = CAKE_RECIPE_SUMMARY_ENTITY,
+        )
+        subject.onEvent(RecipeListEvent.DeleteConfirmed(recipe))
+        assertThat(subject.screenState.value.snackbarState).isEqualTo(RecipeListSnackbar.DeleteFailed)
     }
 
     private fun createSubject() = RecipesListViewModel(

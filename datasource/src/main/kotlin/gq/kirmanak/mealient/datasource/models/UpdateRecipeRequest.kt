@@ -23,9 +23,7 @@ data class AddRecipeIngredient(
 
         other as AddRecipeIngredient
 
-        if (note != other.note) return false
-
-        return true
+        return note == other.note
     }
 
     override fun hashCode(): Int {
@@ -46,9 +44,7 @@ data class AddRecipeInstruction(
         other as AddRecipeInstruction
 
         if (text != other.text) return false
-        if (ingredientReferences != other.ingredientReferences) return false
-
-        return true
+        return ingredientReferences == other.ingredientReferences
     }
 
     override fun hashCode(): Int {

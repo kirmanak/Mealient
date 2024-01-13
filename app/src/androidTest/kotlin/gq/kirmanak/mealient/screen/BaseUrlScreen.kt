@@ -1,19 +1,25 @@
 package gq.kirmanak.mealient.screen
 
-import com.kaspersky.kaspresso.screens.KScreen
-import gq.kirmanak.mealient.R
-import gq.kirmanak.mealient.ui.baseurl.BaseURLFragment
-import io.github.kakaocup.kakao.edit.KTextInputLayout
-import io.github.kakaocup.kakao.progress.KProgressBar
-import io.github.kakaocup.kakao.text.KButton
+import androidx.compose.ui.test.SemanticsNodeInteractionsProvider
+import io.github.kakaocup.compose.node.element.ComposeScreen
+import io.github.kakaocup.compose.node.element.KNode
 
-object BaseUrlScreen : KScreen<BaseUrlScreen>() {
-    override val layoutId = R.layout.fragment_base_url
-    override val viewClass = BaseURLFragment::class.java
+class BaseUrlScreen(
+    semanticsProvider: SemanticsNodeInteractionsProvider,
+) : ComposeScreen<BaseUrlScreen>(
+    semanticsProvider = semanticsProvider,
+    viewBuilderAction = { hasTestTag("base-url-screen") },
+) {
 
-    val urlInput = KTextInputLayout { withId(R.id.url_input_layout) }
+    val urlInput = child<KNode> { hasTestTag("url-input-field") }
 
-    val proceedButton = KButton { withId(R.id.button) }
+    val urlInputLabel = unmergedChild<KNode, BaseUrlScreen> { hasTestTag("url-input-label") }
 
-    val progressBar = KProgressBar { withId(R.id.progress)}
+    val proceedButton = child<KNode> { hasTestTag("proceed-button") }
+
+    val proceedButtonText =
+        unmergedChild<KNode, BaseUrlScreen> { hasTestTag("proceed-button-text") }
+
+    val progressBar = unmergedChild<KNode, BaseUrlScreen> { hasTestTag("progress-indicator") }
+
 }

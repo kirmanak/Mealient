@@ -13,7 +13,7 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DisclaimerViewModelTest : BaseUnitTest() {
+internal class DisclaimerViewModelTest : BaseUnitTest() {
 
     @MockK(relaxUnitFun = true)
     lateinit var storage: DisclaimerStorage

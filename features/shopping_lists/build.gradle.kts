@@ -12,6 +12,10 @@ android {
     namespace = "gq.kirmanak.mealient.shopping_list"
 }
 
+ksp {
+    arg("compose-destinations.generateNavGraphs", "false")
+}
+
 dependencies {
     implementation(project(":architecture"))
     implementation(project(":logging"))

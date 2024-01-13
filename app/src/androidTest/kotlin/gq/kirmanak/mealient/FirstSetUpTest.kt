@@ -1,9 +1,11 @@
 package gq.kirmanak.mealient
 
 import dagger.hilt.android.testing.HiltAndroidTest
+import gq.kirmanak.mealient.screen.AuthenticationScreen
 import gq.kirmanak.mealient.screen.BaseUrlScreen
 import gq.kirmanak.mealient.screen.DisclaimerScreen
 import gq.kirmanak.mealient.screen.RecipesListScreen
+import io.github.kakaocup.compose.node.element.ComposeScreen.Companion.onComposeScreen
 import io.github.kakaocup.kakao.common.utilities.getResourceString
 import org.junit.Before
 import org.junit.Test
@@ -13,63 +15,137 @@ class FirstSetUpTest : BaseTestCase() {
 
     @Before
     fun dispatchUrls() {
-        mockWebServer.dispatch { url, _ ->
-            if (url == "/api/app/about") versionV1Response else notFoundResponse
+        mockWebServer.dispatch { request ->
+            when (request.path) {
+                "/api/app/about" -> versionV1Response
+
+                "/api/auth/token" -> {
+                    if (request.body == expectedLoginRequest) {
+                        loginTokenResponse
+                    } else {
+                        notFoundResponse
+                    }
+                }
+
+                "/api/users/api-tokens" -> {
+                    if (request.authorization == expectedApiTokenAuthorizationHeader) {
+                        apiTokenResponse
+                    } else {
+                        notFoundResponse
+                    }
+                }
+
+                "/api/recipes?page=1&perPage=150" -> {
+                    if (request.authorization == expectedAuthorizationHeader ||
+                        request.authorization == expectedApiTokenAuthorizationHeader
+                    ) {
+                        recipeSummariesResponse
+                    } else {
+                        notFoundResponse
+                    }
+                }
+
+                else -> notFoundResponse
+            }
         }
     }
 
     @Test
     fun test() = run {
-        step("Ensure button is disabled") {
-            DisclaimerScreen {
+        step("Disclaimer screen with disabled button") {
+            onComposeScreen<DisclaimerScreen>(mainActivityRule) {
                 okayButton {
-                    isVisible()
-                    isDisabled()
-                    hasAnyText()
+                    assertIsNotEnabled()
+                }
+
+                okayButtonText {
+                    assertTextContains(getResourceString(R.string.fragment_disclaimer_button_okay))
                 }
 
                 disclaimerText {
-                    isVisible()
-                    hasText(R.string.fragment_disclaimer_main_text)
+                    assertTextEquals(getResourceString(R.string.fragment_disclaimer_main_text))
                 }
             }
         }
 
         step("Close disclaimer screen") {
-            DisclaimerScreen {
+            onComposeScreen<DisclaimerScreen>(mainActivityRule) {
+                okayButtonText {
+                    assertTextEquals(getResourceString(R.string.fragment_disclaimer_button_okay))
+                }
+
                 okayButton {
-                    isVisible()
-                    isEnabled()
-                    hasText(R.string.fragment_disclaimer_button_okay)
-                    click()
+                    assertIsEnabled()
+                    performClick()
                 }
             }
         }
 
         step("Enter mock server address and click proceed") {
-            BaseUrlScreen {
+            onComposeScreen<BaseUrlScreen>(mainActivityRule) {
                 progressBar {
-                    isGone()
+                    assertDoesNotExist()
                 }
                 urlInput {
-                    isVisible()
-                    edit.replaceText(mockWebServer.url("/").toString())
-                    hasHint(R.string.fragment_authentication_input_hint_url)
+                    performTextInput(mockWebServer.url("/").toString())
+                }
+                urlInputLabel {
+                    assertTextEquals(getResourceString(R.string.fragment_authentication_input_hint_url))
+                }
+                proceedButtonText {
+                    assertTextEquals(getResourceString(R.string.fragment_base_url_save))
                 }
                 proceedButton {
-                    isVisible()
-                    isEnabled()
-                    hasText(R.string.fragment_base_url_save)
-                    click()
+                    assertIsEnabled()
+                    performClick()
                 }
             }
         }
 
-        step("Check that empty list of recipes is shown") {
-            RecipesListScreen(mainActivityRule).apply {
-                errorText {
+        step("Check that authentication is shown") {
+            onComposeScreen<AuthenticationScreen>(mainActivityRule) {
+                emailInput {
                     assertIsDisplayed()
-                    assertTextEquals(getResourceString(R.string.fragment_recipes_load_failure_toast_no_reason))
+                }
+
+                passwordInput {
+                    assertIsDisplayed()
+                }
+
+                loginButton {
+                    assertIsDisplayed()
+                }
+            }
+        }
+
+        step("Enter credentials and click proceed") {
+            onComposeScreen<AuthenticationScreen>(mainActivityRule) {
+                emailInput {
+                    performTextInput("test@test.test")
+                }
+
+                passwordInput {
+                    performTextInput("password")
+                }
+
+                loginButton {
+                    performClick()
+                }
+            }
+        }
+
+        step("Check that empty recipes list is shown") {
+            onComposeScreen<RecipesListScreen>(mainActivityRule) {
+                emptyListErrorText {
+                    assertTextEquals(getResourceString(R.string.fragment_recipes_list_no_recipes))
+                }
+
+                openDrawerButton {
+                    assertIsDisplayed()
+                }
+
+                searchRecipesField {
+                    assertIsDisplayed()
                 }
             }
         }

@@ -77,6 +77,10 @@ android {
     }
 }
 
+ksp {
+    arg("compose-destinations.generateNavGraphs", "false")
+}
+
 dependencies {
 
     implementation(project(":architecture"))
@@ -112,6 +116,8 @@ dependencies {
 
     implementation(libs.androidx.shareTarget)
 
+    implementation(libs.androidx.compose.materialIconsExtended)
+
     implementation(libs.google.dagger.hiltAndroid)
     kapt(libs.google.dagger.hiltCompiler)
     kaptTest(libs.google.dagger.hiltAndroidCompiler)
@@ -131,6 +137,10 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.coil.compose)
+
+    implementation(libs.androidx.compose.animation)
+
+    implementation(libs.androidx.hilt.navigationCompose)
 
     testImplementation(libs.junit)
 

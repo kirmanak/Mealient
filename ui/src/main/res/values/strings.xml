@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Mealient</string>
+    <string name="menu_navigation_drawer_header" translatable="false">@string/app_name</string>
+    <string name="view_toolbar_navigation_icon_content_description">Open navigation drawer</string>
+</resources>

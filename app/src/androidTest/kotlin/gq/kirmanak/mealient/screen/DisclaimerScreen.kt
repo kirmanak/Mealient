@@ -1,16 +1,19 @@
 package gq.kirmanak.mealient.screen
 
-import com.kaspersky.kaspresso.screens.KScreen
-import gq.kirmanak.mealient.R
-import gq.kirmanak.mealient.ui.disclaimer.DisclaimerFragment
-import io.github.kakaocup.kakao.text.KButton
-import io.github.kakaocup.kakao.text.KTextView
+import androidx.compose.ui.test.SemanticsNodeInteractionsProvider
+import io.github.kakaocup.compose.node.element.ComposeScreen
+import io.github.kakaocup.compose.node.element.KNode
 
-object DisclaimerScreen : KScreen<DisclaimerScreen>() {
-    override val layoutId = R.layout.fragment_disclaimer
-    override val viewClass = DisclaimerFragment::class.java
+internal class DisclaimerScreen(
+    semanticsProvider: SemanticsNodeInteractionsProvider,
+) : ComposeScreen<DisclaimerScreen>(
+    semanticsProvider = semanticsProvider,
+    viewBuilderAction = { hasTestTag("disclaimer-screen") },
+) {
 
-    val okayButton = KButton { withId(R.id.okay) }
+    val okayButton = child<KNode> { hasTestTag("okay-button") }
 
-    val disclaimerText = KTextView { withId(R.id.main_text) }
+    val okayButtonText = unmergedChild<KNode, DisclaimerScreen> { hasTestTag("okay-button-text") }
+
+    val disclaimerText = child<KNode> { hasTestTag("disclaimer-text") }
 }

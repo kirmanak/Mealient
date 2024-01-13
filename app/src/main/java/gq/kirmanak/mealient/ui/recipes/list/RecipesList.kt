@@ -1,15 +1,18 @@
 package gq.kirmanak.mealient.ui.recipes.list
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -17,43 +20,83 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.navigate
 import gq.kirmanak.mealient.R
+import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
+import gq.kirmanak.mealient.ui.components.BaseScreenState
+import gq.kirmanak.mealient.ui.components.BaseScreenWithNavigation
 import gq.kirmanak.mealient.ui.components.CenteredProgressIndicator
 import gq.kirmanak.mealient.ui.components.LazyPagingColumnPullRefresh
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
+import gq.kirmanak.mealient.ui.components.OpenDrawerIconButton
+import gq.kirmanak.mealient.ui.destinations.RecipeScreenDestination
+import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
-@OptIn(ExperimentalLayoutApi::class)
+
+@Destination
 @Composable
 internal fun RecipesList(
-    recipesFlow: Flow<PagingData<RecipeListItemState>>,
-    onDeleteClick: (RecipeListItemState) -> Unit,
-    onFavoriteClick: (RecipeListItemState) -> Unit,
-    onItemClick: (RecipeListItemState) -> Unit,
-    onSnackbarShown: () -> Unit,
-    snackbarMessageState: StateFlow<RecipeListSnackbar?>,
+    navController: NavController,
+    baseScreenState: BaseScreenState,
+    viewModel: RecipesListViewModel = hiltViewModel(),
 ) {
-    val recipes: LazyPagingItems<RecipeListItemState> = recipesFlow.collectAsLazyPagingItems()
+    val state = viewModel.screenState.collectAsState()
+    val stateValue = state.value
+
+    LaunchedEffect(stateValue.recipeIdToOpen) {
+        if (stateValue.recipeIdToOpen != null) {
+            navController.navigate(RecipeScreenDestination(stateValue.recipeIdToOpen))
+            viewModel.onEvent(RecipeListEvent.RecipeOpened)
+        }
+    }
+
+    RecipesList(
+        state = stateValue,
+        baseScreenState = baseScreenState,
+        onEvent = viewModel::onEvent,
+    )
+}
+
+@Composable
+private fun RecipesList(
+    state: RecipeListState,
+    baseScreenState: BaseScreenState,
+    onEvent: (RecipeListEvent) -> Unit,
+) {
+    val recipes: LazyPagingItems<RecipeListItemState> =
+        state.pagingDataRecipeState.collectAsLazyPagingItems()
     val isRefreshing = recipes.loadState.refresh is LoadState.Loading
     var itemToDelete: RecipeListItemState? by remember { mutableStateOf(null) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val snackbar: RecipeListSnackbar? by snackbarMessageState.collectAsState()
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-    ) { padding ->
-        snackbar?.message?.let { message ->
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    BaseScreenWithNavigation(
+        baseScreenState = baseScreenState,
+        drawerState = drawerState,
+        topAppBar = {
+            RecipesTopAppBar(
+                searchQuery = state.searchQuery,
+                onValueChanged = { onEvent(RecipeListEvent.SearchQueryChanged(it)) },
+                drawerState = drawerState,
+            )
+        },
+        snackbarHostState = snackbarHostState,
+    ) { modifier ->
+        state.snackbarState?.message?.let { message ->
             LaunchedEffect(message) {
                 snackbarHostState.showSnackbar(message)
-                onSnackbarShown()
+                onEvent(RecipeListEvent.SnackbarShown)
             }
         } ?: run {
             snackbarHostState.currentSnackbarData?.dismiss()
@@ -63,36 +106,33 @@ internal fun RecipesList(
             ConfirmDeleteDialog(
                 onDismissRequest = { itemToDelete = null },
                 onConfirm = {
-                    onDeleteClick(item)
+                    onEvent(RecipeListEvent.DeleteConfirmed(item))
                     itemToDelete = null
                 },
                 item = item,
             )
         }
 
-        val innerModifier = Modifier
-            .padding(padding)
-            .consumeWindowInsets(padding)
         when {
             recipes.itemCount != 0 -> {
                 RecipesListData(
-                    modifier = innerModifier,
+                    modifier = modifier,
                     recipes = recipes,
                     onDeleteClick = { itemToDelete = it },
-                    onFavoriteClick = onFavoriteClick,
-                    onItemClick = onItemClick
+                    onFavoriteClick = { onEvent(RecipeListEvent.FavoriteClick(it)) },
+                    onItemClick = { onEvent(RecipeListEvent.RecipeClick(it)) },
                 )
             }
 
             isRefreshing -> {
                 CenteredProgressIndicator(
-                    modifier = innerModifier
+                    modifier = modifier
                 )
             }
 
             else -> {
                 RecipesListError(
-                    modifier = innerModifier,
+                    modifier = modifier,
                     recipes = recipes,
                 )
             }
@@ -126,7 +166,7 @@ private fun RecipesListData(
     recipes: LazyPagingItems<RecipeListItemState>,
     onDeleteClick: (RecipeListItemState) -> Unit,
     onFavoriteClick: (RecipeListItemState) -> Unit,
-    onItemClick: (RecipeListItemState) -> Unit
+    onItemClick: (RecipeListItemState) -> Unit,
 ) {
     LazyPagingColumnPullRefresh(
         modifier = modifier
@@ -155,3 +195,45 @@ private fun RecipesListData(
     }
 }
 
+@Composable
+internal fun RecipesTopAppBar(
+    searchQuery: String,
+    onValueChanged: (String) -> Unit,
+    drawerState: DrawerState,
+) {
+    Row(
+        modifier = Modifier
+            .padding(
+                horizontal = Dimens.Medium,
+                vertical = Dimens.Small,
+            )
+            .clip(RoundedCornerShape(Dimens.Medium))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(end = Dimens.Medium),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        OpenDrawerIconButton(
+            drawerState = drawerState,
+        )
+
+        SearchTextField(
+            modifier = Modifier
+                .weight(1f),
+            searchQuery = searchQuery,
+            onValueChanged = onValueChanged,
+            placeholder = R.string.search_recipes_hint,
+        )
+    }
+}
+
+@ColorSchemePreview
+@Composable
+private fun RecipesTopAppBarPreview() {
+    AppTheme {
+        RecipesTopAppBar(
+            searchQuery = "",
+            onValueChanged = {},
+            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+        )
+    }
+}
