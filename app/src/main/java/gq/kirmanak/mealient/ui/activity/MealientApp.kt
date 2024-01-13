@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popUpTo
@@ -40,7 +41,9 @@ private fun MealientApp(
     state: MealientAppState,
     onEvent: (AppEvent) -> Unit,
 ) {
-    val engine = rememberNavHostEngine()
+    val engine = rememberNavHostEngine(
+        rootDefaultAnimations = RootNavGraphDefaultAnimations.ACCOMPANIST_FADING,
+    )
     val controller = engine.rememberNavController()
 
     val currentDestinationState = controller.currentDestinationAsState()
