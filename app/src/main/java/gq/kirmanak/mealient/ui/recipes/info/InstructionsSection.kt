@@ -77,12 +77,12 @@ private fun InstructionListItem(
                     R.string.view_holder_recipe_instructions_step,
                     index + 1
                 ),
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.titleMedium,
             )
 
             Text(
                 text = item.text.trim(),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
             )
 
             if (ingredients.isNotEmpty()) {
@@ -90,7 +90,7 @@ private fun InstructionListItem(
                 ingredients.forEach { ingredient ->
                     Text(
                         text = ingredient.display,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }

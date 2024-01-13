@@ -89,13 +89,13 @@ private fun IngredientListItem(
         Column {
             Text(
                 text = item.display,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
             )
 
             if (item.note.isNotBlank()) {
                 Text(
                     text = item.note,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
         }
