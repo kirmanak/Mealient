@@ -217,10 +217,10 @@ internal fun RecipesTopAppBar(
         )
 
         SearchTextField(
-            searchQuery = searchQuery,
-            onValueChanged = onValueChanged,
             modifier = Modifier
                 .weight(1f),
+            searchQuery = searchQuery,
+            onValueChanged = onValueChanged,
             placeholder = R.string.search_recipes_hint,
         )
     }

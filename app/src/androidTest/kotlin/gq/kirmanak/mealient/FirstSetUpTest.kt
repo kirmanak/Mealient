@@ -4,6 +4,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import gq.kirmanak.mealient.screen.AuthenticationScreen
 import gq.kirmanak.mealient.screen.BaseUrlScreen
 import gq.kirmanak.mealient.screen.DisclaimerScreen
+import gq.kirmanak.mealient.screen.RecipesListScreen
 import io.github.kakaocup.compose.node.element.ComposeScreen.Companion.onComposeScreen
 import io.github.kakaocup.kakao.common.utilities.getResourceString
 import org.junit.Before
@@ -14,14 +15,33 @@ class FirstSetUpTest : BaseTestCase() {
 
     @Before
     fun dispatchUrls() {
-        mockWebServer.dispatch { url, _ ->
-            if (url == "/api/app/about") versionV1Response else notFoundResponse
+        mockWebServer.dispatch { request ->
+            when (request.path) {
+                "/api/app/about" -> versionV1Response
+
+                "/api/auth/token" -> {
+                    if (request.body == expectedLoginRequest) loginTokenResponse
+                    else notFoundResponse
+                }
+
+                "/api/users/api-tokens" -> {
+                    if (request.authorization == expectedApiTokenAuthorizationHeader) apiTokenResponse
+                    else notFoundResponse
+                }
+
+                "/api/recipes?page=1&perPage=150" -> {
+                    if (request.authorization == expectedAuthorizationHeader) recipeSummariesResponse
+                    else notFoundResponse
+                }
+
+                else -> notFoundResponse
+            }
         }
     }
 
     @Test
     fun test() = run {
-        step("Ensure button is disabled") {
+        step("Disclaimer screen with disabled button") {
             onComposeScreen<DisclaimerScreen>(mainActivityRule) {
                 okayButton {
                     assertIsNotEnabled()
@@ -82,6 +102,38 @@ class FirstSetUpTest : BaseTestCase() {
                 }
 
                 loginButton {
+                    assertIsDisplayed()
+                }
+            }
+        }
+
+        step("Enter credentials and click proceed") {
+            onComposeScreen<AuthenticationScreen>(mainActivityRule) {
+                emailInput {
+                    performTextInput("test@test.test")
+                }
+
+                passwordInput {
+                    performTextInput("password")
+                }
+
+                loginButton {
+                    performClick()
+                }
+            }
+        }
+
+        step("Check that empty recipes list is shown") {
+            onComposeScreen<RecipesListScreen>(mainActivityRule) {
+                emptyListErrorText {
+                    assertTextEquals(getResourceString(R.string.fragment_recipes_list_no_recipes))
+                }
+
+                openDrawerButton {
+                    assertIsDisplayed()
+                }
+
+                searchRecipesField {
                     assertIsDisplayed()
                 }
             }

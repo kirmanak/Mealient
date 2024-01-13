@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.input.ImeAction
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.AppTheme
@@ -26,7 +28,8 @@ internal fun SearchTextField(
     modifier: Modifier = Modifier,
 ) {
     TextField(
-        modifier = modifier,
+        modifier = modifier
+            .semantics { testTag = "search-recipes-field" },
         value = searchQuery,
         onValueChange = onValueChanged,
         placeholder = {

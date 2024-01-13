@@ -23,6 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import gq.kirmanak.mealient.ui.R
 import kotlinx.coroutines.launch
 
@@ -52,7 +54,7 @@ fun BaseScreenWithNavigation(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     topAppBar: @Composable () -> Unit = { NavigationTopAppBar(drawerState) },
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    content: @Composable (Modifier) -> Unit
+    content: @Composable (Modifier) -> Unit,
 ) {
     ModalNavigationDrawer(
         drawerContent = {
@@ -86,7 +88,7 @@ class BaseScreenState internal constructor(
 
 @Composable
 fun rememberBaseScreenState(
-    drawerItems: List<DrawerItem>
+    drawerItems: List<DrawerItem>,
 ): BaseScreenState {
     return remember {
         BaseScreenState(
@@ -125,6 +127,8 @@ fun OpenDrawerIconButton(
     val coroutineScope = rememberCoroutineScope()
 
     IconButton(
+        modifier = Modifier
+            .semantics { testTag = "open-drawer-button" },
         onClick = {
             coroutineScope.launch {
                 drawerState.open()
