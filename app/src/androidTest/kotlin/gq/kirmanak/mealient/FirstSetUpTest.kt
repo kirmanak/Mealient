@@ -20,18 +20,29 @@ class FirstSetUpTest : BaseTestCase() {
                 "/api/app/about" -> versionV1Response
 
                 "/api/auth/token" -> {
-                    if (request.body == expectedLoginRequest) loginTokenResponse
-                    else notFoundResponse
+                    if (request.body == expectedLoginRequest) {
+                        loginTokenResponse
+                    } else {
+                        notFoundResponse
+                    }
                 }
 
                 "/api/users/api-tokens" -> {
-                    if (request.authorization == expectedApiTokenAuthorizationHeader) apiTokenResponse
-                    else notFoundResponse
+                    if (request.authorization == expectedApiTokenAuthorizationHeader) {
+                        apiTokenResponse
+                    } else {
+                        notFoundResponse
+                    }
                 }
 
                 "/api/recipes?page=1&perPage=150" -> {
-                    if (request.authorization == expectedAuthorizationHeader) recipeSummariesResponse
-                    else notFoundResponse
+                    if (request.authorization == expectedAuthorizationHeader ||
+                        request.authorization == expectedApiTokenAuthorizationHeader
+                    ) {
+                        recipeSummariesResponse
+                    } else {
+                        notFoundResponse
+                    }
                 }
 
                 else -> notFoundResponse
