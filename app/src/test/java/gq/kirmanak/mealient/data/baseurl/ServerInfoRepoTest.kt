@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.data.baseurl
 
 import com.google.common.truth.Truth.assertThat
 import gq.kirmanak.mealient.test.AuthImplTestData.TEST_BASE_URL
+import gq.kirmanak.mealient.test.AuthImplTestData.VERSION_RESPONSE
 import gq.kirmanak.mealient.test.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -48,10 +49,16 @@ class ServerInfoRepoTest : BaseUnitTest() {
 
     @Test
     fun `when tryBaseURL succeeds expect call to storage`() = runTest {
-        coEvery { storage.getBaseURL() } returns null
+        coEvery { dataSource.requestVersion(TEST_BASE_URL) } returns VERSION_RESPONSE
         subject.tryBaseURL(TEST_BASE_URL)
         coVerify {
             storage.storeBaseURL(eq(TEST_BASE_URL))
         }
+    }
+
+    @Test
+    fun `when tryBaseURL succeeds expect response`() = runTest {
+        coEvery { dataSource.requestVersion(TEST_BASE_URL) } returns VERSION_RESPONSE
+        assertThat(subject.tryBaseURL(TEST_BASE_URL)).isEqualTo(Result.success(VERSION_RESPONSE))
     }
 }

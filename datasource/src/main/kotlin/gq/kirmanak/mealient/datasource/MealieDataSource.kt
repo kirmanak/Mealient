@@ -35,7 +35,7 @@ interface MealieDataSource {
         password: String,
     ): String
 
-    suspend fun getVersionInfo(): VersionResponse
+    suspend fun getVersionInfo(baseURL: String): VersionResponse
 
     suspend fun requestRecipes(
         page: Int,

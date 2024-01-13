@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.test
 
 import gq.kirmanak.mealient.datasource.models.GetUserInfoResponse
+import gq.kirmanak.mealient.datasource.models.VersionResponse
 
 object AuthImplTestData {
     const val TEST_USERNAME = "TEST_USERNAME"
@@ -11,4 +12,5 @@ object AuthImplTestData {
 
     val FAVORITE_RECIPES_LIST = listOf("cake", "porridge")
     val USER_INFO = GetUserInfoResponse("userId", FAVORITE_RECIPES_LIST)
+    val VERSION_RESPONSE = VersionResponse("1.0.0")
 }

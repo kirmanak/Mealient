@@ -77,7 +77,7 @@ internal class BaseURLViewModel @Inject constructor(
             return
         }
 
-        val result: Result<Unit> = serverInfoRepo.tryBaseURL(url).recoverCatching {
+        val result = serverInfoRepo.tryBaseURL(url).recoverCatching {
             logger.e(it) { "checkBaseURL: trying to recover, had prefix = $hasPrefix" }
             val certificateError = it.findCauseAsInstanceOf<CertificateCombinedException>()
             if (certificateError != null) {
