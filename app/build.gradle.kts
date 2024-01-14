@@ -7,7 +7,6 @@ import java.util.Properties
 plugins {
     id("gq.kirmanak.mealient.application")
     id("kotlin-kapt")
-    id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.ksp)
     alias(libs.plugins.appsweep)
@@ -17,8 +16,8 @@ plugins {
 android {
     defaultConfig {
         applicationId = "gq.kirmanak.mealient"
-        versionCode = 34
-        versionName = "0.4.5"
+        versionCode = 35
+        versionName = "0.4.6"
         testInstrumentationRunner = "gq.kirmanak.mealient.MealientTestRunner"
         testInstrumentationRunnerArguments += mapOf("clearPackageData" to "true")
         resourceConfigurations += listOf("en", "es", "ru", "fr", "nl", "pt", "de")
@@ -75,6 +74,9 @@ android {
             }
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 ksp {
@@ -98,20 +100,11 @@ dependencies {
 
     implementation(libs.android.material.material)
 
-    implementation(libs.androidx.navigation.fragmentKtx)
-    implementation(libs.androidx.navigation.runtimeKtx)
-    implementation(libs.androidx.navigation.uiKtx)
-
     implementation(libs.androidx.coreKtx)
     implementation(libs.androidx.splashScreen)
 
     implementation(libs.androidx.appcompat)
 
-    implementation(libs.androidx.constraintLayout)
-
-    implementation(libs.androidx.swipeRefreshLayout)
-
-    implementation(libs.androidx.lifecycle.livedataKtx)
     implementation(libs.androidx.lifecycle.viewmodelKtx)
 
     implementation(libs.androidx.shareTarget)
@@ -130,8 +123,6 @@ dependencies {
     testImplementation(libs.androidx.paging.commonKtx)
 
     implementation(libs.jetbrains.kotlinx.datetime)
-
-    implementation(libs.kirich1409.viewBinding)
 
     implementation(libs.androidx.datastore.preferences)
 

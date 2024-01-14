@@ -74,32 +74,38 @@ val PORRIDGE_RECIPE_SUMMARY_RESPONSE = GetRecipeSummaryResponse(
 
 val MILK_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
     note = "2 oz of white milk",
-    quantity = 1.0,
     unit = null,
     food = null,
+    quantity = 1.0,
     display = "2 oz of white milk",
     referenceId = "1",
     title = null,
+    isFood = false,
+    disableAmount = true,
 )
 
 val SUGAR_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
     note = "2 oz of white sugar",
-    quantity = 1.0,
     unit = null,
     food = null,
+    quantity = 1.0,
     display = "2 oz of white sugar",
     referenceId = "1",
     title = "Sugar",
+    isFood = false,
+    disableAmount = true,
 )
 
 val BREAD_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
     note = "2 oz of white bread",
-    quantity = 1.0,
     unit = null,
     food = null,
+    quantity = 1.0,
     display = "2 oz of white bread",
     referenceId = "3",
     title = null,
+    isFood = false,
+    disableAmount = true,
 )
 
 val MIX_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse(

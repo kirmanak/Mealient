@@ -11,6 +11,9 @@ android {
         consumerProguardFiles("consumer-proguard-rules.pro")
     }
     namespace = "gq.kirmanak.mealient.datasource"
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
