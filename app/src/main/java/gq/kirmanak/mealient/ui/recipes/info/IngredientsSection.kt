@@ -111,7 +111,7 @@ private val RecipeIngredientEntity.textAndNote: Pair<String, String>
 
         else -> {
             val text = if (display.endsWith(note)) {
-                display.dropLast(note.length)
+                display.dropLast(note.length).trimEnd()
             } else {
                 display
             }
