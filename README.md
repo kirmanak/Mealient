@@ -18,7 +18,8 @@ repository.
 
 ## What is this?
 
-An unofficial Android client for [Mealie](https://hay-kot.github.io/mealie/). It enables you to
+An unofficial Android client for [Mealie](https://github.com/mealie-recipes/mealie/). It enables you
+to
 easily access your recipes using an Android device. The main advantage over website is that
 recipe data is stored locally and can be accessed without the Internet connection.
 
