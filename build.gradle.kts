@@ -10,7 +10,6 @@ buildscript {
         classpath(libs.google.dagger.hiltPlugin)
         classpath(libs.jetbrains.kotlinPlugin)
         classpath(libs.jetbrains.serializationPlugin)
-        classpath(libs.androidx.navigation.safeArgsPlugin)
     }
 }
 

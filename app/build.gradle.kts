@@ -7,7 +7,6 @@ import java.util.Properties
 plugins {
     id("gq.kirmanak.mealient.application")
     id("kotlin-kapt")
-    id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.ksp)
     alias(libs.plugins.appsweep)
@@ -98,20 +97,11 @@ dependencies {
 
     implementation(libs.android.material.material)
 
-    implementation(libs.androidx.navigation.fragmentKtx)
-    implementation(libs.androidx.navigation.runtimeKtx)
-    implementation(libs.androidx.navigation.uiKtx)
-
     implementation(libs.androidx.coreKtx)
     implementation(libs.androidx.splashScreen)
 
     implementation(libs.androidx.appcompat)
 
-    implementation(libs.androidx.constraintLayout)
-
-    implementation(libs.androidx.swipeRefreshLayout)
-
-    implementation(libs.androidx.lifecycle.livedataKtx)
     implementation(libs.androidx.lifecycle.viewmodelKtx)
 
     implementation(libs.androidx.shareTarget)
@@ -130,8 +120,6 @@ dependencies {
     testImplementation(libs.androidx.paging.commonKtx)
 
     implementation(libs.jetbrains.kotlinx.datetime)
-
-    implementation(libs.kirich1409.viewBinding)
 
     implementation(libs.androidx.datastore.preferences)
 

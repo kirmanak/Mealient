@@ -3,8 +3,6 @@
 androidGradlePlugin = "8.1.2"
 # https://github.com/JetBrains/kotlin/releases
 kotlin = "1.9.10"
-# https://developer.android.com/jetpack/androidx/releases/navigation
-googleNavigation = "2.7.4"
 # https://dagger.dev/hilt/gradle-setup
 hilt = "2.48.1"
 # https://github.com/protocolbuffers/protobuf/releases
@@ -21,10 +19,6 @@ material = "1.10.0"
 coreKtx = "1.12.0"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 appcompat = "1.6.1"
-# https://developer.android.com/jetpack/androidx/releases/constraintlayout
-contraintLayout = "2.1.4"
-# https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout
-swipeRefreshLayout = "1.1.0"
 # https://developer.android.com/jetpack/androidx/releases/core
 splashScreen = "1.0.1"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
@@ -41,10 +35,6 @@ paging = "3.2.1"
 room = "2.6.0"
 # https://github.com/Kotlin/kotlinx-datetime/releases
 kotlinxDatetime = "0.4.0"
-# https://github.com/bumptech/glide/releases
-glide = "4.16.0"
-# https://github.com/androidbroadcast/ViewBindingPropertyDelegate/releases
-viewBindingDelegate = "1.5.9"
 # https://developer.android.com/jetpack/androidx/releases/datastore
 datastore = "1.0.0"
 # https://developer.android.com/jetpack/androidx/releases/security
@@ -135,15 +125,8 @@ jetbrains-kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 jetbrains-kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 jetbrains-kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
-androidx-navigation-safeArgsPlugin = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "googleNavigation" }
-androidx-navigation-fragmentKtx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "googleNavigation" }
-androidx-navigation-runtimeKtx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "googleNavigation" }
-androidx-navigation-uiKtx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "googleNavigation" }
-
 androidx-coreKtx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-androidx-constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "contraintLayout" }
-androidx-swipeRefreshLayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swipeRefreshLayout" }
 androidx-splashScreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
 androidx-coreTesting = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
 androidx-shareTarget = { group = "androidx.sharetarget", name = "sharetarget", version.ref = "shareTarget" }
@@ -152,7 +135,6 @@ androidx-paging-runtimeKtx = { group = "androidx.paging", name = "paging-runtime
 androidx-paging-commonKtx = { group = "androidx.paging", name = "paging-common-ktx", version.ref = "paging" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
-androidx-lifecycle-livedataKtx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 
@@ -179,13 +161,6 @@ okhttp3-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref
 okhttp3-okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp3-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
 okhttp3-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
-
-bumptech-glide-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
-bumptech-glide-okhttp3 = { group = "com.github.bumptech.glide", name = "okhttp3-integration", version.ref = "glide" }
-bumptech-glide-recyclerview = { group = "com.github.bumptech.glide", name = "recyclerview-integration", version.ref = "glide" }
-bumptech-glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "glide" }
-
-kirich1409-viewBinding = { group = "com.github.kirich1409", name = "viewbindingpropertydelegate-noreflection", version.ref = "viewBindingDelegate" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
