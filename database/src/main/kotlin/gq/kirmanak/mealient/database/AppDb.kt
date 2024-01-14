@@ -1,11 +1,17 @@
 package gq.kirmanak.mealient.database
 
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import gq.kirmanak.mealient.database.recipe.RecipeDao
-import gq.kirmanak.mealient.database.recipe.entity.*
+import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientToInstructionEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 
 @Database(
-    version = 11,
+    version = 12,
     entities = [
         RecipeSummaryEntity::class,
         RecipeEntity::class,

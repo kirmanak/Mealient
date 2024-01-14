@@ -25,4 +25,6 @@ data class RecipeIngredientEntity(
     @ColumnInfo(name = "recipe_ingredient_quantity") val quantity: Double?,
     @ColumnInfo(name = "recipe_ingredient_display") val display: String,
     @ColumnInfo(name = "recipe_ingredient_title") val title: String?,
+    @ColumnInfo(name = "recipe_ingredient_is_food") val isFood: Boolean,
+    @ColumnInfo(name = "recipe_ingredient_disable_amount") val disableAmount: Boolean,
 )

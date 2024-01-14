@@ -12,9 +12,11 @@ internal val INGREDIENT_TWO = RecipeIngredientEntity(
     note = "Recipe ingredient note",
     food = "Recipe ingredient food",
     unit = "Recipe ingredient unit",
-    display = "Recipe ingredient display that is very long and should be wrapped",
     quantity = 1.0,
+    display = "Recipe ingredient display that is very long and should be wrapped",
     title = null,
+    isFood = false,
+    disableAmount = true,
 )
 
 internal val SUMMARY_ENTITY = RecipeSummaryEntity(
@@ -34,9 +36,11 @@ internal val INGREDIENT_ONE = RecipeIngredientEntity(
     note = "Recipe ingredient note",
     food = "Recipe ingredient food",
     unit = "Recipe ingredient unit",
-    display = "Recipe ingredient display that is very long and should be wrapped",
     quantity = 1.0,
+    display = "Recipe ingredient display that is very long and should be wrapped",
     title = "Recipe ingredient section title",
+    isFood = false,
+    disableAmount = true,
 )
 
 internal val INSTRUCTION_ONE = RecipeInstructionEntity(
