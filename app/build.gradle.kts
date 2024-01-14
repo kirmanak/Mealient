@@ -74,6 +74,9 @@ android {
             }
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 ksp {

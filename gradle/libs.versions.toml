@@ -1,20 +1,20 @@
 [versions]
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-androidGradlePlugin = "8.1.2"
+androidGradlePlugin = "8.2.1"
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "1.9.10"
+kotlin = "1.9.22"
 # https://dagger.dev/hilt/gradle-setup
-hilt = "2.48.1"
+hilt = "2.50"
 # https://github.com/protocolbuffers/protobuf/releases
-protobuf = "3.24.4"
+protobuf = "3.25.2"
 # https://github.com/google/protobuf-gradle-plugin/releases
 protobufPlugin = "0.9.4"
 # https://plugins.gradle.org/plugin/org.sonarqube
 sonarqube = "4.4.1.3373"
 # https://plugins.gradle.org/plugin/com.guardsquare.appsweep
-appsweep = "1.5.2"
+appsweep = "1.5.6"
 # https://github.com/material-components/material-components-android/releases
-material = "1.10.0"
+material = "1.11.0"
 # https://developer.android.com/kotlin/ktx#core
 coreKtx = "1.12.0"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
@@ -22,19 +22,19 @@ appcompat = "1.6.1"
 # https://developer.android.com/jetpack/androidx/releases/core
 splashScreen = "1.0.1"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
-lifecycle = "2.6.2"
+lifecycle = "2.7.0"
 # https://developer.android.com/jetpack/androidx/releases/arch-core
 coreTesting = "2.2.0"
 # https://github.com/Kotlin/kotlinx.serialization/releases
-kotlinxSerialization = "1.6.0"
+kotlinxSerialization = "1.6.2"
 # https://github.com/square/okhttp/tags
 okhttp = "4.12.0"
 # https://developer.android.com/jetpack/androidx/releases/paging
 paging = "3.2.1"
 # https://developer.android.com/jetpack/androidx/releases/room
-room = "2.6.0"
+room = "2.6.1"
 # https://github.com/Kotlin/kotlinx-datetime/releases
-kotlinxDatetime = "0.4.0"
+kotlinxDatetime = "0.5.0"
 # https://developer.android.com/jetpack/androidx/releases/datastore
 datastore = "1.0.0"
 # https://developer.android.com/jetpack/androidx/releases/security
@@ -44,19 +44,19 @@ junit = "4.13.2"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 coroutines = "1.7.3"
 # https://github.com/robolectric/robolectric/releases
-robolectric = "4.11"
+robolectric = "4.11.1"
 # https://mvnrepository.com/artifact/com.google.truth/truth
-truth = "1.1.5"
+truth = "1.2.0"
 # https://mockk.io/
-mockk = "1.13.8"
+mockk = "1.13.9"
 # https://github.com/square/leakcanary/releases
-leakcanary = "2.12"
+leakcanary = "2.13"
 # https://github.com/ChuckerTeam/chucker/releases
 chucker = "4.0.0"
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
-desugar = "2.0.3"
+desugar = "2.0.4"
 # https://github.com/google/ksp/releases
-kspPlugin = "1.9.10-1.0.13"
+kspPlugin = "1.9.22-1.0.16"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
 shareTarget = "1.2.0"
 # https://github.com/KasperskyLab/Kaspresso/releases
@@ -70,17 +70,17 @@ junitKtx = "1.1.5"
 # https://mvnrepository.com/artifact/androidx.compose/compose-bom
 composeBom = "2023.10.01"
 # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-composeKotlinCompilerExtension = "1.5.3"
+composeKotlinCompilerExtension = "1.5.8"
 # https://google.github.io/accompanist/
 accompanistVersion = "0.32.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
 materialCompose = "1.5.4"
-# https://github.com/raamcosta/compose-destinations
-composeDestinations = "1.9.54"
+# https://github.com/raamcosta/compose-destinations/releases
+composeDestinations = "1.9.59"
 # https://developer.android.com/jetpack/androidx/releases/hilt
 androidxHilt = "1.1.0"
 # https://github.com/ktorio/ktor/releases
-ktor = "2.3.5"
+ktor = "2.3.7"
 # https://github.com/coil-kt/coil/releases
 coil = "2.5.0"
 
