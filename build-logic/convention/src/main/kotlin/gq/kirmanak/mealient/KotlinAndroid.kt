@@ -50,10 +50,6 @@ internal fun Project.configureKotlinAndroid(
             )
         }
 
-        buildFeatures {
-            viewBinding = true
-        }
-
         testOptions {
             unitTests {
                 isIncludeAndroidResources = true
