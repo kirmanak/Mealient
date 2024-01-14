@@ -86,13 +86,14 @@ private fun IngredientListItem(
             onCheckedChange = { isChecked = it },
         )
 
+        val (text, note) = item.textAndNote
         Column {
             Text(
-                text = item.display,
+                text = text,
                 style = MaterialTheme.typography.bodyLarge,
             )
 
-            if (item.note.isNotBlank()) {
+            if (note.isNotBlank()) {
                 Text(
                     text = item.note,
                     style = MaterialTheme.typography.bodyMedium,
@@ -101,3 +102,20 @@ private fun IngredientListItem(
         }
     }
 }
+
+private val RecipeIngredientEntity.textAndNote: Pair<String, String>
+    get() = when {
+        disableAmount -> note to ""
+
+        note.isBlank() -> display to ""
+
+        else -> {
+            val text = if (display.endsWith(note)) {
+                display.dropLast(note.length)
+            } else {
+                display
+            }
+
+            text to note
+        }
+    }
