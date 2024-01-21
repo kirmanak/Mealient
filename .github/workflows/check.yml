@@ -26,7 +26,7 @@ jobs:
       - name: Run tests
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew check sonar --no-configuration-cache --no-daemon
+        run: ./gradlew check sonar koverVerifyRelease --no-configuration-cache --no-daemon
 
       - name: Publish test reports
         uses: mikepenz/action-junit-report@0a8a5ba57593d67b2e45de2c543b438412382b7b

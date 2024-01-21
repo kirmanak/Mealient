@@ -184,4 +184,11 @@ koverReport {
             packages("gq.kirmanak.mealient")
         }
     }
+    androidReports("release") {
+        verify {
+            rule {
+                minBound(25)
+            }
+        }
+    }
 }
