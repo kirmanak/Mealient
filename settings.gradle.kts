@@ -23,6 +23,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "Mealient"
 
+System.setProperty("sonar.gradle.skipCompile", "true")
+
 include(":app")
 include(":architecture")
 include(":database")

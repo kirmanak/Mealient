@@ -23,10 +23,13 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a
 
-      - name: Run tests
+      - name: Checks
+        run: ./gradlew check :app:koverXmlReportRelease
+
+      - name: SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew check :app:koverXmlReportRelease sonar --no-configuration-cache --no-daemon
+        run: ./gradlew sonar
 
       - name: Publish test reports
         uses: mikepenz/action-junit-report@0a8a5ba57593d67b2e45de2c543b438412382b7b
