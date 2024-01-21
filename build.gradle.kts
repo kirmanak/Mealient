@@ -24,6 +24,10 @@ sonarqube {
         property("sonar.projectKey", "kirmanak_Mealient")
         property("sonar.organization", "kirmanak")
         property("sonar.host.url", "https://sonarcloud.io")
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths",
+            "${projectDir.path}/app/build/reports/kover/reportRelease.xml"
+        )
     }
 }
 
@@ -34,6 +38,7 @@ subprojects {
                 "sonar.androidLint.reportPaths",
                 "${projectDir.path}/build/reports/lint-results-debug.xml"
             )
+
         }
     }
 }
