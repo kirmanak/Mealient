@@ -17,5 +17,4 @@ data class RecipeInfoUiState(
     val rating: Long? = null,
     val locked: Boolean = false,
     val editable: Boolean = true,
-    val editMode: Boolean = false,
 )

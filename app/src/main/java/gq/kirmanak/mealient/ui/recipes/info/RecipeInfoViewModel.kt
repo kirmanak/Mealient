@@ -45,7 +45,6 @@ internal class RecipeInfoViewModel @Inject constructor(
                 imageUrl = imageUrl,
                 rating = entity.recipeSummaryEntity.rating,
                 locked = entity.recipeEntity.locked,
-                editMode = false,
             )
         } ?: RecipeInfoUiState()
         emit(state)

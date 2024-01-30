@@ -87,7 +87,7 @@ internal fun HeaderSection(
                 label = { Text(text = "title")}
             )
             OutlinedTextField(
-                value = description!!,
+                value = description,
                 onValueChange = { /* TODO */ },
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(text = "description")}
