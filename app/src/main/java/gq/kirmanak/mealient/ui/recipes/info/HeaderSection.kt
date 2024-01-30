@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +29,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 internal fun HeaderSection(
@@ -37,6 +42,10 @@ internal fun HeaderSection(
     isEditMode: Boolean,
 ) {
     val imageFallback = painterResource(id = R.drawable.placeholder_recipe)
+
+    var bHeaderExpanded by remember {
+        mutableStateOf(false)
+    }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(Dimens.Small, Alignment.Top),
@@ -96,6 +105,30 @@ internal fun HeaderSection(
                     text = description,
                     style = MaterialTheme.typography.bodyLarge,
                 )
+            }
+        }
+
+        val sExpandText =
+            if (bHeaderExpanded) stringResource(id = R.string.hideDetails) else stringResource(id = R.string.showDetails)
+        ClickableText(
+            text = buildAnnotatedString {
+                append(sExpandText)
+            },
+            onClick = { bHeaderExpanded = !bHeaderExpanded },
+            modifier = Modifier
+                .padding(top = 4.dp, start = 4.dp, bottom = 4.dp)
+                .fillMaxWidth(),
+            style = TextStyle(
+                textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.primary
+            )
+        )
+
+        if (bHeaderExpanded) {
+            // ToDo: Show categories, tags, settings, required tools and nutrition
+            Button(
+                onClick = { /*TODO*/ },
+            ) {
+                Text(text = "Settings")
             }
         }
     }

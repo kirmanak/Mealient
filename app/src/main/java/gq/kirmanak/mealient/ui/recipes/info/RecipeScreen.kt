@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.ui.AppTheme
@@ -66,9 +68,12 @@ private fun RecipeScreen(
     Scaffold(
         floatingActionButton = {
             Row {
-                FloatingActionButton(onClick = {
-                    changeEditMode()
-                }) {
+                FloatingActionButton(
+                    onClick = {
+                        changeEditMode()
+                    },
+                    modifier = Modifier.padding( horizontal = 8.dp)
+                ) {
                     if (isEditMode) {
                         Icon(Icons.Default.Cancel, contentDescription = "Cancel")
                     } else {
@@ -76,10 +81,13 @@ private fun RecipeScreen(
                     }
                 }
                 if (isEditMode) {
-                    FloatingActionButton(onClick = {
-                        changeEditMode()
-                        save()
-                    }) {
+                    FloatingActionButton(
+                        onClick = {
+                            changeEditMode()
+                            save()
+                        },
+                        modifier = Modifier.padding( horizontal = 8.dp)
+                    ) {
                         Icon(Icons.Default.Save, contentDescription = "Save")
                     }
                 }
@@ -140,7 +148,7 @@ private fun RecipeScreenPreview() {
                 editable = true,
             ),
             changeEditMode = {},
-            isEditMode = true,
+            isEditMode = false,
         )
     }
 }
