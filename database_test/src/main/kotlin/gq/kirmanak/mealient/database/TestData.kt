@@ -18,6 +18,7 @@ val CAKE_RECIPE_SUMMARY_ENTITY = RecipeSummaryEntity(
     dateUpdated = LocalDateTime.parse("2021-11-13T15:30:13"),
     imageId = "1",
     isFavorite = false,
+    rating = 0,
 )
 
 val PORRIDGE_RECIPE_SUMMARY_ENTITY = RecipeSummaryEntity(
@@ -29,6 +30,7 @@ val PORRIDGE_RECIPE_SUMMARY_ENTITY = RecipeSummaryEntity(
     dateUpdated = LocalDateTime.parse("2021-10-13T17:35:23"),
     imageId = "2",
     isFavorite = false,
+    rating = 0,
 )
 
 val TEST_RECIPE_SUMMARY_ENTITIES =
@@ -64,6 +66,7 @@ val CAKE_RECIPE_ENTITY = RecipeEntity(
     remoteId = "1",
     recipeYield = "4 servings",
     disableAmounts = true,
+    locked = false,
 )
 
 val CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
@@ -113,6 +116,7 @@ val PORRIDGE_RECIPE_ENTITY_FULL = RecipeEntity(
     remoteId = "2",
     recipeYield = "3 servings",
     disableAmounts = true,
+    locked = false,
 )
 
 val PORRIDGE_MILK_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(

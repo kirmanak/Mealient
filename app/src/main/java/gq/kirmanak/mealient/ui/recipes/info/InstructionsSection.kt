@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import gq.kirmanak.mealient.ui.Dimens
 @Composable
 internal fun InstructionsSection(
     instructions: Map<RecipeInstructionEntity, List<RecipeIngredientEntity>>,
+    isEditMode: Boolean
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(Dimens.Small, Alignment.Top),
@@ -39,6 +41,7 @@ internal fun InstructionsSection(
                 item = instruction,
                 ingredients = ingredients,
                 index = stepCount++,
+                isEditMode = isEditMode,
             )
         }
     }
@@ -50,6 +53,7 @@ private fun InstructionListItem(
     index: Int,
     ingredients: List<RecipeIngredientEntity>,
     modifier: Modifier = Modifier,
+    isEditMode: Boolean
 ) {
     val title = item.title
 
@@ -80,10 +84,19 @@ private fun InstructionListItem(
                 style = MaterialTheme.typography.titleMedium,
             )
 
-            Text(
-                text = item.text.trim(),
-                style = MaterialTheme.typography.bodyLarge,
-            )
+            if (isEditMode) {
+
+                OutlinedTextField(
+                    value = item.text.trim(),
+                    onValueChange = { /* TODO */ },
+                )
+            }
+            else {
+                Text(
+                    text = item.text.trim(),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
 
             if (ingredients.isNotEmpty()) {
                 Divider()

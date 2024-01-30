@@ -28,6 +28,7 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
         remoteId = getRecipeResponse.remoteId,
         recipeYield = getRecipeResponse.recipeYield,
         disableAmounts = getRecipeResponse.settings?.disableAmount ?: true,
+        locked = getRecipeResponse.settings?.locked ?: true,
     )
 
     override fun toRecipeIngredientEntity(
@@ -69,6 +70,7 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
             dateUpdated = recipeSummaryInfo.dateUpdated,
             imageId = recipeSummaryInfo.remoteId,
             isFavorite = isFavorite,
+            rating = recipeSummaryInfo.rating ?: 0,
         )
 
     override fun toAddRecipeInfo(addRecipeDraft: AddRecipeDraft) = AddRecipeInfo(

@@ -12,5 +12,6 @@ data class GetRecipeSummaryResponse(
     @SerialName("slug") val slug: String,
     @SerialName("description") val description: String = "",
     @SerialName("dateAdded") val dateAdded: LocalDate,
-    @SerialName("dateUpdated") val dateUpdated: LocalDateTime
+    @SerialName("dateUpdated") val dateUpdated: LocalDateTime,
+    @SerialName("rating") val rating: Long?,
 )

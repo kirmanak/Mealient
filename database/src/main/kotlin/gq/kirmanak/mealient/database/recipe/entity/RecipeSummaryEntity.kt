@@ -16,4 +16,5 @@ data class RecipeSummaryEntity(
     @ColumnInfo(name = "recipe_summaries_date_updated") val dateUpdated: LocalDateTime,
     @ColumnInfo(name = "recipe_summaries_image_id") val imageId: String?,
     @ColumnInfo(name = "recipe_summaries_is_favorite") val isFavorite: Boolean,
+    @ColumnInfo(name = "recipe_summaries_rating") val rating: Long,
 )

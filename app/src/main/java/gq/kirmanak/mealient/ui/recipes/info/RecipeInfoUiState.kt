@@ -14,4 +14,8 @@ data class RecipeInfoUiState(
     val description: String? = null,
     val disableAmounts: Boolean = true,
     val imageUrl: String? = null,
+    val rating: Long? = null,
+    val locked: Boolean = false,
+    val editable: Boolean = true,
+    val editMode: Boolean = false,
 )

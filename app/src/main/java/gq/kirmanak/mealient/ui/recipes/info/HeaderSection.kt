@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.ui.recipes.info
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,12 +20,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.Dimens
+import androidx.compose.material3.OutlinedTextField
 
 @Composable
 internal fun HeaderSection(
     imageUrl: String?,
     title: String?,
     description: String?,
+    isEditMode: Boolean,
 ) {
     val imageFallback = painterResource(id = R.drawable.placeholder_recipe)
 
@@ -51,22 +54,39 @@ internal fun HeaderSection(
             contentScale = ContentScale.Crop,
         )
 
-        if (!title.isNullOrEmpty()) {
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = Dimens.Small),
-                text = title,
-                style = MaterialTheme.typography.headlineSmall,
-            )
-        }
 
-        if (!description.isNullOrEmpty()) {
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = Dimens.Small),
-                text = description,
-                style = MaterialTheme.typography.bodyLarge,
-            )
+        Column {
+            Row {
+                if (isEditMode) {
+                    Column {
+                        OutlinedTextField(
+                            value = title!!,
+                            onValueChange = { /* TODO */ },
+                        )
+                    }
+                }
+                else {
+                    if (!title.isNullOrEmpty()) {
+                        Column {
+                            Text(
+                                modifier = Modifier
+                                    .padding(horizontal = Dimens.Small),
+                                text = title,
+                                style = MaterialTheme.typography.headlineSmall,
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (!description.isNullOrEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = Dimens.Small),
+                    text = description,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
         }
     }
 }
