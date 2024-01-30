@@ -33,6 +33,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import gq.kirmanak.mealient.ui.AppTheme
+import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
+import okhttp3.internal.http2.Header
 
 @Composable
 internal fun HeaderSection(
@@ -131,5 +134,18 @@ internal fun HeaderSection(
                 Text(text = "Settings")
             }
         }
+    }
+}
+
+@ColorSchemePreview
+@Composable
+private fun HeaderSectionPreview() {
+    AppTheme {
+        HeaderSection(
+            imageUrl = "",
+            title = "Test Recipe",
+            description = "test Test Test test",
+            isEditMode = true,
+        )
     }
 }
