@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,12 +22,18 @@ import coil.compose.AsyncImage
 import gq.kirmanak.mealient.R
 import gq.kirmanak.mealient.ui.Dimens
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.text.input.TextFieldValue
 
 @Composable
 internal fun HeaderSection(
     imageUrl: String?,
-    title: String?,
-    description: String?,
+    title: String,
+    description: String,
     isEditMode: Boolean,
 ) {
     val imageFallback = painterResource(id = R.drawable.placeholder_recipe)
@@ -55,30 +62,33 @@ internal fun HeaderSection(
         )
 
 
-        Column {
-            Row {
-                if (isEditMode) {
-                    Column {
-                        OutlinedTextField(
-                            value = title!!,
-                            onValueChange = { /* TODO */ },
-                        )
-                    }
-                }
-                else {
-                    if (!title.isNullOrEmpty()) {
-                        Column {
-                            Text(
-                                modifier = Modifier
-                                    .padding(horizontal = Dimens.Small),
-                                text = title,
-                                style = MaterialTheme.typography.headlineSmall,
-                            )
-                        }
-                    }
-                }
+        if (isEditMode) {
+            // ToDo: Only for Testing
+            var titleValue by remember {
+                mutableStateOf(TextFieldValue(title))
             }
 
+            OutlinedTextField(
+                value = titleValue,
+                onValueChange = { titleValue = it },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(text = "title")}
+            )
+            OutlinedTextField(
+                value = description!!,
+                onValueChange = { /* TODO */ },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(text = "description")}
+            )
+        } else {
+            if (!title.isNullOrEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = Dimens.Small),
+                    text = title,
+                    style = MaterialTheme.typography.headlineSmall,
+                )
+            }
             if (!description.isNullOrEmpty()) {
                 Text(
                     modifier = Modifier

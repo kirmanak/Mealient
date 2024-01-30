@@ -64,9 +64,8 @@ private fun RecipeScreen(
     KeepScreenOn()
 
     Scaffold(
-
         floatingActionButton = {
-            Row() {
+            Row {
                 FloatingActionButton(onClick = {
                     changeEditMode()
                 }) {
@@ -79,8 +78,7 @@ private fun RecipeScreen(
                 if (isEditMode) {
                     FloatingActionButton(onClick = {
                         changeEditMode()
-                        if (isEditMode)
-                            save()
+                        save()
                     }) {
                         Icon(Icons.Default.Save, contentDescription = "Save")
                     }
@@ -98,14 +96,15 @@ private fun RecipeScreen(
         ) {
             HeaderSection(
                 imageUrl = state.imageUrl,
-                title = state.title,
-                description = state.description,
+                title = state.title ?: "",
+                description = state.description ?: "",
                 isEditMode = isEditMode,
             )
 
             if (state.showIngredients) {
                 IngredientsSection(
                     ingredients = state.recipeIngredients,
+                    isEditMode = isEditMode,
                 )
             }
 
