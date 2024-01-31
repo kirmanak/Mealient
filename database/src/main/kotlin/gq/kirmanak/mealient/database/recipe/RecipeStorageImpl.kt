@@ -7,6 +7,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientToInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSettingsEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 import gq.kirmanak.mealient.logging.Logger
@@ -44,6 +45,7 @@ internal class RecipeStorageImpl @Inject constructor(
 
     override suspend fun saveRecipeInfo(
         recipe: RecipeEntity,
+        recipeSettings: RecipeSettingsEntity,
         ingredients: List<RecipeIngredientEntity>,
         instructions: List<RecipeInstructionEntity>,
         ingredientToInstruction: List<RecipeIngredientToInstructionEntity>,
@@ -51,6 +53,8 @@ internal class RecipeStorageImpl @Inject constructor(
         logger.v { "saveRecipeInfo() called with: recipe = $recipe, ingredients = $ingredients, instructions = $instructions, ingredientToInstructions = $ingredientToInstruction" }
         db.withTransaction {
             recipeDao.insertRecipe(recipe)
+
+            recipeDao.insertRecipeSettings(recipeSettings)
 
             recipeDao.deleteRecipeIngredients(recipe.remoteId)
             recipeDao.insertRecipeIngredients(ingredients)

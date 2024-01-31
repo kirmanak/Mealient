@@ -22,6 +22,7 @@ data class GetRecipeResponse(
 
 @Serializable
 data class GetRecipeSettingsResponse(
+    @SerialName("id") val remoteId: String,
     @SerialName("public") val public: Boolean,
     @SerialName("showNutrition") val showNutrition: Boolean,
     @SerialName("showAssets") val showAssets: Boolean,
@@ -29,7 +30,6 @@ data class GetRecipeSettingsResponse(
     @SerialName("disableComments") val disableComments: Boolean,
     @SerialName("disableAmount") val disableAmount: Boolean,
     @SerialName("locked") val locked: Boolean,
-
 )
 
 @Serializable

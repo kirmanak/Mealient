@@ -28,7 +28,14 @@ internal val SUMMARY_ENTITY = RecipeSummaryEntity(
     dateUpdated = LocalDateTime(2021, 1, 1, 1, 1, 1),
     imageId = null,
     isFavorite = false,
-    rating = 3,
+    groupId = "1",
+    userId = "1",
+    cookTime = "",
+    performTime = "",
+    prepTime = "",
+    totalTime = "",
+    recipeYield = "2 Pieces",
+    rating = 3
 )
 
 internal val INGREDIENT_ONE = RecipeIngredientEntity(

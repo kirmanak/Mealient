@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.model_mapper
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSettingsEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeIngredient
@@ -15,6 +16,7 @@ import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
 import gq.kirmanak.mealient.datasource.models.GetRecipeIngredientResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
+import gq.kirmanak.mealient.datasource.models.GetRecipeSettingsResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
@@ -26,9 +28,19 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
 
     override fun toRecipeEntity(getRecipeResponse: GetRecipeResponse) = RecipeEntity(
         remoteId = getRecipeResponse.remoteId,
-        recipeYield = getRecipeResponse.recipeYield,
-        disableAmounts = getRecipeResponse.settings?.disableAmount ?: true,
-        locked = getRecipeResponse.settings?.locked ?: true,
+    )
+
+    override fun toRecipeSettingsEntity(
+        settingsResponse: GetRecipeSettingsResponse
+    ) = RecipeSettingsEntity(
+        remoteId = settingsResponse.remoteId,
+        public = settingsResponse.public,
+        showNutrition = settingsResponse.showNutrition,
+        showAssets = settingsResponse.showAssets,
+        landscapeView = settingsResponse.landscapeView,
+        disableComments = settingsResponse.disableComments,
+        disableAmounts = settingsResponse.disableAmount,
+        locked = settingsResponse.public,
     )
 
     override fun toRecipeIngredientEntity(
@@ -71,6 +83,13 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
             imageId = recipeSummaryInfo.remoteId,
             isFavorite = isFavorite,
             rating = recipeSummaryInfo.rating ?: 0,
+            recipeYield = recipeSummaryInfo.recipeYield ?: "",
+            userId = recipeSummaryInfo.userId ?: "",
+            groupId = recipeSummaryInfo.groupId ?: "",
+            cookTime = recipeSummaryInfo.cookTime,
+            performTime = recipeSummaryInfo.cookTime,
+            prepTime = recipeSummaryInfo.cookTime,
+            totalTime = recipeSummaryInfo.cookTime,
         )
 
     override fun toAddRecipeInfo(addRecipeDraft: AddRecipeDraft) = AddRecipeInfo(
