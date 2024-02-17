@@ -83,6 +83,8 @@ androidxHilt = "1.1.0"
 ktor = "2.3.7"
 # https://github.com/coil-kt/coil/releases
 coil = "2.5.0"
+# https://github.com/Kotlin/kotlinx-kover/releases
+kover = "0.7.5"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -191,3 +193,4 @@ sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
 appsweep = { id = "com.guardsquare.appsweep", version.ref = "appsweep" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspPlugin" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
