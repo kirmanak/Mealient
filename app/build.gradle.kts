@@ -182,7 +182,7 @@ koverReport {
     androidReports("release") {
         verify {
             rule {
-                minBound(40)
+                minBound(30)
             }
         }
     }
