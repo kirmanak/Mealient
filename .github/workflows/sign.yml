@@ -24,22 +24,27 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Sign APK
+      - name: Restore keystore
         env:
           MEALIENT_KEY_STORE: ${{ secrets.MEALIENT_KEY_STORE }}
           MEALIENT_KEY_STORE_PASSWORD: ${{ secrets.MEALIENT_KEY_STORE_PASSWORD }}
           MEALIENT_KEY_ALIAS: ${{ secrets.MEALIENT_KEY_ALIAS }}
           MEALIENT_KEY_PASSWORD: ${{ secrets.MEALIENT_KEY_PASSWORD }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          APPSWEEP_API_KEY: ${{ secrets.APPSWEEP_API_KEY }}
         run: |
           echo "$MEALIENT_KEY_STORE" | base64 -d > app/keystore.jks
           echo "storeFile=keystore.jks" > keystore.properties
           echo "storePassword=$MEALIENT_KEY_STORE_PASSWORD" >> keystore.properties
           echo "keyAlias=$MEALIENT_KEY_ALIAS" >> keystore.properties
           echo "keyPassword=$MEALIENT_KEY_PASSWORD" >> keystore.properties
-          ./gradlew build bundle sonar uploadToAppSweepRelease
+
+      - name: APK
+        run: |
+          ./gradlew build
           cp app/build/outputs/apk/release/*.apk mealient-release.apk
+
+      - name: Bundle
+        run: |
+          ./gradlew bundle
           cp app/build/outputs/bundle/release/*.aab mealient-release.aab
 
       - name: Upload release build
@@ -49,3 +54,13 @@ jobs:
           path: |
             mealient-release.apk
             mealient-release.aab
+
+      - name: SonarCloud
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonar
+
+      - name: AppSweep
+        env:
+          APPSWEEP_API_KEY: ${{ secrets.APPSWEEP_API_KEY }}
+        run: ./gradlew uploadToAppSweepRelease
