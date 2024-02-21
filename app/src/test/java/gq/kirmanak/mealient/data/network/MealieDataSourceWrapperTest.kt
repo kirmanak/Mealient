@@ -59,6 +59,11 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     @Test
     fun `when requestRecipes expect valid network request`() = runTest {
         coEvery {
+    @Test(expected = IllegalArgumentException::class)
+    fun `when requestRecipeInfo with invalid slug expect exception`() = runTest {
+        val invalidSlug = ""
+        subject.requestRecipe(invalidSlug)
+    }
             dataSource.requestRecipes(any(), any())
         } returns listOf(PORRIDGE_RECIPE_SUMMARY_RESPONSE)
         coEvery { authRepo.getAuthToken() } returns TEST_TOKEN
@@ -73,7 +78,10 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
 
         assertThat(actual).isEqualTo(listOf(RECIPE_SUMMARY_PORRIDGE))
     }
-
+    @Test(expected = IllegalArgumentException::class)
+    fun `when requestRecipes with invalid parameters expect exception`() = runTest {
+        subject.requestRecipes(-1, 0)
+    }
     @Test(expected = IOException::class)
     fun `when request fails expect createRecipe to rethrow`() = runTest {
         coEvery { dataSource.createRecipe(any()) } throws IOException()
@@ -119,6 +127,11 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
     @Test
     fun `when add favorite recipe info expect correct sequence`() = runTest {
         subject.updateIsRecipeFavorite(recipeSlug = "cake", isFavorite = true)
+    @Test(expected = Exception::class)
+    fun `when updateIsRecipeFavorite and requestUserInfo fails expect exception`() = runTest {
+        coEvery { dataSource.requestUserInfo() } throws Exception()
+        subject.updateIsRecipeFavorite(recipeSlug = "cake", isFavorite = true)
+    }
         coVerify {
             dataSource.requestUserInfo()
             dataSource.addFavoriteRecipe(eq("userId"), eq("cake"))
@@ -136,3 +149,30 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         assertThat(subject.getFavoriteRecipes()).isEqualTo(FAVORITE_RECIPES_LIST)
     }
 }
+    @Test
+    fun `parseRecipeFromURL_expectCorrectCallAndResult`() = runTest {
+        val parseRecipeURLRequest = ParseRecipeURLRequest("http://example.com/recipe")
+        val expectedSlug = "example-recipe"
+        coEvery { dataSource.parseRecipeFromURL(eq(parseRecipeURLRequest)) } returns expectedSlug
+
+        val actualSlug = subject.parseRecipeFromURL(parseRecipeURLRequest)
+
+        coVerify { dataSource.parseRecipeFromURL(eq(parseRecipeURLRequest)) }
+        assertThat(actualSlug).isEqualTo(expectedSlug)
+    }
+
+    @Test
+    fun `deleteRecipe_expectCorrectCall`() = runTest {
+        val recipeSlug = "example-recipe"
+        coEvery { dataSource.deleteRecipe(eq(recipeSlug)) } just Runs
+
+        subject.deleteRecipe(recipeSlug)
+
+        coVerify { dataSource.deleteRecipe(eq(recipeSlug)) }
+    }
+
+    @Test(expected = IOException::class)
+    fun `when createRecipe fails expect exception`() = runTest {
+        coEvery { dataSource.createRecipe(any()) } throws IOException()
+        subject.addRecipe(PORRIDGE_ADD_RECIPE_INFO)
+    }
