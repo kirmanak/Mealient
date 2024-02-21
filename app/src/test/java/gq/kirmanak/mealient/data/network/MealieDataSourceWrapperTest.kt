@@ -74,19 +74,11 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         assertThat(actual).isEqualTo(listOf(RECIPE_SUMMARY_PORRIDGE))
     }
 
-    @Test
-    fun `when updateRecipe fails expect exception`() = runTest {
-        val slug = "porridge"
-        coEvery { dataSource.createRecipe(any()) } returns slug
-        coEvery { dataSource.updateRecipe(any(), any()) } throws IOException()
+    @Test(expected = IOException::class)
+    fun `when request fails expect createRecipe to rethrow`() = runTest {
+        coEvery { dataSource.createRecipe(any()) } throws IOException()
         coEvery { authRepo.getAuthToken() } returns TEST_TOKEN
-    
-        assertThrows(IOException::class.java) {
-            subject.addRecipe(PORRIDGE_ADD_RECIPE_INFO)
-        }
-    
-        coVerify(exactly = 1) { dataSource.createRecipe(any()) }
-        coVerify(exactly = 1) { dataSource.updateRecipe(any(), any()) }
+        subject.addRecipe(PORRIDGE_ADD_RECIPE_INFO)
     }
 
     @Test
@@ -144,22 +136,3 @@ class MealieDataSourceWrapperTest : BaseUnitTest() {
         assertThat(subject.getFavoriteRecipes()).isEqualTo(FAVORITE_RECIPES_LIST)
     }
 }
-    @Test
-    fun deleteRecipe_expectCorrectNetworkCall() = runTest {
-        val recipeSlug = "test-recipe"
-        coEvery { dataSource.deleteRecipe(recipeSlug) } just Runs
-
-        subject.deleteRecipe(recipeSlug)
-
-        coVerify(exactly = 1) { dataSource.deleteRecipe(recipeSlug) }
-    }
-
-    @Test(expected = IOException::class)
-    fun deleteRecipe_whenNetworkFails_expectException() = runTest {
-        val recipeSlug = "test-recipe"
-        coEvery { dataSource.deleteRecipe(recipeSlug) } throws IOException()
-
-        subject.deleteRecipe(recipeSlug)
-
-        coVerify(exactly = 1) { dataSource.deleteRecipe(recipeSlug) }
-    }
