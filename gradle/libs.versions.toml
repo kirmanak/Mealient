@@ -78,7 +78,7 @@ materialCompose = "1.6.2"
 # https://github.com/raamcosta/compose-destinations/releases
 composeDestinations = "1.9.63"
 # https://developer.android.com/jetpack/androidx/releases/hilt
-androidxHilt = "1.1.0"
+androidxHilt = "1.2.0"
 # https://github.com/ktorio/ktor/releases
 ktor = "2.3.8"
 # https://github.com/coil-kt/coil/releases
