@@ -74,7 +74,7 @@ composeKotlinCompilerExtension = "1.5.9"
 # https://google.github.io/accompanist/
 accompanistVersion = "0.34.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
-materialCompose = "1.6.1"
+materialCompose = "1.6.2"
 # https://github.com/raamcosta/compose-destinations/releases
 composeDestinations = "1.9.63"
 # https://developer.android.com/jetpack/androidx/releases/hilt
