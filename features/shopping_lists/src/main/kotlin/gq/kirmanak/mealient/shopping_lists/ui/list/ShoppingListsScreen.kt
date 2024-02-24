@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,7 +23,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.navigate
-import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.getErrorMessage
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
@@ -40,7 +41,8 @@ fun ShoppingListsScreen(
     baseScreenState: BaseScreenState,
     shoppingListsViewModel: ShoppingListsViewModel = hiltViewModel(),
 ) {
-    val loadingState by shoppingListsViewModel.loadingState.collectAsState()
+    val screenState by shoppingListsViewModel.screenStateFlow.collectAsState()
+    val loadingState = screenState.loadingState
     val errorToShowInSnackbar = shoppingListsViewModel.errorToShowInSnackBar
 
     BaseScreenWithNavigation(
@@ -58,10 +60,19 @@ fun ShoppingListsScreen(
         ) { items ->
             items(items) { shoppingList ->
                 ShoppingListCard(
-                    shoppingList = shoppingList,
-                    onItemClick = { clickedEntity ->
-                        val shoppingListId = clickedEntity.id
+                    listName = shoppingList.name,
+                    onItemClick = {
+                        val shoppingListId = shoppingList.id
                         navController.navigate(ShoppingListScreenDestination(shoppingListId))
+                    }
+                )
+            }
+
+            itemsIndexed(screenState.newLists) { index, newList ->
+                OutlinedTextField(
+                    value = newList,
+                    onValueChange = {
+                        shoppingListsViewModel.onNewListNameChanged(index, it)
                     }
                 )
             }
@@ -74,22 +85,22 @@ fun ShoppingListsScreen(
 private fun PreviewShoppingListCard() {
     AppTheme {
         ShoppingListCard(
-            shoppingList = GetShoppingListsSummaryResponse("1", "Weekend shopping"),
+            listName = "Weekend shopping",
         )
     }
 }
 
 @Composable
 private fun ShoppingListCard(
-    shoppingList: GetShoppingListsSummaryResponse?,
+    listName: String?,
     modifier: Modifier = Modifier,
-    onItemClick: (GetShoppingListsSummaryResponse) -> Unit = {},
+    onItemClick: () -> Unit = {},
 ) {
     Card(
         modifier = modifier
             .padding(horizontal = Dimens.Medium, vertical = Dimens.Small)
             .fillMaxWidth()
-            .clickable { shoppingList?.let { onItemClick(it) } },
+            .clickable(onClick = onItemClick),
     ) {
         Row(
             modifier = Modifier.padding(Dimens.Medium),
@@ -101,7 +112,7 @@ private fun ShoppingListCard(
                 modifier = Modifier.height(Dimens.Large),
             )
             Text(
-                text = shoppingList?.name.orEmpty(),
+                text = listName.orEmpty(),
                 modifier = Modifier.padding(start = Dimens.Medium),
             )
         }

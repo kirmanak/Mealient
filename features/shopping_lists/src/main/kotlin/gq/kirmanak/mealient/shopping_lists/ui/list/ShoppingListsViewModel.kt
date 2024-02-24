@@ -15,7 +15,9 @@ import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.ui.util.LoadingHelper
 import gq.kirmanak.mealient.ui.util.LoadingHelperFactory
 import gq.kirmanak.mealient.ui.util.LoadingState
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,13 +29,17 @@ class ShoppingListsViewModel @Inject constructor(
     loadingHelperFactory: LoadingHelperFactory,
 ) : ViewModel() {
 
+    private val newShoppingLists = MutableStateFlow<List<String>>(emptyList())
+
     private val loadingHelper: LoadingHelper<List<GetShoppingListsSummaryResponse>> =
         loadingHelperFactory.create(viewModelScope) {
             runCatchingExceptCancel { shoppingListsRepo.getShoppingLists() }
         }
 
-    val loadingState: StateFlow<LoadingState<List<GetShoppingListsSummaryResponse>>> =
-        loadingHelper.loadingState
+    private val screenState = MutableStateFlow(
+        ScreenState(loadingState = loadingHelper.loadingState.value)
+    )
+    val screenStateFlow: StateFlow<ScreenState> = screenState
 
     private var _errorToShowInSnackbar by mutableStateOf<Throwable?>(null)
     val errorToShowInSnackBar: Throwable? get() = _errorToShowInSnackbar
@@ -41,6 +47,7 @@ class ShoppingListsViewModel @Inject constructor(
     init {
         refresh()
         listenToAuthState()
+        observeScreenState()
     }
 
     private fun listenToAuthState() {
@@ -49,6 +56,26 @@ class ShoppingListsViewModel @Inject constructor(
             authRepo.isAuthorizedFlow.valueUpdatesOnly().collect {
                 logger.d { "Authorization state changed to $it" }
                 if (it) refresh()
+            }
+        }
+    }
+
+    private fun observeScreenState() {
+        logger.v { "observeScreenState() called" }
+
+        viewModelScope.launch {
+            loadingHelper.loadingState.collect { loadingState ->
+                screenState.update { oldScreenState ->
+                    oldScreenState.copy(loadingState = loadingState)
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            newShoppingLists.collect { newLists ->
+                screenState.update { oldScreenState ->
+                    oldScreenState.copy(newLists = newLists)
+                }
             }
         }
     }
@@ -64,4 +91,22 @@ class ShoppingListsViewModel @Inject constructor(
         logger.v { "onSnackbarShown() called" }
         _errorToShowInSnackbar = null
     }
+
+    fun onAddShoppingListClicked() {
+        logger.v { "onAddShoppingListClicked() called" }
+    }
+
+    fun onNewListNameChanged(index: Int, newName: String) {
+        logger.v { "onNewListNameChanged($index, $newName) called" }
+        newShoppingLists.update {
+            it.toMutableList().apply {
+                set(index, newName)
+            }
+        }
+    }
 }
+
+data class ScreenState(
+    val newLists: List<String> = emptyList(),
+    val loadingState: LoadingState<List<GetShoppingListsSummaryResponse>>,
+)
