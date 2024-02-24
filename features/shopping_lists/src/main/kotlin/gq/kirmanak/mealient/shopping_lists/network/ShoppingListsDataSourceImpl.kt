@@ -2,6 +2,7 @@ package gq.kirmanak.mealient.shopping_lists.network
 
 import gq.kirmanak.mealient.datasource.MealieDataSource
 import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListRequest
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
@@ -27,7 +28,7 @@ class ShoppingListsDataSourceImpl @Inject constructor(
     ) = dataSource.deleteShoppingListItem(id)
 
     override suspend fun updateShoppingListItem(
-        item: GetShoppingListItemResponse
+        item: GetShoppingListItemResponse,
     ) = dataSource.updateShoppingListItem(item)
 
     override suspend fun getFoods(): List<GetFoodResponse> = dataSource.getFoods().items
@@ -35,7 +36,11 @@ class ShoppingListsDataSourceImpl @Inject constructor(
     override suspend fun getUnits(): List<GetUnitResponse> = dataSource.getUnits().items
 
     override suspend fun addShoppingListItem(
-        item: CreateShoppingListItemRequest
+        item: CreateShoppingListItemRequest,
     ) = dataSource.addShoppingListItem(item)
+
+    override suspend fun addShoppingList(
+        request: CreateShoppingListRequest,
+    ) = dataSource.addShoppingList(request)
 }
 
