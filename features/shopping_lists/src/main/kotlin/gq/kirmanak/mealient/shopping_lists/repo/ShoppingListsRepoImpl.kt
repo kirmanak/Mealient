@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.shopping_lists.repo
 
 import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListRequest
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
@@ -48,5 +49,10 @@ class ShoppingListsRepoImpl @Inject constructor(
     override suspend fun addShoppingListItem(item: CreateShoppingListItemRequest) {
         logger.v { "addShoppingListItem() called with: item = $item" }
         dataSource.addShoppingListItem(item)
+    }
+
+    override suspend fun addShoppingList(request: CreateShoppingListRequest) {
+        logger.v { "addShoppingList() called with: request = $request" }
+        dataSource.addShoppingList(request)
     }
 }

@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.shopping_lists.network
 
 import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListRequest
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
@@ -22,4 +23,6 @@ interface ShoppingListsDataSource {
     suspend fun getUnits(): List<GetUnitResponse>
 
     suspend fun addShoppingListItem(item: CreateShoppingListItemRequest)
+
+    suspend fun addShoppingList(request: CreateShoppingListRequest)
 }
