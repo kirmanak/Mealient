@@ -82,7 +82,7 @@ androidxHilt = "1.1.0"
 # https://github.com/ktorio/ktor/releases
 ktor = "2.3.8"
 # https://github.com/coil-kt/coil/releases
-coil = "2.5.0"
+coil = "2.6.0"
 # https://github.com/Kotlin/kotlinx-kover/releases
 kover = "0.7.5"
 
