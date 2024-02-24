@@ -84,7 +84,7 @@ ktor = "2.3.8"
 # https://github.com/coil-kt/coil/releases
 coil = "2.6.0"
 # https://github.com/Kotlin/kotlinx-kover/releases
-kover = "0.7.5"
+kover = "0.7.6"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
