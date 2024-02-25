@@ -1,24 +1,36 @@
 package gq.kirmanak.mealient.shopping_lists.ui.list
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
@@ -36,31 +48,40 @@ import gq.kirmanak.mealient.ui.util.error
 
 @Destination
 @Composable
-fun ShoppingListsScreen(
+internal fun ShoppingListsScreen(
     navController: NavController,
     baseScreenState: BaseScreenState,
     shoppingListsViewModel: ShoppingListsViewModel = hiltViewModel(),
 ) {
-    val screenState by shoppingListsViewModel.screenStateFlow.collectAsState()
-    val loadingState = screenState.loadingState
-    val errorToShowInSnackbar = shoppingListsViewModel.errorToShowInSnackBar
+    val screenState = shoppingListsViewModel.shoppingListsState
 
     BaseScreenWithNavigation(
         baseScreenState = baseScreenState,
     ) { modifier ->
         LazyColumnWithLoadingState(
             modifier = modifier,
-            loadingState = loadingState,
-            emptyListError = loadingState.error?.let { getErrorMessage(it) }
+            loadingState = screenState.loadingState,
+            emptyListError = screenState.loadingState.error?.let { getErrorMessage(it) }
                 ?: stringResource(R.string.shopping_lists_screen_empty),
             retryButtonText = stringResource(id = R.string.shopping_lists_screen_empty_button_refresh),
-            snackbarText = errorToShowInSnackbar?.let { getErrorMessage(error = it) },
-            onSnackbarShown = shoppingListsViewModel::onSnackbarShown,
-            onRefresh = shoppingListsViewModel::refresh
+            snackbarText = screenState.errorToShow?.let { getErrorMessage(error = it) },
+            onSnackbarShown = { shoppingListsViewModel.onEvent(ShoppingListsEvent.SnackbarShown) },
+            onRefresh = { shoppingListsViewModel.onEvent(ShoppingListsEvent.RefreshRequested) },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = { shoppingListsViewModel.onEvent(ShoppingListsEvent.AddShoppingList) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.shopping_lists_screen_add_icon_content_description),
+                    )
+                }
+            }
         ) { items ->
             items(items) { shoppingList ->
                 ShoppingListCard(
                     listName = shoppingList.name,
+                    isEditing = false,
                     onItemClick = {
                         val shoppingListId = shoppingList.id
                         navController.navigate(ShoppingListScreenDestination(shoppingListId))
@@ -69,10 +90,16 @@ fun ShoppingListsScreen(
             }
 
             itemsIndexed(screenState.newLists) { index, newList ->
-                OutlinedTextField(
-                    value = newList,
-                    onValueChange = {
-                        shoppingListsViewModel.onNewListNameChanged(index, it)
+                ShoppingListCard(
+                    listName = newList,
+                    isEditing = true,
+                    onNameChange = {
+                        val event = ShoppingListsEvent.NewListNameChanged(index, it)
+                        shoppingListsViewModel.onEvent(event)
+                    },
+                    onEditDone = {
+                        val event = ShoppingListsEvent.NewListSaved(index)
+                        shoppingListsViewModel.onEvent(event)
                     }
                 )
             }
@@ -81,26 +108,19 @@ fun ShoppingListsScreen(
 }
 
 @Composable
-@ColorSchemePreview
-private fun PreviewShoppingListCard() {
-    AppTheme {
-        ShoppingListCard(
-            listName = "Weekend shopping",
-        )
-    }
-}
-
-@Composable
 private fun ShoppingListCard(
     listName: String?,
+    isEditing: Boolean,
     modifier: Modifier = Modifier,
-    onItemClick: () -> Unit = {},
+    onItemClick: (() -> Unit)? = null,
+    onNameChange: (String) -> Unit = {},
+    onEditDone: () -> Unit = {},
 ) {
     Card(
         modifier = modifier
             .padding(horizontal = Dimens.Medium, vertical = Dimens.Small)
             .fillMaxWidth()
-            .clickable(onClick = onItemClick),
+            .then(if (onItemClick == null) Modifier else Modifier.clickable(onClick = onItemClick))
     ) {
         Row(
             modifier = Modifier.padding(Dimens.Medium),
@@ -111,11 +131,104 @@ private fun ShoppingListCard(
                 contentDescription = stringResource(id = R.string.shopping_lists_screen_cart_icon),
                 modifier = Modifier.height(Dimens.Large),
             )
-            Text(
-                text = listName.orEmpty(),
-                modifier = Modifier.padding(start = Dimens.Medium),
+
+            if (isEditing) {
+                NameTextField(
+                    listName = listName,
+                    onNameChange = onNameChange,
+                    onEditDone = onEditDone,
+                    modifier = Modifier.weight(1f),
+                )
+
+                Icon(
+                    imageVector = Icons.Default.Done,
+                    contentDescription = stringResource(id = R.string.shopping_lists_screen_add_new_list_done_content_description),
+                    tint = if (listName.isNullOrBlank()) {
+                        LocalContentColor.current.copy(alpha = LocalContentColor.current.alpha / 2)
+                    } else {
+                        LocalContentColor.current
+                    },
+                    modifier = Modifier
+                        .height(Dimens.Large)
+                        .clickable(
+                            enabled = listName
+                                .isNullOrBlank()
+                                .not(),
+                            onClick = onEditDone,
+                        ),
+                )
+            } else {
+                Text(
+                    text = listName.orEmpty(),
+                    modifier = Modifier.padding(start = Dimens.Medium),
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun NameTextField(
+    listName: String?,
+    onNameChange: (String) -> Unit,
+    onEditDone: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+
+    BasicTextField(
+        modifier = modifier.padding(start = Dimens.Medium),
+        textStyle = LocalTextStyle.current,
+        value = listName.orEmpty(),
+        onValueChange = onNameChange,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            imeAction = if (listName.isNullOrBlank()) ImeAction.None else ImeAction.Done,
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = { onEditDone() }
+        ),
+        interactionSource = interactionSource,
+        decorationBox = @Composable { innerTextField ->
+            TextFieldDefaults.DecorationBox(
+                value = listName.orEmpty(),
+                innerTextField = innerTextField,
+                enabled = true,
+                singleLine = true,
+                visualTransformation = VisualTransformation.None,
+                interactionSource = interactionSource,
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.shopping_lists_screen_add_new_list_placeholder),
+                    )
+                },
+                contentPadding = PaddingValues(),
+                container = {}
             )
         }
+    )
+}
+
+@Composable
+@ColorSchemePreview
+private fun PreviewShoppingListCard() {
+    AppTheme {
+        ShoppingListCard(
+            listName = "Weekend shopping",
+            isEditing = false
+        )
+    }
+}
+
+@Composable
+@ColorSchemePreview
+private fun PreviewEditingShoppingListCard() {
+    AppTheme {
+        ShoppingListCard(
+            listName = "Weekend shopping",
+            isEditing = true
+        )
     }
 }
 
