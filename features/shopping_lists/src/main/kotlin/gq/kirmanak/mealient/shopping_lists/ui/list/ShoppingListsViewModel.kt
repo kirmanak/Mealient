@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gq.kirmanak.mealient.architecture.valueUpdatesOnly
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListRequest
 import gq.kirmanak.mealient.datasource.models.GetShoppingListsSummaryResponse
 import gq.kirmanak.mealient.datasource.runCatchingExceptCancel
 import gq.kirmanak.mealient.logging.Logger
@@ -15,34 +16,26 @@ import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.ui.util.LoadingHelper
 import gq.kirmanak.mealient.ui.util.LoadingHelperFactory
 import gq.kirmanak.mealient.ui.util.LoadingState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ShoppingListsViewModel @Inject constructor(
+internal class ShoppingListsViewModel @Inject constructor(
     private val logger: Logger,
     private val shoppingListsRepo: ShoppingListsRepo,
     private val authRepo: ShoppingListsAuthRepo,
     loadingHelperFactory: LoadingHelperFactory,
 ) : ViewModel() {
 
-    private val newShoppingLists = MutableStateFlow<List<String>>(emptyList())
-
     private val loadingHelper: LoadingHelper<List<GetShoppingListsSummaryResponse>> =
         loadingHelperFactory.create(viewModelScope) {
             runCatchingExceptCancel { shoppingListsRepo.getShoppingLists() }
         }
 
-    private val screenState = MutableStateFlow(
-        ScreenState(loadingState = loadingHelper.loadingState.value)
+    private var _shoppingListsState by mutableStateOf(
+        ShoppingListsState(loadingState = loadingHelper.loadingState.value)
     )
-    val screenStateFlow: StateFlow<ScreenState> = screenState
-
-    private var _errorToShowInSnackbar by mutableStateOf<Throwable?>(null)
-    val errorToShowInSnackBar: Throwable? get() = _errorToShowInSnackbar
+    val shoppingListsState: ShoppingListsState get() = _shoppingListsState
 
     init {
         refresh()
@@ -65,48 +58,101 @@ class ShoppingListsViewModel @Inject constructor(
 
         viewModelScope.launch {
             loadingHelper.loadingState.collect { loadingState ->
-                screenState.update { oldScreenState ->
-                    oldScreenState.copy(loadingState = loadingState)
-                }
-            }
-        }
-
-        viewModelScope.launch {
-            newShoppingLists.collect { newLists ->
-                screenState.update { oldScreenState ->
-                    oldScreenState.copy(newLists = newLists)
-                }
+                _shoppingListsState = _shoppingListsState.copy(loadingState = loadingState)
             }
         }
     }
 
-    fun refresh() {
+    fun onEvent(event: ShoppingListsEvent) {
+        logger.v { "onEvent($event) called" }
+        when (event) {
+            is ShoppingListsEvent.AddShoppingList -> {
+                onAddShoppingListClicked()
+            }
+
+            is ShoppingListsEvent.NewListNameChanged -> {
+                onNewListNameChanged(event.index, event.newName)
+            }
+
+            is ShoppingListsEvent.SnackbarShown -> {
+                onSnackbarShown()
+            }
+
+            is ShoppingListsEvent.RefreshRequested -> {
+                refresh()
+            }
+
+            is ShoppingListsEvent.NewListSaved -> {
+                onNewListSaved(event.index)
+            }
+        }
+    }
+
+    private fun onNewListSaved(index: Int) {
+        logger.v { "onNewListSaved($index) called" }
+        val newLists = _shoppingListsState.newLists
+        val request = CreateShoppingListRequest(name = newLists[index])
+        viewModelScope.launch {
+            runCatchingExceptCancel {
+                shoppingListsRepo.addShoppingList(request)
+            }.onFailure {
+                logger.e(it) { "Error while creating shopping list" }
+                _shoppingListsState = _shoppingListsState.copy(errorToShow = it)
+            }.onSuccess {
+                logger.d { "Shopping list \"${newLists[index]}\" created" }
+                refresh()
+                _shoppingListsState = _shoppingListsState.copy(
+                    newLists = newLists.take(index) + newLists.drop(index + 1)
+                )
+            }
+        }
+    }
+
+    private fun refresh() {
         logger.v { "refresh() called" }
         viewModelScope.launch {
-            _errorToShowInSnackbar = loadingHelper.refresh().exceptionOrNull()
+            _shoppingListsState =
+                _shoppingListsState.copy(errorToShow = loadingHelper.refresh().exceptionOrNull())
         }
     }
 
-    fun onSnackbarShown() {
+    private fun onSnackbarShown() {
         logger.v { "onSnackbarShown() called" }
-        _errorToShowInSnackbar = null
+        _shoppingListsState = _shoppingListsState.copy(errorToShow = null)
     }
 
-    fun onAddShoppingListClicked() {
-        logger.v { "onAddShoppingListClicked() called" }
-    }
-
-    fun onNewListNameChanged(index: Int, newName: String) {
+    private fun onNewListNameChanged(index: Int, newName: String) {
         logger.v { "onNewListNameChanged($index, $newName) called" }
-        newShoppingLists.update {
-            it.toMutableList().apply {
-                set(index, newName)
-            }
-        }
+        val newLists = _shoppingListsState.newLists
+        val filteredName = newName.replace(System.lineSeparator(), "")
+        val withUpdatedItem = newLists.take(index) + filteredName + newLists.drop(index + 1)
+        _shoppingListsState = _shoppingListsState.copy(newLists = withUpdatedItem)
+    }
+
+    private fun onAddShoppingListClicked() {
+        logger.v { "onAddShoppingListClicked() called" }
+        _shoppingListsState = _shoppingListsState.copy(newLists = _shoppingListsState.newLists + "")
     }
 }
 
-data class ScreenState(
+internal data class ShoppingListsState(
     val newLists: List<String> = emptyList(),
+    val errorToShow: Throwable? = null,
     val loadingState: LoadingState<List<GetShoppingListsSummaryResponse>>,
 )
+
+internal sealed interface ShoppingListsEvent {
+
+    data object AddShoppingList : ShoppingListsEvent
+
+    data class NewListNameChanged(
+        val index: Int,
+        val newName: String,
+    ) : ShoppingListsEvent
+
+    data object SnackbarShown : ShoppingListsEvent
+
+    data object RefreshRequested : ShoppingListsEvent
+
+    data class NewListSaved(val index: Int) : ShoppingListsEvent
+}
