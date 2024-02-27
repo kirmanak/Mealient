@@ -25,6 +25,8 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +55,7 @@ internal fun ShoppingListsScreen(
     baseScreenState: BaseScreenState,
     shoppingListsViewModel: ShoppingListsViewModel = hiltViewModel(),
 ) {
-    val screenState = shoppingListsViewModel.shoppingListsState
+    val screenState by shoppingListsViewModel.shoppingListsState.collectAsState()
 
     BaseScreenWithNavigation(
         baseScreenState = baseScreenState,
