@@ -48,7 +48,7 @@ robolectric = "4.11.1"
 # https://mvnrepository.com/artifact/com.google.truth/truth
 truth = "1.4.1"
 # https://mockk.io/
-mockk = "1.13.9"
+mockk = "1.13.10"
 # https://github.com/square/leakcanary/releases
 leakcanary = "2.13"
 # https://github.com/ChuckerTeam/chucker/releases
