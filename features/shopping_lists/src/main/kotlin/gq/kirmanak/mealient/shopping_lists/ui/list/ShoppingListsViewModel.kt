@@ -13,9 +13,13 @@ import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.ui.util.LoadingHelper
 import gq.kirmanak.mealient.ui.util.LoadingHelperFactory
 import gq.kirmanak.mealient.ui.util.LoadingState
+import gq.kirmanak.mealient.ui.util.LoadingStateNoData
+import gq.kirmanak.mealient.ui.util.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,9 +37,9 @@ internal class ShoppingListsViewModel @Inject constructor(
             runCatchingExceptCancel { shoppingListsRepo.getShoppingLists() }
         }
 
-    private var _shoppingListsState = MutableStateFlow(
-        ShoppingListsState(loadingState = loadingHelper.loadingState.value)
-    )
+    private val newListState = MutableStateFlow<CreateShoppingListRequest?>(null)
+
+    private var _shoppingListsState = MutableStateFlow(ShoppingListsState())
     val shoppingListsState: StateFlow<ShoppingListsState> get() = _shoppingListsState.asStateFlow()
 
     init {
@@ -57,11 +61,18 @@ internal class ShoppingListsViewModel @Inject constructor(
     private fun observeScreenState() {
         logger.v { "observeScreenState() called" }
 
-        viewModelScope.launch {
-            loadingHelper.loadingState.collect { loadingState ->
-                _shoppingListsState.update { it.copy(loadingState = loadingState) }
+        loadingHelper.loadingState.combine(newListState) { loadingState, newList ->
+            logger.d { "screenStateUpdate: loadingState: $loadingState, newList: $newList" }
+            val existingLists: LoadingState<List<DisplayList>> = loadingState.map { lists ->
+                lists.map { DisplayList.ExistingList(it) }
             }
-        }
+            val listState = if (newList == null) {
+                existingLists
+            } else {
+                existingLists.map { it + DisplayList.NewList(newList) }
+            }
+            _shoppingListsState.update { it.copy(loadingState = listState) }
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: ShoppingListsEvent) {
@@ -72,7 +83,7 @@ internal class ShoppingListsViewModel @Inject constructor(
             }
 
             is ShoppingListsEvent.NewListNameChanged -> {
-                onNewListNameChanged(event.index, event.newName)
+                onNewListNameChanged(event)
             }
 
             is ShoppingListsEvent.SnackbarShown -> {
@@ -84,15 +95,14 @@ internal class ShoppingListsViewModel @Inject constructor(
             }
 
             is ShoppingListsEvent.NewListSaved -> {
-                onNewListSaved(event.index)
+                onNewListSaved(event)
             }
         }
     }
 
-    private fun onNewListSaved(index: Int) {
-        logger.v { "onNewListSaved($index) called" }
-        val name = _shoppingListsState.value.newLists[index]
-        val request = CreateShoppingListRequest(name = name)
+    private fun onNewListSaved(event: ShoppingListsEvent.NewListSaved) {
+        logger.v { "onNewListSaved($event) called" }
+        val request = event.newList.createRequest
         viewModelScope.launch {
             runCatchingExceptCancel {
                 shoppingListsRepo.addShoppingList(request)
@@ -100,11 +110,9 @@ internal class ShoppingListsViewModel @Inject constructor(
                 logger.e(exception) { "Error while creating shopping list" }
                 _shoppingListsState.update { it.copy(errorToShow = exception) }
             }.onSuccess {
-                logger.d { "Shopping list \"$name\" created" }
+                logger.d { "Shopping list \"${request.name}\" created" }
                 refresh()
-                _shoppingListsState.update {
-                    it.copy(newLists = it.newLists.take(index) + it.newLists.drop(index + 1))
-                }
+                newListState.value = null
             }
         }
     }
@@ -122,25 +130,37 @@ internal class ShoppingListsViewModel @Inject constructor(
         _shoppingListsState.update { it.copy(errorToShow = null) }
     }
 
-    private fun onNewListNameChanged(index: Int, newName: String) {
-        logger.v { "onNewListNameChanged($index, $newName) called" }
-        val filteredName = newName.replace(System.lineSeparator(), "")
-        _shoppingListsState.update {
-            val newLists = it.newLists.take(index) + filteredName + it.newLists.drop(index + 1)
-            it.copy(newLists = newLists)
-        }
+    private fun onNewListNameChanged(event: ShoppingListsEvent.NewListNameChanged) {
+        logger.v { "onNewListNameChanged($event) called" }
+        val filteredName = event.newName.replace(System.lineSeparator(), "")
+        newListState.update { it?.copy(name = filteredName) }
     }
 
     private fun onAddShoppingListClicked() {
         logger.v { "onAddShoppingListClicked() called" }
-        _shoppingListsState.update { it.copy(newLists = it.newLists + "") }
+        newListState.update { it ?: CreateShoppingListRequest(name = "") }
+    }
+}
+
+internal sealed interface DisplayList {
+    val name: String
+
+    data class ExistingList(
+        val list: GetShoppingListsSummaryResponse,
+    ) : DisplayList {
+        override val name = list.name.orEmpty()
+    }
+
+    data class NewList(
+        val createRequest: CreateShoppingListRequest
+    ) : DisplayList {
+        override val name = createRequest.name
     }
 }
 
 internal data class ShoppingListsState(
-    val newLists: List<String> = emptyList(),
     val errorToShow: Throwable? = null,
-    val loadingState: LoadingState<List<GetShoppingListsSummaryResponse>>,
+    val loadingState: LoadingState<List<DisplayList>> = LoadingStateNoData.InitialLoad,
 )
 
 internal sealed interface ShoppingListsEvent {
@@ -148,13 +168,13 @@ internal sealed interface ShoppingListsEvent {
     data object AddShoppingList : ShoppingListsEvent
 
     data class NewListNameChanged(
-        val index: Int,
-        val newName: String,
+        val newList: DisplayList.NewList,
+        val newName: String
     ) : ShoppingListsEvent
 
     data object SnackbarShown : ShoppingListsEvent
 
     data object RefreshRequested : ShoppingListsEvent
 
-    data class NewListSaved(val index: Int) : ShoppingListsEvent
+    data class NewListSaved(val newList: DisplayList.NewList) : ShoppingListsEvent
 }
