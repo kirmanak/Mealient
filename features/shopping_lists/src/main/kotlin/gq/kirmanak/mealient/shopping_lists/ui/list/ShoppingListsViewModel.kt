@@ -71,7 +71,12 @@ internal class ShoppingListsViewModel @Inject constructor(
             } else {
                 existingLists.map { it + DisplayList.NewList(newList) }
             }
-            _shoppingListsState.update { it.copy(loadingState = listState) }
+            _shoppingListsState.update {
+                it.copy(
+                    loadingState = listState,
+                    canAddShoppingList = newList == null
+                )
+            }
         }.launchIn(viewModelScope)
     }
 
@@ -161,6 +166,7 @@ internal sealed interface DisplayList {
 internal data class ShoppingListsState(
     val errorToShow: Throwable? = null,
     val loadingState: LoadingState<List<DisplayList>> = LoadingStateNoData.InitialLoad,
+    val canAddShoppingList: Boolean = true,
 )
 
 internal sealed interface ShoppingListsEvent {
