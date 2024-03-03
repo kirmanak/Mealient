@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -80,28 +79,61 @@ internal fun ShoppingListsScreen(
                 }
             }
         ) { items ->
-            items(items) { shoppingList ->
-                ShoppingListCard(
-                    listName = shoppingList.name,
-                    isEditing = false,
-                    onItemClick = {
-                        val shoppingListId = shoppingList.id
-                        navController.navigate(ShoppingListScreenDestination(shoppingListId))
+            items(
+                items = items,
+                key = {
+                    when (it) {
+                        is DisplayList.ExistingList -> it.list.id
+                        is DisplayList.NewList -> "New list"
                     }
-                )
-            }
-
-            itemsIndexed(screenState.newLists) { index, newList ->
+                },
+                contentType = {
+                    when (it) {
+                        is DisplayList.ExistingList -> "Existing list"
+                        is DisplayList.NewList -> "New list"
+                    }
+                }
+            ) { displayList ->
                 ShoppingListCard(
-                    listName = newList,
-                    isEditing = true,
-                    onNameChange = {
-                        val event = ShoppingListsEvent.NewListNameChanged(index, it)
-                        shoppingListsViewModel.onEvent(event)
+                    listName = displayList.name,
+                    isEditing = when (displayList) {
+                        is DisplayList.ExistingList -> false
+                        is DisplayList.NewList -> true
                     },
-                    onEditDone = {
-                        val event = ShoppingListsEvent.NewListSaved(index)
-                        shoppingListsViewModel.onEvent(event)
+                    onItemClick = when (displayList) {
+                        is DisplayList.ExistingList -> object : () -> Unit {
+                            override fun invoke() {
+                                val shoppingListId = displayList.list.id
+                                navController.navigate(ShoppingListScreenDestination(shoppingListId))
+                            }
+                        }
+
+                        is DisplayList.NewList -> null
+                    },
+                    onNameChange = when (displayList) {
+                        is DisplayList.ExistingList -> object : (String) -> Unit {
+                            override fun invoke(newName: String) = Unit
+                        }
+
+                        is DisplayList.NewList -> object : (String) -> Unit {
+                            override fun invoke(newName: String) {
+                                val event =
+                                    ShoppingListsEvent.NewListNameChanged(displayList, newName)
+                                shoppingListsViewModel.onEvent(event)
+                            }
+                        }
+                    },
+                    onEditDone = when (displayList) {
+                        is DisplayList.ExistingList -> object : () -> Unit {
+                            override fun invoke() = Unit
+                        }
+
+                        is DisplayList.NewList -> object : () -> Unit {
+                            override fun invoke() {
+                                val event = ShoppingListsEvent.NewListSaved(displayList)
+                                shoppingListsViewModel.onEvent(event)
+                            }
+                        }
                     }
                 )
             }
