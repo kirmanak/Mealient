@@ -69,13 +69,15 @@ internal fun ShoppingListsScreen(
             onSnackbarShown = { shoppingListsViewModel.onEvent(ShoppingListsEvent.SnackbarShown) },
             onRefresh = { shoppingListsViewModel.onEvent(ShoppingListsEvent.RefreshRequested) },
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { shoppingListsViewModel.onEvent(ShoppingListsEvent.AddShoppingList) }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(id = R.string.shopping_lists_screen_add_icon_content_description),
-                    )
+                if (screenState.canAddShoppingList) {
+                    FloatingActionButton(
+                        onClick = { shoppingListsViewModel.onEvent(ShoppingListsEvent.AddShoppingList) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = stringResource(id = R.string.shopping_lists_screen_add_icon_content_description),
+                        )
+                    }
                 }
             }
         ) { items ->
