@@ -24,6 +24,6 @@ internal fun Project.library(name: String): Provider<MinimalExternalModuleDepend
     return libs.findLibrary(name).get()
 }
 
-internal fun CommonExtension<*, *, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
+internal fun CommonExtension<*, *, *, *, *, *>.kotlinOptions(block: KotlinJvmOptions.() -> Unit) {
     (this as ExtensionAware).extensions.configure("kotlinOptions", block)
 }
