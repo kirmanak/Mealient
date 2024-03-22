@@ -68,7 +68,7 @@ androidXTestRunner = "1.5.2"
 androidXTestOrchestrator = "1.4.2"
 junitKtx = "1.1.5"
 # https://mvnrepository.com/artifact/androidx.compose/compose-bom
-composeBom = "2024.02.02"
+composeBom = "2024.03.00"
 # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
 composeKotlinCompilerExtension = "1.5.9"
 # https://google.github.io/accompanist/
