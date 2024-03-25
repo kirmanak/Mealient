@@ -48,6 +48,7 @@ class RecipeRepoImpl @Inject constructor(
         return runCatchingExceptCancel {
             val recipe = dataSource.requestRecipe(recipeSlug)
             val entity = modelMapper.toRecipeEntity(recipe)
+            val settings = modelMapper.toRecipeSettingsEntity(recipe.settings)
             val ingredients = recipe.ingredients.map {
                 modelMapper.toRecipeIngredientEntity(it, entity.remoteId)
             }
@@ -63,7 +64,7 @@ class RecipeRepoImpl @Inject constructor(
                     )
                 }
             }
-            storage.saveRecipeInfo(entity, ingredients, instructions, ingredientToInstruction)
+            storage.saveRecipeInfo(entity, settings, ingredients, instructions, ingredientToInstruction)
         }.onFailure {
             logger.e(it) { "loadRecipeInfo: can't update full recipe info" }
         }

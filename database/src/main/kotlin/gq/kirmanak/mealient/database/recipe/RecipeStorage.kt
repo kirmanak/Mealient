@@ -5,6 +5,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientToInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSettingsEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 
@@ -19,6 +20,7 @@ interface RecipeStorage {
 
     suspend fun saveRecipeInfo(
         recipe: RecipeEntity,
+        recipeSettings: RecipeSettingsEntity,
         ingredients: List<RecipeIngredientEntity>,
         instructions: List<RecipeInstructionEntity>,
         ingredientToInstruction: List<RecipeIngredientToInstructionEntity>,

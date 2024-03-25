@@ -11,11 +11,25 @@ data class GetRecipeResponse(
     @SerialName("recipeIngredient") val ingredients: List<GetRecipeIngredientResponse> = emptyList(),
     @SerialName("recipeInstructions") val instructions: List<GetRecipeInstructionResponse> = emptyList(),
     @SerialName("settings") val settings: GetRecipeSettingsResponse? = null,
+    @SerialName("rating") val rating: Long? = null,
+    @SerialName("userId") val userId: String,
+    @SerialName("groupId") val groupId: String,
+    @SerialName("totalTime") val totalTime: String = "",
+    @SerialName("prepTime") val prepTime: String = "",
+    @SerialName("cookTime") val cookTime: String = "",
+    @SerialName("performTime") val performTime: String = "",
 )
 
 @Serializable
 data class GetRecipeSettingsResponse(
+    @SerialName("id") val remoteId: String,
+    @SerialName("public") val public: Boolean,
+    @SerialName("showNutrition") val showNutrition: Boolean,
+    @SerialName("showAssets") val showAssets: Boolean,
+    @SerialName("landscapeView") val landscapeView: Boolean,
+    @SerialName("disableComments") val disableComments: Boolean,
     @SerialName("disableAmount") val disableAmount: Boolean,
+    @SerialName("locked") val locked: Boolean,
 )
 
 @Serializable

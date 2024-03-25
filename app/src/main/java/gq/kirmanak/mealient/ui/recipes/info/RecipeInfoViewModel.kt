@@ -43,6 +43,8 @@ internal class RecipeInfoViewModel @Inject constructor(
                 title = entity.recipeSummaryEntity.name,
                 description = entity.recipeSummaryEntity.description,
                 imageUrl = imageUrl,
+                rating = entity.recipeSummaryEntity.rating,
+                locked = entity.recipeSettingsEntity.locked
             )
         } ?: RecipeInfoUiState()
         emit(state)

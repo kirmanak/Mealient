@@ -4,6 +4,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientToInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSettingsEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeWithSummaryAndIngredientsAndInstructions
 import kotlinx.datetime.LocalDate
@@ -18,6 +19,14 @@ val CAKE_RECIPE_SUMMARY_ENTITY = RecipeSummaryEntity(
     dateUpdated = LocalDateTime.parse("2021-11-13T15:30:13"),
     imageId = "1",
     isFavorite = false,
+    rating = 0,
+    recipeYield = "",
+    totalTime = "",
+    prepTime = "",
+    performTime = "",
+    cookTime = "",
+    groupId = "",
+    userId = ""
 )
 
 val PORRIDGE_RECIPE_SUMMARY_ENTITY = RecipeSummaryEntity(
@@ -29,6 +38,14 @@ val PORRIDGE_RECIPE_SUMMARY_ENTITY = RecipeSummaryEntity(
     dateUpdated = LocalDateTime.parse("2021-10-13T17:35:23"),
     imageId = "2",
     isFavorite = false,
+    rating = 0,
+    userId = "",
+    groupId = "",
+    recipeYield = "4 servings",
+    totalTime = "",
+    prepTime = "",
+    performTime = "",
+    cookTime = "",
 )
 
 val TEST_RECIPE_SUMMARY_ENTITIES =
@@ -62,8 +79,17 @@ val MIX_BREAD_RECIPE_INGREDIENT_INSTRUCTION_ENTITY = RecipeIngredientToInstructi
 
 val CAKE_RECIPE_ENTITY = RecipeEntity(
     remoteId = "1",
-    recipeYield = "4 servings",
+)
+
+val CAKE_RECIPE_SETTINGS_ENTITY = RecipeSettingsEntity(
     disableAmounts = true,
+    locked = false,
+    remoteId = "1",
+    landscapeView = false,
+    showNutrition = true,
+    showAssets = true,
+    disableComments = false,
+    public = true
 )
 
 val CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
@@ -94,6 +120,7 @@ val CAKE_BREAD_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
 
 val FULL_CAKE_INFO_ENTITY = RecipeWithSummaryAndIngredientsAndInstructions(
     recipeEntity = CAKE_RECIPE_ENTITY,
+    recipeSettingsEntity = CAKE_RECIPE_SETTINGS_ENTITY,
     recipeSummaryEntity = CAKE_RECIPE_SUMMARY_ENTITY,
     recipeIngredients = listOf(
         CAKE_SUGAR_RECIPE_INGREDIENT_ENTITY,
@@ -111,8 +138,17 @@ val FULL_CAKE_INFO_ENTITY = RecipeWithSummaryAndIngredientsAndInstructions(
 
 val PORRIDGE_RECIPE_ENTITY_FULL = RecipeEntity(
     remoteId = "2",
-    recipeYield = "3 servings",
+)
+
+val PORRIDGE_RECIPE_SETTINGS_ENTITY = RecipeSettingsEntity(
     disableAmounts = true,
+    locked = false,
+    remoteId = "1",
+    landscapeView = false,
+    showNutrition = true,
+    showAssets = true,
+    disableComments = false,
+    public = true,
 )
 
 val PORRIDGE_MILK_RECIPE_INGREDIENT_ENTITY = RecipeIngredientEntity(
@@ -158,6 +194,7 @@ val PORRIDGE_BOIL_RECIPE_INSTRUCTION_ENTITY = RecipeInstructionEntity(
 val FULL_PORRIDGE_INFO_ENTITY = RecipeWithSummaryAndIngredientsAndInstructions(
     recipeEntity = PORRIDGE_RECIPE_ENTITY_FULL,
     recipeSummaryEntity = PORRIDGE_RECIPE_SUMMARY_ENTITY,
+    recipeSettingsEntity = PORRIDGE_RECIPE_SETTINGS_ENTITY,
     recipeIngredients = listOf(
         PORRIDGE_SUGAR_RECIPE_INGREDIENT_ENTITY,
         PORRIDGE_MILK_RECIPE_INGREDIENT_ENTITY,

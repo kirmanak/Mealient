@@ -17,6 +17,10 @@ internal interface RecipeDao {
     suspend fun insertRecipeSummaries(recipeSummaryEntity: Iterable<RecipeSummaryEntity>)
 
     @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRecipeSettings(recipeSettingsEntity: RecipeSettingsEntity)
+
+    @Transaction
     @Query("DELETE FROM recipe_summaries")
     suspend fun removeAllRecipes()
 
