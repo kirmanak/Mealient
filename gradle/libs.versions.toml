@@ -10,7 +10,7 @@ protobuf = "3.25.3"
 # https://github.com/google/protobuf-gradle-plugin/releases
 protobufPlugin = "0.9.4"
 # https://plugins.gradle.org/plugin/org.sonarqube
-sonarqube = "4.4.1.3373"
+sonarqube = "5.0.0.4638"
 # https://plugins.gradle.org/plugin/com.guardsquare.appsweep
 appsweep = "1.5.6"
 # https://github.com/material-components/material-components-android/releases
