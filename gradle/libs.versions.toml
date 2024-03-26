@@ -2,7 +2,7 @@
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
 androidGradlePlugin = "8.3.1"
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "1.9.22"
+kotlin = "1.9.23"
 # https://dagger.dev/hilt/gradle-setup
 hilt = "2.51"
 # https://github.com/protocolbuffers/protobuf/releases
