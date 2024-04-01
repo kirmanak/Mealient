@@ -11,8 +11,6 @@ protobuf = "3.25.3"
 protobufPlugin = "0.9.4"
 # https://plugins.gradle.org/plugin/org.sonarqube
 sonarqube = "5.0.0.4638"
-# https://plugins.gradle.org/plugin/com.guardsquare.appsweep
-appsweep = "1.5.6"
 # https://github.com/material-components/material-components-android/releases
 material = "1.11.0"
 # https://developer.android.com/kotlin/ktx#core
@@ -190,7 +188,6 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 
 [plugins]
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
-appsweep = { id = "com.guardsquare.appsweep", version.ref = "appsweep" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspPlugin" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

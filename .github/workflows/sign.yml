@@ -59,8 +59,3 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonar
-
-      - name: AppSweep
-        env:
-          APPSWEEP_API_KEY: ${{ secrets.APPSWEEP_API_KEY }}
-        run: ./gradlew uploadToAppSweepRelease
