@@ -51,9 +51,10 @@ internal fun SearchTextField(
         ),
         singleLine = true,
         colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Unspecified,
-            unfocusedIndicatorColor = Color.Unspecified,
-            disabledIndicatorColor = Color.Unspecified,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent
         )
     )
 }

@@ -9,43 +9,53 @@ jobs:
   sign:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a
+        uses: gradle/gradle-build-action@v3
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@13f81365a437096ca29f87b1e7389bf0ea1385ed
+        uses: android-actions/setup-android@v3
 
-      - name: Sign APK
+      - name: Restore keystore
         env:
           MEALIENT_KEY_STORE: ${{ secrets.MEALIENT_KEY_STORE }}
           MEALIENT_KEY_STORE_PASSWORD: ${{ secrets.MEALIENT_KEY_STORE_PASSWORD }}
           MEALIENT_KEY_ALIAS: ${{ secrets.MEALIENT_KEY_ALIAS }}
           MEALIENT_KEY_PASSWORD: ${{ secrets.MEALIENT_KEY_PASSWORD }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          APPSWEEP_API_KEY: ${{ secrets.APPSWEEP_API_KEY }}
         run: |
           echo "$MEALIENT_KEY_STORE" | base64 -d > app/keystore.jks
           echo "storeFile=keystore.jks" > keystore.properties
           echo "storePassword=$MEALIENT_KEY_STORE_PASSWORD" >> keystore.properties
           echo "keyAlias=$MEALIENT_KEY_ALIAS" >> keystore.properties
           echo "keyPassword=$MEALIENT_KEY_PASSWORD" >> keystore.properties
-          ./gradlew build bundle sonar uploadToAppSweepRelease --no-configuration-cache --no-daemon
+
+      - name: APK
+        run: |
+          ./gradlew build
           cp app/build/outputs/apk/release/*.apk mealient-release.apk
+
+      - name: Bundle
+        run: |
+          ./gradlew bundle
           cp app/build/outputs/bundle/release/*.aab mealient-release.aab
 
       - name: Upload release build
-        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32
+        uses: actions/upload-artifact@v4
         with:
           name: Release build
           path: |
             mealient-release.apk
             mealient-release.aab
+
+      - name: SonarCloud
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonar

@@ -21,21 +21,21 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.NoMeals
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DismissState
-import androidx.compose.material3.DismissValue
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -516,22 +516,22 @@ fun ShoppingListItem(
     onCheckedChange: (Boolean) -> Unit = {},
     onDismissed: () -> Unit = {},
     onEditStart: () -> Unit = {},
-    dismissState: DismissState = rememberDismissState(
+    dismissState: SwipeToDismissBoxState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
             when (it) {
-                DismissValue.DismissedToStart -> onDismissed()
-                DismissValue.DismissedToEnd -> onEditStart()
-                DismissValue.Default -> Unit
+                SwipeToDismissBoxValue.EndToStart -> onDismissed()
+                SwipeToDismissBoxValue.StartToEnd -> onEditStart()
+                SwipeToDismissBoxValue.Settled -> Unit
             }
             true
         }
     ),
 ) {
     val shoppingListItem = itemState.item
-    SwipeToDismiss(
+    SwipeToDismissBox(
         state = dismissState,
-        background = {
-            if (dismissState.targetValue == DismissValue.DismissedToStart) {
+        backgroundContent = {
+            if (dismissState.targetValue == SwipeToDismissBoxValue.EndToStart) {
                 val color by animateColorAsState(MaterialTheme.colorScheme.error)
                 val iconColor by animateColorAsState(MaterialTheme.colorScheme.onError)
                 Box(
@@ -548,7 +548,7 @@ fun ShoppingListItem(
                             .padding(end = Dimens.Small)
                     )
                 }
-            } else if (dismissState.targetValue == DismissValue.DismissedToEnd) {
+            } else if (dismissState.targetValue == SwipeToDismissBoxValue.StartToEnd) {
                 val color by animateColorAsState(MaterialTheme.colorScheme.primary)
                 val iconColor by animateColorAsState(MaterialTheme.colorScheme.onPrimary)
                 Box(
@@ -567,14 +567,14 @@ fun ShoppingListItem(
                 }
             }
         },
-        dismissContent = {
+        content = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface),
             ) {
                 if (showDivider) {
-                    Divider()
+                    HorizontalDivider()
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -637,8 +637,8 @@ fun PreviewShoppingListItemDismissed() {
         ShoppingListItem(
             itemState = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
             showDivider = false,
-            dismissState = rememberDismissState(
-                initialValue = DismissValue.DismissedToStart,
+            dismissState = rememberSwipeToDismissBoxState(
+                initialValue = SwipeToDismissBoxValue.EndToStart,
             ),
         )
     }
@@ -652,8 +652,8 @@ fun PreviewShoppingListItemEditing() {
         ShoppingListItem(
             itemState = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
             showDivider = false,
-            dismissState = rememberDismissState(
-                initialValue = DismissValue.DismissedToEnd,
+            dismissState = rememberSwipeToDismissBoxState(
+                initialValue = SwipeToDismissBoxValue.StartToEnd,
             ),
         )
     }

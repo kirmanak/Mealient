@@ -11,6 +11,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
+                apply("org.jetbrains.kotlinx.kover")
             }
 
             extensions.configure<LibraryExtension> {

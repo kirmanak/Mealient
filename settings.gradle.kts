@@ -10,7 +10,7 @@ pluginManagement {
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
+    id("org.gradle.toolchains.foojay-resolver-convention") version("0.8.0")
 }
 
 dependencyResolutionManagement {
@@ -22,6 +22,8 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Mealient"
+
+System.setProperty("sonar.gradle.skipCompile", "true")
 
 include(":app")
 include(":architecture")
