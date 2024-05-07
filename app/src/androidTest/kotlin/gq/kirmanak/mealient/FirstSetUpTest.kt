@@ -58,8 +58,14 @@ class FirstSetUpTest : BaseTestCase() {
                     assertIsNotEnabled()
                 }
 
-                okayButtonText {
-                    assertTextContains(getResourceString(R.string.fragment_disclaimer_button_okay))
+                flakySafely(5_000) {
+                    okayButton {
+                        assertIsEnabled()
+                    }
+
+                    okayButtonText {
+                        assertTextContains(getResourceString(R.string.fragment_disclaimer_button_okay))
+                    }
                 }
 
                 disclaimerText {
