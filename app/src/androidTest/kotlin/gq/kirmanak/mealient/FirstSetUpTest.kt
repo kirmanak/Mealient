@@ -5,6 +5,7 @@ import gq.kirmanak.mealient.screen.AuthenticationScreen
 import gq.kirmanak.mealient.screen.BaseUrlScreen
 import gq.kirmanak.mealient.screen.DisclaimerScreen
 import gq.kirmanak.mealient.screen.RecipesListScreen
+import gq.kirmanak.mealient.ui.disclaimer.DisclaimerViewModel
 import io.github.kakaocup.compose.node.element.ComposeScreen.Companion.onComposeScreen
 import io.github.kakaocup.kakao.common.utilities.getResourceString
 import org.junit.Before
@@ -58,14 +59,14 @@ class FirstSetUpTest : BaseTestCase() {
                     assertIsNotEnabled()
                 }
 
-                flakySafely(5_000) {
-                    okayButton {
-                        assertIsEnabled()
-                    }
-
-                    okayButtonText {
+                okayButtonText {
+                    flakySafely(DisclaimerViewModel.FULL_COUNT_DOWN_SEC * 1_000L) {
                         assertTextContains(getResourceString(R.string.fragment_disclaimer_button_okay))
                     }
+                }
+
+                okayButton {
+                    assertIsEnabled()
                 }
 
                 disclaimerText {
