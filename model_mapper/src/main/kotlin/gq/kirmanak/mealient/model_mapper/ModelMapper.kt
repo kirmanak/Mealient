@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.model_mapper
 import gq.kirmanak.mealient.database.recipe.entity.RecipeEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
+import gq.kirmanak.mealient.database.recipe.entity.RecipeSettingsEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import gq.kirmanak.mealient.datasource.models.AddRecipeInfo
 import gq.kirmanak.mealient.datasource.models.AddRecipeIngredient
@@ -15,6 +16,7 @@ import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
 import gq.kirmanak.mealient.datasource.models.GetRecipeIngredientResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeInstructionResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
+import gq.kirmanak.mealient.datasource.models.GetRecipeSettingsResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
@@ -22,6 +24,8 @@ import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
 interface ModelMapper {
 
     fun toRecipeEntity(getRecipeResponse: GetRecipeResponse): RecipeEntity
+
+    fun toRecipeSettingsEntity(getRecipeSettingsResponse: GetRecipeSettingsResponse): RecipeSettingsEntity
 
     fun toRecipeIngredientEntity(
         ingredientResponse: GetRecipeIngredientResponse, recipeId: String

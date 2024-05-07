@@ -81,4 +81,6 @@
 	<string name="activity_main_logout_confirmation_message">Are you sure you want to log yourself out?</string>
 	<string name="activity_main_logout_confirmation_positive">Log out</string>
 	<string name="activity_main_logout_confirmation_negative">Cancel</string>
+	<string name="showDetails">Details</string>
+	<string name="hideDetails">Hide details</string>
 </resources>

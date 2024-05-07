@@ -25,6 +25,14 @@ val RECIPE_SUMMARY_CAKE = GetRecipeSummaryResponse(
     description = "A tasty cake",
     dateAdded = LocalDate.parse("2021-11-13"),
     dateUpdated = LocalDateTime.parse("2021-11-13T15:30:13"),
+    rating = null,
+    recipeYield = "4",
+    totalTime = "",
+    prepTime = "",
+    performTime = "",
+    cookTime = "",
+    userId = "1",
+    groupId = "1",
 )
 
 val RECIPE_SUMMARY_PORRIDGE = GetRecipeSummaryResponse(
@@ -34,6 +42,14 @@ val RECIPE_SUMMARY_PORRIDGE = GetRecipeSummaryResponse(
     description = "A tasty porridge",
     dateAdded = LocalDate.parse("2021-11-12"),
     dateUpdated = LocalDateTime.parse("2021-10-13T17:35:23"),
+    rating = null,
+    recipeYield = "4",
+    totalTime = "",
+    prepTime = "",
+    performTime = "",
+    cookTime = "",
+    userId = "1",
+    groupId = "1",
 )
 
 val TEST_RECIPE_SUMMARIES = listOf(RECIPE_SUMMARY_CAKE, RECIPE_SUMMARY_PORRIDGE)
@@ -70,6 +86,14 @@ val PORRIDGE_RECIPE_SUMMARY_RESPONSE = GetRecipeSummaryResponse(
     description = "A tasty porridge",
     dateAdded = LocalDate.parse("2021-11-12"),
     dateUpdated = LocalDateTime.parse("2021-10-13T17:35:23"),
+    rating = null,
+    recipeYield = "4",
+    totalTime = "",
+    prepTime = "",
+    performTime = "",
+    cookTime = "",
+    userId = "1",
+    groupId = "1",
 )
 
 val MILK_RECIPE_INGREDIENT_RESPONSE = GetRecipeIngredientResponse(
@@ -132,7 +156,16 @@ val BOIL_RECIPE_INSTRUCTION_RESPONSE = GetRecipeInstructionResponse(
     ingredientReferences = emptyList()
 )
 
-val NO_AMOUNT_RECIPE_SETTINGS_RESPONSE = GetRecipeSettingsResponse(disableAmount = true)
+val NO_AMOUNT_RECIPE_SETTINGS_RESPONSE = GetRecipeSettingsResponse(
+    remoteId = "1",
+    disableAmount = true,
+    locked = false,
+    public = false,
+    disableComments = false,
+    showAssets = true,
+    showNutrition = true,
+    landscapeView = false,
+)
 
 val CAKE_RECIPE_RESPONSE = GetRecipeResponse(
     remoteId = "1",
@@ -140,6 +173,8 @@ val CAKE_RECIPE_RESPONSE = GetRecipeResponse(
     recipeYield = "4 servings",
     ingredients = listOf(SUGAR_RECIPE_INGREDIENT_RESPONSE, BREAD_RECIPE_INGREDIENT_RESPONSE),
     instructions = listOf(MIX_RECIPE_INSTRUCTION_RESPONSE, BAKE_RECIPE_INSTRUCTION_RESPONSE),
+    groupId = "123094870213",
+    userId = "12374879",
     settings = NO_AMOUNT_RECIPE_SETTINGS_RESPONSE,
 )
 
@@ -147,6 +182,8 @@ val PORRIDGE_RECIPE_RESPONSE = GetRecipeResponse(
     remoteId = "2",
     recipeYield = "3 servings",
     name = "Porridge",
+    groupId = "123094870213",
+    userId = "12374879",
     ingredients = listOf(
         SUGAR_RECIPE_INGREDIENT_RESPONSE,
         MILK_RECIPE_INGREDIENT_RESPONSE,
