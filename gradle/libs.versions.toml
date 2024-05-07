@@ -68,7 +68,7 @@ junitKtx = "1.1.5"
 # https://mvnrepository.com/artifact/androidx.compose/compose-bom
 composeBom = "2024.03.00"
 # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-composeKotlinCompilerExtension = "1.5.9"
+composeKotlinCompilerExtension = "1.5.13"
 # https://google.github.io/accompanist/
 accompanistVersion = "0.34.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
