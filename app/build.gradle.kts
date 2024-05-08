@@ -68,7 +68,7 @@ android {
                 maybeCreate<ManagedVirtualDevice>("mediumPhoneApi34").apply {
                     device = "Medium Phone"
                     apiLevel = 34
-                    systemImageSource = "aosp-atd"
+                    systemImageSource = "google-atd"
                 }
             }
         }
