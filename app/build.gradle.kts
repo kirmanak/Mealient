@@ -1,6 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.android.build.api.dsl.ManagedVirtualDevice
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -64,11 +63,11 @@ android {
 
     testOptions {
         managedDevices {
-            devices {
-                maybeCreate<ManagedVirtualDevice>("mediumPhoneApi34").apply {
+            localDevices {
+                create("mediumPhoneApi34") {
                     device = "Medium Phone"
                     apiLevel = 34
-                    systemImageSource = "google-atd"
+                    systemImageSource = "aosp-atd"
                 }
             }
         }
