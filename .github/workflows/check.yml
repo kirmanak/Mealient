@@ -83,9 +83,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
