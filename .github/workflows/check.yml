@@ -80,7 +80,10 @@ jobs:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
+          arch: x86_64
+          disable-animations: true
+          disk-size: 6000M
+          heap-size: 600M
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run tests
@@ -89,4 +92,8 @@ jobs:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          arch: x86_64
+          disable-animations: true
+          disk-size: 6000M
+          heap-size: 600M
           script: ./gradlew connectedCheck
