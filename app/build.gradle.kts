@@ -1,6 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.android.build.api.dsl.ManagedVirtualDevice
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -62,17 +61,6 @@ android {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
 
-    testOptions {
-        managedDevices {
-            devices {
-                maybeCreate("pixel4Api30", ManagedVirtualDevice::class.java).apply {
-                    device = "Pixel 4"
-                    apiLevel = 30
-                    systemImageSource = "aosp-atd"
-                }
-            }
-        }
-    }
     buildFeatures {
         buildConfig = true
     }
