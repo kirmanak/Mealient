@@ -1,8 +1,8 @@
 [versions]
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-androidGradlePlugin = "8.4.0"
+androidGradlePlugin = "8.3.2"
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "1.9.23"
+kotlin = "1.9.22"
 # https://dagger.dev/hilt/gradle-setup
 hilt = "2.51.1"
 # https://github.com/protocolbuffers/protobuf/releases
@@ -54,7 +54,7 @@ chucker = "4.0.0"
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
 desugar = "2.0.4"
 # https://github.com/google/ksp/releases
-kspPlugin = "1.9.23-1.0.20"
+kspPlugin = "1.9.22-1.0.17"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
 shareTarget = "1.2.0"
 # https://github.com/KasperskyLab/Kaspresso/releases
@@ -68,7 +68,7 @@ junitKtx = "1.1.5"
 # https://mvnrepository.com/artifact/androidx.compose/compose-bom
 composeBom = "2024.03.00"
 # https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-composeKotlinCompilerExtension = "1.5.13"
+composeKotlinCompilerExtension = "1.5.9"
 # https://google.github.io/accompanist/
 accompanistVersion = "0.34.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
