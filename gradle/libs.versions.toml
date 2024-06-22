@@ -78,7 +78,7 @@ composeDestinations = "1.10.2"
 # https://developer.android.com/jetpack/androidx/releases/hilt
 androidxHilt = "1.2.0"
 # https://github.com/ktorio/ktor/releases
-ktor = "2.3.10"
+ktor = "2.3.12"
 # https://github.com/coil-kt/coil/releases
 coil = "2.6.0"
 # https://github.com/Kotlin/kotlinx-kover/releases
