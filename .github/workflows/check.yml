@@ -96,4 +96,4 @@ jobs:
           disable-animations: true
           disk-size: 6000M
           heap-size: 600M
-          script: ./gradlew connectedCheck
+          script: ./gradlew :app:connectedCheck
