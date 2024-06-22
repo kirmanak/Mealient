@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -40,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -123,6 +125,12 @@ private fun ShoppingListScreen(
         loadingState.data?.name.orEmpty()
     )
 
+    var lastAddedItemIndex by remember { mutableIntStateOf(-1) }
+    val lazyListState = rememberLazyListState()
+    LaunchedEffect(lastAddedItemIndex) {
+        if (lastAddedItemIndex >= 0) lazyListState.animateScrollToItem(lastAddedItemIndex)
+    }
+
     LazyColumnWithLoadingState(
         modifier = modifier,
         loadingState = loadingState.map { it.items },
@@ -145,9 +153,12 @@ private fun ShoppingListScreen(
                     contentDescription = stringResource(id = R.string.shopping_list_screen_add_icon_content_description),
                 )
             }
-        }
+        },
+        lazyListState = lazyListState
     ) { items ->
         val firstCheckedItemIndex = items.indexOfFirst { it.checked }
+        lastAddedItemIndex =
+            items.indexOfLast { it is ShoppingListItemState.NewItem }
 
         itemsIndexed(items, { _, item -> item.id }) { index, itemState ->
             if (itemState is ShoppingListItemState.ExistingItem) {
