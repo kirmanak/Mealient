@@ -40,7 +40,7 @@ security = "1.0.0"
 # https://github.com/junit-team/junit4/releases
 junit = "4.13.2"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
-coroutines = "1.8.0"
+coroutines = "1.8.1"
 # https://github.com/robolectric/robolectric/releases
 robolectric = "4.12.1"
 # https://mvnrepository.com/artifact/com.google.truth/truth
