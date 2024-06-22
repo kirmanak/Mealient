@@ -85,7 +85,7 @@ internal class DisclaimerViewModel @Inject constructor(
     }
 
     companion object {
-        private const val FULL_COUNT_DOWN_SEC = 5
+        const val FULL_COUNT_DOWN_SEC = 5
         private const val COUNT_DOWN_TICK_PERIOD_SEC = 1
     }
 }
