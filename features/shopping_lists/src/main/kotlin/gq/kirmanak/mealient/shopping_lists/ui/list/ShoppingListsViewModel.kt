@@ -18,8 +18,8 @@ import gq.kirmanak.mealient.ui.util.map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,8 +36,6 @@ internal class ShoppingListsViewModel @Inject constructor(
         loadingHelperFactory.create(viewModelScope) {
             runCatchingExceptCancel { shoppingListsRepo.getShoppingLists() }
         }
-
-    private val newListState = MutableStateFlow<CreateShoppingListRequest?>(null)
 
     private var _shoppingListsState = MutableStateFlow(ShoppingListsState())
     val shoppingListsState: StateFlow<ShoppingListsState> get() = _shoppingListsState.asStateFlow()
@@ -61,22 +59,12 @@ internal class ShoppingListsViewModel @Inject constructor(
     private fun observeScreenState() {
         logger.v { "observeScreenState() called" }
 
-        loadingHelper.loadingState.combine(newListState) { loadingState, newList ->
-            logger.d { "screenStateUpdate: loadingState: $loadingState, newList: $newList" }
+        loadingHelper.loadingState.onEach { loadingState ->
+            logger.d { "screenStateUpdate: loadingState: $loadingState" }
             val existingLists: LoadingState<List<DisplayList>> = loadingState.map { lists ->
-                lists.map { DisplayList.ExistingList(it) }
+                lists.map { DisplayList(it) }
             }
-            val listState = if (newList == null) {
-                existingLists
-            } else {
-                existingLists.map { it + DisplayList.NewList(newList) }
-            }
-            _shoppingListsState.update {
-                it.copy(
-                    loadingState = listState,
-                    canAddShoppingList = newList == null
-                )
-            }
+            _shoppingListsState.update { it.copy(loadingState = existingLists) }
         }.launchIn(viewModelScope)
     }
 
@@ -102,12 +90,22 @@ internal class ShoppingListsViewModel @Inject constructor(
             is ShoppingListsEvent.NewListSaved -> {
                 onNewListSaved(event)
             }
+
+            is ShoppingListsEvent.NewListDialogDismissed -> {
+                onNewListDialogDismissed()
+            }
+        }
+    }
+
+    private fun onNewListDialogDismissed() {
+        _shoppingListsState.update {
+            it.copy(newListName = null)
         }
     }
 
     private fun onNewListSaved(event: ShoppingListsEvent.NewListSaved) {
         logger.v { "onNewListSaved($event) called" }
-        val request = event.newList.createRequest
+        val request = CreateShoppingListRequest(event.name)
         viewModelScope.launch {
             runCatchingExceptCancel {
                 shoppingListsRepo.addShoppingList(request)
@@ -117,7 +115,7 @@ internal class ShoppingListsViewModel @Inject constructor(
             }.onSuccess {
                 logger.d { "Shopping list \"${request.name}\" created" }
                 refresh()
-                newListState.value = null
+                _shoppingListsState.update { it.copy(newListName = null) }
             }
         }
     }
@@ -138,49 +136,38 @@ internal class ShoppingListsViewModel @Inject constructor(
     private fun onNewListNameChanged(event: ShoppingListsEvent.NewListNameChanged) {
         logger.v { "onNewListNameChanged($event) called" }
         val filteredName = event.newName.replace(System.lineSeparator(), "")
-        newListState.update { it?.copy(name = filteredName) }
+        _shoppingListsState.update { it.copy(newListName = filteredName) }
     }
 
     private fun onAddShoppingListClicked() {
         logger.v { "onAddShoppingListClicked() called" }
-        newListState.update { it ?: CreateShoppingListRequest(name = "") }
+        _shoppingListsState.update { it.copy(newListName = "") }
     }
 }
 
-internal sealed interface DisplayList {
-    val name: String
-
-    data class ExistingList(
-        val list: GetShoppingListsSummaryResponse,
-    ) : DisplayList {
-        override val name = list.name.orEmpty()
-    }
-
-    data class NewList(
-        val createRequest: CreateShoppingListRequest
-    ) : DisplayList {
-        override val name = createRequest.name
-    }
-}
+internal data class DisplayList(
+    private val list: GetShoppingListsSummaryResponse,
+    val name: String = list.name.orEmpty(),
+    val id: String = list.id
+)
 
 internal data class ShoppingListsState(
     val errorToShow: Throwable? = null,
     val loadingState: LoadingState<List<DisplayList>> = LoadingStateNoData.InitialLoad,
-    val canAddShoppingList: Boolean = true,
+    val newListName: String? = null
 )
 
 internal sealed interface ShoppingListsEvent {
 
     data object AddShoppingList : ShoppingListsEvent
 
-    data class NewListNameChanged(
-        val newList: DisplayList.NewList,
-        val newName: String
-    ) : ShoppingListsEvent
+    data class NewListNameChanged(val newName: String) : ShoppingListsEvent
 
     data object SnackbarShown : ShoppingListsEvent
 
     data object RefreshRequested : ShoppingListsEvent
 
-    data class NewListSaved(val newList: DisplayList.NewList) : ShoppingListsEvent
+    data class NewListSaved(val name: String) : ShoppingListsEvent
+
+    data object NewListDialogDismissed : ShoppingListsEvent
 }
