@@ -2,7 +2,7 @@
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
 androidGradlePlugin = "8.5.0"
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "1.9.22"
+kotlin = "2.0.0"
 # https://dagger.dev/hilt/gradle-setup
 hilt = "2.51.1"
 # https://github.com/protocolbuffers/protobuf/releases
@@ -54,7 +54,7 @@ chucker = "4.0.0"
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
 desugar = "2.0.4"
 # https://github.com/google/ksp/releases
-kspPlugin = "1.9.22-1.0.17"
+kspPlugin = "2.0.0-1.0.22"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
 shareTarget = "1.2.0"
 # https://github.com/KasperskyLab/Kaspresso/releases
@@ -67,8 +67,6 @@ androidXTestOrchestrator = "1.4.2"
 junitKtx = "1.2.1"
 # https://mvnrepository.com/artifact/androidx.compose/compose-bom
 composeBom = "2024.03.00"
-# https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-composeKotlinCompilerExtension = "1.5.9"
 # https://google.github.io/accompanist/
 accompanistVersion = "0.34.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
@@ -191,3 +189,4 @@ sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspPlugin" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

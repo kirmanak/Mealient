@@ -17,6 +17,7 @@ plugins {
     alias(libs.plugins.sonarqube)
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kover) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }
 
 sonarqube {
