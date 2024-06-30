@@ -44,7 +44,7 @@ coroutines = "1.8.1"
 # https://github.com/robolectric/robolectric/releases
 robolectric = "4.12.2"
 # https://mvnrepository.com/artifact/com.google.truth/truth
-truth = "1.4.2"
+truth = "1.4.3"
 # https://mockk.io/
 mockk = "1.13.11"
 # https://github.com/square/leakcanary/releases
