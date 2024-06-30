@@ -20,10 +20,6 @@ internal fun Project.configureKotlinAndroid(
             isCoreLibraryDesugaringEnabled = true
         }
 
-        kotlinOptions {
-            freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
-        }
-
         lint {
             disable += listOf(
                 "ObsoleteLintCustomCheck",

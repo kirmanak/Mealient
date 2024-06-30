@@ -20,11 +20,6 @@ internal fun Project.configureAndroidCompose(
             compose = true
         }
 
-        composeOptions {
-            val version = libs.findVersion("composeKotlinCompilerExtension")
-            kotlinCompilerExtensionVersion = version.get().toString()
-        }
-
         // Add compose-destinations generated code to Gradle source sets
         variants.all {
             kotlin.sourceSets {
