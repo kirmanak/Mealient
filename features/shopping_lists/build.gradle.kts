@@ -4,7 +4,6 @@ plugins {
     id("gq.kirmanak.mealient.library")
     alias(libs.plugins.ksp)
     id("gq.kirmanak.mealient.compose")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
 }
 
@@ -30,9 +29,9 @@ dependencies {
     implementation(libs.androidx.hilt.navigationCompose)
     implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
 
-    kapt(libs.google.dagger.hiltCompiler)
+    ksp(libs.google.dagger.hiltCompiler)
 
-    kaptTest(libs.google.dagger.hiltAndroidCompiler)
+    kspTest(libs.google.dagger.hiltAndroidCompiler)
 
     testImplementation(project(":testing"))
     testImplementation(libs.google.dagger.hiltAndroidTesting)
@@ -40,8 +39,4 @@ dependencies {
     testImplementation(libs.androidx.test.junit)
     testImplementation(libs.google.truth)
     testImplementation(libs.io.mockk)
-}
-
-kapt {
-    correctErrorTypes = true
 }

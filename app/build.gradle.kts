@@ -5,7 +5,6 @@ import java.util.Properties
 
 plugins {
     id("gq.kirmanak.mealient.application")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.ksp)
     id("gq.kirmanak.mealient.compose.app")
@@ -108,11 +107,11 @@ dependencies {
     kover(project(":datastore"))
     kover(project(":datasource"))
 
-    kapt(libs.google.dagger.hiltCompiler)
+    ksp(libs.google.dagger.hiltCompiler)
 
-    kaptTest(libs.google.dagger.hiltAndroidCompiler)
+    kspTest(libs.google.dagger.hiltAndroidCompiler)
 
-    kaptAndroidTest(libs.google.dagger.hiltAndroidCompiler)
+    kspAndroidTest(libs.google.dagger.hiltAndroidCompiler)
 
     testImplementation(project(":datasource_test"))
     testImplementation(project(":database_test"))

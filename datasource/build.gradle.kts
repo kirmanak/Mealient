@@ -1,8 +1,8 @@
 plugins {
     id("gq.kirmanak.mealient.library")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("org.jetbrains.kotlin.plugin.serialization")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -21,8 +21,8 @@ dependencies {
     testImplementation(project(":testing"))
 
     implementation(libs.google.dagger.hiltAndroid)
-    kapt(libs.google.dagger.hiltCompiler)
-    kaptTest(libs.google.dagger.hiltAndroidCompiler)
+    ksp(libs.google.dagger.hiltCompiler)
+    kspTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
 
     api(libs.jetbrains.kotlinx.datetime)

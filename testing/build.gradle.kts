@@ -1,6 +1,6 @@
 plugins {
     id("gq.kirmanak.mealient.library")
-    id("kotlin-kapt")
+    alias(libs.plugins.ksp)
     id("dagger.hilt.android.plugin")
 }
 
@@ -18,8 +18,8 @@ dependencies {
     implementation(project(":architecture"))
 
     implementation(libs.google.dagger.hiltAndroid)
-    kapt(libs.google.dagger.hiltCompiler)
-    kapt(libs.google.dagger.hiltAndroidCompiler)
+    ksp(libs.google.dagger.hiltCompiler)
+    ksp(libs.google.dagger.hiltAndroidCompiler)
     implementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.jetbrains.kotlinx.coroutinesAndroid)
@@ -35,6 +35,3 @@ dependencies {
     implementation(libs.robolectric)
 }
 
-kapt {
-    correctErrorTypes = true
-}

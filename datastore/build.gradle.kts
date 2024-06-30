@@ -1,8 +1,8 @@
 plugins {
     id("gq.kirmanak.mealient.library")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.protobuf)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -20,8 +20,8 @@ dependencies {
     implementation(libs.androidx.security.crypto)
 
     implementation(libs.google.dagger.hiltAndroid)
-    kapt(libs.google.dagger.hiltCompiler)
-    kaptTest(libs.google.dagger.hiltAndroidCompiler)
+    ksp(libs.google.dagger.hiltCompiler)
+    kspTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.jetbrains.kotlinx.datetime)
@@ -52,6 +52,6 @@ protobuf {
     }
 }
 
-kapt {
-    correctErrorTypes = true
+ksp {
+    allowSourcesFromOtherPlugins = true
 }
