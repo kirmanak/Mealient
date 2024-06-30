@@ -28,7 +28,7 @@ kotlinxSerialization = "1.6.3"
 # https://github.com/square/okhttp/tags
 okhttp = "4.12.0"
 # https://developer.android.com/jetpack/androidx/releases/paging
-paging = "3.2.1"
+paging = "3.3.0"
 # https://developer.android.com/jetpack/androidx/releases/room
 room = "2.6.1"
 # https://github.com/Kotlin/kotlinx-datetime/releases
