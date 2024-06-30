@@ -1,6 +1,5 @@
 plugins {
     id("gq.kirmanak.mealient.library")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.ksp)
 }
@@ -15,8 +14,8 @@ dependencies {
     testImplementation(project(":database_test"))
 
     implementation(libs.google.dagger.hiltAndroid)
-    kapt(libs.google.dagger.hiltCompiler)
-    kaptTest(libs.google.dagger.hiltAndroidCompiler)
+    ksp(libs.google.dagger.hiltCompiler)
+    kspTest(libs.google.dagger.hiltAndroidCompiler)
     testImplementation(libs.google.dagger.hiltAndroidTesting)
 
     implementation(libs.androidx.room.ktx)

@@ -1,7 +1,7 @@
 plugins {
     id("gq.kirmanak.mealient.library")
     id("dagger.hilt.android.plugin")
-    id("kotlin-kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -12,5 +12,5 @@ dependencies {
     implementation(project(":architecture"))
 
     implementation(libs.google.dagger.hiltAndroid)
-    kapt(libs.google.dagger.hiltCompiler)
+    ksp(libs.google.dagger.hiltCompiler)
 }
