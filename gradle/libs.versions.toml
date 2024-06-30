@@ -61,7 +61,7 @@ shareTarget = "1.2.0"
 kaspresso = "1.5.4"
 # https://developer.android.com/jetpack/androidx/releases/test
 androidXTestCore = "1.5.0"
-androidXTestRules = "1.5.0"
+androidXTestRules = "1.6.1"
 androidXTestRunner = "1.6.1"
 androidXTestOrchestrator = "1.5.0"
 junitKtx = "1.2.1"
