@@ -25,4 +25,9 @@
     <string name="shopping_lists_screen_add_icon_content_description">Add list</string>
     <string name="shopping_lists_screen_add_new_list_placeholder">New list name</string>
     <string name="shopping_lists_screen_add_new_list_done_content_description">Done</string>
+
+    <string name="shopping_lists_dialog_add_new_title">Add new shopping list</string>
+    <string name="shopping_lists_dialog_add_new_confirm">Confirm</string>
+    <string name="shopping_lists_dialog_add_new_cancel">Cancel</string>
+    <string name="shopping_lists_dialog_add_new_clear">Clear input</string>
 </resources>
