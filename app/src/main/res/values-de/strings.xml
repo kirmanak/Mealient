@@ -43,7 +43,7 @@
 	<string name="fragment_add_recipe_save_success">Rezept erfolgreich gespeichert</string>
 	<string name="fragment_add_recipe_clear_button">Klar</string>
 	<string name="fragment_base_url_url_input_helper_text">Beispiel: demo.mealie.io</string>
-	<string name="fragment_authentication_email_input_helper_text">Beispiel: changeme@example.com</string>
+	<string name="fragment_authentication_email_input_helper_text">Beispiel: ändern@beispiel.com</string>
 	<string name="fragment_authentication_password_input_helper_text">Beispiel: Demo</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Zuletzt geladene Seite</string>
 	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load error: unauthorized.">Ladefehler: %1$s.</string>
@@ -70,4 +70,14 @@
 	<string name="fragment_recipes_favorite_added">%1$s zu den Favoriten hinzugefügt</string>
 	<string name="fragment_recipes_favorite_removed">%1$s aus den Favoriten entfernt</string>
 	<string name="menu_navigation_drawer_shopping_lists">Einkaufslisten</string>
+	<string name="menu_navigation_drawer_email_logs">E-Mail Protokolle</string>
+	<string name="activity_main_email_logs_subject">Mealient Protokolle</string>
+	<string name="activity_main_email_logs_confirmation_message">Die Protokolle enthalten sensible Daten, wie zum Beispiel API-Token, Einkaufslisten und Rezepte. API-Token können per Web-Client widerrufen werden. Die Datei kann angesehen und bearbeitet werden, wenn Sie sie stattdessen an sich selbst senden.</string>
+	<string name="activity_main_email_logs_confirmation_title">Sende sensible Daten</string>
+	<string name="activity_main_email_logs_confirmation_positive">Wählen Sie eine Sendemethode</string>
+	<string name="activity_main_email_logs_confirmation_negative">Abbrechen</string>
+	<string name="activity_main_logout_confirmation_title">Abmelden läuft</string>
+	<string name="activity_main_logout_confirmation_message">Sind Sie sicher, dass Sie sich abmelden möchten?</string>
+	<string name="activity_main_logout_confirmation_positive">Abmelden</string>
+	<string name="activity_main_logout_confirmation_negative">Abbrechen</string>
 </resources>
