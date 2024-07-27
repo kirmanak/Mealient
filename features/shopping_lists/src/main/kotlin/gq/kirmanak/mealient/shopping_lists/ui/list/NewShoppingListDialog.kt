@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -16,12 +17,10 @@ import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -122,6 +121,25 @@ private fun NameTextField(
     onEvent: (ShoppingListsEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val onDone: KeyboardActionScope.() -> Unit = {
+        onEvent(ShoppingListsEvent.NewListSaved(listName))
+    }
+
+    val trailingIcon: @Composable () -> Unit = {
+        IconButton(
+            onClick = {
+                onEvent(ShoppingListsEvent.NewListNameChanged(""))
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Clear,
+                contentDescription = stringResource(id = R.string.shopping_lists_dialog_add_new_clear)
+            )
+        }
+    }
+
+    val isInputEmpty = listName.isBlank()
+
     TextField(
         modifier = modifier
             .showKeyboard()
@@ -137,27 +155,12 @@ private fun NameTextField(
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
-            imeAction = if (listName.isBlank()) ImeAction.None else ImeAction.Done,
+            imeAction = if (isInputEmpty) ImeAction.None else ImeAction.Done,
         ),
         keyboardActions = KeyboardActions(
-            onDone = {
-                onEvent(ShoppingListsEvent.NewListSaved(listName))
-            },
+            onDone = onDone.takeUnless { isInputEmpty },
         ),
-        trailingIcon = {
-            if (listName.isNotEmpty()) {
-                IconButton(
-                    onClick = {
-                        onEvent(ShoppingListsEvent.NewListNameChanged(""))
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = stringResource(id = R.string.shopping_lists_dialog_add_new_clear)
-                    )
-                }
-            }
-        }
+        trailingIcon = trailingIcon.takeUnless { isInputEmpty }
     )
 }
 
