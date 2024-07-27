@@ -32,6 +32,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.MealientTextField
 import gq.kirmanak.mealient.ui.AppTheme
@@ -174,6 +175,7 @@ private fun NameTextField(
         singleLine = true,
         keyboardOptions = KeyboardOptions(
             imeAction = if (isInputEmpty) ImeAction.None else ImeAction.Done,
+            capitalization = KeyboardCapitalization.Sentences
         ),
         keyboardActions = KeyboardActions(
             onDone = onDone.takeUnless { isInputEmpty },
