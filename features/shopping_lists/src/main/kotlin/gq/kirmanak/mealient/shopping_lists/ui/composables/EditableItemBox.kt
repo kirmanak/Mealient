@@ -30,17 +30,25 @@ import gq.kirmanak.mealient.ui.Dimens
 internal fun EditableItemBox(
     onDelete: () -> Unit,
     onEdit: () -> Unit,
-    content: @Composable (RowScope.() -> Unit),
     deleteContentDescription: String,
     editContentDescription: String,
+    content: @Composable (RowScope.() -> Unit),
     modifier: Modifier = Modifier
 ) {
     val dismissState = rememberSwipeToDismissBoxState()
 
     LaunchedEffect(dismissState.currentValue, onDelete, onEdit) {
         when (dismissState.currentValue) {
-            SwipeToDismissBoxValue.EndToStart -> onDelete()
-            SwipeToDismissBoxValue.StartToEnd -> onEdit()
+            SwipeToDismissBoxValue.EndToStart -> {
+                onDelete()
+                dismissState.reset()
+            }
+
+            SwipeToDismissBoxValue.StartToEnd -> {
+                onEdit()
+                dismissState.reset()
+            }
+
             SwipeToDismissBoxValue.Settled -> Unit
         }
     }

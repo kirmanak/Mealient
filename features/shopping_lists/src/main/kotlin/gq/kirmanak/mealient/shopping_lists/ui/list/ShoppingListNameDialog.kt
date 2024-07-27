@@ -40,32 +40,34 @@ import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun NewShoppingListDialog(
+internal fun ShoppingListNameDialog(
     onEvent: (ShoppingListsEvent) -> Unit,
-    listName: String?,
-    modifier: Modifier = Modifier
+    listName: String,
+    onConfirm: ShoppingListsEvent,
+    modifier: Modifier = Modifier,
+    oldName: String? = null
 ) {
-    if (listName == null) {
-        return
-    }
-
     BasicAlertDialog(
         modifier = modifier,
         onDismissRequest = {
-            onEvent(ShoppingListsEvent.NewListDialogDismissed)
+            onEvent(ShoppingListsEvent.DialogDismissed)
         }
     ) {
-        NewShoppingListDialogContent(
+        ShoppingListNameDialogContent(
             listName = listName,
-            onEvent = onEvent
+            onEvent = onEvent,
+            oldName = oldName,
+            onConfirm = onConfirm
         )
     }
 }
 
 @Composable
-private fun NewShoppingListDialogContent(
+private fun ShoppingListNameDialogContent(
     listName: String,
     onEvent: (ShoppingListsEvent) -> Unit,
+    oldName: String?,
+    onConfirm: ShoppingListsEvent,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -78,12 +80,17 @@ private fun NewShoppingListDialogContent(
             verticalArrangement = Arrangement.spacedBy(Dimens.Medium)
         ) {
             Text(
-                text = stringResource(R.string.shopping_lists_dialog_add_new_title),
+                text = if (oldName == null) {
+                    stringResource(R.string.shopping_lists_dialog_add_new_title)
+                } else {
+                    stringResource(id = R.string.shopping_lists_dialog_edit_name_title, oldName)
+                },
                 style = MaterialTheme.typography.titleMedium
             )
 
             NameTextField(
                 listName = listName,
+                isEdit = oldName != null,
                 onEvent = onEvent
             )
 
@@ -93,21 +100,27 @@ private fun NewShoppingListDialogContent(
                 horizontalArrangement = Arrangement.spacedBy(Dimens.Small, Alignment.End)
             ) {
                 IconButton(
-                    onClick = { onEvent(ShoppingListsEvent.NewListDialogDismissed) }
+                    onClick = { onEvent(ShoppingListsEvent.DialogDismissed) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Cancel,
-                        contentDescription = stringResource(id = R.string.shopping_lists_dialog_add_new_cancel)
+                        contentDescription = stringResource(id = R.string.shopping_lists_dialog_cancel)
                     )
                 }
 
                 IconButton(
-                    onClick = { onEvent(ShoppingListsEvent.NewListSaved(listName)) },
+                    onClick = {
+                        if (oldName == null) {
+                            onEvent(onConfirm)
+                        } else {
+                            onEvent(onConfirm)
+                        }
+                    },
                     enabled = listName.isNotBlank()
                 ) {
                     Icon(
                         imageVector = Icons.Default.Check,
-                        contentDescription = stringResource(id = R.string.shopping_lists_dialog_add_new_confirm)
+                        contentDescription = stringResource(id = R.string.shopping_lists_dialog_confirm)
                     )
                 }
             }
@@ -118,6 +131,7 @@ private fun NewShoppingListDialogContent(
 @Composable
 private fun NameTextField(
     listName: String,
+    isEdit: Boolean,
     onEvent: (ShoppingListsEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -125,15 +139,21 @@ private fun NameTextField(
         onEvent(ShoppingListsEvent.NewListSaved(listName))
     }
 
+    val onEdit: (newValue: String) -> Unit = { newValue ->
+        if (isEdit) {
+            onEvent(ShoppingListsEvent.EditListInput(newValue))
+        } else {
+            onEvent(ShoppingListsEvent.NewListInput(newValue))
+        }
+    }
+
     val trailingIcon: @Composable () -> Unit = {
         IconButton(
-            onClick = {
-                onEvent(ShoppingListsEvent.NewListNameChanged(""))
-            }
+            onClick = { onEdit("") }
         ) {
             Icon(
                 imageVector = Icons.Default.Clear,
-                contentDescription = stringResource(id = R.string.shopping_lists_dialog_add_new_clear)
+                contentDescription = stringResource(id = R.string.shopping_lists_dialog_name_clear_input)
             )
         }
     }
@@ -145,12 +165,10 @@ private fun NameTextField(
             .showKeyboard()
             .fillMaxWidth(),
         value = listName,
-        onValueChange = {
-            onEvent(ShoppingListsEvent.NewListNameChanged(it))
-        },
+        onValueChange = { onEdit(it) },
         placeholder = {
             Text(
-                text = stringResource(R.string.shopping_lists_screen_add_new_list_placeholder)
+                text = stringResource(R.string.shopping_lists_screen_list_name_placeholder)
             )
         },
         singleLine = true,
@@ -181,11 +199,25 @@ private fun Modifier.showKeyboard() = composed {
 
 @ColorSchemePreview
 @Composable
-private fun NewShoppingListDialogContentPreview() {
+private fun ShoppingListNameDialogEditPreview() {
     AppTheme {
-        NewShoppingListDialogContent(
+        ShoppingListNameDialog(
             listName = "Test",
+            onConfirm = ShoppingListsEvent.DialogDismissed,
+            oldName = "Old test",
             onEvent = {}
+        )
+    }
+}
+
+@ColorSchemePreview
+@Composable
+private fun ShoppingListNameDialogNewPreview() {
+    AppTheme {
+        ShoppingListNameDialog(
+            listName = "Test",
+            onConfirm = ShoppingListsEvent.DialogDismissed,
+            onEvent = {},
         )
     }
 }

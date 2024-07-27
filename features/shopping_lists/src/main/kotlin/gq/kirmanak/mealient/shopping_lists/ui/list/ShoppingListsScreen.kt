@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.shopping_lists.ui.list
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +25,7 @@ import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.navigate
 import gq.kirmanak.mealient.shopping_list.R
+import gq.kirmanak.mealient.shopping_lists.ui.composables.EditableItemBox
 import gq.kirmanak.mealient.shopping_lists.ui.composables.getErrorMessage
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
 import gq.kirmanak.mealient.ui.AppTheme
@@ -43,9 +45,9 @@ internal fun ShoppingListsScreen(
 ) {
     val screenState by shoppingListsViewModel.shoppingListsState.collectAsState()
 
-    NewShoppingListDialog(
-        onEvent = shoppingListsViewModel::onEvent,
-        listName = screenState.newListName
+    ShoppingListsScreenDialog(
+        dialog = screenState.dialog,
+        onEvent = shoppingListsViewModel::onEvent
     )
 
     BaseScreenWithNavigation(
@@ -81,6 +83,12 @@ internal fun ShoppingListsScreen(
                     onClick = {
                         val shoppingListId = displayList.id
                         navController.navigate(ShoppingListScreenDestination(shoppingListId))
+                    },
+                    onDelete = {
+                        shoppingListsViewModel.onEvent(ShoppingListsEvent.RemoveList(displayList))
+                    },
+                    onEdit = {
+                        shoppingListsViewModel.onEvent(ShoppingListsEvent.EditList(displayList))
                     }
                 )
             }
@@ -89,39 +97,97 @@ internal fun ShoppingListsScreen(
 }
 
 @Composable
-private fun ShoppingListCard(
-    listName: String?,
-    modifier: Modifier = Modifier,
-    onClick: (() -> Unit),
+private fun ShoppingListsScreenDialog(
+    dialog: ShoppingListsDialog,
+    onEvent: (ShoppingListsEvent) -> Unit,
 ) {
-    Card(
-        modifier = modifier
-            .padding(
-                horizontal = Dimens.Medium,
-                vertical = Dimens.Small
-            )
-            .fillMaxWidth()
-            .clickable(
-                onClick = onClick
-            )
-    ) {
-        Row(
-            modifier = Modifier.padding(Dimens.Medium),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = Icons.Default.ShoppingCart,
-                contentDescription = stringResource(id = R.string.shopping_lists_screen_cart_icon),
-                modifier = Modifier.height(Dimens.Large),
+    when (dialog) {
+        is ShoppingListsDialog.EditListItem -> {
+            ShoppingListNameDialog(
+                onEvent = onEvent,
+                onConfirm = dialog.onConfirm,
+                listName = dialog.listName,
+                oldName = dialog.oldListName
             )
 
+        }
 
-            Text(
-                text = listName.orEmpty(),
-                modifier = Modifier.padding(start = Dimens.Medium),
+        is ShoppingListsDialog.NewListItem -> {
+            ShoppingListNameDialog(
+                onEvent = onEvent,
+                onConfirm = ShoppingListsEvent.NewListSaved(dialog.listName),
+                listName = dialog.listName
             )
         }
+
+
+        is ShoppingListsDialog.RemoveListItem -> {
+            DeleteListConfirmDialog(
+                onEvent = onEvent,
+                onConfirm = dialog.onConfirm,
+                listName = dialog.listName
+            )
+        }
+
+        is ShoppingListsDialog.None -> {
+            Unit
+        }
     }
+}
+
+@Composable
+private fun ShoppingListCard(
+    listName: String,
+    onClick: () -> Unit,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    EditableItemBox(
+        modifier = modifier,
+        onDelete = onDelete,
+        onEdit = onEdit,
+        deleteContentDescription = stringResource(
+            id = R.string.shopping_list_screen_delete_icon_content_description,
+            listName
+        ),
+        editContentDescription = stringResource(
+            id = R.string.shopping_list_screen_edit_icon_content_description,
+            listName
+        ),
+        content = {
+            Card(
+                modifier = Modifier
+                    .padding(
+                        horizontal = Dimens.Medium,
+                        vertical = Dimens.Small
+                    )
+                    .fillMaxWidth()
+                    .clickable(
+                        onClick = onClick
+                    )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(Dimens.Medium),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.Medium)
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .height(Dimens.Large),
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = stringResource(id = R.string.shopping_lists_screen_cart_icon),
+                    )
+
+
+                    Text(
+                        text = listName,
+                    )
+                }
+            }
+        },
+    )
 }
 
 @Composable
@@ -130,7 +196,9 @@ private fun PreviewShoppingListCard() {
     AppTheme {
         ShoppingListCard(
             listName = "Weekend shopping",
-            onClick = {}
+            onClick = {},
+            onDelete = {},
+            onEdit = {}
         )
     }
 }
@@ -141,7 +209,9 @@ private fun PreviewEditingShoppingListCard() {
     AppTheme {
         ShoppingListCard(
             listName = "Weekend shopping",
-            onClick = {}
+            onClick = {},
+            onDelete = {},
+            onEdit = {}
         )
     }
 }

@@ -75,8 +75,8 @@ internal class ShoppingListsViewModel @Inject constructor(
                 onAddShoppingListClicked()
             }
 
-            is ShoppingListsEvent.NewListNameChanged -> {
-                onNewListNameChanged(event)
+            is ShoppingListsEvent.NewListInput -> {
+                onNewListInput(event)
             }
 
             is ShoppingListsEvent.SnackbarShown -> {
@@ -91,15 +91,63 @@ internal class ShoppingListsViewModel @Inject constructor(
                 onNewListSaved(event)
             }
 
-            is ShoppingListsEvent.NewListDialogDismissed -> {
-                onNewListDialogDismissed()
+            is ShoppingListsEvent.DialogDismissed -> {
+                onDialogDismissed()
+            }
+
+            is ShoppingListsEvent.EditList -> {
+                onEditList(event)
+            }
+
+            is ShoppingListsEvent.RemoveList -> {
+                onRemoveList(event)
+            }
+
+            is ShoppingListsEvent.RemoveListConfirmed -> {
+                // TODO
+            }
+
+            is ShoppingListsEvent.EditListConfirmed -> {
+                // TODO
+            }
+
+            is ShoppingListsEvent.EditListInput -> {
+                onEditListInput(event)
             }
         }
     }
 
-    private fun onNewListDialogDismissed() {
+    private fun onEditListInput(event: ShoppingListsEvent.EditListInput) {
         _shoppingListsState.update {
-            it.copy(newListName = null)
+            val old = it.dialog as? ShoppingListsDialog.EditListItem ?: return@update it
+            val onConfirm = old.onConfirm.copy(listName = event.newValue)
+            it.copy(dialog = old.copy(listName = event.newValue, onConfirm = onConfirm))
+        }
+    }
+
+    private fun onRemoveList(event: ShoppingListsEvent.RemoveList) {
+        val onConfirm = ShoppingListsEvent.RemoveListConfirmed(
+            displayList = event.list
+        )
+        _shoppingListsState.update {
+            it.copy(dialog = ShoppingListsDialog.RemoveListItem(event.list.name, onConfirm))
+        }
+    }
+
+    private fun onEditList(event: ShoppingListsEvent.EditList) {
+        val name = event.list.name
+        val onConfirm = ShoppingListsEvent.EditListConfirmed(
+            listName = name,
+            displayList = event.list
+        )
+        _shoppingListsState.update {
+            it.copy(dialog = ShoppingListsDialog.EditListItem(name, name, onConfirm))
+        }
+    }
+
+    private fun onDialogDismissed() {
+        _shoppingListsState.update {
+            it.copy(dialog = ShoppingListsDialog.None)
         }
     }
 
@@ -115,7 +163,9 @@ internal class ShoppingListsViewModel @Inject constructor(
             }.onSuccess {
                 logger.d { "Shopping list \"${request.name}\" created" }
                 refresh()
-                _shoppingListsState.update { it.copy(newListName = null) }
+                _shoppingListsState.update {
+                    it.copy(dialog = ShoppingListsDialog.None)
+                }
             }
         }
     }
@@ -124,24 +174,32 @@ internal class ShoppingListsViewModel @Inject constructor(
         logger.v { "refresh() called" }
         viewModelScope.launch {
             val errorToShow = loadingHelper.refresh().exceptionOrNull()
-            _shoppingListsState.update { it.copy(errorToShow = errorToShow) }
+            _shoppingListsState.update {
+                it.copy(errorToShow = errorToShow)
+            }
         }
     }
 
     private fun onSnackbarShown() {
         logger.v { "onSnackbarShown() called" }
-        _shoppingListsState.update { it.copy(errorToShow = null) }
+        _shoppingListsState.update {
+            it.copy(errorToShow = null)
+        }
     }
 
-    private fun onNewListNameChanged(event: ShoppingListsEvent.NewListNameChanged) {
+    private fun onNewListInput(event: ShoppingListsEvent.NewListInput) {
         logger.v { "onNewListNameChanged($event) called" }
         val filteredName = event.newName.replace(System.lineSeparator(), "")
-        _shoppingListsState.update { it.copy(newListName = filteredName) }
+        _shoppingListsState.update {
+            it.copy(dialog = ShoppingListsDialog.NewListItem(filteredName))
+        }
     }
 
     private fun onAddShoppingListClicked() {
         logger.v { "onAddShoppingListClicked() called" }
-        _shoppingListsState.update { it.copy(newListName = "") }
+        _shoppingListsState.update {
+            it.copy(dialog = ShoppingListsDialog.NewListItem(""))
+        }
     }
 }
 
@@ -154,14 +212,14 @@ internal data class DisplayList(
 internal data class ShoppingListsState(
     val errorToShow: Throwable? = null,
     val loadingState: LoadingState<List<DisplayList>> = LoadingStateNoData.InitialLoad,
-    val newListName: String? = null
+    val dialog: ShoppingListsDialog = ShoppingListsDialog.None
 )
 
 internal sealed interface ShoppingListsEvent {
 
     data object AddShoppingList : ShoppingListsEvent
 
-    data class NewListNameChanged(val newName: String) : ShoppingListsEvent
+    data class NewListInput(val newName: String) : ShoppingListsEvent
 
     data object SnackbarShown : ShoppingListsEvent
 
@@ -169,5 +227,38 @@ internal sealed interface ShoppingListsEvent {
 
     data class NewListSaved(val name: String) : ShoppingListsEvent
 
-    data object NewListDialogDismissed : ShoppingListsEvent
+    data object DialogDismissed : ShoppingListsEvent
+
+    data class EditList(val list: DisplayList) : ShoppingListsEvent
+
+    data class RemoveList(val list: DisplayList) : ShoppingListsEvent
+
+    data class EditListInput(val newValue: String) : ShoppingListsEvent
+
+    data class RemoveListConfirmed(
+        val displayList: DisplayList,
+    ) : ShoppingListsEvent
+
+    data class EditListConfirmed(
+        val listName: String,
+        val displayList: DisplayList,
+    ) : ShoppingListsEvent
+}
+
+internal sealed interface ShoppingListsDialog {
+
+    data class NewListItem(val listName: String) : ShoppingListsDialog
+
+    data class EditListItem(
+        val listName: String,
+        val oldListName: String,
+        val onConfirm: ShoppingListsEvent.EditListConfirmed
+    ) : ShoppingListsDialog
+
+    data class RemoveListItem(
+        val listName: String,
+        val onConfirm: ShoppingListsEvent.RemoveListConfirmed
+    ) : ShoppingListsDialog
+
+    data object None : ShoppingListsDialog
 }
