@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -73,7 +74,9 @@ private fun IngredientListItem(
             style = MaterialTheme.typography.titleMedium,
         )
 
-        HorizontalDivider()
+        HorizontalDivider(
+            color = LocalContentColor.current
+        )
     }
 
     Row(

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -86,7 +87,9 @@ private fun InstructionListItem(
             )
 
             if (ingredients.isNotEmpty()) {
-                HorizontalDivider()
+                HorizontalDivider(
+                    color = LocalContentColor.current
+                )
                 ingredients.forEach { ingredient ->
                     Text(
                         text = ingredient.display,
