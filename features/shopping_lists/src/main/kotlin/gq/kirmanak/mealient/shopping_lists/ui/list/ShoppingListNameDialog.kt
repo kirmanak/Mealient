@@ -20,7 +20,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -34,6 +33,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import gq.kirmanak.mealient.shopping_list.R
+import gq.kirmanak.mealient.shopping_lists.ui.composables.MealientTextField
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
@@ -160,7 +160,7 @@ private fun NameTextField(
 
     val isInputEmpty = listName.isBlank()
 
-    TextField(
+    MealientTextField(
         modifier = modifier
             .showKeyboard()
             .fillMaxWidth(),

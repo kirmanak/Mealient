@@ -36,7 +36,6 @@ internal fun DeleteListConfirmDialog(
         confirmButton = {
             IconButton(
                 onClick = { onEvent(onConfirm) },
-                enabled = listName.isNotBlank()
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,
