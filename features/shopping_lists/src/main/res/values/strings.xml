@@ -22,4 +22,18 @@
     <string name="shopping_lists_screen_no_connection">No server connection</string>
     <string name="shopping_lists_screen_unknown_error">Unknown error</string>
     <string name="shopping_lists_screen_empty_button_refresh">Try again</string>
+    <string name="shopping_lists_screen_add_icon_content_description">Add list</string>
+    <string name="shopping_lists_screen_list_name_placeholder">List name</string>
+    <string name="shopping_lists_screen_list_name_done_content_description">Done</string>
+    <string name="shopping_lists_dialog_delete_icon_content_description">Delete %1$s</string>
+    <string name="shopping_lists_dialog_edit_icon_content_description">Rename %1$s</string>
+
+    <string name="shopping_lists_dialog_add_new_title">Add new shopping list</string>
+    <string name="shopping_lists_dialog_edit_name_title">Edit %1$s</string>
+    <string name="shopping_lists_dialog_confirm">Confirm</string>
+    <string name="shopping_lists_dialog_cancel">Cancel</string>
+    <string name="shopping_lists_dialog_name_clear_input">Clear input</string>
+    <string name="shopping_lists_dialog_delete_confirm_title">Removing %1$s</string>
+    <string name="shopping_lists_dialog_delete_confirm_text">Confirm that you want to remove the shopping list including all items.</string>
+
 </resources>

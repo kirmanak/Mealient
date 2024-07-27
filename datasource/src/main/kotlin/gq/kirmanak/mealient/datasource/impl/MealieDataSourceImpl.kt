@@ -8,6 +8,7 @@ import gq.kirmanak.mealient.datasource.models.CreateApiTokenRequest
 import gq.kirmanak.mealient.datasource.models.CreateApiTokenResponse
 import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
 import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListRequest
 import gq.kirmanak.mealient.datasource.models.ErrorDetail
 import gq.kirmanak.mealient.datasource.models.GetFoodsResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
@@ -37,7 +38,7 @@ internal class MealieDataSourceImpl @Inject constructor(
 ) : MealieDataSource {
 
     override suspend fun createRecipe(
-        recipe: CreateRecipeRequest
+        recipe: CreateRecipeRequest,
     ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.createRecipe(recipe) },
         logMethod = { "createRecipe" },
@@ -46,7 +47,7 @@ internal class MealieDataSourceImpl @Inject constructor(
 
     override suspend fun updateRecipe(
         slug: String,
-        recipe: UpdateRecipeRequest
+        recipe: UpdateRecipeRequest,
     ): GetRecipeResponse = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.updateRecipe(recipe, slug) },
         logMethod = { "updateRecipe" },
@@ -80,7 +81,7 @@ internal class MealieDataSourceImpl @Inject constructor(
 
     override suspend fun requestRecipes(
         page: Int,
-        perPage: Int
+        perPage: Int,
     ): List<GetRecipeSummaryResponse> = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.getRecipeSummary(page, perPage) },
         logMethod = { "requestRecipes" },
@@ -88,7 +89,7 @@ internal class MealieDataSourceImpl @Inject constructor(
     ).items
 
     override suspend fun requestRecipeInfo(
-        slug: String
+        slug: String,
     ): GetRecipeResponse = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.getRecipe(slug) },
         logMethod = { "requestRecipeInfo" },
@@ -96,7 +97,7 @@ internal class MealieDataSourceImpl @Inject constructor(
     )
 
     override suspend fun parseRecipeFromURL(
-        request: ParseRecipeURLRequest
+        request: ParseRecipeURLRequest,
     ): String = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.createRecipeFromURL(request) },
         logMethod = { "parseRecipeFromURL" },
@@ -104,7 +105,7 @@ internal class MealieDataSourceImpl @Inject constructor(
     )
 
     override suspend fun createApiToken(
-        request: CreateApiTokenRequest
+        request: CreateApiTokenRequest,
     ): CreateApiTokenResponse = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.createApiToken(request) },
         logMethod = { "createApiToken" },
@@ -120,7 +121,7 @@ internal class MealieDataSourceImpl @Inject constructor(
 
     override suspend fun removeFavoriteRecipe(
         userId: String,
-        recipeSlug: String
+        recipeSlug: String,
     ): Unit = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.removeFavoriteRecipe(userId, recipeSlug) },
         logMethod = { "removeFavoriteRecipe" },
@@ -129,7 +130,7 @@ internal class MealieDataSourceImpl @Inject constructor(
 
     override suspend fun addFavoriteRecipe(
         userId: String,
-        recipeSlug: String
+        recipeSlug: String,
     ): Unit = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.addFavoriteRecipe(userId, recipeSlug) },
         logMethod = { "addFavoriteRecipe" },
@@ -137,7 +138,7 @@ internal class MealieDataSourceImpl @Inject constructor(
     )
 
     override suspend fun deleteRecipe(
-        slug: String
+        slug: String,
     ): Unit = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.deleteRecipe(slug) },
         logMethod = { "deleteRecipe" },
@@ -154,7 +155,7 @@ internal class MealieDataSourceImpl @Inject constructor(
     )
 
     override suspend fun getShoppingList(
-        id: String
+        id: String,
     ): GetShoppingListResponse = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.getShoppingList(id) },
         logMethod = { "getShoppingList" },
@@ -187,7 +188,7 @@ internal class MealieDataSourceImpl @Inject constructor(
     )
 
     override suspend fun updateShoppingListItem(
-        item: GetShoppingListItemResponse
+        item: GetShoppingListItemResponse,
     ) {
         // Has to be done in two steps because we can't specify only the changed fields
         val remoteItem = getShoppingListItem(item.id)
@@ -219,10 +220,55 @@ internal class MealieDataSourceImpl @Inject constructor(
     }
 
     override suspend fun addShoppingListItem(
-        request: CreateShoppingListItemRequest
+        request: CreateShoppingListItemRequest,
     ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
         block = { service.createShoppingListItem(request) },
         logMethod = { "addShoppingListItem" },
         logParameters = { "request = $request" }
     )
+
+    override suspend fun addShoppingList(
+        request: CreateShoppingListRequest,
+    ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.createShoppingList(request) },
+        logMethod = { "createShoppingList" },
+        logParameters = { "request = $request" }
+    )
+
+    private suspend fun updateShoppingList(
+        id: String,
+        request: JsonElement,
+    ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.updateShoppingList(id, request) },
+        logMethod = { "updateShoppingList" },
+        logParameters = { "id = $id, request = $request" }
+    )
+
+    private suspend fun getShoppingListJson(
+        id: String,
+    ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.getShoppingListJson(id) },
+        logMethod = { "getShoppingListJson" },
+        logParameters = { "id = $id" }
+    )
+
+    override suspend fun deleteShoppingList(
+        id: String,
+    ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.deleteShoppingList(id) },
+        logMethod = { "deleteShoppingList" },
+        logParameters = { "id = $id" }
+    )
+
+    override suspend fun updateShoppingListName(
+        id: String,
+        name: String
+    ) {
+        // Has to be done in two steps because we can't specify only the changed fields
+        val remoteItem = getShoppingListJson(id)
+        val updatedItem = remoteItem.jsonObject.toMutableMap().apply {
+            put("name", JsonPrimitive(name))
+        }.let(::JsonObject)
+        updateShoppingList(id, updatedItem)
+    }
 }
