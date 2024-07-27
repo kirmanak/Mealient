@@ -51,7 +51,6 @@ internal fun ShoppingListsScreen(
     BaseScreenWithNavigation(
         baseScreenState = baseScreenState,
     ) { modifier ->
-
         LazyColumnWithLoadingState(
             modifier = modifier,
             loadingState = screenState.loadingState,
@@ -62,15 +61,13 @@ internal fun ShoppingListsScreen(
             onSnackbarShown = { shoppingListsViewModel.onEvent(ShoppingListsEvent.SnackbarShown) },
             onRefresh = { shoppingListsViewModel.onEvent(ShoppingListsEvent.RefreshRequested) },
             floatingActionButton = {
-                if (screenState.newListName == null) {
-                    FloatingActionButton(
-                        onClick = { shoppingListsViewModel.onEvent(ShoppingListsEvent.AddShoppingList) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(id = R.string.shopping_lists_screen_add_icon_content_description),
-                        )
-                    }
+                FloatingActionButton(
+                    onClick = { shoppingListsViewModel.onEvent(ShoppingListsEvent.AddShoppingList) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.shopping_lists_screen_add_icon_content_description),
+                    )
                 }
             },
         ) { items ->
@@ -81,7 +78,7 @@ internal fun ShoppingListsScreen(
             ) { displayList ->
                 ShoppingListCard(
                     listName = displayList.name,
-                    onItemClick = {
+                    onClick = {
                         val shoppingListId = displayList.id
                         navController.navigate(ShoppingListScreenDestination(shoppingListId))
                     }
@@ -95,13 +92,18 @@ internal fun ShoppingListsScreen(
 private fun ShoppingListCard(
     listName: String?,
     modifier: Modifier = Modifier,
-    onItemClick: (() -> Unit)? = null,
+    onClick: (() -> Unit),
 ) {
     Card(
         modifier = modifier
-            .padding(horizontal = Dimens.Medium, vertical = Dimens.Small)
+            .padding(
+                horizontal = Dimens.Medium,
+                vertical = Dimens.Small
+            )
             .fillMaxWidth()
-            .then(if (onItemClick == null) Modifier else Modifier.clickable(onClick = onItemClick))
+            .clickable(
+                onClick = onClick
+            )
     ) {
         Row(
             modifier = Modifier.padding(Dimens.Medium),
@@ -127,7 +129,8 @@ private fun ShoppingListCard(
 private fun PreviewShoppingListCard() {
     AppTheme {
         ShoppingListCard(
-            listName = "Weekend shopping"
+            listName = "Weekend shopping",
+            onClick = {}
         )
     }
 }
@@ -137,7 +140,8 @@ private fun PreviewShoppingListCard() {
 private fun PreviewEditingShoppingListCard() {
     AppTheme {
         ShoppingListCard(
-            listName = "Weekend shopping"
+            listName = "Weekend shopping",
+            onClick = {}
         )
     }
 }
