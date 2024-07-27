@@ -20,7 +20,7 @@ appcompat = "1.7.0"
 # https://developer.android.com/jetpack/androidx/releases/core
 splashScreen = "1.0.1"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
-lifecycle = "2.8.3"
+lifecycle = "2.8.4"
 # https://developer.android.com/jetpack/androidx/releases/arch-core
 coreTesting = "2.2.0"
 # https://github.com/Kotlin/kotlinx.serialization/releases
