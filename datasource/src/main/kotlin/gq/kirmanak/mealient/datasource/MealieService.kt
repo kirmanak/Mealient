@@ -64,4 +64,10 @@ internal interface MealieService {
     suspend fun createShoppingListItem(request: CreateShoppingListItemRequest)
 
     suspend fun createShoppingList(request: CreateShoppingListRequest)
+
+    suspend fun deleteShoppingList(id: String)
+
+    suspend fun updateShoppingList(id: String, request: JsonElement)
+    
+    suspend fun getShoppingListJson(id: String) : JsonElement
 }

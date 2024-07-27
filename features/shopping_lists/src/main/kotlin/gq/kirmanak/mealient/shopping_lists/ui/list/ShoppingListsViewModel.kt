@@ -104,15 +104,46 @@ internal class ShoppingListsViewModel @Inject constructor(
             }
 
             is ShoppingListsEvent.RemoveListConfirmed -> {
-                // TODO
+                onRemoveListConfirmed(event)
             }
 
             is ShoppingListsEvent.EditListConfirmed -> {
-                // TODO
+                onEditListConfirmed(event)
             }
 
             is ShoppingListsEvent.EditListInput -> {
                 onEditListInput(event)
+            }
+        }
+    }
+
+    private fun onEditListConfirmed(event: ShoppingListsEvent.EditListConfirmed) {
+        viewModelScope.launch {
+            runCatchingExceptCancel {
+                shoppingListsRepo.updateShoppingListName(
+                    id = event.displayList.id,
+                    name = event.listName
+                )
+            }.onFailure { exception ->
+                logger.e(exception) { "Error while updating shopping list" }
+                _shoppingListsState.update { it.copy(errorToShow = exception) }
+            }.onSuccess {
+                refresh()
+                onDialogDismissed()
+            }
+        }
+    }
+
+    private fun onRemoveListConfirmed(event: ShoppingListsEvent.RemoveListConfirmed) {
+        viewModelScope.launch {
+            runCatchingExceptCancel {
+                shoppingListsRepo.deleteShoppingList(event.displayList.id)
+            }.onFailure { exception ->
+                logger.e(exception) { "Error while deleting shopping list" }
+                _shoppingListsState.update { it.copy(errorToShow = exception) }
+            }.onSuccess {
+                refresh()
+                onDialogDismissed()
             }
         }
     }
@@ -163,9 +194,7 @@ internal class ShoppingListsViewModel @Inject constructor(
             }.onSuccess {
                 logger.d { "Shopping list \"${request.name}\" created" }
                 refresh()
-                _shoppingListsState.update {
-                    it.copy(dialog = ShoppingListsDialog.None)
-                }
+                onDialogDismissed()
             }
         }
     }

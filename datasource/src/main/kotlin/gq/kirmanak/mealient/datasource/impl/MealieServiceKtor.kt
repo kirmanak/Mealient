@@ -205,6 +205,26 @@ internal class MealieServiceKtor @Inject constructor(
         }
     }
 
+    override suspend fun deleteShoppingList(id: String) {
+        httpClient.delete {
+            endpoint("/api/groups/shopping/lists/$id")
+        }
+    }
+
+    override suspend fun updateShoppingList(id: String, request: JsonElement) {
+        httpClient.put {
+            endpoint("/api/groups/shopping/lists/$id")
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }
+    }
+
+    override suspend fun getShoppingListJson(id: String): JsonElement {
+        return httpClient.get {
+            endpoint("/api/groups/shopping/lists/$id")
+        }.body()
+    }
+
     private suspend fun HttpRequestBuilder.endpoint(
         path: String,
         block: URLBuilder.() -> Unit = {},

@@ -42,5 +42,12 @@ class ShoppingListsDataSourceImpl @Inject constructor(
     override suspend fun addShoppingList(
         request: CreateShoppingListRequest,
     ) = dataSource.addShoppingList(request)
+
+    override suspend fun updateShoppingListName(
+        id: String,
+        name: String
+    ) = dataSource.updateShoppingListName(id, name)
+
+    override suspend fun deleteShoppingList(id: String) = dataSource.deleteShoppingList(id)
 }
 

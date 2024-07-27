@@ -234,4 +234,41 @@ internal class MealieDataSourceImpl @Inject constructor(
         logMethod = { "createShoppingList" },
         logParameters = { "request = $request" }
     )
+
+    private suspend fun updateShoppingList(
+        id: String,
+        request: JsonElement,
+    ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.updateShoppingList(id, request) },
+        logMethod = { "updateShoppingList" },
+        logParameters = { "id = $id, request = $request" }
+    )
+
+    private suspend fun getShoppingListJson(
+        id: String,
+    ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.getShoppingListJson(id) },
+        logMethod = { "getShoppingListJson" },
+        logParameters = { "id = $id" }
+    )
+
+    override suspend fun deleteShoppingList(
+        id: String,
+    ) = networkRequestWrapper.makeCallAndHandleUnauthorized(
+        block = { service.deleteShoppingList(id) },
+        logMethod = { "deleteShoppingList" },
+        logParameters = { "id = $id" }
+    )
+
+    override suspend fun updateShoppingListName(
+        id: String,
+        name: String
+    ) {
+        // Has to be done in two steps because we can't specify only the changed fields
+        val remoteItem = getShoppingListJson(id)
+        val updatedItem = remoteItem.jsonObject.toMutableMap().apply {
+            put("name", JsonPrimitive(name))
+        }.let(::JsonObject)
+        updateShoppingList(id, updatedItem)
+    }
 }

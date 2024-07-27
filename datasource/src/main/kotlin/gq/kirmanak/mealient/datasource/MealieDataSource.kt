@@ -79,4 +79,7 @@ interface MealieDataSource {
 
     suspend fun addShoppingList(request: CreateShoppingListRequest)
 
+    suspend fun deleteShoppingList(id: String)
+
+    suspend fun updateShoppingListName(id: String, name: String)
 }
