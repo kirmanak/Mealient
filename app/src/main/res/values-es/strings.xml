@@ -44,7 +44,7 @@
 	<string name="fragment_add_recipe_clear_button">Limpiar</string>
 	<string name="fragment_base_url_url_input_helper_text">Ejemplo: demo.mealie.io</string>
 	<string name="fragment_authentication_email_input_helper_text">Ejemplo: changeme@example.com</string>
-	<string name="fragment_authentication_password_input_helper_text">Ejemplo: demo</string>
+	<string name="fragment_authentication_password_input_helper_text">Ejemplo: MiContraseña</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Última página cargada</string>
 	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load error: unauthorized.">Error al cargar: %1$s.</string>
 	<string name="fragment_recipes_load_failure_toast_no_reason">La carga falló.</string>
@@ -70,4 +70,14 @@
 	<string name="fragment_recipes_favorite_added">Añadido %1$s a favoritos</string>
 	<string name="fragment_recipes_favorite_removed">Eliminado %1$s de favoritos</string>
 	<string name="menu_navigation_drawer_shopping_lists">Listas de la compra</string>
+	<string name="menu_navigation_drawer_email_logs">Registros de correo electrónico</string>
+	<string name="activity_main_email_logs_subject">Registros mealientes</string>
+	<string name="activity_main_email_logs_confirmation_message">Los registros contienen datos sensibles como tokens de API, listas de la compra y recetas. Los tokens de API se pueden revocar mediante el cliente web. El archivo se puede ver y editar si te lo envías a ti mismo.</string>
+	<string name="activity_main_email_logs_confirmation_title">Envío de datos sensibles</string>
+	<string name="activity_main_email_logs_confirmation_positive">Elija cómo enviar</string>
+	<string name="activity_main_email_logs_confirmation_negative">Cancelar</string>
+	<string name="activity_main_logout_confirmation_title">Cerrar sesión</string>
+	<string name="activity_main_logout_confirmation_message">¿Seguro que quieres desconectarte?</string>
+	<string name="activity_main_logout_confirmation_positive">Cerrar sesión</string>
+	<string name="activity_main_logout_confirmation_negative">Cancelar</string>
 </resources>
