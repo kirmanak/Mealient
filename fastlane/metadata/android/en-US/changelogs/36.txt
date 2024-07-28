@@ -1,2 +1,1 @@
-Now authentication screen is shown automatically when authentication fails.
-The recipe ingredient notes are no longer duplicated.
+Now you can add new shopping lists as well as rename and remove existing ones.
