@@ -1,0 +1,1 @@
+Now you can add new shopping lists as well as rename and remove existing ones.
