@@ -4,6 +4,7 @@ import gq.kirmanak.mealient.datasource.models.CreateApiTokenRequest
 import gq.kirmanak.mealient.datasource.models.CreateApiTokenResponse
 import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
 import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListRequest
 import gq.kirmanak.mealient.datasource.models.GetFoodsResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
@@ -75,4 +76,10 @@ interface MealieDataSource {
     suspend fun getUnits(): GetUnitsResponse
 
     suspend fun addShoppingListItem(request: CreateShoppingListItemRequest)
+
+    suspend fun addShoppingList(request: CreateShoppingListRequest)
+
+    suspend fun deleteShoppingList(id: String)
+
+    suspend fun updateShoppingListName(id: String, name: String)
 }

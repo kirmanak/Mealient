@@ -1,6 +1,6 @@
 [versions]
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-androidGradlePlugin = "8.5.0"
+androidGradlePlugin = "8.5.1"
 # https://github.com/JetBrains/kotlin/releases
 kotlin = "2.0.0"
 # https://dagger.dev/hilt/gradle-setup
@@ -10,7 +10,7 @@ protobuf = "4.27.2"
 # https://github.com/google/protobuf-gradle-plugin/releases
 protobufPlugin = "0.9.4"
 # https://plugins.gradle.org/plugin/org.sonarqube
-sonarqube = "5.0.0.4638"
+sonarqube = "5.1.0.4882"
 # https://github.com/material-components/material-components-android/releases
 material = "1.12.0"
 # https://developer.android.com/kotlin/ktx#core
@@ -20,7 +20,7 @@ appcompat = "1.7.0"
 # https://developer.android.com/jetpack/androidx/releases/core
 splashScreen = "1.0.1"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
-lifecycle = "2.8.2"
+lifecycle = "2.8.4"
 # https://developer.android.com/jetpack/androidx/releases/arch-core
 coreTesting = "2.2.0"
 # https://github.com/Kotlin/kotlinx.serialization/releases
@@ -28,7 +28,7 @@ kotlinxSerialization = "1.7.1"
 # https://github.com/square/okhttp/tags
 okhttp = "4.12.0"
 # https://developer.android.com/jetpack/androidx/releases/paging
-paging = "3.3.0"
+paging = "3.3.1"
 # https://developer.android.com/jetpack/androidx/releases/room
 room = "2.6.1"
 # https://github.com/Kotlin/kotlinx-datetime/releases
@@ -42,11 +42,11 @@ junit = "4.13.2"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 coroutines = "1.8.1"
 # https://github.com/robolectric/robolectric/releases
-robolectric = "4.12.2"
+robolectric = "4.13"
 # https://mvnrepository.com/artifact/com.google.truth/truth
-truth = "1.4.3"
+truth = "1.4.4"
 # https://mockk.io/
-mockk = "1.13.11"
+mockk = "1.13.12"
 # https://github.com/square/leakcanary/releases
 leakcanary = "2.14"
 # https://github.com/ChuckerTeam/chucker/releases
@@ -54,7 +54,7 @@ chucker = "4.0.0"
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
 desugar = "2.0.4"
 # https://github.com/google/ksp/releases
-kspPlugin = "2.0.0-1.0.22"
+kspPlugin = "2.0.0-1.0.23"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
 shareTarget = "1.2.0"
 # https://github.com/KasperskyLab/Kaspresso/releases
@@ -78,7 +78,7 @@ androidxHilt = "1.2.0"
 # https://github.com/ktorio/ktor/releases
 ktor = "2.3.12"
 # https://github.com/coil-kt/coil/releases
-coil = "2.6.0"
+coil = "2.7.0"
 # https://github.com/Kotlin/kotlinx-kover/releases
 kover = "0.7.6"
 

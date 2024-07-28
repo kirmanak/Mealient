@@ -1,23 +1,18 @@
 package gq.kirmanak.mealient.shopping_lists.ui.details
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.NoMeals
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material3.Checkbox
@@ -31,15 +26,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxState
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,6 +48,7 @@ import gq.kirmanak.mealient.datasource.models.GetShoppingListItemRecipeReference
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 import gq.kirmanak.mealient.shopping_list.R
+import gq.kirmanak.mealient.shopping_lists.ui.composables.EditableItemBox
 import gq.kirmanak.mealient.shopping_lists.ui.composables.getErrorMessage
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
@@ -101,7 +94,6 @@ internal fun ShoppingListScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ShoppingListScreen(
     loadingState: LoadingState<ShoppingListScreenState>,
@@ -122,6 +114,12 @@ private fun ShoppingListScreen(
         R.string.shopping_list_screen_empty_list,
         loadingState.data?.name.orEmpty()
     )
+
+    var lastAddedItemIndex by remember { mutableIntStateOf(-1) }
+    val lazyListState = rememberLazyListState()
+    LaunchedEffect(lastAddedItemIndex) {
+        if (lastAddedItemIndex >= 0) lazyListState.animateScrollToItem(lastAddedItemIndex)
+    }
 
     LazyColumnWithLoadingState(
         modifier = modifier,
@@ -145,9 +143,12 @@ private fun ShoppingListScreen(
                     contentDescription = stringResource(id = R.string.shopping_list_screen_add_icon_content_description),
                 )
             }
-        }
+        },
+        lazyListState = lazyListState
     ) { items ->
         val firstCheckedItemIndex = items.indexOfFirst { it.checked }
+        lastAddedItemIndex =
+            items.indexOfLast { it is ShoppingListItemState.NewItem }
 
         itemsIndexed(items, { _, item -> item.id }) { index, itemState ->
             if (itemState is ShoppingListItemState.ExistingItem) {
@@ -507,7 +508,6 @@ fun ShoppingListItemEditorNonFoodPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingListItem(
     itemState: ShoppingListItemState.ExistingItem,
@@ -516,57 +516,13 @@ fun ShoppingListItem(
     onCheckedChange: (Boolean) -> Unit = {},
     onDismissed: () -> Unit = {},
     onEditStart: () -> Unit = {},
-    dismissState: SwipeToDismissBoxState = rememberSwipeToDismissBoxState(
-        confirmValueChange = {
-            when (it) {
-                SwipeToDismissBoxValue.EndToStart -> onDismissed()
-                SwipeToDismissBoxValue.StartToEnd -> onEditStart()
-                SwipeToDismissBoxValue.Settled -> Unit
-            }
-            true
-        }
-    ),
 ) {
-    val shoppingListItem = itemState.item
-    SwipeToDismissBox(
-        state = dismissState,
-        backgroundContent = {
-            if (dismissState.targetValue == SwipeToDismissBoxValue.EndToStart) {
-                val color by animateColorAsState(MaterialTheme.colorScheme.error)
-                val iconColor by animateColorAsState(MaterialTheme.colorScheme.onError)
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(R.string.shopping_list_screen_delete_icon_content_description),
-                        tint = iconColor,
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = Dimens.Small)
-                    )
-                }
-            } else if (dismissState.targetValue == SwipeToDismissBoxValue.StartToEnd) {
-                val color by animateColorAsState(MaterialTheme.colorScheme.primary)
-                val iconColor by animateColorAsState(MaterialTheme.colorScheme.onPrimary)
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = stringResource(R.string.shopping_list_screen_edit_icon_content_description),
-                        tint = iconColor,
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(start = Dimens.Small)
-                    )
-                }
-            }
-        },
+    EditableItemBox(
+        modifier = modifier,
+        onDelete = onDismissed,
+        onEdit = onEditStart,
+        deleteContentDescription = stringResource(R.string.shopping_list_screen_delete_icon_content_description),
+        editContentDescription = stringResource(R.string.shopping_list_screen_edit_icon_content_description),
         content = {
             Column(
                 modifier = Modifier
@@ -585,6 +541,7 @@ fun ShoppingListItem(
                         onCheckedChange = onCheckedChange,
                     )
 
+                    val shoppingListItem = itemState.item
                     val isFood = shoppingListItem.isFood
                     val quantity = shoppingListItem.quantity
                         .takeUnless { it == 0.0 }
@@ -601,11 +558,9 @@ fun ShoppingListItem(
                 }
             }
         },
-        modifier = modifier,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @ColorSchemePreview
 fun PreviewShoppingListItemChecked() {
@@ -617,7 +572,6 @@ fun PreviewShoppingListItemChecked() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @ColorSchemePreview
 fun PreviewShoppingListItemUnchecked() {
@@ -625,36 +579,6 @@ fun PreviewShoppingListItemUnchecked() {
         ShoppingListItem(
             itemState = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
             showDivider = true
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-@ColorSchemePreview
-fun PreviewShoppingListItemDismissed() {
-    AppTheme {
-        ShoppingListItem(
-            itemState = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
-            showDivider = false,
-            dismissState = rememberSwipeToDismissBoxState(
-                initialValue = SwipeToDismissBoxValue.EndToStart,
-            ),
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-@ColorSchemePreview
-fun PreviewShoppingListItemEditing() {
-    AppTheme {
-        ShoppingListItem(
-            itemState = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
-            showDivider = false,
-            dismissState = rememberSwipeToDismissBoxState(
-                initialValue = SwipeToDismissBoxValue.StartToEnd,
-            ),
         )
     }
 }

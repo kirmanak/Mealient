@@ -6,6 +6,7 @@ import gq.kirmanak.mealient.datasource.models.CreateApiTokenRequest
 import gq.kirmanak.mealient.datasource.models.CreateApiTokenResponse
 import gq.kirmanak.mealient.datasource.models.CreateRecipeRequest
 import gq.kirmanak.mealient.datasource.models.CreateShoppingListItemRequest
+import gq.kirmanak.mealient.datasource.models.CreateShoppingListRequest
 import gq.kirmanak.mealient.datasource.models.GetFoodsResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipesResponse
@@ -194,6 +195,34 @@ internal class MealieServiceKtor @Inject constructor(
             contentType(ContentType.Application.Json)
             setBody(request)
         }
+    }
+
+    override suspend fun createShoppingList(request: CreateShoppingListRequest) {
+        httpClient.post {
+            endpoint("/api/groups/shopping/lists")
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }
+    }
+
+    override suspend fun deleteShoppingList(id: String) {
+        httpClient.delete {
+            endpoint("/api/groups/shopping/lists/$id")
+        }
+    }
+
+    override suspend fun updateShoppingList(id: String, request: JsonElement) {
+        httpClient.put {
+            endpoint("/api/groups/shopping/lists/$id")
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }
+    }
+
+    override suspend fun getShoppingListJson(id: String): JsonElement {
+        return httpClient.get {
+            endpoint("/api/groups/shopping/lists/$id")
+        }.body()
     }
 
     private suspend fun HttpRequestBuilder.endpoint(
