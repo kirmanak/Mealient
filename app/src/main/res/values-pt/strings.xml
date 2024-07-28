@@ -44,7 +44,7 @@
 	<string name="fragment_add_recipe_clear_button">Limpo</string>
 	<string name="fragment_base_url_url_input_helper_text">Exemplo: demo.mealie.io</string>
 	<string name="fragment_authentication_email_input_helper_text">Exemplo: changeme@example.com</string>
-	<string name="fragment_authentication_password_input_helper_text">Exemplo: MinhaSenha</string>
+	<string name="fragment_authentication_password_input_helper_text">Exemplo: MyPassword</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Última página carregada</string>
 	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load error: unauthorized.">Erro de carregamento: %1$s.</string>
 	<string name="fragment_recipes_load_failure_toast_no_reason">O carregamento falhou.</string>
