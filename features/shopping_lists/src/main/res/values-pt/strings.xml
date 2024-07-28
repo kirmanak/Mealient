@@ -21,4 +21,16 @@
     <string name="shopping_lists_screen_no_connection">Sem ligação ao servidor</string>
     <string name="shopping_lists_screen_unknown_error">Erro desconhecido</string>
     <string name="shopping_lists_screen_empty_button_refresh">Tentar novamente</string>
+    <string name="shopping_lists_screen_add_icon_content_description">Adicionar lista</string>
+    <string name="shopping_lists_screen_list_name_placeholder">Nome da lista</string>
+    <string name="shopping_lists_screen_list_name_done_content_description">Feito</string>
+    <string name="shopping_lists_dialog_delete_icon_content_description">Eliminar %1$s</string>
+    <string name="shopping_lists_dialog_edit_icon_content_description">Mudar o nome de %1$s</string>
+    <string name="shopping_lists_dialog_add_new_title">Adicionar nova lista de compras</string>
+    <string name="shopping_lists_dialog_edit_name_title">Editar %1$s</string>
+    <string name="shopping_lists_dialog_confirm">Confirmar</string>
+    <string name="shopping_lists_dialog_cancel">Cancelar</string>
+    <string name="shopping_lists_dialog_name_clear_input">Limpar entrada</string>
+    <string name="shopping_lists_dialog_delete_confirm_title">Remoção de %1$s</string>
+    <string name="shopping_lists_dialog_delete_confirm_text">Confirme que pretende remover a lista de compras, incluindo todos os artigos.</string>
 </resources>
