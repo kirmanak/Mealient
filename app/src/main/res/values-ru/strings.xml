@@ -44,7 +44,7 @@
 	<string name="fragment_add_recipe_clear_button">Очистить</string>
 	<string name="fragment_base_url_url_input_helper_text">Пример: demo.mealie.io</string>
 	<string name="fragment_authentication_email_input_helper_text">Пример: changeme@example.com</string>
-	<string name="fragment_authentication_password_input_helper_text">Пример: demo</string>
+	<string name="fragment_authentication_password_input_helper_text">Пример: MyPassword</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Последняя страница</string>
 	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load error: unauthorized.">Ошибка загрузки: %1$s.</string>
 	<string name="fragment_recipes_load_failure_toast_no_reason">Ошибка загрузки.</string>
@@ -70,4 +70,14 @@
 	<string name="fragment_recipes_favorite_added">%1$s добавлено в избранное</string>
 	<string name="fragment_recipes_favorite_removed">%1$s удалено из избранного</string>
 	<string name="menu_navigation_drawer_shopping_lists">Списки покупок</string>
+	<string name="menu_navigation_drawer_email_logs">Журналы электронной почты</string>
+	<string name="activity_main_email_logs_subject">Бревна для меалиентов</string>
+	<string name="activity_main_email_logs_confirmation_message">В журналах содержатся конфиденциальные данные, такие как API-токен, списки покупок и рецепты. API-токены могут быть отозваны с помощью веб-клиента. Файл можно просматривать и редактировать, если отправить его самому себе.</string>
+	<string name="activity_main_email_logs_confirmation_title">Отправка конфиденциальных данных</string>
+	<string name="activity_main_email_logs_confirmation_positive">Выберите способ отправки</string>
+	<string name="activity_main_email_logs_confirmation_negative">Отмена</string>
+	<string name="activity_main_logout_confirmation_title">Выход из системы</string>
+	<string name="activity_main_logout_confirmation_message">Вы уверены, что хотите выйти из системы?</string>
+	<string name="activity_main_logout_confirmation_positive">Выйти из системы</string>
+	<string name="activity_main_logout_confirmation_negative">Отмена</string>
 </resources>
