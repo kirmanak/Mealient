@@ -21,4 +21,16 @@
     <string name="shopping_lists_screen_no_connection">Нет соединения с сервером</string>
     <string name="shopping_lists_screen_unknown_error">Неизвестная ошибка</string>
     <string name="shopping_lists_screen_empty_button_refresh">Попробовать снова</string>
+    <string name="shopping_lists_screen_add_icon_content_description">Добавить список</string>
+    <string name="shopping_lists_screen_list_name_placeholder">Название списка</string>
+    <string name="shopping_lists_screen_list_name_done_content_description">Готово</string>
+    <string name="shopping_lists_dialog_delete_icon_content_description">Удалить %1$s</string>
+    <string name="shopping_lists_dialog_edit_icon_content_description">Переименовать %1$s</string>
+    <string name="shopping_lists_dialog_add_new_title">Добавить новый список покупок</string>
+    <string name="shopping_lists_dialog_edit_name_title">Редактировать %1$s</string>
+    <string name="shopping_lists_dialog_confirm">Подтвердите</string>
+    <string name="shopping_lists_dialog_cancel">Отмена</string>
+    <string name="shopping_lists_dialog_name_clear_input">Очистить ввод</string>
+    <string name="shopping_lists_dialog_delete_confirm_title">Удаление %1$s</string>
+    <string name="shopping_lists_dialog_delete_confirm_text">Подтвердите, что вы хотите удалить список покупок, включая все товары.</string>
 </resources>
