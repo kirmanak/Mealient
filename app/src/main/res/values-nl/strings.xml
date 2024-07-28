@@ -44,7 +44,7 @@
 	<string name="fragment_add_recipe_clear_button">Duidelijk</string>
 	<string name="fragment_base_url_url_input_helper_text">Voorbeeld: demo.mealie.io</string>
 	<string name="fragment_authentication_email_input_helper_text">Voorbeeld: changeme@example.com</string>
-	<string name="fragment_authentication_password_input_helper_text">Voorbeeld: demo</string>
+	<string name="fragment_authentication_password_input_helper_text">Voorbeeld: MijnWachtwoord</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Laatste pagina geladen</string>
 	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load error: unauthorized.">Fout bij laden: %1$s.</string>
 	<string name="fragment_recipes_load_failure_toast_no_reason">Laden mislukt.</string>
@@ -70,4 +70,14 @@
 	<string name="fragment_recipes_favorite_added">%1$s toegevoegd aan favorieten</string>
 	<string name="fragment_recipes_favorite_removed">Verwijderde %1$s uit favorieten</string>
 	<string name="menu_navigation_drawer_shopping_lists">Boodschappenlijstjes</string>
+	<string name="menu_navigation_drawer_email_logs">Logboeken e-mail</string>
+	<string name="activity_main_email_logs_subject">Mealient logs</string>
+	<string name="activity_main_email_logs_confirmation_message">De logs bevatten gevoelige gegevens zoals API-tokens, boodschappenlijsten en recepten. API-tokens kunnen worden ingetrokken met de webclient. Het bestand kan worden bekeken en bewerkt als je het in plaats daarvan naar jezelf stuurt.</string>
+	<string name="activity_main_email_logs_confirmation_title">Gevoelige gegevens verzenden</string>
+	<string name="activity_main_email_logs_confirmation_positive">Kies hoe te verzenden</string>
+	<string name="activity_main_email_logs_confirmation_negative">Annuleren</string>
+	<string name="activity_main_logout_confirmation_title">Afmelden</string>
+	<string name="activity_main_logout_confirmation_message">Weet je zeker dat je jezelf wilt afmelden?</string>
+	<string name="activity_main_logout_confirmation_positive">Afmelden</string>
+	<string name="activity_main_logout_confirmation_negative">Annuleren</string>
 </resources>
