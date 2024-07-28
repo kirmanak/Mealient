@@ -21,4 +21,16 @@
     <string name="shopping_lists_screen_no_connection">Keine Serververbindung</string>
     <string name="shopping_lists_screen_unknown_error">Unbekannter Fehler</string>
     <string name="shopping_lists_screen_empty_button_refresh">Erneut versuchen</string>
+    <string name="shopping_lists_screen_add_icon_content_description">Liste hinzufügen</string>
+    <string name="shopping_lists_screen_list_name_placeholder">Name der Liste</string>
+    <string name="shopping_lists_screen_list_name_done_content_description">Erledigt</string>
+    <string name="shopping_lists_dialog_delete_icon_content_description">Löschen %1$s</string>
+    <string name="shopping_lists_dialog_edit_icon_content_description">Umbenennen %1$s</string>
+    <string name="shopping_lists_dialog_add_new_title">Neue Einkaufsliste hinzufügen</string>
+    <string name="shopping_lists_dialog_edit_name_title">%1$sbearbeiten</string>
+    <string name="shopping_lists_dialog_confirm">Bestätigen Sie</string>
+    <string name="shopping_lists_dialog_cancel">Abbrechen</string>
+    <string name="shopping_lists_dialog_name_clear_input">Eingabe löschen</string>
+    <string name="shopping_lists_dialog_delete_confirm_title">Entfernen von %1$s</string>
+    <string name="shopping_lists_dialog_delete_confirm_text">Bestätigen Sie, dass Sie die Einkaufsliste mit allen Artikeln entfernen möchten.</string>
 </resources>
