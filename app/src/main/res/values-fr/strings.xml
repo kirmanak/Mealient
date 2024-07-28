@@ -44,7 +44,7 @@
 	<string name="fragment_add_recipe_clear_button">Clair</string>
 	<string name="fragment_base_url_url_input_helper_text">Exemple : demo.mealie.io</string>
 	<string name="fragment_authentication_email_input_helper_text">Exemple : changeme@example.com</string>
-	<string name="fragment_authentication_password_input_helper_text">Exemple : démo</string>
+	<string name="fragment_authentication_password_input_helper_text">Exemple : MyPassword</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Dernière page chargée</string>
 	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load error: unauthorized.">Erreur de chargement : %1$s.</string>
 	<string name="fragment_recipes_load_failure_toast_no_reason">Le chargement a échoué.</string>
@@ -70,4 +70,14 @@
 	<string name="fragment_recipes_favorite_added">Ajout de %1$s aux favoris</string>
 	<string name="fragment_recipes_favorite_removed">Suppression de %1$s des favoris</string>
 	<string name="menu_navigation_drawer_shopping_lists">Listes de courses</string>
+	<string name="menu_navigation_drawer_email_logs">Journaux des courriels</string>
+	<string name="activity_main_email_logs_subject">Journaux de la maltraitance</string>
+	<string name="activity_main_email_logs_confirmation_message">Les journaux contiennent des données sensibles telles que les jetons API, les listes d\'achats et les recettes. Les jetons d\'API peuvent être révoqués à l\'aide du client web. Le fichier peut être consulté et modifié si vous vous l\'envoyez à vous-même.</string>
+	<string name="activity_main_email_logs_confirmation_title">Envoi de données sensibles</string>
+	<string name="activity_main_email_logs_confirmation_positive">Choisir le mode d\'envoi</string>
+	<string name="activity_main_email_logs_confirmation_negative">Annuler</string>
+	<string name="activity_main_logout_confirmation_title">Déconnexion</string>
+	<string name="activity_main_logout_confirmation_message">Êtes-vous sûr de vouloir vous déconnecter ?</string>
+	<string name="activity_main_logout_confirmation_positive">Déconnexion</string>
+	<string name="activity_main_logout_confirmation_negative">Annuler</string>
 </resources>
