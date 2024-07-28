@@ -44,7 +44,7 @@
 	<string name="fragment_add_recipe_clear_button">Limpo</string>
 	<string name="fragment_base_url_url_input_helper_text">Exemplo: demo.mealie.io</string>
 	<string name="fragment_authentication_email_input_helper_text">Exemplo: changeme@example.com</string>
-	<string name="fragment_authentication_password_input_helper_text">Exemplo: demo</string>
+	<string name="fragment_authentication_password_input_helper_text">Exemplo: MyPassword</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Última página carregada</string>
 	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load error: unauthorized.">Erro de carregamento: %1$s.</string>
 	<string name="fragment_recipes_load_failure_toast_no_reason">O carregamento falhou.</string>
@@ -70,4 +70,14 @@
 	<string name="fragment_recipes_favorite_added">Adicionado %1$s aos favoritos</string>
 	<string name="fragment_recipes_favorite_removed">Removido %1$s dos favoritos</string>
 	<string name="menu_navigation_drawer_shopping_lists">Listas de compras</string>
+	<string name="menu_navigation_drawer_email_logs">Registos de correio eletrónico</string>
+	<string name="activity_main_email_logs_subject">Registos de refeições</string>
+	<string name="activity_main_email_logs_confirmation_message">Os registos contêm dados sensíveis, como o token da API, listas de compras e receitas. Os tokens da API podem ser revogados através do cliente Web. O ficheiro pode ser visualizado e editado se, em vez disso, o enviar para si próprio.</string>
+	<string name="activity_main_email_logs_confirmation_title">Envio de dados sensíveis</string>
+	<string name="activity_main_email_logs_confirmation_positive">Escolher como enviar</string>
+	<string name="activity_main_email_logs_confirmation_negative">Cancelar</string>
+	<string name="activity_main_logout_confirmation_title">Terminar a sessão</string>
+	<string name="activity_main_logout_confirmation_message">Tem a certeza de que pretende terminar a sessão?</string>
+	<string name="activity_main_logout_confirmation_positive">Terminar sessão</string>
+	<string name="activity_main_logout_confirmation_negative">Cancelar</string>
 </resources>

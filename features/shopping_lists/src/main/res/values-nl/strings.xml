@@ -21,4 +21,16 @@
     <string name="shopping_lists_screen_no_connection">Geen serververbinding</string>
     <string name="shopping_lists_screen_unknown_error">Onbekende fout</string>
     <string name="shopping_lists_screen_empty_button_refresh">Probeer het opnieuw</string>
+    <string name="shopping_lists_screen_add_icon_content_description">Lijst toevoegen</string>
+    <string name="shopping_lists_screen_list_name_placeholder">Naam lijst</string>
+    <string name="shopping_lists_screen_list_name_done_content_description">Gedaan</string>
+    <string name="shopping_lists_dialog_delete_icon_content_description">Verwijder %1$s</string>
+    <string name="shopping_lists_dialog_edit_icon_content_description">Hernoem %1$s</string>
+    <string name="shopping_lists_dialog_add_new_title">Nieuwe boodschappenlijst toevoegen</string>
+    <string name="shopping_lists_dialog_edit_name_title">Bewerk %1$s</string>
+    <string name="shopping_lists_dialog_confirm">Bevestig</string>
+    <string name="shopping_lists_dialog_cancel">Annuleren</string>
+    <string name="shopping_lists_dialog_name_clear_input">Invoer wissen</string>
+    <string name="shopping_lists_dialog_delete_confirm_title">Verwijderen %1$s</string>
+    <string name="shopping_lists_dialog_delete_confirm_text">Bevestig dat je de boodschappenlijst inclusief alle items wilt verwijderen.</string>
 </resources>
