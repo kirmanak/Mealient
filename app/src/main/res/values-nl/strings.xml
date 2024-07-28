@@ -44,7 +44,7 @@
 	<string name="fragment_add_recipe_clear_button">Duidelijk</string>
 	<string name="fragment_base_url_url_input_helper_text">Voorbeeld: demo.mealie.io</string>
 	<string name="fragment_authentication_email_input_helper_text">Voorbeeld: changeme@example.com</string>
-	<string name="fragment_authentication_password_input_helper_text">Voorbeeld: MijnWachtwoord</string>
+	<string name="fragment_authentication_password_input_helper_text">Voorbeeld: MyPassword</string>
 	<string name="fragment_recipes_last_page_loaded_toast">Laatste pagina geladen</string>
 	<string name="fragment_recipes_load_failure_toast" comment="EXAMPLE: Load error: unauthorized.">Fout bij laden: %1$s.</string>
 	<string name="fragment_recipes_load_failure_toast_no_reason">Laden mislukt.</string>
