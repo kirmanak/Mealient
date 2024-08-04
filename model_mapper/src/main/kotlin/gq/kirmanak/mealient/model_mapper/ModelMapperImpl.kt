@@ -18,6 +18,8 @@ import gq.kirmanak.mealient.datasource.models.GetRecipeResponse
 import gq.kirmanak.mealient.datasource.models.GetRecipeSummaryResponse
 import gq.kirmanak.mealient.datasource.models.UpdateRecipeRequest
 import gq.kirmanak.mealient.datastore.recipe.AddRecipeDraft
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import java.util.UUID
 import javax.inject.Inject
 
@@ -66,7 +68,7 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
             slug = recipeSummaryInfo.slug,
             description = recipeSummaryInfo.description,
             dateAdded = recipeSummaryInfo.dateAdded,
-            dateUpdated = recipeSummaryInfo.dateUpdated,
+            dateUpdated = recipeSummaryInfo.dateUpdated.toLocalDateTime(TimeZone.UTC),
             imageId = recipeSummaryInfo.remoteId,
             isFavorite = isFavorite,
         )
