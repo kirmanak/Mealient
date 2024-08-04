@@ -66,7 +66,6 @@ class ModelMapperImpl @Inject constructor() : ModelMapper {
             slug = recipeSummaryInfo.slug,
             description = recipeSummaryInfo.description,
             dateAdded = recipeSummaryInfo.dateAdded,
-            dateUpdated = recipeSummaryInfo.dateUpdated,
             imageId = recipeSummaryInfo.remoteId,
             isFavorite = isFavorite,
         )

@@ -11,7 +11,7 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 
 @Database(
-    version = 12,
+    version = 13,
     entities = [
         RecipeSummaryEntity::class,
         RecipeEntity::class,
