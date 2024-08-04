@@ -4,7 +4,6 @@ import gq.kirmanak.mealient.database.recipe.entity.RecipeIngredientEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeInstructionEntity
 import gq.kirmanak.mealient.database.recipe.entity.RecipeSummaryEntity
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 
 internal val INGREDIENT_TWO = RecipeIngredientEntity(
     id = "2",
@@ -25,7 +24,6 @@ internal val SUMMARY_ENTITY = RecipeSummaryEntity(
     slug = "recipe-name",
     description = "Recipe description",
     dateAdded = LocalDate(2021, 1, 1),
-    dateUpdated = LocalDateTime(2021, 1, 1, 1, 1, 1),
     imageId = null,
     isFavorite = false,
 )
