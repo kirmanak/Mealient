@@ -4,7 +4,7 @@ androidGradlePlugin = "8.5.1"
 # https://github.com/JetBrains/kotlin/releases
 kotlin = "2.0.0"
 # https://dagger.dev/hilt/gradle-setup
-hilt = "2.51.1"
+hilt = "2.52"
 # https://github.com/protocolbuffers/protobuf/releases
 protobuf = "4.27.3"
 # https://github.com/google/protobuf-gradle-plugin/releases
