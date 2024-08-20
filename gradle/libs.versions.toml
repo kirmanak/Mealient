@@ -32,7 +32,7 @@ paging = "3.3.2"
 # https://developer.android.com/jetpack/androidx/releases/room
 room = "2.6.1"
 # https://github.com/Kotlin/kotlinx-datetime/releases
-kotlinxDatetime = "0.6.0"
+kotlinxDatetime = "0.6.1"
 # https://developer.android.com/jetpack/androidx/releases/datastore
 datastore = "1.1.1"
 # https://developer.android.com/jetpack/androidx/releases/security
