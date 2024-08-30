@@ -1,6 +1,7 @@
 package gq.kirmanak.mealient.shopping_lists.ui.details
 
 import androidx.lifecycle.SavedStateHandle
+import gq.kirmanak.mealient.datasource.models.GetFoodLabelResponse
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemRecipeReferenceResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
@@ -8,6 +9,7 @@ import gq.kirmanak.mealient.datasource.models.GetShoppingListResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsAuthRepo
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
+import gq.kirmanak.mealient.shopping_lists.util.ItemLabelGroup
 import gq.kirmanak.mealient.test.BaseUnitTest
 import gq.kirmanak.mealient.ui.util.LoadingHelper
 import gq.kirmanak.mealient.ui.util.LoadingHelperFactory
@@ -134,7 +136,49 @@ internal class ShoppingListViewModelTest : BaseUnitTest() {
 
 private val mlUnit = GetUnitResponse("ml", "")
 
-private val milkFood = GetFoodResponse("Milk", "")
+private val milkLabel = GetFoodLabelResponse("Milk", "#FF0000", "1", "0")
+private val milkFood = GetFoodResponse(name = "Milk", id ="", label = milkLabel)
+
+private val breadFood = GetFoodResponse(name = "Bread", id = "")
+
+private val appleLabel = GetFoodLabelResponse("Fruit", "#FF0000", "1", "0")
+private val appleFood = GetFoodResponse(name = "Apple", id = "", label = appleLabel)
+
+private val apple = GetShoppingListItemResponse(
+    id = "4",
+    shoppingListId = "1",
+    checked = false,
+    position = 0,
+    isFood = true,
+    note = "Apple",
+    quantity = 1.0,
+    unit = null,
+    food = appleFood,
+    recipeReferences = listOf(
+        GetShoppingListItemRecipeReferenceResponse(
+            recipeId = "1",
+            recipeQuantity = 1.0,
+        ),
+    ),
+)
+
+private val bread = GetShoppingListItemResponse(
+    id = "3",
+    shoppingListId = "1",
+    checked = false,
+    position = 0,
+    isFood = false,
+    note = "Bread",
+    quantity = 1.0,
+    unit = null,
+    food = breadFood,
+    recipeReferences = listOf(
+        GetShoppingListItemRecipeReferenceResponse(
+            recipeId = "1",
+            recipeQuantity = 1.0,
+        ),
+    ),
+)
 
 private val blackTeaBags = GetShoppingListItemResponse(
     id = "1",
@@ -176,7 +220,7 @@ private val shoppingListResponse = GetShoppingListResponse(
     id = "shoppingListId",
     groupId = "shoppingListGroupId",
     name = "shoppingListName",
-    listItems = listOf(blackTeaBags, milk),
+    listItems = listOf(blackTeaBags, milk, bread, apple),
     recipeReferences = listOf()
 )
 
@@ -189,14 +233,27 @@ private val shoppingListData = ShoppingListData(
 private val shoppingListScreen = ShoppingListScreenState(
     name = "shoppingListName",
     listId = "shoppingListId",
-    items = listOf(
-        ShoppingListItemState.ExistingItem(
-            item = blackTeaBags,
-            isEditing = false
+    items = mapOf(
+        ItemLabelGroup.DefaultLabel to listOf(
+            ShoppingListItemState.ExistingItem(
+                item = blackTeaBags,
+                isEditing = false
+            ), ShoppingListItemState.ExistingItem(
+                item = bread,
+                isEditing = false
+            )
         ),
-        ShoppingListItemState.ExistingItem(
-            item = milk,
-            isEditing = false
+        ItemLabelGroup.Label("Fruit") to listOf(
+            ShoppingListItemState.ExistingItem(
+                item = apple,
+                isEditing = false
+            )
+        ),
+        ItemLabelGroup.CheckedItems to listOf(
+            ShoppingListItemState.ExistingItem(
+                item = milk,
+                isEditing = false
+            )
         )
     ),
     foods = listOf(milkFood),

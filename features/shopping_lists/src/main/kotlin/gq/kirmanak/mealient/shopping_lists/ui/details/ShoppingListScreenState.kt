@@ -3,12 +3,13 @@ package gq.kirmanak.mealient.shopping_lists.ui.details
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
+import gq.kirmanak.mealient.shopping_lists.util.ItemLabelGroup
 import java.util.UUID
 
 internal data class ShoppingListScreenState(
     val name: String,
     val listId: String,
-    val items: List<ShoppingListItemState>,
+    val items: Map<ItemLabelGroup, List<ShoppingListItemState>>,
     val foods: List<GetFoodResponse>,
     val units: List<GetUnitResponse>,
 )

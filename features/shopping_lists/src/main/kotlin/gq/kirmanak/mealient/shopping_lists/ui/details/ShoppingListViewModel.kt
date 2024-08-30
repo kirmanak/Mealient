@@ -15,6 +15,7 @@ import gq.kirmanak.mealient.logging.Logger
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsAuthRepo
 import gq.kirmanak.mealient.shopping_lists.repo.ShoppingListsRepo
 import gq.kirmanak.mealient.shopping_lists.ui.destinations.ShoppingListScreenDestination
+import gq.kirmanak.mealient.shopping_lists.util.groupItemsByLabel
 import gq.kirmanak.mealient.ui.util.LoadingHelperFactory
 import gq.kirmanak.mealient.ui.util.LoadingState
 import gq.kirmanak.mealient.ui.util.LoadingStateNoData
@@ -134,7 +135,7 @@ internal class ShoppingListViewModel @Inject constructor(
             ShoppingListScreenState(
                 name = data.shoppingList.name,
                 listId = data.shoppingList.id,
-                items = items,
+                items = groupItemsByLabel(items),
                 foods = data.foods.sortedBy { it.name },
                 units = data.units.sortedBy { it.name },
             )
@@ -238,7 +239,7 @@ internal class ShoppingListViewModel @Inject constructor(
     fun onAddItemClicked() {
         logger.v { "onAddItemClicked() called" }
         val shoppingListScreenState = loadingState.value.data ?: return
-        val maxPosition = shoppingListScreenState.items.maxOfOrNull { it.position } ?: 0
+        val maxPosition = shoppingListScreenState.items.values.flatten().maxOfOrNull { it.position } ?: 0
         val editorState = ShoppingListItemEditorState(
             foods = shoppingListScreenState.foods,
             units = shoppingListScreenState.units,
