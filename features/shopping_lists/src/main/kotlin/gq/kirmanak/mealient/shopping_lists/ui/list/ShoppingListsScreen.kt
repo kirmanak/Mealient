@@ -23,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.navigate
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.EditableItemBox
 import gq.kirmanak.mealient.shopping_lists.ui.composables.getErrorMessage
@@ -32,7 +31,7 @@ import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.components.BaseScreenState
 import gq.kirmanak.mealient.ui.components.BaseScreenWithNavigation
-import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingState
+import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingStateForList
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 import gq.kirmanak.mealient.ui.util.error
 
@@ -53,7 +52,7 @@ internal fun ShoppingListsScreen(
     BaseScreenWithNavigation(
         baseScreenState = baseScreenState,
     ) { modifier ->
-        LazyColumnWithLoadingState(
+        LazyColumnWithLoadingStateForList(
             modifier = modifier,
             loadingState = screenState.loadingState,
             emptyListError = screenState.loadingState.error?.let { getErrorMessage(it) }
@@ -82,7 +81,7 @@ internal fun ShoppingListsScreen(
                     listName = displayList.name,
                     onClick = {
                         val shoppingListId = displayList.id
-                        navController.navigate(ShoppingListScreenDestination(shoppingListId))
+                        navController.navigate(ShoppingListScreenDestination(shoppingListId).route)
                     },
                     onDelete = {
                         shoppingListsViewModel.onEvent(ShoppingListsEvent.RemoveList(displayList))

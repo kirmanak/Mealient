@@ -33,4 +33,5 @@
     <string name="shopping_lists_dialog_name_clear_input">Очистить ввод</string>
     <string name="shopping_lists_dialog_delete_confirm_title">Удаление %1$s</string>
     <string name="shopping_lists_dialog_delete_confirm_text">Подтвердите, что вы хотите удалить список покупок, включая все товары.</string>
+    <string name="shopping_lists_screen_default_label">Другое</string>
 </resources>
