@@ -1,7 +1,7 @@
 package gq.kirmanak.mealient.shopping_lists.ui.details
 
 import androidx.lifecycle.SavedStateHandle
-import gq.kirmanak.mealient.datasource.models.GetFoodLabelResponse
+import gq.kirmanak.mealient.datasource.models.GetItemLabelResponse
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemRecipeReferenceResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
@@ -136,13 +136,13 @@ internal class ShoppingListViewModelTest : BaseUnitTest() {
 
 private val mlUnit = GetUnitResponse("ml", "")
 
-private val milkLabel = GetFoodLabelResponse("Milk", "#FF0000", "1", "0")
-private val milkFood = GetFoodResponse(name = "Milk", id ="", label = milkLabel)
+private val milkLabel = GetItemLabelResponse("Milk", "#FF0000", "1", "0")
+private val milkFood = GetFoodResponse(name = "Milk", id ="")
 
 private val breadFood = GetFoodResponse(name = "Bread", id = "")
 
-private val appleLabel = GetFoodLabelResponse("Fruit", "#FF0000", "1", "0")
-private val appleFood = GetFoodResponse(name = "Apple", id = "", label = appleLabel)
+private val appleLabel = GetItemLabelResponse("Fruit", "#FF0000", "1", "0")
+private val appleFood = GetFoodResponse(name = "Apple", id = "")
 
 private val apple = GetShoppingListItemResponse(
     id = "4",
@@ -154,6 +154,7 @@ private val apple = GetShoppingListItemResponse(
     quantity = 1.0,
     unit = null,
     food = appleFood,
+    label = appleLabel,
     recipeReferences = listOf(
         GetShoppingListItemRecipeReferenceResponse(
             recipeId = "1",
@@ -208,6 +209,7 @@ private val milk = GetShoppingListItemResponse(
     quantity = 500.0,
     unit = mlUnit,
     food = milkFood,
+    label = milkLabel,
     recipeReferences = listOf(
         GetShoppingListItemRecipeReferenceResponse(
             recipeId = "1",

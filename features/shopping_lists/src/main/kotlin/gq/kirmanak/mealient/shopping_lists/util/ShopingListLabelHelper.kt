@@ -17,12 +17,12 @@ fun groupItemsByLabel(
     val uncheckedItemsGroupedByLabel = items
         .filterNot { it.checked }
         .groupBy { item ->
-            (item as? ShoppingListItemState.ExistingItem)?.item?.food?.label?.name?.let {
+            (item as? ShoppingListItemState.ExistingItem)?.item?.label?.name?.let {
                 ItemLabelGroup.Label(it)
             } ?: ItemLabelGroup.DefaultLabel
         }.mapValues { (_, groupedItems) ->
             groupedItems.sortedBy { item ->
-                (item as? ShoppingListItemState.ExistingItem)?.item?.food?.label?.name ?: ""
+                (item as? ShoppingListItemState.ExistingItem)?.item?.label?.name ?: ""
             }
         }.toMutableMap()
 
@@ -34,7 +34,7 @@ fun groupItemsByLabel(
     // Put checked items as a single group to display them without label-specific headers
     val checkedItems = items.filter { it.checked }
         .sortedBy { item ->
-            (item as? ShoppingListItemState.ExistingItem)?.item?.food?.label?.name ?: ""
+            (item as? ShoppingListItemState.ExistingItem)?.item?.label?.name ?: ""
         }
 
     // Add all groups to a single map in the following order:

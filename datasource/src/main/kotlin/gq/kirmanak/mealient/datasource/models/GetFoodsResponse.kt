@@ -12,5 +12,4 @@ data class GetFoodsResponse(
 data class GetFoodResponse(
     @SerialName("name") val name: String,
     @SerialName("id") val id: String,
-    @SerialName("label") val label: GetFoodLabelResponse? = null,
 )
