@@ -35,8 +35,6 @@ val ShoppingListItemState.id: String
         is ShoppingListItemState.ExistingItem -> item.id
         is ShoppingListItemState.NewItem -> id
         is ShoppingListItemState.ItemLabel -> when (group) {
-            // Use label id if label exists (random UUID of otherwise)
-            // and use predefined IDs fo other groups (as they only appear once in the list)
             is ItemLabelGroup.Label -> group.label.id
             is ItemLabelGroup.DefaultLabel -> "defaultLabelId"
             is ItemLabelGroup.CheckedItems -> "checkedLabelId"

@@ -196,9 +196,10 @@ private fun ShoppingListScreen(
 
 @Composable
 fun ShoppingListSectionHeader(state: ShoppingListItemState.ItemLabel) {
-    // Display default label if necessary
+    // Skip displaying checked items group and otherwise display the label name
     val displayLabel = when (state.group) {
-        is ItemLabelGroup.DefaultLabel -> stringResource(R.string.shopping_lists_screen_default_label)
+        is ItemLabelGroup.DefaultLabel -> stringResource(
+            R.string.shopping_lists_screen_default_label)
         is ItemLabelGroup.Label -> state.group.label.name
         is ItemLabelGroup.CheckedItems -> return
     }

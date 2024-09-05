@@ -19,7 +19,7 @@ sealed class ItemLabelGroup {
  *
  * The List contains `ShoppingListItemStates` with each new label group starting with an
  * `ItemLabel` state and followed by the items with that label.
- * The items within a group are sorted by label name.
+ * The items within a group are alphabetically sorted by name.
  */
 fun groupItemsByLabel(
     items: List<ShoppingListItemState>
@@ -39,11 +39,11 @@ fun groupItemsByLabel(
         }.toMutableMap()
 
     // Remove items with no label from grouped items to prevent them from being displayed first.
-    // Store these items in a separate list to add them back to the end of the map later.
+    // Store these items in a separate list to add them to the end of the list later.
     val uncheckedItemsNoLabel = uncheckedItemsGroupedByLabel[ItemLabelGroup.DefaultLabel].orEmpty()
     uncheckedItemsGroupedByLabel.remove(ItemLabelGroup.DefaultLabel)
 
-    // Put checked items as a single group to display them without label-specific headers
+    // Put all checked items into a single group to display them without label-specific headers
     val checkedItems = items.filter { it.checked }
         .sortedBy { item ->
             (item as? ShoppingListItemState.ExistingItem)?.item?.label?.name ?: ""
