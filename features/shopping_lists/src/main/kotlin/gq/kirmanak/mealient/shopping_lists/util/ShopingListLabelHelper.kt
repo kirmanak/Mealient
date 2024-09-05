@@ -55,13 +55,15 @@ fun groupItemsByLabel(
     fun addLabeledGroupToList(
         result: MutableList<ShoppingListItemState>,
         items: List<ShoppingListItemState>,
-        label: ItemLabelGroup
+        label: ItemLabelGroup?
     ) {
-        result.add(
-            ShoppingListItemState.ItemLabel(
-                group = label,
+        if (label != null) {
+            result.add(
+                ShoppingListItemState.ItemLabel(
+                    group = label,
+                )
             )
-        )
+        }
         result.addAll(items)
     }
 
@@ -72,7 +74,12 @@ fun groupItemsByLabel(
         addLabeledGroupToList(result, items, labelGroup)
     }
     if (uncheckedItemsNoLabel.isNotEmpty()) {
-        addLabeledGroupToList(result, uncheckedItemsNoLabel, ItemLabelGroup.DefaultLabel)
+        // Only add DefaultLabel if there are items with a label to avoid cluttering the UI
+        if (result.isNotEmpty()) {
+            addLabeledGroupToList(result, uncheckedItemsNoLabel, ItemLabelGroup.DefaultLabel)
+        } else {
+            addLabeledGroupToList(result, uncheckedItemsNoLabel, null)
+        }
     }
     if (checkedItems.isNotEmpty()) {
         addLabeledGroupToList(result, checkedItems, ItemLabelGroup.CheckedItems)
