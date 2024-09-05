@@ -239,7 +239,7 @@ internal class ShoppingListViewModel @Inject constructor(
     fun onAddItemClicked() {
         logger.v { "onAddItemClicked() called" }
         val shoppingListScreenState = loadingState.value.data ?: return
-        val maxPosition = shoppingListScreenState.items.values.flatten().maxOfOrNull { it.position } ?: 0
+        val maxPosition = shoppingListScreenState.items.maxOfOrNull { it.position } ?: 0
         val editorState = ShoppingListItemEditorState(
             foods = shoppingListScreenState.foods,
             units = shoppingListScreenState.units,

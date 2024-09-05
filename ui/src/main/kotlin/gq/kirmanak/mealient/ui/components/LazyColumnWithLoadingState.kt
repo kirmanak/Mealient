@@ -23,17 +23,10 @@ import gq.kirmanak.mealient.ui.util.data
 import gq.kirmanak.mealient.ui.util.isLoading
 import gq.kirmanak.mealient.ui.util.isRefreshing
 
-/**
- * `LazyColumnWithLoadingStateBase` is a private composable function that displays a `LazyColumn`
- * with different states based on the `loadingState`.
- * Function provides the core functionality, which can be extended or specialized by other functions.
- * In this case, it is used by LazyColumnWithLoadingStateForList and
- * LazyColumnWithLoadingStateForMap to handle specific data types (lists and maps, respectively).
- */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun <T> LazyColumnWithLoadingStateBase(
-    loadingState: LoadingState<T>,
+fun <T> LazyColumnWithLoadingState(
+    loadingState: LoadingState<List<T>>,
     emptyListError: String,
     retryButtonText: String,
     modifier: Modifier = Modifier,
@@ -45,8 +38,7 @@ private fun <T> LazyColumnWithLoadingStateBase(
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     lazyListState: LazyListState = rememberLazyListState(),
-    lazyColumnContent: LazyListScope.(T) -> Unit = {},
-    isEmpty: (T) -> Boolean
+    lazyColumnContent: LazyListScope.(List<T>) -> Unit = {},
 ) {
     val refreshState = rememberPullRefreshState(
         refreshing = loadingState.isRefreshing,
@@ -64,14 +56,14 @@ private fun <T> LazyColumnWithLoadingStateBase(
             .padding(paddingValues)
             .fillMaxSize()
 
-        val data = loadingState.data
+        val list = loadingState.data ?: emptyList()
 
         when {
             loadingState is LoadingStateNoData.InitialLoad -> {
                 CenteredProgressIndicator(modifier = innerModifier)
             }
 
-            !loadingState.isLoading && (data == null || isEmpty(data)) -> {
+            !loadingState.isLoading && list.isEmpty() -> {
                 EmptyListError(
                     text = emptyListError,
                     retryButtonText = retryButtonText,
@@ -86,7 +78,7 @@ private fun <T> LazyColumnWithLoadingStateBase(
                     isRefreshing = loadingState.isRefreshing,
                     contentPadding = contentPadding,
                     verticalArrangement = verticalArrangement,
-                    lazyColumnContent = { data?.let { lazyColumnContent(it) } ?: Unit },
+                    lazyColumnContent = { lazyColumnContent(list) },
                     lazyListState = lazyListState,
                     modifier = innerModifier,
                 )
@@ -99,80 +91,4 @@ private fun <T> LazyColumnWithLoadingStateBase(
             }
         }
     }
-}
-
-/**
- * Function provides a specialized version of `LazyColumnWithLoadingStateBase` for lists.
- */
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun <T> LazyColumnWithLoadingStateForList(
-    loadingState: LoadingState<List<T>>,
-    emptyListError: String,
-    retryButtonText: String,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-    snackbarText: String?,
-    onSnackbarShown: () -> Unit = {},
-    onRefresh: () -> Unit = {},
-    floatingActionButton: @Composable () -> Unit = {},
-    floatingActionButtonPosition: FabPosition = FabPosition.End,
-    lazyListState: LazyListState = rememberLazyListState(),
-    lazyColumnContent: LazyListScope.(List<T>) -> Unit = {},
-) {
-    LazyColumnWithLoadingStateBase(
-        loadingState = loadingState,
-        emptyListError = emptyListError,
-        retryButtonText = retryButtonText,
-        modifier = modifier,
-        contentPadding = contentPadding,
-        verticalArrangement = verticalArrangement,
-        snackbarText = snackbarText,
-        onSnackbarShown = onSnackbarShown,
-        onRefresh = onRefresh,
-        floatingActionButton = floatingActionButton,
-        floatingActionButtonPosition = floatingActionButtonPosition,
-        lazyListState = lazyListState,
-        lazyColumnContent = lazyColumnContent,
-        isEmpty = { it.isEmpty() }
-    )
-}
-
-/**
- * Function provides a specialized version of `LazyColumnWithLoadingStateBase` for maps.
- */
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun <K, V> LazyColumnWithLoadingStateForMap(
-    loadingState: LoadingState<Map<K, V>>,
-    emptyListError: String,
-    retryButtonText: String,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-    snackbarText: String?,
-    onSnackbarShown: () -> Unit = {},
-    onRefresh: () -> Unit = {},
-    floatingActionButton: @Composable () -> Unit = {},
-    floatingActionButtonPosition: FabPosition = FabPosition.End,
-    lazyListState: LazyListState = rememberLazyListState(),
-    lazyColumnContent: LazyListScope.(Map<K, V>) -> Unit = {},
-) {
-    LazyColumnWithLoadingStateBase(
-        loadingState = loadingState,
-        emptyListError = emptyListError,
-        retryButtonText = retryButtonText,
-        modifier = modifier,
-        contentPadding = contentPadding,
-        verticalArrangement = verticalArrangement,
-        snackbarText = snackbarText,
-        onSnackbarShown = onSnackbarShown,
-        onRefresh = onRefresh,
-        floatingActionButton = floatingActionButton,
-        floatingActionButtonPosition = floatingActionButtonPosition,
-        lazyListState = lazyListState,
-        lazyColumnContent = lazyColumnContent,
-        isEmpty = { it.isEmpty() }
-    )
 }

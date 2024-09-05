@@ -141,7 +141,7 @@ private val milkFood = GetFoodResponse(name = "Milk", id ="")
 
 private val breadFood = GetFoodResponse(name = "Bread", id = "")
 
-private val appleLabel = GetItemLabelResponse("Fruit", "#FF0000", "1", "0")
+private val appleLabel = GetItemLabelResponse("Fruit", "#FF0000", "1", "1")
 private val appleFood = GetFoodResponse(name = "Apple", id = "")
 
 private val apple = GetShoppingListItemResponse(
@@ -235,28 +235,33 @@ private val shoppingListData = ShoppingListData(
 private val shoppingListScreen = ShoppingListScreenState(
     name = "shoppingListName",
     listId = "shoppingListId",
-    items = mapOf(
-        ItemLabelGroup.DefaultLabel to listOf(
-            ShoppingListItemState.ExistingItem(
-                item = blackTeaBags,
-                isEditing = false
-            ), ShoppingListItemState.ExistingItem(
-                item = bread,
-                isEditing = false
-            )
+    items = listOf(
+        ShoppingListItemState.ItemLabel(
+            group = ItemLabelGroup.Label(apple.label
+                ?: GetItemLabelResponse(name = "", "", "", "")),
         ),
-        ItemLabelGroup.Label("Fruit") to listOf(
-            ShoppingListItemState.ExistingItem(
-                item = apple,
-                isEditing = false
-            )
+        ShoppingListItemState.ExistingItem(
+            item = apple,
+            isEditing = false
         ),
-        ItemLabelGroup.CheckedItems to listOf(
-            ShoppingListItemState.ExistingItem(
-                item = milk,
-                isEditing = false
-            )
-        )
+        ShoppingListItemState.ItemLabel(
+            group = ItemLabelGroup.DefaultLabel,
+        ),
+        ShoppingListItemState.ExistingItem(
+            item = blackTeaBags,
+            isEditing = false
+        ),
+        ShoppingListItemState.ExistingItem(
+            item = bread,
+            isEditing = false
+        ),
+        ShoppingListItemState.ItemLabel(
+            group = ItemLabelGroup.CheckedItems
+        ),
+        ShoppingListItemState.ExistingItem(
+            item = milk,
+            isEditing = false
+        ),
     ),
     foods = listOf(milkFood),
     units = listOf(mlUnit)

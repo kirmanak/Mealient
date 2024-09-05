@@ -9,12 +9,15 @@ import java.util.UUID
 internal data class ShoppingListScreenState(
     val name: String,
     val listId: String,
-    val items: Map<ItemLabelGroup, List<ShoppingListItemState>>,
+    val items: List<ShoppingListItemState>,
     val foods: List<GetFoodResponse>,
     val units: List<GetUnitResponse>,
 )
 
 sealed class ShoppingListItemState {
+    data class ItemLabel(
+        val group: ItemLabelGroup,
+    ) : ShoppingListItemState()
 
     data class ExistingItem(
         val item: GetShoppingListItemResponse,
@@ -31,16 +34,25 @@ val ShoppingListItemState.id: String
     get() = when (this) {
         is ShoppingListItemState.ExistingItem -> item.id
         is ShoppingListItemState.NewItem -> id
+        is ShoppingListItemState.ItemLabel -> when (group) {
+            // Use label id if label exists (random UUID of otherwise)
+            // and use predefined IDs fo other groups (as they only appear once in the list)
+            is ItemLabelGroup.Label -> group.label.id
+            is ItemLabelGroup.DefaultLabel -> "defaultLabelId"
+            is ItemLabelGroup.CheckedItems -> "checkedLabelId"
+        }
     }
 
 val ShoppingListItemState.checked: Boolean
     get() = when (this) {
         is ShoppingListItemState.ExistingItem -> item.checked
         is ShoppingListItemState.NewItem -> false
+        is ShoppingListItemState.ItemLabel -> false
     }
 
 val ShoppingListItemState.position: Int
     get() = when (this) {
         is ShoppingListItemState.ExistingItem -> item.position
         is ShoppingListItemState.NewItem -> item.position
+        is ShoppingListItemState.ItemLabel -> -1
     }

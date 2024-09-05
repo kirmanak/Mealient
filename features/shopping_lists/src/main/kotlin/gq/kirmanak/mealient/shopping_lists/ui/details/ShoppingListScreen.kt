@@ -55,7 +55,7 @@ import gq.kirmanak.mealient.shopping_lists.util.ItemLabelGroup
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.components.BaseScreen
-import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingStateForMap
+import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 import gq.kirmanak.mealient.ui.util.LoadingState
 import gq.kirmanak.mealient.ui.util.data
@@ -123,7 +123,7 @@ private fun ShoppingListScreen(
         if (lastAddedItemIndex >= 0) lazyListState.animateScrollToItem(lastAddedItemIndex)
     }
 
-    LazyColumnWithLoadingStateForMap(
+    LazyColumnWithLoadingState(
         modifier = modifier,
         loadingState = loadingState.map { it.items },
         emptyListError = loadingState.error?.let { getErrorMessage(it) } ?: defaultEmptyListError,
@@ -147,22 +147,17 @@ private fun ShoppingListScreen(
             }
         },
         lazyListState = lazyListState
-    ) { groupedItems ->
+    ) { sortedItems ->
 
-        val flattenedItems = groupedItems.values.flatten()
-        lastAddedItemIndex = flattenedItems.indexOfLast { it is ShoppingListItemState.NewItem }
+        lastAddedItemIndex = sortedItems.indexOfLast { it is ShoppingListItemState.NewItem }
+        val firstCheckedItemIndex = sortedItems.indexOfFirst { it.checked }
 
-        groupedItems.forEach{(labelGroup, items) ->
-            // Get index of the first checked item in the group to place a divider
-            // (only affects the group containing all checked groupedItems, otherwise returns -1)
-            val firstCheckedItemIndex = items.indexOfFirst { it.checked }
-
-            // Only display section header if group is not CheckedItems (replaced by showDivider)
-            if (labelGroup != ItemLabelGroup.CheckedItems)
-                item { ShoppingListSectionHeader(labelGroup) }
-
-            itemsIndexed(items, { _, item -> item.id }) { index, itemState ->
-                if (itemState is ShoppingListItemState.ExistingItem) {
+        itemsIndexed(sortedItems, { _, item -> item.id}) { index, itemState ->
+            when (itemState) {
+                is ShoppingListItemState.ItemLabel -> {
+                    ShoppingListSectionHeader(state = itemState)
+                }
+                is ShoppingListItemState.ExistingItem -> {
                     if (itemState.isEditing) {
                         val state = remember {
                             ShoppingListItemEditorState(
@@ -186,7 +181,8 @@ private fun ShoppingListScreen(
                             onEditStart = { onEditStart(itemState) },
                         )
                     }
-                } else if (itemState is ShoppingListItemState.NewItem) {
+                }
+                is ShoppingListItemState.NewItem -> {
                     ShoppingListItemEditor(
                         state = itemState.item,
                         onEditCancelled = { onAddCancel(itemState) },
@@ -199,12 +195,12 @@ private fun ShoppingListScreen(
 }
 
 @Composable
-fun ShoppingListSectionHeader(labelGroup: ItemLabelGroup) {
+fun ShoppingListSectionHeader(state: ShoppingListItemState.ItemLabel) {
     // Display default label if necessary
-    val displayLabel = when (labelGroup) {
-        is ItemLabelGroup.DefaultLabel -> stringResource(id = R.string.shopping_lists_screen_default_label)
-        is ItemLabelGroup.Label -> labelGroup.name
-        else -> ""
+    val displayLabel = when (state.group) {
+        is ItemLabelGroup.DefaultLabel -> stringResource(R.string.shopping_lists_screen_default_label)
+        is ItemLabelGroup.Label -> state.group.label.name
+        is ItemLabelGroup.CheckedItems -> return
     }
 
     Column(

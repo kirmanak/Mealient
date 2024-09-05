@@ -31,7 +31,7 @@ import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.components.BaseScreenState
 import gq.kirmanak.mealient.ui.components.BaseScreenWithNavigation
-import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingStateForList
+import gq.kirmanak.mealient.ui.components.LazyColumnWithLoadingState
 import gq.kirmanak.mealient.ui.preview.ColorSchemePreview
 import gq.kirmanak.mealient.ui.util.error
 
@@ -52,7 +52,7 @@ internal fun ShoppingListsScreen(
     BaseScreenWithNavigation(
         baseScreenState = baseScreenState,
     ) { modifier ->
-        LazyColumnWithLoadingStateForList(
+        LazyColumnWithLoadingState(
             modifier = modifier,
             loadingState = screenState.loadingState,
             emptyListError = screenState.loadingState.error?.let { getErrorMessage(it) }
