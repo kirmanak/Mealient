@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.navigate
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.EditableItemBox
 import gq.kirmanak.mealient.shopping_lists.ui.composables.getErrorMessage
@@ -81,7 +82,7 @@ internal fun ShoppingListsScreen(
                     listName = displayList.name,
                     onClick = {
                         val shoppingListId = displayList.id
-                        navController.navigate(ShoppingListScreenDestination(shoppingListId).route)
+                        navController.navigate(ShoppingListScreenDestination(shoppingListId))
                     },
                     onDelete = {
                         shoppingListsViewModel.onEvent(ShoppingListsEvent.RemoveList(displayList))
