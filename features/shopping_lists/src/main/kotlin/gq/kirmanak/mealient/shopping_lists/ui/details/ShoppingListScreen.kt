@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -50,6 +51,7 @@ import gq.kirmanak.mealient.datasource.models.GetUnitResponse
 import gq.kirmanak.mealient.shopping_list.R
 import gq.kirmanak.mealient.shopping_lists.ui.composables.EditableItemBox
 import gq.kirmanak.mealient.shopping_lists.ui.composables.getErrorMessage
+import gq.kirmanak.mealient.shopping_lists.util.ItemLabelGroup
 import gq.kirmanak.mealient.ui.AppTheme
 import gq.kirmanak.mealient.ui.Dimens
 import gq.kirmanak.mealient.ui.components.BaseScreen
@@ -145,44 +147,73 @@ private fun ShoppingListScreen(
             }
         },
         lazyListState = lazyListState
-    ) { items ->
-        val firstCheckedItemIndex = items.indexOfFirst { it.checked }
-        lastAddedItemIndex =
-            items.indexOfLast { it is ShoppingListItemState.NewItem }
+    ) { sortedItems ->
 
-        itemsIndexed(items, { _, item -> item.id }) { index, itemState ->
-            if (itemState is ShoppingListItemState.ExistingItem) {
-                if (itemState.isEditing) {
-                    val state = remember {
-                        ShoppingListItemEditorState(
-                            state = itemState,
-                            foods = loadingState.data?.foods.orEmpty(),
-                            units = loadingState.data?.units.orEmpty(),
+        lastAddedItemIndex = sortedItems.indexOfLast { it is ShoppingListItemState.NewItem }
+        val firstCheckedItemIndex = sortedItems.indexOfFirst { it.checked }
+
+        itemsIndexed(sortedItems, { _, item -> item.id}) { index, itemState ->
+            when (itemState) {
+                is ShoppingListItemState.ItemLabel -> {
+                    ShoppingListSectionHeader(state = itemState)
+                }
+                is ShoppingListItemState.ExistingItem -> {
+                    if (itemState.isEditing) {
+                        val state = remember {
+                            ShoppingListItemEditorState(
+                                state = itemState,
+                                foods = loadingState.data?.foods.orEmpty(),
+                                units = loadingState.data?.units.orEmpty(),
+                            )
+                        }
+                        ShoppingListItemEditor(
+                            state = state,
+                            onEditCancelled = { onEditCancel(itemState) },
+                            onEditConfirmed = { onEditConfirm(itemState, state) },
+                        )
+                    } else {
+                        ShoppingListItem(
+                            itemState = itemState,
+                            showDivider = firstCheckedItemIndex == index,
+                            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                            onCheckedChange = { onItemCheckedChange(itemState, it) },
+                            onDismissed = { onDeleteItem(itemState) },
+                            onEditStart = { onEditStart(itemState) },
                         )
                     }
+                }
+                is ShoppingListItemState.NewItem -> {
                     ShoppingListItemEditor(
-                        state = state,
-                        onEditCancelled = { onEditCancel(itemState) },
-                        onEditConfirmed = { onEditConfirm(itemState, state) },
-                    )
-                } else {
-                    ShoppingListItem(
-                        itemState = itemState,
-                        showDivider = index == firstCheckedItemIndex && index != 0,
-                        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-                        onCheckedChange = { onItemCheckedChange(itemState, it) },
-                        onDismissed = { onDeleteItem(itemState) },
-                        onEditStart = { onEditStart(itemState) },
+                        state = itemState.item,
+                        onEditCancelled = { onAddCancel(itemState) },
+                        onEditConfirmed = { onAddConfirm(itemState) }
                     )
                 }
-            } else if (itemState is ShoppingListItemState.NewItem) {
-                ShoppingListItemEditor(
-                    state = itemState.item,
-                    onEditCancelled = { onAddCancel(itemState) },
-                    onEditConfirmed = { onAddConfirm(itemState) }
-                )
             }
         }
+    }
+}
+
+@Composable
+fun ShoppingListSectionHeader(state: ShoppingListItemState.ItemLabel) {
+    // Skip displaying checked items group and otherwise display the label name
+    val displayLabel = when (state.group) {
+        is ItemLabelGroup.DefaultLabel -> stringResource(
+            R.string.shopping_lists_screen_default_label)
+        is ItemLabelGroup.Label -> state.group.label.name
+        is ItemLabelGroup.CheckedItems -> return
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface),
+    ) {
+        Text(
+            text = displayLabel,
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(horizontal = Dimens.Small)
+        )
     }
 }
 

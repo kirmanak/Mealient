@@ -33,4 +33,5 @@
     <string name="shopping_lists_dialog_name_clear_input">Invoer wissen</string>
     <string name="shopping_lists_dialog_delete_confirm_title">Verwijderen %1$s</string>
     <string name="shopping_lists_dialog_delete_confirm_text">Bevestig dat je de boodschappenlijst inclusief alle items wilt verwijderen.</string>
+    <string name="shopping_lists_screen_default_label">Overig</string>
 </resources>

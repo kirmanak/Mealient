@@ -35,5 +35,6 @@
     <string name="shopping_lists_dialog_name_clear_input">Clear input</string>
     <string name="shopping_lists_dialog_delete_confirm_title">Removing %1$s</string>
     <string name="shopping_lists_dialog_delete_confirm_text">Confirm that you want to remove the shopping list including all items.</string>
+    <string name="shopping_lists_screen_default_label">Other</string>
 
 </resources>

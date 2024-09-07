@@ -33,4 +33,5 @@
     <string name="shopping_lists_dialog_name_clear_input">Limpar entrada</string>
     <string name="shopping_lists_dialog_delete_confirm_title">Remoção de %1$s</string>
     <string name="shopping_lists_dialog_delete_confirm_text">Confirme que pretende remover a lista de compras, incluindo todos os artigos.</string>
+    <string name="shopping_lists_screen_default_label">Outros</string>
 </resources>

@@ -23,6 +23,7 @@ data class GetShoppingListItemResponse(
     @SerialName("quantity") val quantity: Double = 0.0,
     @SerialName("unit") val unit: GetUnitResponse? = null,
     @SerialName("food") val food: GetFoodResponse? = null,
+    @SerialName("label") val label: GetItemLabelResponse? = null,
     @SerialName("recipeReferences") val recipeReferences: List<GetShoppingListItemRecipeReferenceResponse> = emptyList(),
 )
 

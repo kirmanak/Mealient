@@ -3,6 +3,7 @@ package gq.kirmanak.mealient.shopping_lists.ui.details
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
 import gq.kirmanak.mealient.datasource.models.GetShoppingListItemResponse
 import gq.kirmanak.mealient.datasource.models.GetUnitResponse
+import gq.kirmanak.mealient.shopping_lists.util.ItemLabelGroup
 import java.util.UUID
 
 internal data class ShoppingListScreenState(
@@ -14,6 +15,9 @@ internal data class ShoppingListScreenState(
 )
 
 sealed class ShoppingListItemState {
+    data class ItemLabel(
+        val group: ItemLabelGroup,
+    ) : ShoppingListItemState()
 
     data class ExistingItem(
         val item: GetShoppingListItemResponse,
@@ -30,16 +34,23 @@ val ShoppingListItemState.id: String
     get() = when (this) {
         is ShoppingListItemState.ExistingItem -> item.id
         is ShoppingListItemState.NewItem -> id
+        is ShoppingListItemState.ItemLabel -> when (group) {
+            is ItemLabelGroup.Label -> group.label.id
+            is ItemLabelGroup.DefaultLabel -> "defaultLabelId"
+            is ItemLabelGroup.CheckedItems -> "checkedLabelId"
+        }
     }
 
 val ShoppingListItemState.checked: Boolean
     get() = when (this) {
         is ShoppingListItemState.ExistingItem -> item.checked
         is ShoppingListItemState.NewItem -> false
+        is ShoppingListItemState.ItemLabel -> false
     }
 
 val ShoppingListItemState.position: Int
     get() = when (this) {
         is ShoppingListItemState.ExistingItem -> item.position
         is ShoppingListItemState.NewItem -> item.position
+        is ShoppingListItemState.ItemLabel -> -1
     }
