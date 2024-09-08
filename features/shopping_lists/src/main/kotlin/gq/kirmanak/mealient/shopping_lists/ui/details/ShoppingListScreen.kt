@@ -41,7 +41,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.withStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
@@ -578,14 +582,48 @@ fun ShoppingListItem(
                         .takeUnless { it == 0.0 }
                         .takeUnless { it == 1.0 && !isFood }
                         ?.let { DecimalFormat.getInstance().format(it) }
-                    val text = listOfNotNull(
-                        quantity,
-                        shoppingListItem.unit.takeIf { isFood }?.name,
-                        shoppingListItem.food.takeIf { isFood }?.name,
-                        shoppingListItem.note,
-                    ).filter { it.isNotBlank() }.joinToString(" ")
 
-                    Text(text = text)
+                    val primaryText = buildAnnotatedString {
+                        fun appendWithSpace(text: String?) {
+                            text?.let {
+                                append(it)
+                                append(" ")
+                            }
+                        }
+
+                        fun appendBold(text: String?) {
+                            text?.let {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(it)
+                                }
+                            }
+                        }
+
+                        appendWithSpace(quantity)
+                        if (!isFood) {
+                            appendBold(shoppingListItem.note)
+                        } else {
+                            appendWithSpace(shoppingListItem.unit?.name)
+                            appendBold(shoppingListItem.food?.name)
+                        }
+                    }
+
+                    // only show note in secondary text if it's a food item due
+                    // to the note already being displayed in the primary text otherwise
+                    val secondaryText = shoppingListItem.takeIf { isFood }?.note.orEmpty()
+
+                    Column {
+                        Text(
+                            text = primaryText,
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                        if (secondaryText.isNotBlank()) {
+                            Text(
+                                text = secondaryText,
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                    }
                 }
             }
         },
