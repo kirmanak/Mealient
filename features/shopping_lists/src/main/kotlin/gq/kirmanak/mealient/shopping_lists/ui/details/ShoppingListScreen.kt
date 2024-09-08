@@ -240,6 +240,7 @@ fun ShoppingListItemEditor(
     showAddButton: (Boolean) -> Unit,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    var shouldBringIntoView by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -255,16 +256,18 @@ fun ShoppingListItemEditor(
         ShoppingListItemEditorButtonRow(
             state = state,
             onEditCancelled = onEditCancelled,
-            onEditConfirmed = onEditConfirmed
+            onEditConfirmed = onEditConfirmed,
+            // Bring editor back into view when the user switches between food and non-food items
+            onIconButtonClick = { shouldBringIntoView = true }
         )
     }
 
 
-    LaunchedEffect(Unit) {
-        // Hide the add button when the editor is active
-        showAddButton(false)
-        // Scroll to the editor when it's shown
-        bringIntoViewRequester.bringIntoView()
+    LaunchedEffect(shouldBringIntoView) {
+        if (shouldBringIntoView) {
+            bringIntoViewRequester.bringIntoView()
+            shouldBringIntoView = false
+        }
     }
     DisposableEffect(Unit) {
         onDispose {
@@ -337,6 +340,7 @@ private fun ShoppingListItemEditorButtonRow(
     modifier: Modifier = Modifier,
     onEditCancelled: () -> Unit = {},
     onEditConfirmed: () -> Unit = {},
+    onIconButtonClick: () -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -344,6 +348,7 @@ private fun ShoppingListItemEditorButtonRow(
     ) {
         IconButton(onClick = {
             state.isFood = !state.isFood
+            onIconButtonClick()
         }) {
             val stringId = if (state.isFood) {
                 R.string.shopping_list_screen_editor_not_food_button
