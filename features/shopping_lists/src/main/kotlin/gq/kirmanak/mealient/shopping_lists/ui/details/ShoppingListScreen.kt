@@ -645,7 +645,15 @@ fun ShoppingListItem(
                         if (!isFood) {
                             appendBold(shoppingListItem.note)
                         } else {
-                            appendWithSpace(shoppingListItem.unit?.name)
+                            // Add plural unit name if available and quantity is greater than 1
+                            shoppingListItem.unit?.let { unit ->
+                                if (unit.pluralName.isNullOrEmpty() ||
+                                    shoppingListItem.quantity <= 1) {
+                                    appendWithSpace(unit.name)
+                                } else {
+                                    appendWithSpace(unit.pluralName)
+                                }
+                            }
                             appendBold(shoppingListItem.food?.name)
                         }
                     }
@@ -722,7 +730,7 @@ private object PreviewData {
         isFood = true,
         note = "Cold",
         quantity = 500.0,
-        unit = GetUnitResponse("ml", ""),
+        unit = GetUnitResponse(name= "ml", id= ""),
         food = GetFoodResponse("Milk", ""),
         recipeReferences = listOf(
             GetShoppingListItemRecipeReferenceResponse(
