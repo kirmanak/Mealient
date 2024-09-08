@@ -263,11 +263,10 @@ fun ShoppingListItemEditor(
     }
 
 
-    LaunchedEffect(shouldBringIntoView) {
-        if (shouldBringIntoView) {
-            bringIntoViewRequester.bringIntoView()
-            shouldBringIntoView = false
-        }
+    LaunchedEffect (Unit, shouldBringIntoView) {
+        showAddButton(false)
+        bringIntoViewRequester.bringIntoView()
+        shouldBringIntoView = false
     }
     DisposableEffect(Unit) {
         onDispose {
