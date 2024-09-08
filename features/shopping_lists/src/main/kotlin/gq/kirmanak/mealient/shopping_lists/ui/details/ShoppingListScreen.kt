@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.shopping_lists.ui.details
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,8 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -65,7 +67,6 @@ import gq.kirmanak.mealient.ui.util.LoadingState
 import gq.kirmanak.mealient.ui.util.data
 import gq.kirmanak.mealient.ui.util.error
 import gq.kirmanak.mealient.ui.util.map
-import kotlinx.coroutines.android.awaitFrame
 import java.text.DecimalFormat
 
 data class ShoppingListNavArgs(
@@ -122,6 +123,7 @@ private fun ShoppingListScreen(
     )
 
     var lastAddedItemIndex by remember { mutableIntStateOf(-1) }
+    var showAddButton by remember { mutableStateOf(true) }
     val lazyListState = rememberLazyListState()
     LaunchedEffect(lastAddedItemIndex) {
         if (lastAddedItemIndex >= 0) lazyListState.animateScrollToItem(lastAddedItemIndex)
@@ -135,19 +137,22 @@ private fun ShoppingListScreen(
         contentPadding = PaddingValues(
             start = Dimens.Medium,
             end = Dimens.Medium,
-            top = Dimens.Medium,
-            bottom = Dimens.Large * 4,
+            top = Dimens.Large,
+            bottom = Dimens.Large,
         ),
         verticalArrangement = Arrangement.spacedBy(Dimens.Medium),
         snackbarText = errorToShowInSnackbar?.let { getErrorMessage(error = it) },
         onSnackbarShown = onSnackbarShown,
         onRefresh = onRefreshRequest,
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddItemClicked) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.shopping_list_screen_add_icon_content_description),
-                )
+            // Only show the button if the editor is not active to avoid overlapping
+            if (showAddButton) {
+                FloatingActionButton(onClick = onAddItemClicked) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.shopping_list_screen_add_icon_content_description),
+                    )
+                }
             }
         },
         lazyListState = lazyListState
@@ -174,6 +179,7 @@ private fun ShoppingListScreen(
                             state = state,
                             onEditCancelled = { onEditCancel(itemState) },
                             onEditConfirmed = { onEditConfirm(itemState, state) },
+                            showAddButton = { showAddButton = it }
                         )
                     } else {
                         ShoppingListItem(
@@ -190,7 +196,8 @@ private fun ShoppingListScreen(
                     ShoppingListItemEditor(
                         state = itemState.item,
                         onEditCancelled = { onAddCancel(itemState) },
-                        onEditConfirmed = { onAddConfirm(itemState) }
+                        onEditConfirmed = { onAddConfirm(itemState) },
+                        showAddButton = { showAddButton = it }
                     )
                 }
             }
@@ -221,21 +228,25 @@ fun ShoppingListSectionHeader(state: ShoppingListItemState.ItemLabel) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ShoppingListItemEditor(
     state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
     onEditCancelled: () -> Unit = {},
     onEditConfirmed: () -> Unit = {},
+    showAddButton: (Boolean) -> Unit,
 ) {
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .bringIntoViewRequester(bringIntoViewRequester),
         verticalArrangement = Arrangement.spacedBy(Dimens.Small),
         horizontalAlignment = Alignment.End,
     ) {
-        ShoppingListItemEditorFirstRow(
-            state = state
-        )
+        ShoppingListItemEditorFirstRow(state = state)
         if (state.isFood) {
             ShoppingListItemEditorFoodRow(state = state)
         }
@@ -245,6 +256,20 @@ fun ShoppingListItemEditor(
             onEditConfirmed = onEditConfirmed
         )
     }
+
+
+    LaunchedEffect(Unit) {
+        // Hide the add button when the editor is active
+        showAddButton(false)
+        // Scroll to the editor when it's shown
+        bringIntoViewRequester.bringIntoView()
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            // Show the add button again when the editor is dismissed
+            showAddButton(true)
+        }
+    }
 }
 
 @Composable
@@ -252,8 +277,6 @@ private fun ShoppingListItemEditorFirstRow(
     state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
 ) {
-
-    val focusRequester = remember { FocusRequester() }
 
     Row(
         modifier = modifier,
@@ -302,13 +325,7 @@ private fun ShoppingListItemEditorFirstRow(
             singleLine = true,
             modifier = Modifier
                 .weight(3f, true)
-                .focusRequester(focusRequester),
         )
-    }
-
-    LaunchedEffect(focusRequester) {
-        awaitFrame()
-        focusRequester.requestFocus()
     }
 }
 
@@ -524,7 +541,8 @@ fun ShoppingListItemEditorPreview() {
                 state = ShoppingListItemState.ExistingItem(PreviewData.milk),
                 foods = emptyList(),
                 units = emptyList(),
-            )
+            ),
+            showAddButton = {}
         )
     }
 }
@@ -538,7 +556,8 @@ fun ShoppingListItemEditorNonFoodPreview() {
                 state = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
                 foods = emptyList(),
                 units = emptyList(),
-            )
+            ),
+            showAddButton = {}
         )
     }
 }
