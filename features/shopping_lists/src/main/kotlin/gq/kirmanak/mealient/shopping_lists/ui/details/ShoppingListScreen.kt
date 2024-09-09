@@ -387,8 +387,8 @@ private fun ShoppingListItemEditorFoodRow(
     state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
 ) {
-    var foodSearchQuery by remember { mutableStateOf("") }
-    var unitSearchQuery by remember { mutableStateOf("") }
+    var foodSearchQuery by remember { mutableStateOf(state.food?.name ?: "") }
+    var unitSearchQuery by remember { mutableStateOf(state.unit?.name ?: "") }
 
     Row(
         modifier = modifier,
