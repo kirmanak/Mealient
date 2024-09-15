@@ -125,7 +125,11 @@ private fun ShoppingListScreen(
     )
 
     var lastAddedItemIndex by remember { mutableIntStateOf(-1) }
-    var showAddButton by remember { mutableStateOf(true) }
+    // Show the add button only if there are no items being edited or added
+    val showAddButton = loadingState.data?.items.orEmpty().none {
+        (it as? ShoppingListItemState.ExistingItem)?.isEditing == true
+                || it is ShoppingListItemState.NewItem
+    }
     val lazyListState = rememberLazyListState()
     LaunchedEffect(lastAddedItemIndex) {
         if (lastAddedItemIndex >= 0) lazyListState.animateScrollToItem(lastAddedItemIndex)
@@ -181,7 +185,6 @@ private fun ShoppingListScreen(
                             state = state,
                             onEditCancelled = { onEditCancel(itemState) },
                             onEditConfirmed = { onEditConfirm(itemState, state) },
-                            showAddButton = { showAddButton = it }
                         )
                     } else {
                         ShoppingListItem(
@@ -199,7 +202,6 @@ private fun ShoppingListScreen(
                         state = itemState.item,
                         onEditCancelled = { onAddCancel(itemState) },
                         onEditConfirmed = { onAddConfirm(itemState) },
-                        showAddButton = { showAddButton = it }
                     )
                 }
             }
@@ -236,8 +238,7 @@ fun ShoppingListItemEditor(
     state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
     onEditCancelled: () -> Unit = {},
-    onEditConfirmed: () -> Unit = {},
-    showAddButton: (Boolean) -> Unit,
+    onEditConfirmed: () -> Unit = {}
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     var shouldBringIntoView by remember { mutableStateOf(true) }
@@ -264,16 +265,13 @@ fun ShoppingListItemEditor(
 
 
     LaunchedEffect (shouldBringIntoView) {
-        if (shouldBringIntoView) {
-            showAddButton(false)
-            bringIntoViewRequester.bringIntoView()
-            shouldBringIntoView = false
-        }
+        bringIntoViewRequester.bringIntoView()
+        shouldBringIntoView = false
     }
     DisposableEffect(Unit) {
         onDispose {
             // Show the add button again when the editor is dismissed
-            showAddButton(true)
+            //showAddButton(true)
         }
     }
 }
@@ -570,8 +568,7 @@ fun ShoppingListItemEditorPreview() {
                 state = ShoppingListItemState.ExistingItem(PreviewData.milk),
                 foods = emptyList(),
                 units = emptyList(),
-            ),
-            showAddButton = {}
+            )
         )
     }
 }
@@ -585,8 +582,7 @@ fun ShoppingListItemEditorNonFoodPreview() {
                 state = ShoppingListItemState.ExistingItem(PreviewData.blackTeaBags),
                 foods = emptyList(),
                 units = emptyList(),
-            ),
-            showAddButton = {}
+            )
         )
     }
 }
