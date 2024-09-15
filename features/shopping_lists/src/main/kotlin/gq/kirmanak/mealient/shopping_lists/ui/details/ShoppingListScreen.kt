@@ -647,7 +647,7 @@ fun ShoppingListItem(
                         if (!isFood) {
                             appendBold(shoppingListItem.note)
                         } else {
-                            // Add plural unit name if available and quantity is greater than 1
+                            // Add plural unit and food name if available
                             shoppingListItem.unit?.let { unit ->
                                 if (unit.pluralName.isNullOrEmpty() ||
                                     shoppingListItem.quantity <= 1) {
@@ -656,7 +656,14 @@ fun ShoppingListItem(
                                     appendWithSpace(unit.pluralName)
                                 }
                             }
-                            appendBold(shoppingListItem.food?.name)
+                            shoppingListItem.food?.let { food ->
+                                if (food.pluralName.isNullOrEmpty() ||
+                                    shoppingListItem.quantity <= 1) {
+                                    appendBold(food.name)
+                                } else {
+                                    appendBold(food.pluralName)
+                                }
+                            }
                         }
                     }
 
