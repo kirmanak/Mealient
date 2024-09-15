@@ -419,8 +419,10 @@ private fun ShoppingListItemEditorFoodRow(
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             )
 
-            val foodFilteringOptions = state.foods.filter {
-                it.name.contains(foodSearchQuery, ignoreCase = true)
+            val foodFilteringOptions = remember(state.foods, foodSearchQuery) {
+                state.foods.filter {
+                    it.name.contains(foodSearchQuery, ignoreCase = true)
+                }
             }
             DropdownMenu (
                 modifier = Modifier
@@ -479,8 +481,11 @@ private fun ShoppingListItemEditorFoodRow(
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             )
 
-            val unitFilteringOptions = state.units.filter {
-                it.name.contains(unitSearchQuery, ignoreCase = true)
+
+            val unitFilteringOptions = remember(state.foods, unitSearchQuery) {
+                state.units.filter {
+                    it.name.contains(unitSearchQuery, ignoreCase = true)
+                }
             }
             DropdownMenu (
                 modifier = Modifier
