@@ -643,26 +643,31 @@ fun ShoppingListItem(
                             }
                         }
 
+                        fun appendWithPlural(
+                            name: String,
+                            pluralName: String?,
+                            quantity: Double,
+                            append: (String) -> Unit
+                        ) {
+                            if (pluralName.isNullOrEmpty() || quantity <= 1) {
+                                append(name)
+                            } else {
+                                append(pluralName)
+                            }
+                        }
+
                         appendWithSpace(quantity)
                         if (!isFood) {
                             appendBold(shoppingListItem.note)
                         } else {
                             // Add plural unit and food name if available
                             shoppingListItem.unit?.let { unit ->
-                                if (unit.pluralName.isNullOrEmpty() ||
-                                    shoppingListItem.quantity <= 1) {
-                                    appendWithSpace(unit.name)
-                                } else {
-                                    appendWithSpace(unit.pluralName)
-                                }
+                                appendWithPlural(unit.name, unit.pluralName,
+                                    shoppingListItem.quantity, ::appendWithSpace)
                             }
                             shoppingListItem.food?.let { food ->
-                                if (food.pluralName.isNullOrEmpty() ||
-                                    shoppingListItem.quantity <= 1) {
-                                    appendBold(food.name)
-                                } else {
-                                    appendBold(food.pluralName)
-                                }
+                                appendWithPlural(food.name, food.pluralName,
+                                    shoppingListItem.quantity, ::appendBold)
                             }
                         }
                     }
