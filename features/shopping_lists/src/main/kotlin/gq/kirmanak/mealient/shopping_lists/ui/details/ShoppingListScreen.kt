@@ -240,7 +240,7 @@ fun ShoppingListItemEditor(
     showAddButton: (Boolean) -> Unit,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    var shouldBringIntoView by remember { mutableStateOf(false) }
+    var shouldBringIntoView by remember { mutableStateOf(true) }
 
     Column(
         modifier = modifier
@@ -263,10 +263,12 @@ fun ShoppingListItemEditor(
     }
 
 
-    LaunchedEffect (Unit, shouldBringIntoView) {
-        showAddButton(false)
-        bringIntoViewRequester.bringIntoView()
-        shouldBringIntoView = false
+    LaunchedEffect (shouldBringIntoView) {
+        if (shouldBringIntoView) {
+            showAddButton(false)
+            bringIntoViewRequester.bringIntoView()
+            shouldBringIntoView = false
+        }
     }
     DisposableEffect(Unit) {
         onDispose {
