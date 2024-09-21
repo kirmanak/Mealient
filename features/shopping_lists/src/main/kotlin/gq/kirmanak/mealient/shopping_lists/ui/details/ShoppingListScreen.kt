@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -30,6 +29,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,7 +49,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.window.PopupProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
@@ -403,8 +402,8 @@ private fun ShoppingListItemEditorFoodRow(
                 value = foodSearchQuery,
                 onValueChange = {
                     foodSearchQuery = it
-                    state.foodsExpanded = true },
-                modifier = Modifier.menuAnchor(),
+                },
+                modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 label = {
                     Text(
@@ -424,11 +423,7 @@ private fun ShoppingListItemEditorFoodRow(
                     it.name.contains(foodSearchQuery, ignoreCase = true)
                 }
             }
-            DropdownMenu (
-                modifier = Modifier
-                    .exposedDropdownSize(true)
-                    .background(MaterialTheme.colorScheme.surface),
-                properties = PopupProperties(focusable = false),
+            ExposedDropdownMenu(
                 expanded = state.foodsExpanded,
                 onDismissRequest = { state.foodsExpanded = false }
             ) {
@@ -466,7 +461,7 @@ private fun ShoppingListItemEditorFoodRow(
                 onValueChange = {
                     unitSearchQuery = it
                     state.unitsExpanded = true },
-                modifier = Modifier.menuAnchor(),
+                modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 label = {
                     Text(
@@ -481,17 +476,12 @@ private fun ShoppingListItemEditorFoodRow(
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             )
 
-
             val unitFilteringOptions = remember(state.foods, unitSearchQuery) {
                 state.units.filter {
                     it.name.contains(unitSearchQuery, ignoreCase = true)
                 }
             }
-            DropdownMenu (
-                modifier = Modifier
-                    .exposedDropdownSize(true)
-                    .background(MaterialTheme.colorScheme.surface),
-                properties = PopupProperties(focusable = false),
+            ExposedDropdownMenu (
                 expanded = state.unitsExpanded,
                 onDismissRequest = { state.unitsExpanded = false }
             ) {
