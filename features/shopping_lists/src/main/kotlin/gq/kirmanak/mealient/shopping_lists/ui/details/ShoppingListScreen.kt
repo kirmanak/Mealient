@@ -33,7 +33,6 @@ import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -125,7 +124,7 @@ private fun ShoppingListScreen(
 
     var lastAddedItemIndex by remember { mutableIntStateOf(-1) }
     // Show the add button only if there are no items being edited or added
-    val showAddButton = loadingState.data?.items.orEmpty().none {
+    val itemBeingEdited = !loadingState.data?.items.orEmpty().none {
         (it as? ShoppingListItemState.ExistingItem)?.isEditing == true
                 || it is ShoppingListItemState.NewItem
     }
@@ -151,7 +150,7 @@ private fun ShoppingListScreen(
         onRefresh = onRefreshRequest,
         floatingActionButton = {
             // Only show the button if the editor is not active to avoid overlapping
-            if (showAddButton) {
+            if (!itemBeingEdited) {
                 FloatingActionButton(onClick = onAddItemClicked) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -192,7 +191,12 @@ private fun ShoppingListScreen(
                             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
                             onCheckedChange = { onItemCheckedChange(itemState, it) },
                             onDismissed = { onDeleteItem(itemState) },
-                            onEditStart = { onEditStart(itemState) },
+                            onEditStart = {
+                                // Only allow one item to be edited at a time
+                                if (!itemBeingEdited) {
+                                    onEditStart(itemState)
+                                }
+                            },
                         )
                     }
                 }
@@ -266,12 +270,6 @@ fun ShoppingListItemEditor(
     LaunchedEffect (shouldBringIntoView) {
         bringIntoViewRequester.bringIntoView()
         shouldBringIntoView = false
-    }
-    DisposableEffect(Unit) {
-        onDispose {
-            // Show the add button again when the editor is dismissed
-            //showAddButton(true)
-        }
     }
 }
 
