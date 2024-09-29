@@ -1,5 +1,6 @@
 package gq.kirmanak.mealient.shopping_lists.ui.details
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -26,6 +29,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,10 +42,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.withStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import gq.kirmanak.mealient.datasource.models.GetFoodResponse
@@ -61,7 +67,6 @@ import gq.kirmanak.mealient.ui.util.LoadingState
 import gq.kirmanak.mealient.ui.util.data
 import gq.kirmanak.mealient.ui.util.error
 import gq.kirmanak.mealient.ui.util.map
-import kotlinx.coroutines.android.awaitFrame
 import java.text.DecimalFormat
 
 data class ShoppingListNavArgs(
@@ -118,6 +123,11 @@ private fun ShoppingListScreen(
     )
 
     var lastAddedItemIndex by remember { mutableIntStateOf(-1) }
+    // Show the add button only if there are no items being edited or added
+    val itemBeingEdited = !loadingState.data?.items.orEmpty().none {
+        (it as? ShoppingListItemState.ExistingItem)?.isEditing == true
+                || it is ShoppingListItemState.NewItem
+    }
     val lazyListState = rememberLazyListState()
     LaunchedEffect(lastAddedItemIndex) {
         if (lastAddedItemIndex >= 0) lazyListState.animateScrollToItem(lastAddedItemIndex)
@@ -131,19 +141,22 @@ private fun ShoppingListScreen(
         contentPadding = PaddingValues(
             start = Dimens.Medium,
             end = Dimens.Medium,
-            top = Dimens.Medium,
-            bottom = Dimens.Large * 4,
+            top = Dimens.Large,
+            bottom = Dimens.Large,
         ),
         verticalArrangement = Arrangement.spacedBy(Dimens.Medium),
         snackbarText = errorToShowInSnackbar?.let { getErrorMessage(error = it) },
         onSnackbarShown = onSnackbarShown,
         onRefresh = onRefreshRequest,
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddItemClicked) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.shopping_list_screen_add_icon_content_description),
-                )
+            // Only show the button if the editor is not active to avoid overlapping
+            if (!itemBeingEdited) {
+                FloatingActionButton(onClick = onAddItemClicked) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.shopping_list_screen_add_icon_content_description),
+                    )
+                }
             }
         },
         lazyListState = lazyListState
@@ -178,7 +191,12 @@ private fun ShoppingListScreen(
                             modifier = Modifier.background(MaterialTheme.colorScheme.surface),
                             onCheckedChange = { onItemCheckedChange(itemState, it) },
                             onDismissed = { onDeleteItem(itemState) },
-                            onEditStart = { onEditStart(itemState) },
+                            onEditStart = {
+                                // Only allow one item to be edited at a time
+                                if (!itemBeingEdited) {
+                                    onEditStart(itemState)
+                                }
+                            },
                         )
                     }
                 }
@@ -186,7 +204,7 @@ private fun ShoppingListScreen(
                     ShoppingListItemEditor(
                         state = itemState.item,
                         onEditCancelled = { onAddCancel(itemState) },
-                        onEditConfirmed = { onAddConfirm(itemState) }
+                        onEditConfirmed = { onAddConfirm(itemState) },
                     )
                 }
             }
@@ -217,29 +235,41 @@ fun ShoppingListSectionHeader(state: ShoppingListItemState.ItemLabel) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ShoppingListItemEditor(
     state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
     onEditCancelled: () -> Unit = {},
-    onEditConfirmed: () -> Unit = {},
+    onEditConfirmed: () -> Unit = {}
 ) {
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    var shouldBringIntoView by remember { mutableStateOf(true) }
+
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .bringIntoViewRequester(bringIntoViewRequester),
         verticalArrangement = Arrangement.spacedBy(Dimens.Small),
         horizontalAlignment = Alignment.End,
     ) {
-        ShoppingListItemEditorFirstRow(
-            state = state
-        )
+        ShoppingListItemEditorFirstRow(state = state)
         if (state.isFood) {
             ShoppingListItemEditorFoodRow(state = state)
         }
         ShoppingListItemEditorButtonRow(
             state = state,
             onEditCancelled = onEditCancelled,
-            onEditConfirmed = onEditConfirmed
+            onEditConfirmed = onEditConfirmed,
+            // Bring editor back into view when the user switches between food and non-food items
+            onIconButtonClick = { shouldBringIntoView = true }
         )
+    }
+
+
+    LaunchedEffect (shouldBringIntoView) {
+        bringIntoViewRequester.bringIntoView()
+        shouldBringIntoView = false
     }
 }
 
@@ -248,8 +278,6 @@ private fun ShoppingListItemEditorFirstRow(
     state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
 ) {
-
-    val focusRequester = remember { FocusRequester() }
 
     Row(
         modifier = modifier,
@@ -298,13 +326,7 @@ private fun ShoppingListItemEditorFirstRow(
             singleLine = true,
             modifier = Modifier
                 .weight(3f, true)
-                .focusRequester(focusRequester),
         )
-    }
-
-    LaunchedEffect(focusRequester) {
-        awaitFrame()
-        focusRequester.requestFocus()
     }
 }
 
@@ -314,6 +336,7 @@ private fun ShoppingListItemEditorButtonRow(
     modifier: Modifier = Modifier,
     onEditCancelled: () -> Unit = {},
     onEditConfirmed: () -> Unit = {},
+    onIconButtonClick: () -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -321,6 +344,7 @@ private fun ShoppingListItemEditorButtonRow(
     ) {
         IconButton(onClick = {
             state.isFood = !state.isFood
+            onIconButtonClick()
         }) {
             val stringId = if (state.isFood) {
                 R.string.shopping_list_screen_editor_not_food_button
@@ -360,6 +384,9 @@ private fun ShoppingListItemEditorFoodRow(
     state: ShoppingListItemEditorState,
     modifier: Modifier = Modifier,
 ) {
+    var foodSearchQuery by remember { mutableStateOf(state.food?.name ?: "") }
+    var unitSearchQuery by remember { mutableStateOf(state.unit?.name ?: "") }
+
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(Dimens.Small),
@@ -370,10 +397,11 @@ private fun ShoppingListItemEditorFoodRow(
             modifier = Modifier.weight(1f),
         ) {
             OutlinedTextField(
-                value = state.food?.name.orEmpty(),
-                onValueChange = { },
-                modifier = Modifier.menuAnchor(),
-                readOnly = true,
+                value = foodSearchQuery,
+                onValueChange = {
+                    foodSearchQuery = it
+                },
+                modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 label = {
                     Text(
@@ -388,11 +416,16 @@ private fun ShoppingListItemEditorFoodRow(
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             )
 
+            val foodFilteringOptions = remember(state.foods, foodSearchQuery) {
+                state.foods.filter {
+                    it.name.contains(foodSearchQuery, ignoreCase = true)
+                }
+            }
             ExposedDropdownMenu(
                 expanded = state.foodsExpanded,
                 onDismissRequest = { state.foodsExpanded = false }
             ) {
-                state.foods.forEach {
+                foodFilteringOptions.forEach {
                     DropdownMenuItem(
                         text = {
                             Text(text = it.name, style = MaterialTheme.typography.bodyMedium)
@@ -400,6 +433,7 @@ private fun ShoppingListItemEditorFoodRow(
                         onClick = {
                             state.food = it
                             state.foodsExpanded = false
+                            foodSearchQuery = it.name
                         },
                         trailingIcon = {
                             if (it == state.food) {
@@ -421,10 +455,11 @@ private fun ShoppingListItemEditorFoodRow(
             modifier = Modifier.weight(1f),
         ) {
             OutlinedTextField(
-                value = state.unit?.name.orEmpty(),
-                onValueChange = { },
-                modifier = Modifier.menuAnchor(),
-                readOnly = true,
+                value = unitSearchQuery,
+                onValueChange = {
+                    unitSearchQuery = it
+                    state.unitsExpanded = true },
+                modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 label = {
                     Text(
@@ -439,11 +474,16 @@ private fun ShoppingListItemEditorFoodRow(
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             )
 
-            ExposedDropdownMenu(
+            val unitFilteringOptions = remember(state.foods, unitSearchQuery) {
+                state.units.filter {
+                    it.name.contains(unitSearchQuery, ignoreCase = true)
+                }
+            }
+            ExposedDropdownMenu (
                 expanded = state.unitsExpanded,
                 onDismissRequest = { state.unitsExpanded = false }
             ) {
-                state.units.forEach {
+                unitFilteringOptions.forEach {
                     DropdownMenuItem(
                         text = {
                             Text(text = it.name, style = MaterialTheme.typography.bodyMedium)
@@ -451,6 +491,7 @@ private fun ShoppingListItemEditorFoodRow(
                         onClick = {
                             state.unit = it
                             state.unitsExpanded = false
+                            unitSearchQuery = it.name
                         },
                         trailingIcon = {
                             if (it == state.unit) {
@@ -578,14 +619,68 @@ fun ShoppingListItem(
                         .takeUnless { it == 0.0 }
                         .takeUnless { it == 1.0 && !isFood }
                         ?.let { DecimalFormat.getInstance().format(it) }
-                    val text = listOfNotNull(
-                        quantity,
-                        shoppingListItem.unit.takeIf { isFood }?.name,
-                        shoppingListItem.food.takeIf { isFood }?.name,
-                        shoppingListItem.note,
-                    ).filter { it.isNotBlank() }.joinToString(" ")
 
-                    Text(text = text)
+                    val primaryText = buildAnnotatedString {
+                        fun appendWithSpace(text: String?) {
+                            text?.let {
+                                append(it)
+                                append(" ")
+                            }
+                        }
+
+                        fun appendBold(text: String?) {
+                            text?.let {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(it)
+                                }
+                            }
+                        }
+
+                        fun appendWithPlural(
+                            name: String,
+                            pluralName: String?,
+                            quantity: Double,
+                            append: (String) -> Unit
+                        ) {
+                            if (pluralName.isNullOrEmpty() || quantity <= 1) {
+                                append(name)
+                            } else {
+                                append(pluralName)
+                            }
+                        }
+
+                        appendWithSpace(quantity)
+                        if (!isFood) {
+                            appendBold(shoppingListItem.note)
+                        } else {
+                            // Add plural unit and food name if available
+                            shoppingListItem.unit?.let { unit ->
+                                appendWithPlural(unit.name, unit.pluralName,
+                                    shoppingListItem.quantity, ::appendWithSpace)
+                            }
+                            shoppingListItem.food?.let { food ->
+                                appendWithPlural(food.name, food.pluralName,
+                                    shoppingListItem.quantity, ::appendBold)
+                            }
+                        }
+                    }
+
+                    // only show note in secondary text if it's a food item due
+                    // to the note already being displayed in the primary text otherwise
+                    val secondaryText = shoppingListItem.takeIf { isFood }?.note.orEmpty()
+
+                    Column {
+                        Text(
+                            text = primaryText,
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                        if (secondaryText.isNotBlank()) {
+                            Text(
+                                text = secondaryText,
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                    }
                 }
             }
         },
@@ -642,7 +737,7 @@ private object PreviewData {
         isFood = true,
         note = "Cold",
         quantity = 500.0,
-        unit = GetUnitResponse("ml", ""),
+        unit = GetUnitResponse(name= "ml", id= ""),
         food = GetFoodResponse("Milk", ""),
         recipeReferences = listOf(
             GetShoppingListItemRecipeReferenceResponse(

@@ -134,7 +134,7 @@ internal class ShoppingListViewModelTest : BaseUnitTest() {
 }
 
 
-private val mlUnit = GetUnitResponse("ml", "")
+private val mlUnit = GetUnitResponse(name="ml", id="")
 
 private val milkLabel = GetItemLabelResponse("Milk", "#FF0000", "1", "0")
 private val milkFood = GetFoodResponse(name = "Milk", id ="")
