@@ -52,7 +52,7 @@ leakcanary = "2.14"
 # https://github.com/ChuckerTeam/chucker/releases
 chucker = "4.0.0"
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
-desugar = "2.1.1"
+desugar = "2.1.2"
 # https://github.com/google/ksp/releases
 kspPlugin = "2.0.10-1.0.24"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
