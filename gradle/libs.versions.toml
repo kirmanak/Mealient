@@ -72,7 +72,7 @@ accompanistVersion = "0.36.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
 materialCompose = "1.7.3"
 # https://github.com/raamcosta/compose-destinations/releases
-composeDestinations = "1.10.2"
+composeDestinations = "1.11.7"
 # https://developer.android.com/jetpack/androidx/releases/hilt
 androidxHilt = "1.2.0"
 # https://github.com/ktorio/ktor/releases
