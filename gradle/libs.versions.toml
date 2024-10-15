@@ -70,7 +70,7 @@ composeBom = "2024.09.03"
 # https://google.github.io/accompanist/
 accompanistVersion = "0.36.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-material
-materialCompose = "1.7.2"
+materialCompose = "1.7.3"
 # https://github.com/raamcosta/compose-destinations/releases
 composeDestinations = "1.10.2"
 # https://developer.android.com/jetpack/androidx/releases/hilt
