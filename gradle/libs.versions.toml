@@ -54,7 +54,7 @@ chucker = "4.0.0"
 # https://github.com/google/desugar_jdk_libs/blob/master/CHANGELOG.md
 desugar = "2.1.2"
 # https://github.com/google/ksp/releases
-kspPlugin = "2.0.10-1.0.24"
+kspPlugin = "2.0.21-1.0.27"
 # https://developer.android.com/jetpack/androidx/releases/sharetarget
 shareTarget = "1.2.0"
 # https://github.com/KasperskyLab/Kaspresso/releases
