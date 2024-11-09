@@ -10,6 +10,10 @@
 
 # Mealient
 
+## DEPRECATION
+
+Thank you for your interest in Mealient! This project is no longer maintained, so feel free to fork and develop it independently.
+
 ## DISCLAIMER
 
 This project is developed independently from the core Mealie project. It is NOT associated with the
