@@ -1,6 +1,6 @@
 [versions]
 # https://maven.google.com/web/index.html?q=com.android.tools.build#com.android.tools.build:gradle
-androidGradlePlugin = "8.5.2"
+androidGradlePlugin = "8.7.2"
 # https://github.com/JetBrains/kotlin/releases
 kotlin = "2.0.10"
 # https://dagger.dev/hilt/gradle-setup
